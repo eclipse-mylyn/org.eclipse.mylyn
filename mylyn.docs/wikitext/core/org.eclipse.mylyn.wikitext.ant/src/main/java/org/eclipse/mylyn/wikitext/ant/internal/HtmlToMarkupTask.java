@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2013 Tasktop Technologies.
+ * Copyright (c) 2011, 2024 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.ant.internal;
@@ -18,6 +19,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -123,24 +125,15 @@ public class HtmlToMarkupTask extends MarkupTask {
 		File outputFile = computeTargetFile(markupLanguage, source, name);
 		if (!outputFile.exists() || overwrite || outputFile.lastModified() < source.lastModified()) {
 
-			Writer writer;
-			try {
-				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(outputFile)),
-						StandardCharsets.UTF_8);
-			} catch (Exception e) {
-				throw new BuildException(
-						MessageFormat.format(Messages.getString("MarkupToHtmlTask.16"), outputFile, e.getMessage()), e); //$NON-NLS-1$
-			}
-			try {
+			try (Writer writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(outputFile)),
+					StandardCharsets.UTF_8)) {
 				DocumentBuilder builder = markupLanguage.createDocumentBuilder(writer);
 
 				Reader input;
-				InputStream in;
-				try {
-					in = new BufferedInputStream(new FileInputStream(source));
+				try (InputStream in = new BufferedInputStream(new FileInputStream(source))) {
 					input = getSourceEncoding() == null
 							? new InputStreamReader(in)
-							: new InputStreamReader(in, getSourceEncoding());
+									: new InputStreamReader(in, getSourceEncoding());
 				} catch (Exception e) {
 					throw new BuildException(MessageFormat.format(Messages.getString("MarkupTask.cannotReadSource"), //$NON-NLS-1$
 							source, e.getMessage()), e);
@@ -150,21 +143,10 @@ public class HtmlToMarkupTask extends MarkupTask {
 				} catch (Exception e) {
 					throw new BuildException(MessageFormat.format(
 							Messages.getString("HtmlToMarkupTask.failedToProcessContent"), source, e.getMessage()), e); //$NON-NLS-1$
-				} finally {
-					try {
-						in.close();
-					} catch (Exception e) {
-						throw new BuildException(MessageFormat.format(Messages.getString("MarkupTask.cannotReadSource"), //$NON-NLS-1$
-								source, e.getMessage()), e);
-					}
 				}
-			} finally {
-				try {
-					writer.close();
-				} catch (Exception e) {
-					throw new BuildException(MessageFormat.format(Messages.getString("MarkupToHtmlTask.17"), outputFile, //$NON-NLS-1$
-							e.getMessage()), e);
-				}
+			} catch (IOException e) {
+				throw new BuildException(
+						MessageFormat.format(Messages.getString("MarkupToHtmlTask.16"), outputFile, e.getMessage()), e); //$NON-NLS-1$
 			}
 		}
 	}

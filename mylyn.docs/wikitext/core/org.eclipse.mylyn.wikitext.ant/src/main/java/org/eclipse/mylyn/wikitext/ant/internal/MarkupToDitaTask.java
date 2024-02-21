@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.ant.internal;
 
@@ -169,15 +170,8 @@ public class MarkupToDitaTask extends MarkupTask {
 
 			OutlineItem outline = new OutlineParser(markupLanguage).parse(markupContent);
 
-			Writer writer;
-			try {
-				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(outputFile)),
-						StandardCharsets.UTF_8);
-			} catch (Exception e) {
-				throw new BuildException(MessageFormat.format(Messages.getString("MarkupToDitaTask.11"), outputFile, //$NON-NLS-1$
-						e.getMessage()), e);
-			}
-			try {
+			try (Writer writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(outputFile)),
+					StandardCharsets.UTF_8)) {
 				if (topicStrategy == BreakStrategy.NONE) {
 					DitaTopicDocumentBuilder builder = new DitaTopicDocumentBuilder(new DefaultXmlStreamWriter(writer),
 							formatting);
@@ -194,10 +188,10 @@ public class MarkupToDitaTask extends MarkupTask {
 
 					parser.parse(markupContent);
 				} else {
-					DitaBookMapDocumentBuilder builder = new DitaBookMapDocumentBuilder(formatting
+
+					try (DitaBookMapDocumentBuilder builder = new DitaBookMapDocumentBuilder(formatting
 							? new FormattingXMLStreamWriter(new DefaultXmlStreamWriter(writer))
-							: new DefaultXmlStreamWriter(writer));
-					try {
+									: new DefaultXmlStreamWriter(writer))) {
 						builder.setFormattingDependencies(formatting);
 
 						MarkupParser parser = new MarkupParser();
@@ -229,24 +223,14 @@ public class MarkupToDitaTask extends MarkupTask {
 						}
 
 						parser.parse(markupContent);
-					} finally {
-						try {
-							builder.close();
-						} catch (IOException e) {
-							throw new BuildException(
-									MessageFormat.format(Messages.getString("MarkupToDitaTask.12"), outputFile, //$NON-NLS-1$
-											e.getMessage()),
-									e);
-						}
+					} catch (IOException e) {
+						throw new BuildException(MessageFormat.format(Messages.getString("MarkupToDitaTask.12"), outputFile, //$NON-NLS-1$
+								e.getMessage()), e);
 					}
 				}
-			} finally {
-				try {
-					writer.close();
-				} catch (Exception e) {
-					throw new BuildException(MessageFormat.format(Messages.getString("MarkupToDitaTask.12"), outputFile, //$NON-NLS-1$
-							e.getMessage()), e);
-				}
+			} catch (Exception e) {
+				throw new BuildException(MessageFormat.format(Messages.getString("MarkupToDitaTask.11"), outputFile, //$NON-NLS-1$
+						e.getMessage()), e);
 			}
 		}
 	}
