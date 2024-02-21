@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Tasktop Technologies.
+ * Copyright (c) 2011, 2024 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.internal.parser.html;
@@ -45,20 +46,20 @@ class RemoveEmptySpansProcessor extends DocumentProcessor {
 						element.remove();
 						modifiedOne = true;
 					} else // a span with a single text child that is only whitespace is removed (text is retained)
-					if (childNodes.size() == 1) {
-						Node node = childNodes.get(0);
-						if (node instanceof TextNode textNode) {
-							String text = textNode.text();
-							if (text.trim().length() == 0) {
-								textNode.remove();
-								element.before(textNode);
-								element.remove();
-								modifiedOne = true;
-							}
+						if (childNodes.size() == 1) {
+							Node node = childNodes.get(0);
+							if (node instanceof TextNode textNode) {
+								String text = textNode.text();
+								if (text.trim().length() == 0) {
+									textNode.remove();
+									element.before(textNode);
+									element.remove();
+									modifiedOne = true;
+								}
 
-							normalizeTextNodes((Element) textNode.parent());
+								normalizeTextNodes((Element) textNode.parent());
+							}
 						}
-					}
 				}
 				// a br within a span that is a first or last child is moved out
 				Element parent = element.parent();
@@ -80,7 +81,7 @@ class RemoveEmptySpansProcessor extends DocumentProcessor {
 	}
 
 	private boolean isHyperlinkWithTarget(Element element) {
-		return element.tagName().equalsIgnoreCase("a") && !Strings.isNullOrEmpty(element.attr("href"));
+		return element.tagName().equalsIgnoreCase("a") && !Strings.isNullOrEmpty(element.attr("href")); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 }

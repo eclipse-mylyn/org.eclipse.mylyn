@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.builder;
@@ -34,13 +35,13 @@ import javax.lang.model.SourceVersion;
  */
 public class JavadocShortcutUriProcessor implements UriProcessor {
 
-	private static final String TARGET = "_javadoc";
+	private static final String TARGET = "_javadoc"; //$NON-NLS-1$
 
-	private static final String JAVADOC_URI_MARKER = "@";
+	private static final String JAVADOC_URI_MARKER = "@"; //$NON-NLS-1$
 
-	private static final String JAVADOC_ABSOLUTE_URI_MARKER = "javadoc://";
+	private static final String JAVADOC_ABSOLUTE_URI_MARKER = "javadoc://"; //$NON-NLS-1$
 
-	private static final String BASE_PACKAGE_MARKER = ".";
+	private static final String BASE_PACKAGE_MARKER = "."; //$NON-NLS-1$
 
 	private final String basePackageName;
 
@@ -92,22 +93,22 @@ public class JavadocShortcutUriProcessor implements UriProcessor {
 	}
 
 	private String toTypePage(String newUri) {
-		return javadocFramePage() + "?" + newUri.replace('.', '/') + ".html";
+		return javadocFramePage() + "?" + newUri.replace('.', '/') + ".html"; //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 	private String toPackagePage(String newUri) {
-		return javadocFramePage() + "?" + newUri.replace('.', '/') + "/package-summary.html";
+		return javadocFramePage() + "?" + newUri.replace('.', '/') + "/package-summary.html"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private String javadocFramePage() {
 		if (javadocRelativePath == null) {
-			return "index.html";
+			return "index.html"; //$NON-NLS-1$
 		}
 		String pageUri = javadocRelativePath;
-		if (!pageUri.endsWith("/")) {
-			pageUri += "/";
+		if (!pageUri.endsWith("/")) { //$NON-NLS-1$
+			pageUri += "/"; //$NON-NLS-1$
 		}
-		return pageUri + "index.html";
+		return pageUri + "index.html"; //$NON-NLS-1$
 	}
 
 	private String prependWithBasePackage(String uri) {

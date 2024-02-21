@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.parser.builder;
 
@@ -410,10 +411,10 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 					writer.writeAttribute("url", href); //$NON-NLS-1$
 				}
 			}
-				break;
+			break;
 			case MARK:
-				writer.writeStartElement("emphasis");
-				writer.writeAttribute("role", "marked");
+				writer.writeStartElement("emphasis"); //$NON-NLS-1$
+				writer.writeAttribute("role", "marked"); //$NON-NLS-1$ //$NON-NLS-2$
 				break;
 			default:
 				Logger.getLogger(DocBookDocumentBuilder.class.getName()).warning("No docbook mapping for " + type); //$NON-NLS-1$
@@ -433,29 +434,29 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (attributes.getCssStyle() != null) {
 			String cssStyle = attributes.getCssStyle();
 			if (cssStyle != null) {
-				Matcher typeMatcher = Pattern.compile("list-style-type:\\s+([\\w-]+);").matcher(cssStyle);
+				Matcher typeMatcher = Pattern.compile("list-style-type:\\s+([\\w-]+);").matcher(cssStyle); //$NON-NLS-1$
 				if (typeMatcher.find()) {
 					String type = typeMatcher.group(1);
 					switch (type) {
-						case "decimal":
-							type = "arabic";
+						case "decimal": //$NON-NLS-1$
+							type = "arabic"; //$NON-NLS-1$
 							break;
-						case "lower-alpha":
-							type = "loweralpha";
+						case "lower-alpha": //$NON-NLS-1$
+							type = "loweralpha"; //$NON-NLS-1$
 							break;
-						case "upper-alpha":
-							type = "upperalpha";
+						case "upper-alpha": //$NON-NLS-1$
+							type = "upperalpha"; //$NON-NLS-1$
 							break;
-						case "upper-roman":
-							type = "upperroman";
+						case "upper-roman": //$NON-NLS-1$
+							type = "upperroman"; //$NON-NLS-1$
 							break;
-						case "lower-roman":
-							type = "lowerroman";
+						case "lower-roman": //$NON-NLS-1$
+							type = "lowerroman"; //$NON-NLS-1$
 							break;
 						default:
 							break;
 					}
-					writer.writeAttribute("numeration", type);
+					writer.writeAttribute("numeration", type); //$NON-NLS-1$
 				}
 			}
 		}
