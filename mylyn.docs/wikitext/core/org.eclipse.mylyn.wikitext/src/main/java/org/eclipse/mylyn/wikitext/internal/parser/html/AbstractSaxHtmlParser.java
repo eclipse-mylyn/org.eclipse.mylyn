@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2021 Tasktop Technologies.
+ * Copyright (c) 2011, 2024 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.internal.parser.html;
@@ -70,7 +71,7 @@ public abstract class AbstractSaxHtmlParser {
 			"dd", //$NON-NLS-1$
 			"dt", //$NON-NLS-1$
 			"blockquote" //$NON-NLS-1$
-	);
+			);
 
 	/**
 	 * element names for elements that cause adjacent whitespace to be collapsed
@@ -83,7 +84,7 @@ public abstract class AbstractSaxHtmlParser {
 			"tbody", //$NON-NLS-1$
 			"thead", //$NON-NLS-1$
 			"tr" //$NON-NLS-1$
-	);
+			);
 
 	private static final Map<String, SpanType> elementNameToSpanType = Map.ofEntries(entry("a", SpanType.LINK), //$NON-NLS-1$
 			entry("b", SpanType.BOLD), //$NON-NLS-1$
@@ -104,7 +105,7 @@ public abstract class AbstractSaxHtmlParser {
 			entry("code", SpanType.CODE), //$NON-NLS-1$
 			entry("tt", SpanType.MONOSPACE), //$NON-NLS-1$
 			entry("mark", SpanType.MARK) //$NON-NLS-1$
-	);
+			);
 
 	private static final Map<String, BlockType> elementNameToBlockType = Map.ofEntries(
 			entry("ul", BlockType.BULLETED_LIST), //$NON-NLS-1$
@@ -123,7 +124,7 @@ public abstract class AbstractSaxHtmlParser {
 			entry("th", BlockType.TABLE_CELL_HEADER), //$NON-NLS-1$
 			entry("td", BlockType.TABLE_CELL_NORMAL), //$NON-NLS-1$
 			entry("tr", BlockType.TABLE_ROW) //$NON-NLS-1$
-	);
+			);
 
 	private static final class ElementState {
 		@SuppressWarnings("unused")
@@ -266,7 +267,7 @@ public abstract class AbstractSaxHtmlParser {
 				if (elementState.noWhitespaceTextContainer
 						&& (elementState.lastChild == null || elementState.lastChild.blockElement)
 						|| elementState.blockElement && !elementState.preserveWhitespace
-								&& elementState.textChildCount == 0 && elementState.childCount == 0
+						&& elementState.textChildCount == 0 && elementState.childCount == 0
 						|| elementState.lastChild != null && elementState.lastChild.collapsesAdjacentWhitespace) {
 					// trim left here
 					int skip = 0;
@@ -407,28 +408,28 @@ public abstract class AbstractSaxHtmlParser {
 				populateCommonAttributes(listAttributes, atts);
 				listAttributes.setStart(getAttribute(atts, "start")); //$NON-NLS-1$
 				if (listAttributes.getCssStyle() == null
-						|| !listAttributes.getCssStyle().contains("list-style-type:")) {
-					String typeAttribute = getAttribute(atts, "type");
+						|| !listAttributes.getCssStyle().contains("list-style-type:")) { //$NON-NLS-1$
+					String typeAttribute = getAttribute(atts, "type"); //$NON-NLS-1$
 					if (typeAttribute != null) {
 						String listCssType = null;
 						switch (typeAttribute) {
-							case "1":
-								listCssType = "decimal";
+							case "1": //$NON-NLS-1$
+								listCssType = "decimal"; //$NON-NLS-1$
 								break;
-							case "a":
-								listCssType = "lower-alpha";
+							case "a": //$NON-NLS-1$
+								listCssType = "lower-alpha"; //$NON-NLS-1$
 								break;
-							case "i":
-								listCssType = "lower-roman";
+							case "i": //$NON-NLS-1$
+								listCssType = "lower-roman"; //$NON-NLS-1$
 								break;
-							case "A":
-								listCssType = "upper-alpha";
+							case "A": //$NON-NLS-1$
+								listCssType = "upper-alpha"; //$NON-NLS-1$
 								break;
-							case "I":
-								listCssType = "upper-roman";
+							case "I": //$NON-NLS-1$
+								listCssType = "upper-roman"; //$NON-NLS-1$
 								break;
 						}
-						listAttributes.appendCssStyle("list-style-type: " + listCssType + ";");
+						listAttributes.appendCssStyle("list-style-type: " + listCssType + ";"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}
 				builder.beginBlock(BlockType.NUMERIC_LIST, listAttributes);
@@ -655,7 +656,7 @@ public abstract class AbstractSaxHtmlParser {
 	private org.eclipse.mylyn.wikitext.parser.Attributes computeAttributes(SpanType spanType, Attributes atts) {
 		org.eclipse.mylyn.wikitext.parser.Attributes attributes = spanType == SpanType.LINK
 				? new LinkAttributes()
-				: new org.eclipse.mylyn.wikitext.parser.Attributes();
+						: new org.eclipse.mylyn.wikitext.parser.Attributes();
 		populateCommonAttributes(attributes, atts);
 		if (spanType == SpanType.LINK) {
 			String href = getValue("href", atts); //$NON-NLS-1$

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2022 David Green and others.
+ * Copyright (c) 2007, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
  *     David Green - initial API and implementation
  *     Torkild U. Resheim - Handle links when transforming, bug 325006
  *     Jeremie Bresson - Bug 492302
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.parser.builder;
 
@@ -79,7 +80,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			entry(SpanType.CODE, "code"), //$NON-NLS-1$
 			entry(SpanType.MONOSPACE, "tt"), //$NON-NLS-1$
 			entry(SpanType.MARK, "mark") //$NON-NLS-1$
-	);
+			);
 
 	private static final Map<BlockType, ElementInfo> blockTypeToElementInfo = Map.ofEntries(
 			entry(BlockType.BULLETED_LIST, new ElementInfo("ul")), //$NON-NLS-1$
@@ -108,7 +109,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 					"border: 1px solid #F0C000;background-color: #FFFFCE;margin: 20px;padding: 0px 6px 0px 6px;")), //$NON-NLS-1$
 			entry(BlockType.PANEL, new ElementInfo("div", "panel", //$NON-NLS-1$ //$NON-NLS-2$
 					"border: 1px solid #ccc;background-color: #FFFFCE;margin: 10px;padding: 0px 6px 0px 6px;")) //$NON-NLS-1$
-	);
+			);
 
 	private Map<SpanType, String> spanTypeToElementName = Map.copyOf(defaultSpanTypeToElementName);
 
@@ -222,7 +223,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * @since 3.1
 	 */
 	public void addLinkUriProcessor(UriProcessor processor) {
-		Objects.requireNonNull(processor, "Must provide processor");
+		Objects.requireNonNull(processor, "Must provide processor"); //$NON-NLS-1$
 		linkUriProcessors = ImmutableList.<UriProcessor> builder().addAll(linkUriProcessors).add(processor).build();
 	}
 
@@ -557,9 +558,9 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 				emitHead();
 				beginBody();
 			} else // sanity check
-			if (stylesheets != null && !stylesheets.isEmpty()) {
-				throw new IllegalStateException(Messages.getString("HtmlDocumentBuilder.0")); //$NON-NLS-1$
-			}
+				if (stylesheets != null && !stylesheets.isEmpty()) {
+					throw new IllegalStateException(Messages.getString("HtmlDocumentBuilder.0")); //$NON-NLS-1$
+				}
 		}
 
 		@Override
@@ -722,23 +723,19 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	@Override
 	public void entityReference(String entity) {
-		if (filterEntityReferences && !entity.isEmpty()) {
-			if (entity.charAt(0) == '#') {
-				writer.writeEntityRef(entity);
+		if (!filterEntityReferences || entity.isEmpty() || entity.charAt(0) == '#') {
+			writer.writeEntityRef(entity);
+		} else {
+			List<String> emitEntity = HtmlEntities.instance().nameToEntityReferences(entity);
+			if (emitEntity.isEmpty()) {
+				writer.writeCharacters("&"); //$NON-NLS-1$
+				writer.writeCharacters(entity);
+				writer.writeCharacters(";"); //$NON-NLS-1$
 			} else {
-				List<String> emitEntity = HtmlEntities.instance().nameToEntityReferences(entity);
-				if (emitEntity.isEmpty()) {
-					writer.writeCharacters("&"); //$NON-NLS-1$
-					writer.writeCharacters(entity);
-					writer.writeCharacters(";"); //$NON-NLS-1$
-				} else {
-					for (String numericEntity : emitEntity) {
-						writer.writeEntityRef(numericEntity);
-					}
+				for (String numericEntity : emitEntity) {
+					writer.writeEntityRef(numericEntity);
 				}
 			}
-		} else {
-			writer.writeEntityRef(entity);
 		}
 	}
 
@@ -1060,10 +1057,10 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 		if (!hasTarget) {
 			linkUriProcessors.stream()
-					.map(s -> s.target(href))
-					.filter(Objects::nonNull)
-					.findFirst()
-					.ifPresent(target -> writer.writeAttribute("target", target));
+			.map(s -> s.target(href))
+			.filter(Objects::nonNull)
+			.findFirst()
+			.ifPresent(target -> writer.writeAttribute("target", target)); //$NON-NLS-1$
 		}
 
 		if (rel != null) {

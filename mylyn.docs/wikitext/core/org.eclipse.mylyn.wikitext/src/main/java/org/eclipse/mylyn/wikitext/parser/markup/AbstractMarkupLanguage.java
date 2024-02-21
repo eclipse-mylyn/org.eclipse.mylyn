@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 David Green and others.
+ * Copyright (c) 2009, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.markup;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -236,9 +239,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 		DocumentBuilder builder = parser.getBuilder();
 		builder.setLocator(state);
 
-		@SuppressWarnings("resource")
-		LocationTrackingReader reader = new LocationTrackingReader(new StringReader(markupContent));
-		try {
+		try (LocationTrackingReader reader = new LocationTrackingReader(new StringReader(markupContent))) {
 			if (asDocument) {
 				builder.beginDocument();
 			}
@@ -353,6 +354,8 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 				builder.endDocument();
 			}
 			builder.flush();
+		} catch (IOException e) {
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
 		} finally {
 			builder.setLocator(null);
 		}
