@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -9,12 +9,14 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.ant.internal;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -134,17 +136,8 @@ public class MarkupToDocbookTask extends MarkupTask {
 			}
 			performValidation(source, markupContent);
 
-			Writer writer;
-			try {
-				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(docbookOutputFile)),
-						StandardCharsets.UTF_8);
-			} catch (Exception e) {
-				throw new BuildException(
-						MessageFormat.format(Messages.getString("MarkupToDocbookTask.11"), docbookOutputFile, //$NON-NLS-1$
-								e.getMessage()),
-						e);
-			}
-			try {
+			try (Writer writer = new OutputStreamWriter(
+					new BufferedOutputStream(new FileOutputStream(docbookOutputFile)), StandardCharsets.UTF_8)) {
 				DocBookDocumentBuilder builder = new DocBookDocumentBuilder(writer) {
 					@Override
 					protected XmlStreamWriter createXmlStreamWriter(Writer out) {
@@ -159,15 +152,11 @@ public class MarkupToDocbookTask extends MarkupTask {
 					builder.setDoctype(doctype);
 				}
 				parser.parse(markupContent);
-			} finally {
-				try {
-					writer.close();
-				} catch (Exception e) {
-					throw new BuildException(
-							MessageFormat.format(Messages.getString("MarkupToDocbookTask.12"), docbookOutputFile, //$NON-NLS-1$
-									e.getMessage()),
-							e);
-				}
+			} catch (IOException e) {
+				throw new BuildException(
+						MessageFormat.format(Messages.getString("MarkupToDocbookTask.11"), docbookOutputFile, //$NON-NLS-1$
+								e.getMessage()),
+						e);
 			}
 		}
 

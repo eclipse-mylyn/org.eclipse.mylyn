@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2013 David Green and others.
+ * Copyright (c) 2009, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -9,12 +9,14 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.ant.internal;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -140,15 +142,8 @@ public class MarkupToXslfoTask extends MarkupTask {
 
 			performValidation(source, markupContent);
 
-			Writer out;
-			try {
-				out = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(outputFile)),
-						StandardCharsets.UTF_8);
-			} catch (Exception e) {
-				throw new BuildException(
-						MessageFormat.format(Messages.getString("MarkupToXslfoTask.8"), outputFile, e.getMessage()), e); //$NON-NLS-1$
-			}
-			try {
+			try (Writer out = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(outputFile)),
+					StandardCharsets.UTF_8)) {
 				XslfoDocumentBuilder builder = new XslfoDocumentBuilder(out);
 				XslfoDocumentBuilder.Configuration configuration = this.configuration.clone();
 				if (configuration.getTitle() == null) {
@@ -167,13 +162,9 @@ public class MarkupToXslfoTask extends MarkupTask {
 				}
 
 				parser.parse(markupContent);
-			} finally {
-				try {
-					out.close();
-				} catch (Exception e) {
-					throw new BuildException(MessageFormat.format(Messages.getString("MarkupToXslfoTask.9"), outputFile, //$NON-NLS-1$
-							e.getMessage()), e);
-				}
+			} catch (IOException e) {
+				throw new BuildException(
+						MessageFormat.format(Messages.getString("MarkupToXslfoTask.8"), outputFile, e.getMessage()), e); //$NON-NLS-1$
 			}
 		}
 		return markupContent;

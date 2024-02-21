@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -9,12 +9,14 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.ant.internal;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -49,16 +51,8 @@ public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 		File tocOutputFile = computeTocFile(source, name);
 		if (!tocOutputFile.exists() || overwrite || tocOutputFile.lastModified() < source.lastModified()) {
 			File htmlOutputFile = computeHtmlFile(source, name);
-
-			Writer writer;
-			try {
-				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(tocOutputFile)),
-						StandardCharsets.UTF_8);
-			} catch (Exception e) {
-				throw new BuildException(String.format("Cannot write to file '%s': %s", tocOutputFile, e.getMessage()), //$NON-NLS-1$
-						e);
-			}
-			try {
+			try (Writer writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(tocOutputFile)),
+					StandardCharsets.UTF_8)){
 
 				MarkupToEclipseToc toEclipseToc = new SplittingMarkupToEclipseToc();
 
@@ -90,13 +84,9 @@ public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 				} catch (Exception e) {
 					throw new BuildException(String.format("Cannot write to file '%s': %s", tocXml, e.getMessage()), e); //$NON-NLS-1$
 				}
-			} finally {
-				try {
-					writer.close();
-				} catch (Exception e) {
-					throw new BuildException(String.format("Cannot write to file '%s': %s", tocOutputFile, //$NON-NLS-1$
-							e.getMessage()), e);
-				}
+			} catch (IOException e) {
+				throw new BuildException(String.format("Cannot write to file '%s': %s", tocOutputFile, e.getMessage()), //$NON-NLS-1$
+						e);
 			}
 		}
 	}

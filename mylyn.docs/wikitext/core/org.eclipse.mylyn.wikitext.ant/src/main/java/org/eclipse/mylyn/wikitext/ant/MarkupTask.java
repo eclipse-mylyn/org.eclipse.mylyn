@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.ant;
 
@@ -250,20 +251,13 @@ public abstract class MarkupTask extends Task {
 	 */
 	protected String readFully(File inputFile) {
 		StringBuilder w = new StringBuilder((int) inputFile.length());
-		try {
-			InputStream input = new BufferedInputStream(new FileInputStream(inputFile));
-			try (input) {
+		try (InputStream input = new BufferedInputStream(new FileInputStream(inputFile));
 				Reader r = sourceEncoding == null
 						? new InputStreamReader(input)
-						: new InputStreamReader(input, sourceEncoding);
-				try {
-					int i;
-					while ((i = r.read()) != -1) {
-						w.append((char) i);
-					}
-				} finally {
-					r.close();
-				}
+								: new InputStreamReader(input, sourceEncoding)) {
+			int i;
+			while ((i = r.read()) != -1) {
+				w.append((char) i);
 			}
 		} catch (IOException e) {
 			throw new BuildException(

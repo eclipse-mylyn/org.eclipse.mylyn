@@ -17,6 +17,7 @@ package org.eclipse.mylyn.wikitext.ant.internal;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -207,17 +208,8 @@ public class MarkupToHtmlTask extends MarkupTask {
 			}
 
 			performValidation(source, markupContent);
-
-			Writer writer;
-			try {
-				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(htmlOutputFile)),
-						StandardCharsets.UTF_8);
-			} catch (Exception e) {
-				throw new BuildException(
-						MessageFormat.format(Messages.getString("MarkupToHtmlTask.16"), htmlOutputFile, e.getMessage()), //$NON-NLS-1$
-						e);
-			}
-			try {
+			try (Writer writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(htmlOutputFile)),
+					StandardCharsets.UTF_8)) {
 				HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer, formatOutput);
 				for (Stylesheet stylesheet : stylesheets) {
 					HtmlDocumentBuilder.Stylesheet builderStylesheet;
@@ -256,7 +248,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 
 				SplittingStrategy splittingStrategy = multipleOutputFiles
 						? new DefaultSplittingStrategy()
-						: new NoSplittingStrategy();
+								: new NoSplittingStrategy();
 				SplittingOutlineParser outlineParser = new SplittingOutlineParser();
 				outlineParser.setMarkupLanguage(markupLanguage.clone());
 				outlineParser.setSplittingStrategy(splittingStrategy);
@@ -276,15 +268,10 @@ public class MarkupToHtmlTask extends MarkupTask {
 				parser.parse(markupContent);
 
 				processed(markupContent, item, baseDir, source);
-			} finally {
-				try {
-					writer.close();
-				} catch (Exception e) {
-					throw new BuildException(
-							MessageFormat.format(Messages.getString("MarkupToHtmlTask.17"), htmlOutputFile, //$NON-NLS-1$
-									e.getMessage()),
-							e);
-				}
+			} catch (IOException e) {
+				throw new BuildException(
+						MessageFormat.format(Messages.getString("MarkupToHtmlTask.16"), htmlOutputFile, e.getMessage()), //$NON-NLS-1$
+						e);
 			}
 		}
 		return markupContent;
