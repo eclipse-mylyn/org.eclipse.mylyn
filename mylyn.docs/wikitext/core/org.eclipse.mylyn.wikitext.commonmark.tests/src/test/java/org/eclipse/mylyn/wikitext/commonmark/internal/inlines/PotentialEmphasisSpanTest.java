@@ -23,6 +23,7 @@ import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.TextSegment;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class PotentialEmphasisSpanTest extends AbstractSourceSpanTest {
 
 	public PotentialEmphasisSpanTest() {

@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class LineSequenceTest {
 
 	@Test(expected = NullPointerException.class)

@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import com.google.common.base.Strings;
 
+@SuppressWarnings("nls")
 public class ToStringHelperTest {
 	@Test
 	public void toStringValue() {

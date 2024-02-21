@@ -29,6 +29,7 @@ import java.util.function.Predicate;
 
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class LinesIterableTest {
 
 	@Test(expected = NullPointerException.class)

@@ -28,6 +28,7 @@ import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
 import org.eclipse.mylyn.wikitext.commonmark.internal.TextSegment;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class CursorTest {
 
 	@Test(expected = NullPointerException.class)

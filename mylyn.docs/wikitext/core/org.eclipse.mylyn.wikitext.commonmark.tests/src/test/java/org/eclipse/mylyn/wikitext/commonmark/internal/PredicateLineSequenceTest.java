@@ -22,6 +22,7 @@ import java.util.function.Predicate;
 
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class PredicateLineSequenceTest {
 
 	@Test(expected = NullPointerException.class)

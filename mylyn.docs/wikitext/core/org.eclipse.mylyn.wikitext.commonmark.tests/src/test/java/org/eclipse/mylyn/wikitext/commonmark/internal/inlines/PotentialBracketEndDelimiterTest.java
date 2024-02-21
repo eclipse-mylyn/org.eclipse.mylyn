@@ -27,6 +27,7 @@ import org.junit.Test;
 import com.google.common.escape.Escaper;
 import com.google.common.net.UrlEscapers;
 
+@SuppressWarnings("nls")
 public class PotentialBracketEndDelimiterTest {
 
 	private final Line line = new Line(0, 1, "test");

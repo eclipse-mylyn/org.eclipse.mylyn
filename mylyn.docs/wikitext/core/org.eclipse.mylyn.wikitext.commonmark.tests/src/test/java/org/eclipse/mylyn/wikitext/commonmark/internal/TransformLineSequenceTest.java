@@ -22,6 +22,7 @@ import java.util.function.Function;
 
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class TransformLineSequenceTest {
 
 	static final class UpperCaseTransform implements Function<Line, Line> {

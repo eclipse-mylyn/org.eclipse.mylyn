@@ -25,6 +25,7 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.Locator;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class InlineTest {
 
 	@Test

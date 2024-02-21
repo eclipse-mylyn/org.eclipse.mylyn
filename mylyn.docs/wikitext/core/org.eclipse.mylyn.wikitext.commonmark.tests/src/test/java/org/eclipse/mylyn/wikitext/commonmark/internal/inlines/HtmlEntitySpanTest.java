@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class HtmlEntitySpanTest extends AbstractSourceSpanTest {
 
 	public HtmlEntitySpanTest() {

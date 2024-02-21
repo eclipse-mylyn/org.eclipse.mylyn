@@ -20,6 +20,7 @@ import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class EmptyBlockTest {
 
 	@Test

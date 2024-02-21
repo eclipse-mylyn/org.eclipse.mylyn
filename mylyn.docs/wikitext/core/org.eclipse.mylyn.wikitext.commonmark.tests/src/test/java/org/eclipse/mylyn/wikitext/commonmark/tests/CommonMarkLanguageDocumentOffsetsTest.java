@@ -29,6 +29,7 @@ import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.util.LocatorImpl;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class CommonMarkLanguageDocumentOffsetsTest {
 
 	@Test

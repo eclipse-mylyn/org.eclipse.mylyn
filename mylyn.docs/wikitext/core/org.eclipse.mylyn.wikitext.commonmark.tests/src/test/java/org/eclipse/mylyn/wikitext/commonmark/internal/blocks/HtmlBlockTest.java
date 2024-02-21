@@ -22,6 +22,7 @@ import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class HtmlBlockTest {
 
 	private final HtmlBlock block = new HtmlBlock();

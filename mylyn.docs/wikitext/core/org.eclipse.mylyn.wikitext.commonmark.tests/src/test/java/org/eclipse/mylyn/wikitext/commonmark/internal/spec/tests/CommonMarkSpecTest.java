@@ -47,6 +47,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharStreams;
 import com.google.common.io.Resources;
 
+@SuppressWarnings("nls")
 @RunWith(Parameterized.class)
 public class CommonMarkSpecTest {
 
@@ -71,7 +72,7 @@ public class CommonMarkSpecTest {
 			4425, // Lists
 			4664, // Lists
 			4681 // Lists
-	);
+			);
 
 	public static class Expectation {
 
