@@ -27,6 +27,7 @@ import org.eclipse.mylyn.wikitext.ant.internal.MarkupToDocbookTask;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class MarkupToDocbookTaskTest extends AbstractTestAntTask {
 
 	private MarkupToDocbookTask task;
@@ -94,8 +95,7 @@ public class MarkupToDocbookTaskTest extends AbstractTestAntTask {
 
 	protected File createSimpleTextileMarkup() throws IOException {
 		File markupFile = new File(tempFolder, "markup.textile");
-		PrintWriter writer = new PrintWriter(new FileWriter(markupFile));
-		try (writer) {
+		try (PrintWriter writer = new PrintWriter(new FileWriter(markupFile))) {
 			writer.println("h1. First Heading");
 			writer.println();
 			writer.println("some content");

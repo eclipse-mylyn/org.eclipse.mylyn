@@ -27,6 +27,7 @@ import org.eclipse.mylyn.wikitext.ant.internal.MarkupToDitaTask;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 
 	private MarkupToDitaTask ditaTask;
@@ -47,8 +48,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 
 	private File createSimpleTextileMarkup() throws IOException {
 		File markupFile = new File(tempFolder, "markup.textile");
-		PrintWriter writer = new PrintWriter(new FileWriter(markupFile));
-		try (writer) {
+		try (PrintWriter writer = new PrintWriter(new FileWriter(markupFile))) {
 			writer.println("h1. First Heading");
 			writer.println();
 			writer.println("some content");
@@ -66,8 +66,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 
 	private File createTextileMarkupWithXref(int headingLevel) throws IOException {
 		File markupFile = new File(tempFolder, "markup.textile");
-		PrintWriter writer = new PrintWriter(new FileWriter(markupFile));
-		try (writer) {
+		try (PrintWriter writer = new PrintWriter(new FileWriter(markupFile))) {
 			writer.println("h" + headingLevel + "(#Id1). First Heading");
 			writer.println();
 			writer.println("some content with a \"ref to 2\":#Id2");
@@ -81,8 +80,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 
 	private File createSimpleTextileMarkupWithFQNHeadings() throws IOException {
 		File markupFile = new File(tempFolder, "markup.textile");
-		PrintWriter writer = new PrintWriter(new FileWriter(markupFile));
-		try (writer) {
+		try (PrintWriter writer = new PrintWriter(new FileWriter(markupFile))) {
 			writer.println("h1. " + MarkupToDitaTaskTest.class.getName());
 			writer.println();
 			writer.println("some content");

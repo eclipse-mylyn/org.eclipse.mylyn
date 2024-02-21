@@ -26,6 +26,7 @@ import org.eclipse.mylyn.wikitext.ant.internal.MarkupToEclipseHelpTask;
 import org.eclipse.mylyn.wikitext.ant.internal.MarkupToHtmlTask;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 
 	@Override
@@ -101,8 +102,7 @@ public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {
 
 	protected File createSimpleTextileMarkupWithMultiLevelHeadings() throws IOException {
 		File markupFile = new File(tempFolder, "markup.textile");
-		PrintWriter writer = new PrintWriter(new FileWriter(markupFile));
-		try (writer) {
+		try (PrintWriter writer = new PrintWriter(new FileWriter(markupFile))) {
 			writer.println("h1. First Heading");
 			writer.println();
 			writer.println("some content");

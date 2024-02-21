@@ -26,6 +26,7 @@ import org.eclipse.mylyn.wikitext.ant.internal.MarkupToXslfoTask;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class MarkupToXslfoTaskTest extends AbstractTestAntTask {
 
 	private MarkupToXslfoTask task;
@@ -61,8 +62,7 @@ public class MarkupToXslfoTaskTest extends AbstractTestAntTask {
 
 	protected File createSimpleTextileMarkup() throws IOException {
 		File markupFile = new File(tempFolder, "markup.textile");
-		PrintWriter writer = new PrintWriter(new FileWriter(markupFile));
-		try (writer) {
+		try (PrintWriter writer = new PrintWriter(new FileWriter(markupFile))) {
 			writer.println("h1. First Heading");
 			writer.println();
 			writer.println("some content");

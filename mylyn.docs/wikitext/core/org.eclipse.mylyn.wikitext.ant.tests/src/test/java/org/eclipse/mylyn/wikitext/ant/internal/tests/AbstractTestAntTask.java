@@ -28,6 +28,7 @@ import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 import org.junit.After;
 import org.junit.Before;
 
+@SuppressWarnings("nls")
 public abstract class AbstractTestAntTask {
 
 	protected File tempFolder;

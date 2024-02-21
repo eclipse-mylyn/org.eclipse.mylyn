@@ -34,6 +34,7 @@ import org.junit.Test;
  * @author David Green
  * @author Torkild U. Resheim
  */
+@SuppressWarnings("nls")
 public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 
 	protected MarkupToHtmlTask task;
@@ -268,8 +269,7 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 
 	protected File createSimpleTextileMarkupWithImage() throws IOException {
 		File markupFile = new File(tempFolder, "markup.textile");
-		PrintWriter writer = new PrintWriter(new FileWriter(markupFile));
-		try (writer) {
+		try (PrintWriter writer = new PrintWriter(new FileWriter(markupFile))) {
 			writer.println("some content with !image.png! an image");
 		}
 		return markupFile;
