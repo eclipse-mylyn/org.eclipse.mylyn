@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.mylyn.wikitext.osgi
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.osgi
@@ -8,7 +9,6 @@ Bundle-Localization: META-INF/l10n/bundle
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="4.2.0"
-Export-Package: org.eclipse.mylyn.wikitext.core.osgi
+Export-Package: org.eclipse.mylyn.wikitext.core.osgi;x-internal:=true
 Import-Package: org.osgi.framework;version="1.5.0",
  com.google.common.base;version="[33.0.0,34.0.0)"
-Automatic-Module-Name: org.eclipse.mylyn.wikitext.osgi

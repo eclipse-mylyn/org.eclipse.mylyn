@@ -40,6 +40,6 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.tasks.ui;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.tasks.ui.preferences;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.tasks.ui.util;x-friends:="org.eclipse.mylyn.wikitext.ui.tests",
  org.eclipse.mylyn.internal.wikitext.tasks.ui.util.bugzilla;x-internal:=true,
- org.eclipse.mylyn.wikitext.tasks.ui.editor
+ org.eclipse.mylyn.wikitext.tasks.ui.editor;x-internal:=true
 Bundle-Activator: org.eclipse.mylyn.internal.wikitext.tasks.ui.WikiTextTasksUiPlugin
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.tasks.ui

@@ -16,7 +16,7 @@ Import-Package: com.google.common.base;version="[33.0,34.0)",
  org.junit.rules,
  org.junit.runner,
  org.junit.runners.model
-Export-Package: org.eclipse.mylyn.wikitext.toolkit;version="4.2.0";
+Export-Package: org.eclipse.mylyn.wikitext.toolkit;version="4.2.0";x-internal:=true;
   uses:="org.eclipse.mylyn.wikitext.parser,
    org.eclipse.mylyn.wikitext.parser.markup,
    org.eclipse.mylyn.wikitext.util,
