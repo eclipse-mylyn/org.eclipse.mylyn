@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2024 Tasktop Technologies.
+ * Copyright (c) 2011, 2024 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -29,6 +29,7 @@ import org.junit.Test;
 /**
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class HtmlToMarkupTaskTest extends AbstractTestAntTask {
 
 	private HtmlToMarkupTask task;
@@ -63,8 +64,7 @@ public class HtmlToMarkupTaskTest extends AbstractTestAntTask {
 
 	private File createSimpleHtmlMarkup() throws IOException {
 		File htmlFile = new File(tempFolder, "markup.html");
-		PrintWriter writer = new PrintWriter(new FileWriter(htmlFile));
-		try (writer) {
+		try (PrintWriter writer = new PrintWriter(new FileWriter(htmlFile))) {
 			writer.println(
 					"<html><body>\n<h1>First Heading</h1>\n\n<p>some content</p>\n<h1>Second Heading</h1>\n<p>some more content</p></body></html>");
 		}
