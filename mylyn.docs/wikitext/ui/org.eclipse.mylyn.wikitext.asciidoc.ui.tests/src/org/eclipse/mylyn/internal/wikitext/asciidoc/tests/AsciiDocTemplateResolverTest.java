@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2021 Max Rydahl Andersen and others.
+ * Copyright (c) 2015, 2024 Max Rydahl Andersen and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Max Rydahl Andersen- initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
@@ -28,7 +29,7 @@ import org.junit.Test;
  *
  * @author Max Rydahl Andersen
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "nls", "restriction" })
 public class AsciiDocTemplateResolverTest {
 
 	private Templates templates;
