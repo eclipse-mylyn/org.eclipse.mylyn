@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -33,7 +33,7 @@ abstract class AbstractHtmlBlock extends SourceBlock {
 		while (line != null) {
 			String lineText = line.getText();
 			builder.charactersUnescaped(lineText);
-			builder.charactersUnescaped("\n");
+			builder.charactersUnescaped("\n"); //$NON-NLS-1$
 
 			lineSequence.advance();
 

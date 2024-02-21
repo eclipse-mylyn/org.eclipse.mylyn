@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.blocks;
@@ -23,7 +24,7 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 
 public class HorizontalRuleBlock extends SourceBlock {
 
-	private static final Pattern PATTERN = Pattern.compile(" {0,3}((\\*[ \t]*){3,}|(-[ \t]*){3,}|(_[ \t]*){3,})");
+	private static final Pattern PATTERN = Pattern.compile(" {0,3}((\\*[ \t]*){3,}|(-[ \t]*){3,}|(_[ \t]*){3,})"); //$NON-NLS-1$
 
 	@Override
 	public void process(ProcessingContext context, DocumentBuilder builder, LineSequence lineSequence) {

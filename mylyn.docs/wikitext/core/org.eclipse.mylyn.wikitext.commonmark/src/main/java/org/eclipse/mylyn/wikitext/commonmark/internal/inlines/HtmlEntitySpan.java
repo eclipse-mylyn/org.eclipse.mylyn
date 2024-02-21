@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
@@ -21,7 +22,7 @@ import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 
 public class HtmlEntitySpan extends SourceSpan {
 
-	private final Pattern pattern = Pattern.compile("&(#x[a-f0-9]{1,8}|#[0-9]{1,8}|[a-z][a-z0-9]{1,31});.*",
+	private final Pattern pattern = Pattern.compile("&(#x[a-f0-9]{1,8}|#[0-9]{1,8}|[a-z][a-z0-9]{1,31});.*", //$NON-NLS-1$
 			Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
 	@Override
@@ -37,7 +38,7 @@ public class HtmlEntitySpan extends SourceSpan {
 				Line lineAtOffset = cursor.getLineAtOffset();
 
 				if (isInvalidUnicodeCodepoint(ent)) {
-					return Optional.of(new Characters(lineAtOffset, offset, length, "\ufffd"));
+					return Optional.of(new Characters(lineAtOffset, offset, length, "\ufffd")); //$NON-NLS-1$
 				}
 				return Optional.of(new HtmlEntity(lineAtOffset, offset, length, ent));
 			}

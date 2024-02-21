@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
@@ -19,7 +20,7 @@ import java.util.regex.Pattern;
 
 public class StringCharactersSpan extends SourceSpan {
 
-	private final Pattern pattern = Pattern.compile("((?: *[^\n `\\[\\]\\\\!<&*_h]+)+).*", Pattern.DOTALL);
+	private final Pattern pattern = Pattern.compile("((?: *[^\n `\\[\\]\\\\!<&*_h]+)+).*", Pattern.DOTALL); //$NON-NLS-1$
 
 	@Override
 	public Optional<? extends Inline> createInline(Cursor cursor) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
@@ -75,11 +76,11 @@ public class SimpleLocator implements Locator {
 
 	@Override
 	public String toString() {
-		return toStringHelper(Locator.class).add("lineNumber", lineNumber)
-				.add("lineDocumentOffset", lineDocumentOffset)
-				.add("lineLength", lineLength)
-				.add("lineCharacterOffset", lineCharacterOffset)
-				.add("lineSegmentEndOffset", lineSegmentEndOffset)
+		return toStringHelper(Locator.class).add("lineNumber", lineNumber) //$NON-NLS-1$
+				.add("lineDocumentOffset", lineDocumentOffset) //$NON-NLS-1$
+				.add("lineLength", lineLength) //$NON-NLS-1$
+				.add("lineCharacterOffset", lineCharacterOffset) //$NON-NLS-1$
+				.add("lineSegmentEndOffset", lineSegmentEndOffset) //$NON-NLS-1$
 				.toString();
 	}
 }

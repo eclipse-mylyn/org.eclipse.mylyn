@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
@@ -21,7 +22,7 @@ import com.google.common.base.Strings;
 
 public class CodeSpan extends SourceSpan {
 
-	Pattern pattern = Pattern.compile("(`+).*", Pattern.DOTALL | Pattern.MULTILINE);
+	Pattern pattern = Pattern.compile("(`+).*", Pattern.DOTALL | Pattern.MULTILINE); //$NON-NLS-1$
 
 	@Override
 	public Optional<? extends Inline> createInline(Cursor cursor) {
@@ -31,7 +32,7 @@ public class CodeSpan extends SourceSpan {
 			if (matcher.matches()) {
 				String openingBackticks = matcher.group(1);
 				int backtickCount = openingBackticks.length();
-				Pattern closingPattern = Pattern.compile("(?<!`)(" + Strings.repeat("`", backtickCount) + ")([^`]|$)",
+				Pattern closingPattern = Pattern.compile("(?<!`)(" + Strings.repeat("`", backtickCount) + ")([^`]|$)", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						Pattern.DOTALL | Pattern.MULTILINE);
 				cursor.advance(backtickCount);
 				String textAtOffset = cursor.getTextAtOffset();

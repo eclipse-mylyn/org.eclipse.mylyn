@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
@@ -23,6 +24,7 @@ import com.google.common.net.UrlEscapers;
 
 public class AutoLinkSpan extends SourceSpan {
 
+	@SuppressWarnings("nls")
 	private static final Set<String> SCHEMES = Set.of("coap", "doi", "javascript", "aaa", "aaas", "about", "acap",
 			"cap", "cid", "crid", "data", "dav", "dict", "dns", "file", "ftp", "geo", "go", "gopher", "h323", "http",
 			"https", "iax", "icap", "im", "imap", "info", "ipp", "iris", "iris.beep", "iris.xpc", "iris.xpcs",
@@ -40,10 +42,10 @@ public class AutoLinkSpan extends SourceSpan {
 			"things", "udp", "unreal", "ut2004", "ventrilo", "view-source", "webcal", "wtai", "wyciwyg", "xfire", "xri",
 			"ymsgr");
 
-	private static final String EMAIL_DOMAIN_PART = "[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?";
+	private static final String EMAIL_DOMAIN_PART = "[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?"; //$NON-NLS-1$
 
-	private static final String EMAIL_REGEX = "[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@" + EMAIL_DOMAIN_PART + "(?:\\."
-			+ EMAIL_DOMAIN_PART + ")*";
+	private static final String EMAIL_REGEX = "[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@" + EMAIL_DOMAIN_PART + "(?:\\." //$NON-NLS-1$ //$NON-NLS-2$
+			+ EMAIL_DOMAIN_PART + ")*"; //$NON-NLS-1$
 
 	private final Pattern linkPattern = createLinkPattern();
 
@@ -57,7 +59,7 @@ public class AutoLinkSpan extends SourceSpan {
 				String link = href;
 				String email = matcher.group(2);
 				if (email != null) {
-					link = "mailto:" + email;
+					link = "mailto:" + email; //$NON-NLS-1$
 				}
 				int endOffset = cursor.getOffset(matcher.end(3));
 				int linkLength = endOffset - cursor.getOffset();
@@ -70,20 +72,20 @@ public class AutoLinkSpan extends SourceSpan {
 	}
 
 	private String escapeUri(String link) {
-		return UrlEscapers.urlFragmentEscaper().escape(link).replace("%23", "#").replace("%25", "%");
+		return UrlEscapers.urlFragmentEscaper().escape(link).replace("%23", "#").replace("%25", "%"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 
 	private Pattern createLinkPattern() {
-		String regex = "";
+		String regex = ""; //$NON-NLS-1$
 		for (String scheme : SCHEMES) {
 			if (regex.isEmpty()) {
-				regex += "<((?:(?:";
+				regex += "<((?:(?:"; //$NON-NLS-1$
 			} else {
-				regex += "|";
+				regex += "|"; //$NON-NLS-1$
 			}
-			regex += scheme.replace(".", "\\.");
+			regex += scheme.replace(".", "\\."); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		regex += "):[^\\s>]+)|(" + EMAIL_REGEX + "))(>).*";
+		regex += "):[^\\s>]+)|(" + EMAIL_REGEX + "))(>).*"; //$NON-NLS-1$ //$NON-NLS-2$
 		return Pattern.compile(regex, Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 	}
 }

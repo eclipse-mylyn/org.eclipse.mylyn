@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.blocks;
@@ -17,10 +18,10 @@ import java.util.regex.Pattern;
 
 public class HtmlType1Block extends AbstractHtmlBlock {
 
-	private final Pattern startPattern = Pattern.compile("\\s{0,3}(<(?:pre|script|style))(\\s|>|$).*",
+	private final Pattern startPattern = Pattern.compile("\\s{0,3}(<(?:pre|script|style))(\\s|>|$).*", //$NON-NLS-1$
 			Pattern.CASE_INSENSITIVE);
 
-	private final Pattern closePattern = Pattern.compile("\\s{0,3}</(?:pre|script|style)\\s*>",
+	private final Pattern closePattern = Pattern.compile("\\s{0,3}</(?:pre|script|style)\\s*>", //$NON-NLS-1$
 			Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
 
 	@Override
