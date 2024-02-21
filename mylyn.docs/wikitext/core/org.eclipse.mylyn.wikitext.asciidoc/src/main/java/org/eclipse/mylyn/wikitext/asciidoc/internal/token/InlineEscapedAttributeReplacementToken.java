@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Jeremie Bresson and others.
+ * Copyright (c) 2017, 2024 Jeremie Bresson and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Jeremie Bresson - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.asciidoc.internal.token;
@@ -20,7 +21,7 @@ public class InlineEscapedAttributeReplacementToken extends PatternBasedElement 
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "\\\\(\\{\\w+\\})";
+		return "\\\\(\\{\\w+\\})"; //$NON-NLS-1$
 	}
 
 	@Override

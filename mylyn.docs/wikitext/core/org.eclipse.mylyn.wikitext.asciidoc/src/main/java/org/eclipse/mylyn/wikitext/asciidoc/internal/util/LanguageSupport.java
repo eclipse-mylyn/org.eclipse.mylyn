@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Max Rydhal Andersen and others.
+ * Copyright (c) 2015, 2024 Max Rydhal Andersen and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
  *     David Green - initial API and implementation
  *     Max Rydahl Andersen - Bug 474084
  *     Patrik Suzzi <psuzzi@gmail.com> - Bug 474084
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.asciidoc.internal.util;
@@ -75,11 +76,11 @@ public class LanguageSupport {
 				value = matcher.group(2);
 				properties.put(key, value);
 			} else // could not parse key/value pairs
-			if (positionalParameters.isEmpty()) {
-				//no more positional items left - ignoring
-			} else {
-				properties.put(positionalParameters.remove(0), pair.trim());
-			}
+				if (positionalParameters.isEmpty()) {
+					//no more positional items left - ignoring
+				} else {
+					properties.put(positionalParameters.remove(0), pair.trim());
+				}
 		}
 
 		return properties;
@@ -142,7 +143,7 @@ public class LanguageSupport {
 	}
 
 	public static int computeHeadingLevel(int initialLevel, AsciiDocContentState state) {
-		String attributeValue = state.getAttributeOrValue(AsciiDocContentState.ATTRIBUTE_LEVELOFFSET, "0");
+		String attributeValue = state.getAttributeOrValue(AsciiDocContentState.ATTRIBUTE_LEVELOFFSET, "0"); //$NON-NLS-1$
 		int levelOffset;
 		try {
 			levelOffset = Integer.parseInt(attributeValue);

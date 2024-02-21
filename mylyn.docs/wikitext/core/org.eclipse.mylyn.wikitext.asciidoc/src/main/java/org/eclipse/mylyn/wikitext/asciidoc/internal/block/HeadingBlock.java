@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2024 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Stefan Seelmann - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.asciidoc.internal.block;
@@ -74,8 +75,8 @@ public class HeadingBlock extends Block {
 				setClosed(true);
 			} else {
 				lineCount++;
-				String tocAttribute = getAsciiDocState().getAttribute("toc");
-				if (tocAttribute != null && !"macro".equals(tocAttribute)) {
+				String tocAttribute = getAsciiDocState().getAttribute("toc"); //$NON-NLS-1$
+				if (tocAttribute != null && !"macro".equals(tocAttribute)) { //$NON-NLS-1$
 					emitTableOfContent();
 				}
 			}
@@ -123,7 +124,7 @@ public class HeadingBlock extends Block {
 
 		HeadingAttributes attributes = new HeadingAttributes();
 		if (level == 1) {
-			attributes.setId("header");
+			attributes.setId("header"); //$NON-NLS-1$
 		} else {
 			attributes.setId(state.getIdGenerator().newId(null, text));
 		}
@@ -138,20 +139,20 @@ public class HeadingBlock extends Block {
 	}
 
 	private boolean processAuthors(String line) {
-		Matcher authorMatcher = Pattern.compile("(?:^|;)\\s*((?:\\w+\\s+)+)\\s*<([^>]+)>\\s*").matcher(line);
+		Matcher authorMatcher = Pattern.compile("(?:^|;)\\s*((?:\\w+\\s+)+)\\s*<([^>]+)>\\s*").matcher(line); //$NON-NLS-1$
 		int authorCount = 0;
 		while (authorMatcher.find()) {
 			if (authorCount == 0) {
-				Attributes attributes = new Attributes(null, "details", null, null);
+				Attributes attributes = new Attributes(null, "details", null, null); //$NON-NLS-1$
 				builder.beginBlock(BlockType.DIV, attributes);
 			}
 			authorCount++;
-			String idCount = authorCount > 1 ? Integer.toString(authorCount) : "";
-			Attributes attributes = new Attributes("author" + idCount, "author", null, null);
+			String idCount = authorCount > 1 ? Integer.toString(authorCount) : ""; //$NON-NLS-1$
+			Attributes attributes = new Attributes("author" + idCount, "author", null, null); //$NON-NLS-1$//$NON-NLS-2$
 			builder.beginSpan(SpanType.SPAN, attributes);
 			getMarkupLanguage().emitMarkupLine(getParser(), state, authorMatcher.group(1).trim(), 0);
 			builder.endSpan();
-			attributes = new Attributes("email" + idCount, "email", null, null);
+			attributes = new Attributes("email" + idCount, "email", null, null); //$NON-NLS-1$ //$NON-NLS-2$
 			builder.beginSpan(SpanType.SPAN, attributes);
 			getMarkupLanguage().emitMarkupLine(getParser(), state, authorMatcher.group(2).trim(), 0);
 			builder.endSpan();

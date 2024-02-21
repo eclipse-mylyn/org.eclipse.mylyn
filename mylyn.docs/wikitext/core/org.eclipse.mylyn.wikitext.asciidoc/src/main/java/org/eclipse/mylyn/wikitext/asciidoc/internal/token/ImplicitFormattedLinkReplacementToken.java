@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Max Rydahl Andersen and others.
+ * Copyright (c) 2015, 2024 Max Rydahl Andersen and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Max Rydahl Andersen- initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.asciidoc.internal.token;
@@ -48,9 +49,9 @@ public class ImplicitFormattedLinkReplacementToken extends PatternBasedElement {
 			String href = group(2);
 			String text = group(3);
 			LinkAttributes attributes = new LinkAttributes();
-			if (text.endsWith("^")) {
+			if (text.endsWith("^")) { //$NON-NLS-1$
 				text = text.substring(0, text.length() - 1);
-				attributes.setTarget("_blank");
+				attributes.setTarget("_blank"); //$NON-NLS-1$
 			}
 			builder.link(attributes, href, text);
 		}

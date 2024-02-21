@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Jeremie Bresson and others.
+ * Copyright (c) 2016, 2024 Jeremie Bresson and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Jeremie Bresson - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.asciidoc.internal.block;
@@ -142,13 +143,13 @@ public class TableBlock extends AsciiDocBlock {
 							cellSpan = 1;
 						}
 						String alignGroup = rowCellMatcher.group(2);
-						openCellBlock(alignGroup == null ? "" : alignGroup);
+						openCellBlock(alignGroup == null ? "" : alignGroup); //$NON-NLS-1$
 					}
 				} else {
 					if (!found && !isColFormatKnown()) {
 						colsAttribute = LanguageSupport.createDefaultColumnsAttributeList(cellsCount + 1);
 					}
-					openCellBlock("");
+					openCellBlock(""); //$NON-NLS-1$
 					handleCellContent(cellContent, contentOffset, false);
 					closeCellBlockIfNeeded();
 				}
@@ -195,14 +196,14 @@ public class TableBlock extends AsciiDocBlock {
 		}
 		attributes.setColspan(cellSpan > 1 ? Integer.toString(cellSpan) : null);
 		switch (alignCode) {
-			case "<":
-				attributes.setAlign("left");
+			case "<": //$NON-NLS-1$
+				attributes.setAlign("left"); //$NON-NLS-1$
 				break;
-			case "^":
-				attributes.setAlign("center");
+			case "^": //$NON-NLS-1$
+				attributes.setAlign("center"); //$NON-NLS-1$
 				break;
-			case ">":
-				attributes.setAlign("right");
+			case ">": //$NON-NLS-1$
+				attributes.setAlign("right"); //$NON-NLS-1$
 				break;
 			default:
 				break;
@@ -217,10 +218,10 @@ public class TableBlock extends AsciiDocBlock {
 		if (!cellBlockIsOpen) {
 			return;
 		}
-		String blockContent = append ? " " : "";
+		String blockContent = append ? " " : ""; //$NON-NLS-1$ //$NON-NLS-2$
 		if (format == TableFormat.COMMA_SEPARATED_VALUES) {
-			if (cellContent.startsWith("\"") && cellContent.endsWith("\"")) {
-				blockContent += cellContent.substring(1, cellContent.length() - 1).replace("\"\"", "\"");
+			if (cellContent.startsWith("\"") && cellContent.endsWith("\"")) { //$NON-NLS-1$ //$NON-NLS-2$
+				blockContent += cellContent.substring(1, cellContent.length() - 1).replace("\"\"", "\""); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
 				blockContent += cellContent;
 			}
