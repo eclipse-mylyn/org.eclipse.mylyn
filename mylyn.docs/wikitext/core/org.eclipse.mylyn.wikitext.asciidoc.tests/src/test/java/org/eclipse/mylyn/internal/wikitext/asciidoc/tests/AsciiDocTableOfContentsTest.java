@@ -21,6 +21,7 @@ import org.junit.Test;
  *
  * @author Fabrizio Iannetti
  */
+@SuppressWarnings("nls")
 public class AsciiDocTableOfContentsTest extends AsciiDocLanguageTestBase {
 
 	@Test
@@ -39,7 +40,7 @@ public class AsciiDocTableOfContentsTest extends AsciiDocLanguageTestBase {
 				==== section 1.1.1 ====
 
 				"""
-		);
+				);
 		String expectedHtml = """
 				<h1 id="header">test</h1>\
 				<ol class="toc" style="list-style: none;">\
@@ -75,7 +76,7 @@ public class AsciiDocTableOfContentsTest extends AsciiDocLanguageTestBase {
 				==== section 1.1.1 ====
 
 				"""
-		);
+				);
 		String expectedHtml = """
 				<ol class="toc" style="list-style: none;">\
 				<li><a href="#_section_1">section 1</a>\
@@ -115,7 +116,7 @@ public class AsciiDocTableOfContentsTest extends AsciiDocLanguageTestBase {
 				====== section 1.1.1.1.1 ======
 
 				"""
-		);
+				);
 		String expectedHtml = """
 				<h1 id="header">test</h1>\
 				<ol class="toc" style="list-style: none;">\
@@ -165,7 +166,7 @@ public class AsciiDocTableOfContentsTest extends AsciiDocLanguageTestBase {
 				==== section 1.1.1 ====
 
 				"""
-		);
+				);
 		String expectedHtml = """
 				<h1 id="header">test</h1>\
 				<div class="title">Contents</div>\

@@ -17,6 +17,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class AsciiDocLanguageHorizontalRuleTest extends AsciiDocLanguageTestBase {
 
 	@Test

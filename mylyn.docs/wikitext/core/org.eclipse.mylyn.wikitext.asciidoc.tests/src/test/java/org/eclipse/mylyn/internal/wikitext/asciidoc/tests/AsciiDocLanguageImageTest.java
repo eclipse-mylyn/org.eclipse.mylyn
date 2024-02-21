@@ -23,6 +23,7 @@ import org.junit.Test;
  *
  * @author Max Rydahl Andersen
  */
+@SuppressWarnings("nls")
 public class AsciiDocLanguageImageTest extends AsciiDocLanguageTestBase {
 
 	@Test
@@ -47,12 +48,12 @@ public class AsciiDocLanguageImageTest extends AsciiDocLanguageTestBase {
 				"You can find image:http://upload.wikimedia.org/wikipedia/commons/3/35/Tux.svg[Linux,25,35] everywhere these days.");
 		assertEquals(
 				"""
-						<p>You can find\s\
-						<span class="image">\
-						<img height="35" width="25" alt="Linux" border="0" src="http://upload.wikimedia.org/wikipedia/commons/3/35/Tux.svg"/>\
-						</span>\
-						 everywhere these days.</p>
-						""",
+				<p>You can find\s\
+				<span class="image">\
+				<img height="35" width="25" alt="Linux" border="0" src="http://upload.wikimedia.org/wikipedia/commons/3/35/Tux.svg"/>\
+				</span>\
+				 everywhere these days.</p>
+				""",
 				html);
 	}
 
@@ -75,14 +76,14 @@ public class AsciiDocLanguageImageTest extends AsciiDocLanguageTestBase {
 		String html = parseToHtml("image::sunset.jpg[Sunset]");
 		assertEquals(
 				"""
-						<p>\
-						<div class="imageblock">\
-						<div class="content">\
-						<img alt="Sunset" border="0" src="sunset.jpg"/>\
-						</div>\
-						</div>\
-						</p>
-						""", html);
+				<p>\
+				<div class="imageblock">\
+				<div class="content">\
+				<img alt="Sunset" border="0" src="sunset.jpg"/>\
+				</div>\
+				</div>\
+				</p>
+				""", html);
 
 	}
 
@@ -107,17 +108,17 @@ public class AsciiDocLanguageImageTest extends AsciiDocLanguageTestBase {
 				+ "alt=\"Sunset\", width=\"300\", height=\"200\", link=\"http://www.flickr.com/photos/javh/5448336655\"]");
 		assertEquals(
 				"""
-						<p>\
-						<div class="imageblock">\
-						<div class="content">\
-						<a href="http://www.flickr.com/photos/javh/5448336655" class="image">\
-						<img height="200" width="300" alt="Sunset" border="0" src="sunset.jpg"/>\
-						</a>\
-						</div>\
-						<div class="title">Figure 1: A mountain sunset</div>\
-						</div>\
-						</p>
-						""", html);
+				<p>\
+				<div class="imageblock">\
+				<div class="content">\
+				<a href="http://www.flickr.com/photos/javh/5448336655" class="image">\
+				<img height="200" width="300" alt="Sunset" border="0" src="sunset.jpg"/>\
+				</a>\
+				</div>\
+				<div class="title">Figure 1: A mountain sunset</div>\
+				</div>\
+				</p>
+				""", html);
 	}
 
 	@Test

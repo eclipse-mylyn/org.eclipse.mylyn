@@ -22,6 +22,7 @@ import org.junit.Test;
  * @author Stefan Seelmann
  * @author Max Rydahl Andersen
  */
+@SuppressWarnings("nls")
 public class AsciiDocLanguageTest extends AsciiDocLanguageTestBase {
 
 	@Test

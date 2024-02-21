@@ -29,6 +29,7 @@ import org.junit.Test;
  *
  * @author Max Rydahl Andersen
  */
+@SuppressWarnings("nls")
 public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase {
 
 	@Test
@@ -635,13 +636,13 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 				"= Title =\nSam One <sam.one@example.com>; Sam Two <https://example.com/samtwo[@samtwo]>\n");
 		String expectedHtml = //
 				"""
-						<h1 id="header">Title</h1>\
-						<div class="details">\
-						<span id="author" class="author">Sam One</span>\
-						<span id="email" class="email"><a href="mailto:sam.one@example.com">sam.one@example.com</a></span>\
-						<span id="author2" class="author">Sam Two</span>\
-						<span id="email2" class="email"><a href="https://example.com/samtwo">@samtwo</a></span>\
-						</div>""";
+				<h1 id="header">Title</h1>\
+				<div class="details">\
+				<span id="author" class="author">Sam One</span>\
+				<span id="email" class="email"><a href="mailto:sam.one@example.com">sam.one@example.com</a></span>\
+				<span id="author2" class="author">Sam Two</span>\
+				<span id="email2" class="email"><a href="https://example.com/samtwo">@samtwo</a></span>\
+				</div>""";
 		assertEquals(expectedHtml, html);
 	}
 
