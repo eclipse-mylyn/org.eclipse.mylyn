@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2024 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
  *     Max Rydahl Andersen - Bug 474084
  *     Patrik Suzzi <psuzzi@gmail.com> - Bug 481670, 474084
  *     Jeremie Bresson - Bug 488246
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.asciidoc;
@@ -141,7 +142,7 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 		phraseModifierSyntax.add(new InlineImageReplacementToken());
 
 		// pass-through
-		phraseModifierSyntax.add(new SimplePhraseModifier("+++", SpanType.SPAN, Mode.SPECIAL));
+		phraseModifierSyntax.add(new SimplePhraseModifier("+++", SpanType.SPAN, Mode.SPECIAL)); //$NON-NLS-1$
 
 		// emphasis span elements
 		phraseModifierSyntax.add(new SimplePhraseModifier("``", SpanType.CODE, Mode.NESTING)); //$NON-NLS-1$
@@ -150,16 +151,16 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 		phraseModifierSyntax.add(new SimplePhraseModifier("__", SpanType.EMPHASIS, Mode.NESTING)); //$NON-NLS-1$
 
 		// emphasis span elements on word boundaries
-		phraseModifierSyntax.beginGroup("(?:(?<=\\W)|^)(?:", 0);
+		phraseModifierSyntax.beginGroup("(?:(?<=\\W)|^)(?:", 0); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.STRONG, Mode.NESTING)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("_", SpanType.EMPHASIS, Mode.NESTING)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("`", SpanType.CODE, Mode.NESTING)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("+", SpanType.SPAN, Mode.NORMAL)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new CssClassPhraseModifier());
-		phraseModifierSyntax.endGroup(")(?:(?=\\W)|$)", 0);
+		phraseModifierSyntax.endGroup(")(?:(?=\\W)|$)", 0); //$NON-NLS-1$
 
-		phraseModifierSyntax.add(new SimplePhraseModifier("^", SpanType.SUPERSCRIPT, Mode.NESTING));
-		phraseModifierSyntax.add(new SimplePhraseModifier("~", SpanType.SUBSCRIPT, Mode.NESTING));
+		phraseModifierSyntax.add(new SimplePhraseModifier("^", SpanType.SUPERSCRIPT, Mode.NESTING)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("~", SpanType.SUBSCRIPT, Mode.NESTING)); //$NON-NLS-1$
 	}
 
 	@Override

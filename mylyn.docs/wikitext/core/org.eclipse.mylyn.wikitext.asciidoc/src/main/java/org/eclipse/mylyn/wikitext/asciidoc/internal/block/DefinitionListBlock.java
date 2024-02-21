@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 Fabrizio Iannetti and others.
+ * Copyright (c) 2007, 2024 Fabrizio Iannetti and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Fabrizio Iannetti - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.asciidoc.internal.block;
@@ -87,7 +88,7 @@ public class DefinitionListBlock extends Block {
 
 	private void openLevel(int level) {
 		if (!isCurrentLevel(0) && !blockItemIsOpen) {
-			openItemBlock("", 0);
+			openItemBlock("", 0); //$NON-NLS-1$
 		}
 		builder.beginBlock(BlockType.DEFINITION_LIST, new ListAttributes());
 		levels.push(level);

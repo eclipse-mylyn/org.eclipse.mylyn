@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.asciidoc.internal.block;
@@ -41,8 +42,8 @@ public class TableOfContentsBlock extends AbstractTableOfContentsBlock {
 			setClosed(true);
 			return 0;
 		}
-		String tocAttribute = getAsciiDocState().getAttribute("toc");
-		if ("macro".equals(tocAttribute)) {
+		String tocAttribute = getAsciiDocState().getAttribute("toc"); //$NON-NLS-1$
+		if ("macro".equals(tocAttribute)) { //$NON-NLS-1$
 			emitFullToc();
 		}
 
@@ -52,7 +53,7 @@ public class TableOfContentsBlock extends AbstractTableOfContentsBlock {
 	public void emitFullToc() {
 		if (!getMarkupLanguage().isFilterGenerativeContents()) {
 			setMaxLevel(1 + getTocLevelsAttribute());
-			String tocTitle = getAsciiDocState().getAttribute("toc-title");
+			String tocTitle = getAsciiDocState().getAttribute("toc-title"); //$NON-NLS-1$
 			OutlineParser outlineParser = new OutlineParser(new AsciiDocLanguage());
 			OutlineItem rootItem = outlineParser.parse(state.getMarkupContent());
 			List<OutlineItem> zeroLevelItems = rootItem.getChildren();
@@ -66,7 +67,7 @@ public class TableOfContentsBlock extends AbstractTableOfContentsBlock {
 	private void emitTocTitle(String tocTitle) {
 		if (tocTitle != null) {
 			Attributes attributes = new Attributes();
-			attributes.setCssClass("title");
+			attributes.setCssClass("title"); //$NON-NLS-1$
 			builder.beginBlock(BlockType.DIV, attributes);
 			builder.characters(tocTitle);
 			builder.endBlock();
@@ -77,7 +78,7 @@ public class TableOfContentsBlock extends AbstractTableOfContentsBlock {
 		int tocLevel = tocLevelDefault;
 		try {
 			tocLevel = Integer
-					.parseInt(getAsciiDocState().getAttributeOrValue("toclevels", Integer.toString(tocLevelDefault)));
+					.parseInt(getAsciiDocState().getAttributeOrValue("toclevels", Integer.toString(tocLevelDefault))); //$NON-NLS-1$
 		} catch (NumberFormatException e) {
 			// leave default in case of parsing error
 		}

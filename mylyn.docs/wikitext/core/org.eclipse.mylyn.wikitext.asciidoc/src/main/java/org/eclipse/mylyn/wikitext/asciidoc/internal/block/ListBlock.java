@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Patrik Suzzi and others.
+ * Copyright (c) 2015, 2024 Patrik Suzzi and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Patrik Suzzi - Bug 481670 - [asciidoc] support for lists
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.asciidoc.internal.block;
@@ -37,19 +38,19 @@ import com.google.common.collect.ImmutableList;
  */
 public class ListBlock extends Block {
 
-	private static final String PARAM_NAME_START = "start";
+	private static final String PARAM_NAME_START = "start"; //$NON-NLS-1$
 
-	private static final String PARAM_NAME_STYLE = "style";
+	private static final String PARAM_NAME_STYLE = "style"; //$NON-NLS-1$
 
 	private static final String ANY_CHAR = "\\s+(.*+)"; //$NON-NLS-1$
 
-	private static final List<String> TYPE_ORDER = ImmutableList.of("arabic", "loweralpha", "lowerroman", "upperalpha",
-			"upperroman");
+	private static final List<String> TYPE_ORDER = ImmutableList.of("arabic", "loweralpha", "lowerroman", "upperalpha", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			"upperroman"); //$NON-NLS-1$
 
-	private static final List<String> TYPE_LISTSPEC = ImmutableList.of("1.", "a.", "i)", "A.", "I)");
+	private static final List<String> TYPE_LISTSPEC = ImmutableList.of("1.", "a.", "i)", "A.", "I)"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
-	private static final List<String> TYPE_CSS_STYLE = ImmutableList.of("decimal", "lower-alpha", "lower-roman",
-			"upper-alpha", "upper-roman");
+	private static final List<String> TYPE_CSS_STYLE = ImmutableList.of("decimal", "lower-alpha", "lower-roman", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			"upper-alpha", "upper-roman"); //$NON-NLS-1$//$NON-NLS-2$
 
 	/** List item start */
 	private static final Pattern startPattern = Pattern
@@ -105,7 +106,7 @@ public class ListBlock extends Block {
 				List<String> positionalParameters = new ArrayList<>();
 				positionalParameters.add(PARAM_NAME_STYLE);
 				Map<String, String> lastProperties = getAsciiDocState().getLastProperties(positionalParameters);
-				getAsciiDocState().setLastPropertiesText("");
+				getAsciiDocState().setLastPropertiesText(""); //$NON-NLS-1$
 
 				String startProperty = lastProperties.get(PARAM_NAME_START);
 				if (startProperty != null) {
@@ -187,20 +188,20 @@ public class ListBlock extends Block {
 			}
 			listTypeIndex = level % TYPE_ORDER.size();
 		}
-		attributes.appendCssStyle("list-style-type:" + TYPE_CSS_STYLE.get(listTypeIndex) + ";");
+		attributes.appendCssStyle("list-style-type:" + TYPE_CSS_STYLE.get(listTypeIndex) + ";"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private String normalizeListSpec(String group) {
-		if (group.matches("[a-z]+\\.")) {
-			group = "a.";
-		} else if (group.matches("[A-Z]+\\.")) {
-			group = "A.";
-		} else if (group.matches("[IVXLCDM]+\\)")) {
-			group = "I)";
-		} else if (group.matches("[ivxlcdm]+\\)")) {
-			group = "i)";
-		} else if (group.matches("[0-9]+\\.")) {
-			group = "1.";
+		if (group.matches("[a-z]+\\.")) { //$NON-NLS-1$
+			group = "a."; //$NON-NLS-1$
+		} else if (group.matches("[A-Z]+\\.")) { //$NON-NLS-1$
+			group = "A."; //$NON-NLS-1$
+		} else if (group.matches("[IVXLCDM]+\\)")) { //$NON-NLS-1$
+			group = "I)"; //$NON-NLS-1$
+		} else if (group.matches("[ivxlcdm]+\\)")) { //$NON-NLS-1$
+			group = "i)"; //$NON-NLS-1$
+		} else if (group.matches("[0-9]+\\.")) { //$NON-NLS-1$
+			group = "1."; //$NON-NLS-1$
 		}
 
 		return group;

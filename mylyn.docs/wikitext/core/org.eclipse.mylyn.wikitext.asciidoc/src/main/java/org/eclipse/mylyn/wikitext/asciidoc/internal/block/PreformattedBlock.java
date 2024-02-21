@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Max Rydahl and others.
+ * Copyright (c) 2015, 2024 Max Rydahl and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
  *     Stefan Seelmann - initial API and implementation
  *     Max Rydahl Andersen - copied from markdown to get base for asciidoc, Bug 474084
  *     Patrik Suzzi <psuzzi@gmail.com> - Bug 474084
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.asciidoc.internal.block;
@@ -79,7 +80,7 @@ public class PreformattedBlock extends AsciiDocBlock {
 			String content = matcher.group(3);
 
 			if (hasContent) {
-				builder.characters("\n");
+				builder.characters("\n"); //$NON-NLS-1$
 			}
 
 			// emit, handle intention, encode ampersands (&) and angle brackets (< and >)

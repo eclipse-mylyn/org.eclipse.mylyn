@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Jeremie Bresson and others.
+ * Copyright (c) 2017, 2024 Jeremie Bresson and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Jeremie Bresson - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.asciidoc.internal.block;
@@ -54,7 +55,7 @@ public class AttributeDefinitionBlock extends Block {
 			((AsciiDocContentState) getState()).removeAttribute(key);
 		} else {
 			String newKey = key.trim();
-			String newValue = value == null ? "" : value.trim();
+			String newValue = value == null ? "" : value.trim(); //$NON-NLS-1$
 			((AsciiDocContentState) getState()).putAttribute(newKey, newValue);
 		}
 		setClosed(true);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016, 2021 Jeremie Bresson and others.
+ * Copyright (c) 2016, 2024 Jeremie Bresson and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Jeremie Bresson - copied from MarkdownDocumentBuilder and adapted to AsciiDoc
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.asciidoc.internal;
@@ -284,16 +285,16 @@ public class AsciiDocDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			case CODE:
 				return new CodeSpan();
 			case SUPERSCRIPT:
-				return new ContentBlock("^", "^", 0, 0);
+				return new ContentBlock("^", "^", 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			case SUBSCRIPT:
-				return new ContentBlock("~", "~", 0, 0);
+				return new ContentBlock("~", "~", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 			case MARK:
-				return new ContentBlock("#", "#", 0, 0);
+				return new ContentBlock("#", "#", 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			case SPAN:
 				if (attributes.getCssClass() != null) {
-					return new ContentBlock("[" + attributes.getCssClass() + "]#", "#", 0, 0);
+					return new ContentBlock("[" + attributes.getCssClass() + "]#", "#", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
-				return new ContentBlock("", "", 0, 0);
+				return new ContentBlock("", "", 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			default:
 				Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
 				return new ContentBlock("", "", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$

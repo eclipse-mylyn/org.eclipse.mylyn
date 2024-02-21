@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2022 Jeremie Bresson and others.
+ * Copyright (c) 2017, 2024 Jeremie Bresson and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Jeremie Bresson - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.asciidoc;
@@ -43,7 +44,7 @@ public class AsciiDocMarkupLanguageConfiguration extends MarkupLanguageConfigura
 	 *            initial attributes (key, values)
 	 */
 	public void setInitialAttributes(Map<String, String> initialAttributes) {
-		Objects.requireNonNull(initialAttributes, "initialAttributes can not be null");
+		Objects.requireNonNull(initialAttributes, "initialAttributes can not be null"); //$NON-NLS-1$
 		this.initialAttributes = Map.copyOf(initialAttributes);
 	}
 }
