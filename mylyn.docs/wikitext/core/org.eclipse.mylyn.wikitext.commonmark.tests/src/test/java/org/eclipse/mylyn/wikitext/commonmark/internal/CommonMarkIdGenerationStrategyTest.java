@@ -18,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class CommonMarkIdGenerationStrategyTest {
 
 	private final CommonMarkIdGenerationStrategy strategy = new CommonMarkIdGenerationStrategy();

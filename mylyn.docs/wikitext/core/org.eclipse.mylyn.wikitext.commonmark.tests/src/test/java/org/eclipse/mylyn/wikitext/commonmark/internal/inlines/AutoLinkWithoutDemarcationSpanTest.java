@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class AutoLinkWithoutDemarcationSpanTest extends AbstractSourceSpanTest {
 
 	public AutoLinkWithoutDemarcationSpanTest() {

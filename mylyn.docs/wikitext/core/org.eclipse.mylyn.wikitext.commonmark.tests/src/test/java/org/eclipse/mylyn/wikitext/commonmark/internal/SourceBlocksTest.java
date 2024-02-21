@@ -31,6 +31,7 @@ import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.EndBlockEvent;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class SourceBlocksTest {
 
 	private final SourceBlock block1 = mockBlock(BlockType.QUOTE, "b1");
@@ -73,10 +74,10 @@ public class SourceBlocksTest {
 				new EndBlockEvent());
 		assertEquals(
 				builder.getDocumentBuilderEvents()
-						.getEvents()
-						.stream()
-						.map(DocumentBuilderEvent::toString)
-						.collect(Collectors.joining("\n")),
+				.getEvents()
+				.stream()
+				.map(DocumentBuilderEvent::toString)
+				.collect(Collectors.joining("\n")),
 				expectedEvents, builder.getDocumentBuilderEvents().getEvents());
 	}
 

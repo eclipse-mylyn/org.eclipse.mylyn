@@ -16,6 +16,7 @@ package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class PotentialBracketSpanTest extends AbstractSourceSpanTest {
 
 	public PotentialBracketSpanTest() {

@@ -41,6 +41,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class CommonMarkLanguageTest {
 
 	private final CommonMarkLanguage language = new CommonMarkLanguage();

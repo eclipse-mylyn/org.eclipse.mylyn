@@ -27,6 +27,7 @@ import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext;
 import org.eclipse.mylyn.wikitext.commonmark.internal.TextSegment;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class InlineParserTest {
 
 	private final Line line = new Line(0, 1, "test");

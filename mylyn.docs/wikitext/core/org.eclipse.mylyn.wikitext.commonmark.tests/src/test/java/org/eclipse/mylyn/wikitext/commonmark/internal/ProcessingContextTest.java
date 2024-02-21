@@ -28,6 +28,7 @@ import org.eclipse.mylyn.wikitext.commonmark.internal.inlines.InlineParser;
 import org.eclipse.mylyn.wikitext.commonmark.internal.inlines.SourceSpan;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class ProcessingContextTest {
 
 	@Test

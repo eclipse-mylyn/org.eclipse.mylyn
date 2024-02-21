@@ -18,6 +18,7 @@ import static org.eclipse.mylyn.wikitext.commonmark.internal.inlines.Cursors.cre
 
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class HtmlTagSpanTest extends AbstractSourceSpanTest {
 
 	public HtmlTagSpanTest() {

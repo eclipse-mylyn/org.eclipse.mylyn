@@ -24,6 +24,7 @@ import org.junit.Test;
 
 import com.google.common.base.Strings;
 
+@SuppressWarnings("nls")
 public class TextSegmentTest {
 
 	@Test(expected = NullPointerException.class)

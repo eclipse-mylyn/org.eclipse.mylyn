@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class ListBlockTest {
 
 	@Test

@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class HtmlCommentBlockTest {
 
 	private final HtmlCommentBlock block = new HtmlCommentBlock();

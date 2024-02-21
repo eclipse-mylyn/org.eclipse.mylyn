@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import org.eclipse.mylyn.wikitext.parser.Locator;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class SimpleLocatorTest {
 
 	@Test
