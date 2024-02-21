@@ -11,13 +11,3 @@ updates:
       include: scope
     labels:
       - dependencies
-  - package-ecosystem: maven
-    directory: org.eclipse.mylyn
-    schedule:
-      interval: daily
-    commit-message:
-      prefix: fix
-      prefix-development: chore
-      include: scope
-    labels:
-      - dependencies
