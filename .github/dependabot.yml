@@ -2,7 +2,7 @@
 version: 2
 updates:
   - package-ecosystem: maven
-    directory: /
+    directory: mylyn.docs
     schedule:
       interval: daily
     commit-message:
