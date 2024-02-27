@@ -28,7 +28,7 @@ import org.junit.Test;
  *
  * @author Patrik Suzzi
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 
 	static final String BR = System.lineSeparator();
