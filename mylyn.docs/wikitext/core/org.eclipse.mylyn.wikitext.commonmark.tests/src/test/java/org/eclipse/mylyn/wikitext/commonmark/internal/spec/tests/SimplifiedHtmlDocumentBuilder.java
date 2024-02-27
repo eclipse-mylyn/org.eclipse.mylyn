@@ -22,7 +22,7 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class SimplifiedHtmlDocumentBuilder extends HtmlDocumentBuilder {
 
 	public SimplifiedHtmlDocumentBuilder(Writer out) {
