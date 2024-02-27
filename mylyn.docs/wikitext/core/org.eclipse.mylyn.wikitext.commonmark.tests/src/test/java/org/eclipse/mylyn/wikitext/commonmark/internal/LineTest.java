@@ -24,7 +24,7 @@ import org.junit.Test;
 
 import com.google.common.base.Strings;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class LineTest {
 
 	@Test(expected = NullPointerException.class)

@@ -47,7 +47,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharStreams;
 import com.google.common.io.Resources;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 @RunWith(Parameterized.class)
 public class CommonMarkSpecTest {
 

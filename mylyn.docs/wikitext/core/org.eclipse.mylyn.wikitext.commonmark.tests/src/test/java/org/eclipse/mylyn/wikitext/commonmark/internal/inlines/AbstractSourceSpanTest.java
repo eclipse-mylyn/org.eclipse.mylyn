@@ -29,6 +29,7 @@ import org.eclipse.mylyn.wikitext.commonmark.internal.TextSegment;
 import org.eclipse.mylyn.wikitext.commonmark.internal.spec.tests.SimplifiedHtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 
+@SuppressWarnings("restriction")
 abstract class AbstractSourceSpanTest {
 
 	protected final SourceSpan span;

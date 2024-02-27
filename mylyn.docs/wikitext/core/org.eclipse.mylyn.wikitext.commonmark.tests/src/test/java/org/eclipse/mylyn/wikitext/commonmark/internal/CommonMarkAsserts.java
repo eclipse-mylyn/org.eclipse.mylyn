@@ -32,6 +32,7 @@ import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+@SuppressWarnings("restriction")
 public class CommonMarkAsserts {
 
 	public static void assertContent(String expectedHtml, String input) {

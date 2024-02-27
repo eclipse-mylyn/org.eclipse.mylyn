@@ -31,7 +31,7 @@ import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.EndBlockEvent;
 import org.junit.Test;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class SourceBlocksTest {
 
 	private final SourceBlock block1 = mockBlock(BlockType.QUOTE, "b1");
