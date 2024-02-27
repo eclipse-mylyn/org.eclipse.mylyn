@@ -128,17 +128,10 @@ public class HtmlToMarkupTask extends MarkupTask {
 			try (Writer writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(outputFile)),
 					StandardCharsets.UTF_8)) {
 				DocumentBuilder builder = markupLanguage.createDocumentBuilder(writer);
-
-				Reader input;
-				try (InputStream in = new BufferedInputStream(new FileInputStream(source))) {
-					input = getSourceEncoding() == null
-							? new InputStreamReader(in)
-									: new InputStreamReader(in, getSourceEncoding());
-				} catch (Exception e) {
-					throw new BuildException(MessageFormat.format(Messages.getString("MarkupTask.cannotReadSource"), //$NON-NLS-1$
-							source, e.getMessage()), e);
-				}
-				try {
+				try (InputStream in = new BufferedInputStream(new FileInputStream(source));
+						Reader input = getSourceEncoding() == null
+								? new InputStreamReader(in)
+								: new InputStreamReader(in, getSourceEncoding())) {
 					new HtmlParser().parse(new InputSource(input), builder);
 				} catch (Exception e) {
 					throw new BuildException(MessageFormat.format(
