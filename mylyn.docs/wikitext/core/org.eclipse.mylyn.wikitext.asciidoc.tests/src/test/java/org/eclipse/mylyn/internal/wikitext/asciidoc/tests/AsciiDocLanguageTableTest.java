@@ -26,7 +26,7 @@ import org.junit.Test;
 /**
  * Tests for the AsciiDoc TableBlock elements.
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class AsciiDocLanguageTableTest extends AsciiDocLanguageTestBase {
 
 	@Test
@@ -680,21 +680,21 @@ public class AsciiDocLanguageTableTest extends AsciiDocLanguageTestBase {
 	@Test
 	public void testTableCSVWithQuotesAndEscaped() {
 		String html = parseToHtml("""
-				[format="csv"]
-				|===
-				"lorem ""a"" ipsum",second,third
-				first,"lorem ""a"" ipsum",third
-				first,second,"lorem ""a"" ipsum"
+						[format="csv"]
+						|===
+						"lorem ""a"" ipsum",second,third
+						first,"lorem ""a"" ipsum",third
+						first,second,"lorem ""a"" ipsum"
 
-				\"""a"" ipsum",second,third
-				first,\"""a"" ipsum",third
-				first,second,\"""a"" ipsum"
+						\"""a"" ipsum",second,third
+						first,\"""a"" ipsum",third
+						first,second,\"""a"" ipsum"
 
-				"lorem ""a\""",second,third
-				first,"lorem ""a\""",third
-				first,second,"lorem ""a\"""
+						"lorem ""a\""",second,third
+						first,"lorem ""a\""",third
+						first,second,"lorem ""a\"""
 		|===
-				Some Text""");
+						Some Text""");
 		assertEquals("""
 				<table>\
 				<tr>\

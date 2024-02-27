@@ -34,6 +34,7 @@ import org.junit.Before;
  *
  * @author Max Rydahl Andersen
  */
+@SuppressWarnings("restriction")
 public abstract class AsciiDocLanguageTestBase {
 
 	private MarkupParser parser;
