@@ -22,6 +22,7 @@ import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class ListWhitespaceValidationRuleTest {
 
 	private ListWhitespaceValidationRule rule;
