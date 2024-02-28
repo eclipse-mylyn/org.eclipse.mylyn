@@ -24,7 +24,7 @@ import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class SubstitutionBlockStrategyTest {
 
 	private HtmlDocumentBuilder builder;
