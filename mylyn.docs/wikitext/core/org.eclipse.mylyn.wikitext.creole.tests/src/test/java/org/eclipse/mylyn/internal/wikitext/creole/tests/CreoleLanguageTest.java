@@ -29,7 +29,7 @@ import org.junit.Test;
  * @author Igor Malinin
  * @author David Green
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class CreoleLanguageTest {
 
 	private MarkupParser parser;

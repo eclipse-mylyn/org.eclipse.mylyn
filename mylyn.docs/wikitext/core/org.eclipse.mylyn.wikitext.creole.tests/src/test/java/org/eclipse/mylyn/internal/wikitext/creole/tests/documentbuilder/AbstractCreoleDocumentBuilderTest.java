@@ -25,6 +25,7 @@ import org.junit.Before;
 /**
  * @author Kevin de Vlaming
  */
+@SuppressWarnings("restriction")
 public abstract class AbstractCreoleDocumentBuilderTest {
 
 	protected DocumentBuilder builder;
