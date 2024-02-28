@@ -20,6 +20,7 @@ import static org.junit.Assert.assertTrue;
 import org.eclipse.mylyn.wikitext.textile.internal.block.CommentBlock;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class CommentBlockTest {
 
 	@Test

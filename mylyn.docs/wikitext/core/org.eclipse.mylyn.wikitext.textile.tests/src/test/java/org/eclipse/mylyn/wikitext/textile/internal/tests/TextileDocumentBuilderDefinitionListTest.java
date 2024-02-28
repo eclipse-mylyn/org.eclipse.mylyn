@@ -29,6 +29,7 @@ import org.junit.Test;
  * @author David Green
  * @see TextileDocumentBuilder
  */
+@SuppressWarnings("nls")
 public class TextileDocumentBuilderDefinitionListTest {
 
 	private TextileDocumentBuilder builder;

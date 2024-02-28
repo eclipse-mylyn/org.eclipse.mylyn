@@ -46,6 +46,7 @@ import org.junit.Test;
  * @author David Green
  * @see TextileLanguageTasksTest
  */
+@SuppressWarnings("nls")
 public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLanguage> {
 
 	private static final String REGEX_NEWLINE = "(?:\\s*?^)";
@@ -309,8 +310,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 		assertTrue(
 				Pattern.compile("<body><p>first para<br/>\\s*new line</p><p>second para</p></body>", Pattern.MULTILINE)
-						.matcher(html.toString())
-						.find());
+				.matcher(html.toString())
+				.find());
 	}
 
 	@Test
@@ -431,14 +432,14 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		assertMarkup(
 				"<blockquote><p>src/<br/>  main/<br/>    java/  (Java src folder)<br/>      META-INF<br/>     file.txt</p><p>a</p></blockquote>",
 				"""
-						bq.. src/
-						  main/
-						    java/  (Java src folder)
-						      META-INF
-						     file.txt
+				bq.. src/
+				  main/
+				    java/  (Java src folder)
+				      META-INF
+				     file.txt
 
-						 \s
-						a""");
+				 \s
+				a""");
 
 	}
 
@@ -499,8 +500,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 		assertTrue(
 				Pattern.compile("<pre><code>(\\r|\\n)+one\\s+two\\s+</code></pre>", Pattern.MULTILINE | Pattern.DOTALL)
-						.matcher(html)
-						.find());
+				.matcher(html)
+				.find());
 	}
 
 	@Test
@@ -1385,7 +1386,7 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 		assertTrue(Pattern.compile(
 				"<pre><code>one" + REGEX_NEWLINE + "two" + REGEX_NEWLINE + REGEX_NEWLINE + "three" + REGEX_NEWLINE
-						+ REGEX_NEWLINE + REGEX_NEWLINE + "blah" + REGEX_NEWLINE + "</code></pre>",
+				+ REGEX_NEWLINE + REGEX_NEWLINE + "blah" + REGEX_NEWLINE + "</code></pre>",
 				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
 	}
 
@@ -1395,7 +1396,7 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 		assertTrue(Pattern.compile(
 				"<pre><code>one" + REGEX_NEWLINE + "two" + REGEX_NEWLINE + REGEX_NEWLINE + "three" + REGEX_NEWLINE
-						+ REGEX_NEWLINE + REGEX_NEWLINE + "more" + REGEX_NEWLINE + "</code></pre><p>some para</p>",
+				+ REGEX_NEWLINE + REGEX_NEWLINE + "more" + REGEX_NEWLINE + "</code></pre><p>some para</p>",
 				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
 	}
 
@@ -1405,7 +1406,7 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 		assertTrue(Pattern.compile(
 				"<pre>one" + REGEX_NEWLINE + "two" + REGEX_NEWLINE + REGEX_NEWLINE + "three" + REGEX_NEWLINE
-						+ REGEX_NEWLINE + REGEX_NEWLINE + "blah" + REGEX_NEWLINE + "</pre><p>para</p>",
+				+ REGEX_NEWLINE + REGEX_NEWLINE + "blah" + REGEX_NEWLINE + "</pre><p>para</p>",
 				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
 	}
 

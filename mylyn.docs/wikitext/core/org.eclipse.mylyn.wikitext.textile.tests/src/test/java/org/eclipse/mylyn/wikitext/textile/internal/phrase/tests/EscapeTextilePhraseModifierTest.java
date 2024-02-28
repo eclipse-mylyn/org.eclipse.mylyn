@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.wikitext.textile.internal.phrase.EscapeTextilePhraseModifier;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class EscapeTextilePhraseModifierTest {
 
 	@Test
