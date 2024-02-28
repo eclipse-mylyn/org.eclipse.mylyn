@@ -31,6 +31,7 @@ import org.junit.Test;
  * @author David Green
  * @see ConfluenceDocumentBuilder
  */
+@SuppressWarnings("nls")
 public class ConfluenceDocumentBuilderTest {
 
 	private final StringWriter out = new StringWriter();

@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import org.eclipse.mylyn.wikitext.confluence.internal.util.Colors;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class ColorsTest {
 
 	@Test

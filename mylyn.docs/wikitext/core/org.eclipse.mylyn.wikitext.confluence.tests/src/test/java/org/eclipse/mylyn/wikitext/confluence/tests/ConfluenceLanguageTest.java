@@ -42,6 +42,7 @@ import com.google.common.io.Resources;
  * @author David Green
  * @author Patrick Boisclair
  */
+@SuppressWarnings("nls")
 public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<ConfluenceLanguage> {
 
 	@Override
@@ -915,7 +916,7 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	public void parseTableWithLinkAndSquareBrace() {
 		assertMarkup("<table><tr><td>a <a href=\"http://example.com\">link</a> to [B<br/>C]</td></tr></table>",
 				"|a [link|http://example.com] to [B\n"//
-						+ "C]|\n");
+				+ "C]|\n");
 		assertMarkup("<table><tr><td>[a <a href=\"http://example.com\">link</a> to B</td></tr></table>",
 				"|[a [link|http://example.com] to B|");
 	}
@@ -925,18 +926,18 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 		// test for bug# 513661
 		assertMarkup(
 				"""
-						<table>\
-						<tr><th>Bulleted list</th><th><ul><li>one thing</li><li>two things </li></ul></th></tr>\
-						<tr><td>Numbered list</td><td><ol><li>one thing</li><li>two things </li></ol></td></tr>\
-						<tr><td>Bulleted list</td><td><ul style="list-style: square"><li>one thing<ul><li>two things </li></ul></li></ul></td></tr>\
-						</table>""",
+				<table>\
+				<tr><th>Bulleted list</th><th><ul><li>one thing</li><li>two things </li></ul></th></tr>\
+				<tr><td>Numbered list</td><td><ol><li>one thing</li><li>two things </li></ol></td></tr>\
+				<tr><td>Bulleted list</td><td><ul style="list-style: square"><li>one thing<ul><li>two things </li></ul></li></ul></td></tr>\
+				</table>""",
 				"""
-						||Bulleted list||* one thing
-						* two things |
-						|Numbered list|# one thing
-						# two things |
-						|Bulleted list|- one thing
-						-- two things |""");
+				||Bulleted list||* one thing
+				* two things |
+				|Numbered list|# one thing
+				# two things |
+				|Bulleted list|- one thing
+				-- two things |""");
 	}
 
 	@Test

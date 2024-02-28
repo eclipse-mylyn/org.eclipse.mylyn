@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class TableBlockTest {
 
 	private final Pattern cellContentPattern = Pattern.compile(TableBlock.CELL_CONTENT_REGEX);

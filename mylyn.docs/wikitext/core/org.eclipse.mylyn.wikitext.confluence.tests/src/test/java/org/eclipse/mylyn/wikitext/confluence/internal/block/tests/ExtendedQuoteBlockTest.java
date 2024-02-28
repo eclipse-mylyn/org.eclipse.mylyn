@@ -17,6 +17,7 @@ import static org.junit.Assert.assertEquals;
 import org.eclipse.mylyn.wikitext.confluence.internal.block.ExtendedQuoteBlock;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class ExtendedQuoteBlockTest {
 
 	@Test

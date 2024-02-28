@@ -18,6 +18,7 @@ import org.eclipse.mylyn.wikitext.confluence.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.toolkit.AbstractMarkupGenerationTest;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class ConfluenceCodeBlockTest extends AbstractMarkupGenerationTest<ConfluenceLanguage> {
 
 	@Override
@@ -30,14 +31,14 @@ public class ConfluenceCodeBlockTest extends AbstractMarkupGenerationTest<Conflu
 		assertMarkup(
 				"<h1 id=\"aheader\">a header</h1><p>Some text</p><pre class=\"Java code-Java\"><code class=\"Java code-Java\">\npublic class Foo {\n}\n\n</code></pre><p>More text...</p>",
 				"""
-						h1. a header
+				h1. a header
 
-						Some text
-						{code:language=Java}
-						public class Foo {
-						}
-						{code}
-						More text...""");
+				Some text
+				{code:language=Java}
+				public class Foo {
+				}
+				{code}
+				More text...""");
 	}
 
 	@Test
