@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import com.google.common.base.CharMatcher;
 
+@SuppressWarnings("nls")
 public class TextileDocumentBuilderEntityReferenceTest {
 
 	@Test

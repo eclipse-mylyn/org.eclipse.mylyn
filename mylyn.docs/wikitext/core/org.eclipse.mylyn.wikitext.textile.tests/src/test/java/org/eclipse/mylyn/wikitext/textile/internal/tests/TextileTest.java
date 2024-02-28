@@ -27,6 +27,7 @@ import org.junit.Test;
 /**
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class TextileTest {
 	@Test
 	public void testExplicitHeaderStartsNewBlock() {

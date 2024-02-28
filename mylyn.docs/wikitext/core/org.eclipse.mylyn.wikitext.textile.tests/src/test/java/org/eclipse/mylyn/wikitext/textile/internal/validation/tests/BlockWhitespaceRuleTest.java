@@ -28,6 +28,7 @@ import org.junit.Test;
 /**
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class BlockWhitespaceRuleTest {
 
 	private BlockWhitespaceRule rule;

@@ -32,6 +32,7 @@ import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder.Event;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class TextileLanguageDefinitionListTest {
 
 	private MarkupParser parser;
