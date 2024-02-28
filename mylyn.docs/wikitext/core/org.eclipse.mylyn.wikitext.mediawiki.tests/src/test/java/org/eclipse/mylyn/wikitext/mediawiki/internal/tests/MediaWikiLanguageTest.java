@@ -48,6 +48,7 @@ import com.google.common.io.Resources;
 /**
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWikiLanguage> {
 
 	private Locale locale;
@@ -320,11 +321,11 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 		assertMarkup(
 				"<ol><li>a list<ol><li>a nested item<ol><li>another nested item</li></ol>continued</li></ol></li><li>another item</li></ol>",
 				"""
-						# a list
-						## a nested item
-						### another nested item
-						#: continued
-						# another item""");
+				# a list
+				## a nested item
+				### another nested item
+				#: continued
+				# another item""");
 	}
 
 	@Test
@@ -553,9 +554,9 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 		assertMarkup(
 				"<table><tr><td><a href=\"/wiki/Orion/Server_API/Preference_API\" title=\"Orion/Server_API/Preference API\">Preference API</a></td></tr></table>",
 				"""
-						{|
-						| [[Orion/Server_API/Preference API| Preference API]]
-						|}""");
+				{|
+				| [[Orion/Server_API/Preference API| Preference API]]
+				|}""");
 	}
 
 	@Test
@@ -752,16 +753,16 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 		assertMarkup(
 				"<table><tr><td>Orange</td><td>Apple</td></tr><tr><td>Bread</td><td>Pie</td></tr><tr><td>Butter</td><td>Ice cream </td></tr></table>",
 				"""
-						{|
-						|Orange
-						|Apple
-						|-
-						|Bread
-						|Pie
-						|-
-						|Butter
-						|Ice cream\s
-						|}""");
+				{|
+				|Orange
+				|Apple
+				|-
+				|Bread
+				|Pie
+				|-
+				|Butter
+				|Ice cream\s
+				|}""");
 	}
 
 	@Test
@@ -769,14 +770,14 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 		assertMarkup(
 				"<table><tr><td>Orange</td><td>Apple</td><td>more</td></tr><tr><td>Bread</td><td>Pie</td><td>more</td></tr><tr><td>Butter</td><td>Ice cream</td><td>and more</td></tr></table>",
 				"""
-						{|
-						|  Orange    ||   Apple   ||   more
-						|-
-						|   Bread    ||   Pie     ||   more
-						|-
-						|   Butter   || Ice cream ||  and more
-						|}
-						""");
+				{|
+				|  Orange    ||   Apple   ||   more
+				|-
+				|   Bread    ||   Pie     ||   more
+				|-
+				|   Butter   || Ice cream ||  and more
+				|}
+				""");
 	}
 
 	@Test
@@ -784,18 +785,18 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 		assertMarkup(
 				"<table><tr><td>Orange</td><td>Apple</td></tr><tr><td>Bread<p>More bread</p></td><td>Pie</td></tr><tr><td>Butter</td><td>Ice cream </td></tr></table>",
 				"""
-						{|
-						|Orange
-						|Apple
-						|-
-						|Bread
+				{|
+				|Orange
+				|Apple
+				|-
+				|Bread
 
-						More bread
-						|Pie
-						|-
-						|Butter
-						|Ice cream\s
-						|}""");
+				More bread
+				|Pie
+				|-
+				|Butter
+				|Ice cream\s
+				|}""");
 	}
 
 	@Test
@@ -803,12 +804,12 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 		assertMarkup(
 				"<table><tr><th>Fruit</th><th>Quantity</th><th>Price</th></tr><tr><td>Apple</td><td>lb</td><td>0.99</td></tr></table>",
 				"""
-						{|
-						!  Fruit    !!   Quantity   !!  Price
-						|-
-						|   Apple    ||   lb     ||   0.99
-						|}
-						""");
+				{|
+				!  Fruit    !!   Quantity   !!  Price
+				|-
+				|   Apple    ||   lb     ||   0.99
+				|}
+				""");
 	}
 
 	@Test

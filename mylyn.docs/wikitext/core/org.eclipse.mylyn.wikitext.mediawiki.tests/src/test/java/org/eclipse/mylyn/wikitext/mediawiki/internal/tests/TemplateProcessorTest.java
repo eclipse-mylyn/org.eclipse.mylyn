@@ -28,6 +28,7 @@ import org.eclipse.mylyn.wikitext.mediawiki.internal.TemplateProcessor;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class TemplateProcessorTest {
 
 	private MediaWikiLanguage markupLanguage;

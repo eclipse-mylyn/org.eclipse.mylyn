@@ -20,6 +20,7 @@ import org.eclipse.mylyn.wikitext.mediawiki.internal.MediaWikiIdGenerationStrate
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class MediaWikiIdGenerationStrategyTest {
 
 	MediaWikiIdGenerationStrategy generationStrategy;

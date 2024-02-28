@@ -26,6 +26,7 @@ import org.junit.Test;
 /**
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class CommentValidationRuleTest {
 
 	private CommentValidationRule rule;
