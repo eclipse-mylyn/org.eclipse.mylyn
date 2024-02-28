@@ -27,6 +27,7 @@ import org.eclipse.mylyn.wikitext.mediawiki.WikiTemplateResolver;
  * Extension of the {@link WikiTemplateResolver} for test purposes. You should set some content with {@link #setServerContent(Map)} before
  * using this class in your tests.
  */
+@SuppressWarnings("nls")
 class TestWikiTemplateResolver extends WikiTemplateResolver {
 
 	private Map<String, String> serverContent;

@@ -27,6 +27,7 @@ import org.eclipse.mylyn.wikitext.mediawiki.internal.TemplateProcessor;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class WikiTemplateResolverTest {
 
 	private static final String BUG_TEMPLATE_CONTENT = "[https://bugs.eclipse.org/{{{1}}} Bug {{{1}}}]";
