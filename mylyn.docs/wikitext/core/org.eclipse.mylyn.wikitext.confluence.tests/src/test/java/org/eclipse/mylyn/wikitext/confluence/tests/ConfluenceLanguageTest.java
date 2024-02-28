@@ -42,7 +42,7 @@ import com.google.common.io.Resources;
  * @author David Green
  * @author Patrick Boisclair
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<ConfluenceLanguage> {
 
 	@Override
