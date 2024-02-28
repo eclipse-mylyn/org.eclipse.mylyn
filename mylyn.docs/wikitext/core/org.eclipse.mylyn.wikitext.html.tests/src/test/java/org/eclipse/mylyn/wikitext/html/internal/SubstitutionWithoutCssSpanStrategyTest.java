@@ -25,6 +25,7 @@ import org.eclipse.mylyn.wikitext.parser.builder.event.BeginSpanEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvent;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class SubstitutionWithoutCssSpanStrategyTest {
 
 	@Test(expected = NullPointerException.class)

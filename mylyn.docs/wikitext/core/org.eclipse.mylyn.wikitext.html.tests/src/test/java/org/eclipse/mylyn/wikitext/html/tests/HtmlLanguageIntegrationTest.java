@@ -23,6 +23,7 @@ import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class HtmlLanguageIntegrationTest {
 
 	@Test

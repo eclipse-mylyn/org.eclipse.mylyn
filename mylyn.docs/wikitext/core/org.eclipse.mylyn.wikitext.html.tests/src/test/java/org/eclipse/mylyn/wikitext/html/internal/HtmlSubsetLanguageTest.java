@@ -35,6 +35,7 @@ import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentHandler;
 import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class HtmlSubsetLanguageTest {
 
 	@Test(expected = NullPointerException.class)

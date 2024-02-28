@@ -38,6 +38,7 @@ import org.junit.Test;
 
 import com.google.common.io.Resources;
 
+@SuppressWarnings("nls")
 public class HtmlLanguageTest {
 
 	@Test

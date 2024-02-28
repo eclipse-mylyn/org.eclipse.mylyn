@@ -26,6 +26,7 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class SpanStrategiesTest {
 
 	@Test(expected = NullPointerException.class)
