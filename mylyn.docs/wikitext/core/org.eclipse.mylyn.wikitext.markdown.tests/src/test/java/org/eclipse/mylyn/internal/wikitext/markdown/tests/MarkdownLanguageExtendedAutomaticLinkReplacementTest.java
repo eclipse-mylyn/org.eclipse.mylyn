@@ -25,8 +25,9 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
+@SuppressWarnings("nls")
 public class MarkdownLanguageExtendedAutomaticLinkReplacementTest
-		extends AbstractMarkupGenerationTest<MarkdownLanguage> {
+extends AbstractMarkupGenerationTest<MarkdownLanguage> {
 
 	@Parameters
 	public static Collection<Object[]> data() {

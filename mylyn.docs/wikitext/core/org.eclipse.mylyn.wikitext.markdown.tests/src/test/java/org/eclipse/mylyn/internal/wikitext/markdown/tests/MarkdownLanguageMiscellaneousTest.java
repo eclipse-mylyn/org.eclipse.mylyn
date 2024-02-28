@@ -22,6 +22,7 @@ import org.junit.Test;
  *
  * @author Stefan Seelmann
  */
+@SuppressWarnings("nls")
 public class MarkdownLanguageMiscellaneousTest extends MarkdownLanguageTestBase {
 	@Test
 	public void testEmptyLine() {

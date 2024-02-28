@@ -33,6 +33,7 @@ import org.junit.Test;
  * @see http://daringfireball.net/projects/markdown/syntax
  * @author Leo Dos Santos
  */
+@SuppressWarnings("nls")
 public class MarkdownDocumentBuilderTest {
 
 	private DocumentBuilder builder;

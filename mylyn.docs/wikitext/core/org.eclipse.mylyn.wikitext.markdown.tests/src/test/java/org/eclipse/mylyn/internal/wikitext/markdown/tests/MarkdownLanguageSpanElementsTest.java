@@ -23,6 +23,7 @@ import org.junit.Test;
  *
  * @author Stefan Seelmann
  */
+@SuppressWarnings("nls")
 public class MarkdownLanguageSpanElementsTest extends MarkdownLanguageTestBase {
 
 	/*

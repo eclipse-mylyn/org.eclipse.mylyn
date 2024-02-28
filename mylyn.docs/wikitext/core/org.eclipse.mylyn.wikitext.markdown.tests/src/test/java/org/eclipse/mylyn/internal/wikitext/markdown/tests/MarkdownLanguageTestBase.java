@@ -32,6 +32,7 @@ import org.junit.Before;
  *
  * @author Stefan Seelmann
  */
+@SuppressWarnings("nls")
 public abstract class MarkdownLanguageTestBase {
 
 	private MarkupParser parser;
