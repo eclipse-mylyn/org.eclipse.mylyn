@@ -55,6 +55,7 @@ import org.eclipse.mylyn.wikitext.parser.builder.event.LinkEvent;
 import org.eclipse.mylyn.wikitext.parser.markup.ContentState;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class MultiplexingDocumentBuilderTest {
 
 	private final EventDocumentBuilder delegate1 = new EventDocumentBuilder();

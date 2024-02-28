@@ -43,6 +43,7 @@ import org.junit.Test;
 /**
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class CssParserTest {
 	private CssParser parser;
 

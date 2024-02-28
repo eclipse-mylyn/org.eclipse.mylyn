@@ -23,6 +23,7 @@ import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.parser.builder.event.ImageLinkEvent;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class ImageLinkEventTest {
 
 	@Test

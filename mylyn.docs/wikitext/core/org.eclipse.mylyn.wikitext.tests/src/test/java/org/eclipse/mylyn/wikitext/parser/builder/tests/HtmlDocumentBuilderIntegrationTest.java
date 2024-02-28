@@ -29,6 +29,7 @@ import org.junit.Test;
 /**
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class HtmlDocumentBuilderIntegrationTest {
 
 	private MarkupParser parser;
@@ -100,8 +101,8 @@ public class HtmlDocumentBuilderIntegrationTest {
 		String expected = "<!-- Copyright notice here -->";
 		assertTrue("Expected " + expected + " but received " + html, html.startsWith(
 				"""
-						<?xml version='1.0' encoding='utf-8' ?>
-						<!-- Copyright notice here -->
-						<html"""));
+				<?xml version='1.0' encoding='utf-8' ?>
+				<!-- Copyright notice here -->
+				<html"""));
 	}
 }

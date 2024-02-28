@@ -26,6 +26,7 @@ import org.eclipse.mylyn.wikitext.validation.ValidationProblem.Severity;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class StandaloneMarkupValidatorTest {
 
 	private StandaloneMarkupValidator validator;

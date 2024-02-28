@@ -39,6 +39,7 @@ import org.junit.rules.TemporaryFolder;
 
 import com.google.common.io.Resources;
 
+@SuppressWarnings("nls")
 public class SplittingHtmlDocumentBuilderTest {
 
 	@Rule

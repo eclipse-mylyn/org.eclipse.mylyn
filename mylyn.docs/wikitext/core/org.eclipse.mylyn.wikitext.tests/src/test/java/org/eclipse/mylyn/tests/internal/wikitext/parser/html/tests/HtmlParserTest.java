@@ -25,6 +25,7 @@ import org.xml.sax.SAXException;
 /**
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class HtmlParserTest extends AbstractSaxParserTest {
 
 	@Override

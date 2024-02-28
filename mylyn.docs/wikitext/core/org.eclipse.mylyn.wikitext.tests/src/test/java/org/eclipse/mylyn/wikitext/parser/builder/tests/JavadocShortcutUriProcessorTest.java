@@ -17,6 +17,7 @@ import static org.junit.Assert.assertEquals;
 import org.eclipse.mylyn.wikitext.parser.builder.JavadocShortcutUriProcessor;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class JavadocShortcutUriProcessorTest {
 
 	private final JavadocShortcutUriProcessor processor = new JavadocShortcutUriProcessor("../",

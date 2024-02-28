@@ -25,6 +25,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class IdGeneratorTest {
 
 	private final IdGenerator generator = new IdGenerator();

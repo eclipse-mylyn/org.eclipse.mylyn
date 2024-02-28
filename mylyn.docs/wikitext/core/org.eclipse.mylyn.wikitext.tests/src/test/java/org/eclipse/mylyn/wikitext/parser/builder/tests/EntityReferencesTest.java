@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 import org.eclipse.mylyn.wikitext.parser.builder.EntityReferences;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class EntityReferencesTest {
 
 	@Test

@@ -22,6 +22,7 @@ import org.eclipse.mylyn.wikitext.util.LocatorImpl;
 /**
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class RecordingDocumentBuilder extends DocumentBuilder {
 
 	public static class Event {

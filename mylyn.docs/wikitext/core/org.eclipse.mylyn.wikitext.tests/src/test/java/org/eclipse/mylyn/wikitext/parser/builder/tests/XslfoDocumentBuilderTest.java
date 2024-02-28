@@ -28,6 +28,7 @@ import org.junit.Test;
 /**
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class XslfoDocumentBuilderTest {
 	private static final String XSLFO_BEGIN = "<root xmlns=\"http://www.w3.org/1999/XSL/Format\"><layout-master-set><simple-page-master master-name=\"page-layout\" page-height=\"29.7cm\" page-width=\"21.0cm\" margin=\"1.5cm\"><region-body margin-bottom=\"3cm\"/><region-after extent=\"2.0cm\" precedence=\"false\" region-name=\"footer\"/></simple-page-master></layout-master-set><page-sequence master-reference=\"page-layout\"><static-content flow-name=\"footer\"><block font-size=\"10.0pt\" text-align=\"outside\"><page-number/></block></static-content><flow flow-name=\"xsl-region-body\">";
 

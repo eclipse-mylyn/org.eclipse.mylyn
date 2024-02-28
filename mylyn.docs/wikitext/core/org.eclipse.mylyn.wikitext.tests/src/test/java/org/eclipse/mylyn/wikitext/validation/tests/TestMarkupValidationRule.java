@@ -25,6 +25,7 @@ import org.eclipse.mylyn.wikitext.validation.ValidationRule;
  *
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class TestMarkupValidationRule extends ValidationRule {
 
 	private static final Pattern pattern = Pattern.compile("(ERROR|WARNING)", Pattern.MULTILINE);

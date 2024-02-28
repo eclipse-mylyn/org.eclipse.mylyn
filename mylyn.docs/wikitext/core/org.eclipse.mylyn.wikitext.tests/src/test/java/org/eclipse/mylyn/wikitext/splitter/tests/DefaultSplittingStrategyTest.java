@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import org.eclipse.mylyn.wikitext.splitter.DefaultSplittingStrategy;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class DefaultSplittingStrategyTest {
 
 	private final class DefaultSplittingStrategyAccess extends DefaultSplittingStrategy {

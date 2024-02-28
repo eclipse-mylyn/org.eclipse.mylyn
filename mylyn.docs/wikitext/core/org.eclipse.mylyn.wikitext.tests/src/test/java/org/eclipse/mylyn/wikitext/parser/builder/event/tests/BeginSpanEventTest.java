@@ -23,6 +23,7 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.builder.event.BeginSpanEvent;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class BeginSpanEventTest {
 
 	@Test

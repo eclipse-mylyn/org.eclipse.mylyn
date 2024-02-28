@@ -23,6 +23,7 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.builder.event.BeginBlockEvent;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class BeginBlockEventTest {
 
 	@Test

@@ -27,6 +27,7 @@ import org.junit.Test;
 /**
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class HtmlCleanerTest {
 	@Test
 	public void testFirstNode_MoveWhitespaceOutside() {

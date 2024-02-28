@@ -22,6 +22,7 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.builder.event.LinkEvent;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class LinkEventTest {
 
 	@Test
