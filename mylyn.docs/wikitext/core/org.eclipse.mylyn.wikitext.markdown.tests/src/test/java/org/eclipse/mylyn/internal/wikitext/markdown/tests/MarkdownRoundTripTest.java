@@ -24,6 +24,7 @@ import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class MarkdownRoundTripTest {
 
 	private final MarkdownLanguage language = new MarkdownLanguage();

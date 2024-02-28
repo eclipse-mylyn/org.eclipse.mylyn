@@ -26,6 +26,7 @@ import org.junit.Test;
 /**
  * @author Stefan Seelmann
  */
+@SuppressWarnings("nls")
 public class LinkDefinitionParserTest {
 
 	private LinkDefinitionParser linkDefinitionParser;

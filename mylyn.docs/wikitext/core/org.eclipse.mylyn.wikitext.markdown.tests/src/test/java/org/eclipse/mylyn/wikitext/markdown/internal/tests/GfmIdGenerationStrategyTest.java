@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import org.eclipse.mylyn.wikitext.markdown.internal.GfmIdGenerationStrategy;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class GfmIdGenerationStrategyTest {
 
 	private final GfmIdGenerationStrategy strategy = new GfmIdGenerationStrategy();

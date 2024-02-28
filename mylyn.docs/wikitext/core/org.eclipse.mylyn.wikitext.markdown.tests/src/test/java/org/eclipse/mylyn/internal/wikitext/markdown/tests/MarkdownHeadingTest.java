@@ -18,19 +18,20 @@ import org.eclipse.mylyn.wikitext.markdown.MarkdownLanguage;
 import org.eclipse.mylyn.wikitext.toolkit.AbstractMarkupGenerationTest;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class MarkdownHeadingTest extends AbstractMarkupGenerationTest<MarkdownLanguage> {
 
 	@Test
 	public void underlinedHeadingsHaveIds() {
 		assertMarkup("<h1 id=\"heading-1\">Heading 1</h1><p>some content</p><h1 id=\"heading-2\">Heading 2</h1>", //
 				"""
-						Heading 1
-						=========
+				Heading 1
+				=========
 
-						some content
+				some content
 
-						Heading 2
-						===========""");
+				Heading 2
+				===========""");
 	}
 
 	@Test

@@ -38,6 +38,7 @@ import org.junit.Test;
  *
  * @author Stefan Seelmann
  */
+@SuppressWarnings("nls")
 public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
 	@Test
 	public void testDiscoverable() {
