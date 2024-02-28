@@ -28,6 +28,7 @@ import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvents;
 import org.eclipse.mylyn.wikitext.parser.builder.event.EndSpanEvent;
 import org.junit.Test;
 
+@SuppressWarnings("restriction")
 public class CompositeSpanStrategyTest {
 
 	@Test(expected = NullPointerException.class)

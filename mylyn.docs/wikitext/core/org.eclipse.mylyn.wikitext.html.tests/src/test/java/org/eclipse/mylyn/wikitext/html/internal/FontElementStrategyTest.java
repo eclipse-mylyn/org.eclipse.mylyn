@@ -35,7 +35,7 @@ import org.eclipse.mylyn.wikitext.parser.builder.event.CharactersEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.EndSpanEvent;
 import org.junit.Test;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class FontElementStrategyTest {
 
 	private final FontElementStrategy strategy = new FontElementStrategy();

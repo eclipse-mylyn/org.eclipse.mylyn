@@ -38,7 +38,7 @@ import org.junit.Test;
 
 import com.google.common.io.Resources;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class HtmlLanguageTest {
 
 	@Test
