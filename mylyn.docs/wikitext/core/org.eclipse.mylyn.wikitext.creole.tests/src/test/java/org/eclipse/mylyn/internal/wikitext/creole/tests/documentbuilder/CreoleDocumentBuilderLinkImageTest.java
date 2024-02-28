@@ -25,6 +25,7 @@ import org.junit.Test;
  * @see http://www.wikicreole.org/wiki/Elements
  * @author Kevin de Vlaming
  */
+@SuppressWarnings("nls")
 public class CreoleDocumentBuilderLinkImageTest extends AbstractCreoleDocumentBuilderTest {
 	@Test
 	public void testLink() {
