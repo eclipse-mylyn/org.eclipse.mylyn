@@ -31,7 +31,7 @@ import org.junit.Test;
  * <p>
  * Paragraph breaking blocks are disabled by default in some dialects, e.g. Pandoc.
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class MarkdownLanguageParagraphBreakingBlocksDisabledTest {
 
 	private static class Language extends MarkdownLanguage {

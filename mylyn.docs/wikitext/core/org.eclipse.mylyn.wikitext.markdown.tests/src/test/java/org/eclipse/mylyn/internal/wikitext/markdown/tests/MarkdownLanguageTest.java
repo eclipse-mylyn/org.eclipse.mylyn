@@ -38,7 +38,7 @@ import org.junit.Test;
  *
  * @author Stefan Seelmann
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
 	@Test
 	public void testDiscoverable() {

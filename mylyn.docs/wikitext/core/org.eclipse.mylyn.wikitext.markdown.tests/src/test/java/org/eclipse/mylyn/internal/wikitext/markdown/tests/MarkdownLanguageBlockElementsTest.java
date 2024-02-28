@@ -27,7 +27,7 @@ import org.junit.Test;
  *
  * @author Stefan Seelmann
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase {
 
 	/*
