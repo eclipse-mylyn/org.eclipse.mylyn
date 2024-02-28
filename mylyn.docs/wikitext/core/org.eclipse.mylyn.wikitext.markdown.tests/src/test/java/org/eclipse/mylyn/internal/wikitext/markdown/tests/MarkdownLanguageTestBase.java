@@ -32,7 +32,7 @@ import org.junit.Before;
  *
  * @author Stefan Seelmann
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public abstract class MarkdownLanguageTestBase {
 
 	private MarkupParser parser;

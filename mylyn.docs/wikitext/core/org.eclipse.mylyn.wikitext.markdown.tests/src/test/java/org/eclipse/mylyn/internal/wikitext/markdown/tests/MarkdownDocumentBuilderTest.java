@@ -33,7 +33,7 @@ import org.junit.Test;
  * @see http://daringfireball.net/projects/markdown/syntax
  * @author Leo Dos Santos
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class MarkdownDocumentBuilderTest {
 
 	private DocumentBuilder builder;

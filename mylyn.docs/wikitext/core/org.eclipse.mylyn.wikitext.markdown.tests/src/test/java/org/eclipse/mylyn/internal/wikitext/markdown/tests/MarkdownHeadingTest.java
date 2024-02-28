@@ -18,7 +18,7 @@ import org.eclipse.mylyn.wikitext.markdown.MarkdownLanguage;
 import org.eclipse.mylyn.wikitext.toolkit.AbstractMarkupGenerationTest;
 import org.junit.Test;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class MarkdownHeadingTest extends AbstractMarkupGenerationTest<MarkdownLanguage> {
 
 	@Test
