@@ -33,6 +33,7 @@ import org.junit.Test;
 /**
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class TracWikiLanguageTest {
 
 	private MarkupParser parser;
@@ -279,7 +280,7 @@ public class TracWikiLanguageTest {
 
 			assertTrue(Pattern.compile(
 					"<body><h" + x + " id=\"headingtext\">heading text</h" + x
-							+ "><p>first para\\s*first para line2</p><p>second para</p><p>third para</p></body>",
+					+ "><p>first para\\s*first para line2</p><p>second para</p><p>third para</p></body>",
 					Pattern.MULTILINE).matcher(html).find());
 
 			html = parser.parseToHtml(delimiter + "heading text" + delimiter + " #with-id-" + x
@@ -287,7 +288,7 @@ public class TracWikiLanguageTest {
 
 			assertTrue(Pattern.compile(
 					"<body><h" + x + " id=\"with-id-" + x + "\">heading text</h" + x
-							+ "><p>first para\\s*first para line2</p><p>second para</p><p>third para</p></body>",
+					+ "><p>first para\\s*first para line2</p><p>second para</p><p>third para</p></body>",
 					Pattern.MULTILINE).matcher(html).find());
 
 			html = parser.parseToHtml(delimiter + "heading text" + delimiter + "    \n"
@@ -295,7 +296,7 @@ public class TracWikiLanguageTest {
 
 			assertTrue(Pattern.compile(
 					"<body><h" + x + " id=\"headingtext\">heading text</h" + x
-							+ "><p>first para\\s*first para line2</p><p>second para</p><p>third para</p></body>",
+					+ "><p>first para\\s*first para line2</p><p>second para</p><p>third para</p></body>",
 					Pattern.MULTILINE).matcher(html).find());
 		}
 	}
@@ -581,21 +582,21 @@ public class TracWikiLanguageTest {
 		assertTrue(
 				Pattern.compile(
 						"""
-								<body>\
-								<p>normal para</p>\
-								<table>\
-								<tr>\
-								<td>a table</td>\
-								<td>row with three</td>\
-								<td>columns</td>\
-								</tr>\
-								<tr>\
-								<td>another</td>\
-								<td>row</td>\
-								<td></td>\
-								</tr>\
-								</table>\
-								<p>new para</p></body>""", Pattern.MULTILINE).matcher(html).find());
+						<body>\
+						<p>normal para</p>\
+						<table>\
+						<tr>\
+						<td>a table</td>\
+						<td>row with three</td>\
+						<td>columns</td>\
+						</tr>\
+						<tr>\
+						<td>another</td>\
+						<td>row</td>\
+						<td></td>\
+						</tr>\
+						</table>\
+						<p>new para</p></body>""", Pattern.MULTILINE).matcher(html).find());
 	}
 
 	@Test

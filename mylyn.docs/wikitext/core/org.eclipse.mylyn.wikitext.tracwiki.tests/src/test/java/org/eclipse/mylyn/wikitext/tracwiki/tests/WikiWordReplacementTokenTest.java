@@ -29,6 +29,7 @@ import org.junit.Test;
 /**
  * @author Holger Voormann
  */
+@SuppressWarnings("nls")
 public class WikiWordReplacementTokenTest {
 
 	private static final String SUFFIX = ". And so on...";
