@@ -35,6 +35,7 @@ import org.osgi.framework.BundleContext;
 
 import com.google.common.base.Throwables;
 
+@SuppressWarnings("nls")
 public class OsgiServiceLocatorTest {
 
 	@Test
@@ -105,7 +106,7 @@ public class OsgiServiceLocatorTest {
 			URL url = new URL("file:" + markupLanguage.getName());
 			List<URL> resources = Collections.singletonList(url);
 			doReturn(Collections.enumeration(resources)).when(bundle)
-					.findEntries(eq(servicesFolder), eq(MarkupLanguage.class.getName()), eq(false));
+			.findEntries(eq(servicesFolder), eq(MarkupLanguage.class.getName()), eq(false));
 			doReturn(1234L).when(bundle).getBundleId();
 			doReturn(markupLanguage).when(bundle).loadClass(eq(markupLanguage.getName()));
 		} catch (Exception e) {
