@@ -21,6 +21,7 @@ import java.io.StringReader;
 import java.net.URL;
 import java.util.Map;
 
+@SuppressWarnings("nls")
 public class TestMediaWikiApiImageFetchingStrategy extends MediaWikiApiImageFetchingStrategy {
 
 	private final Map<String, String> serverContent;

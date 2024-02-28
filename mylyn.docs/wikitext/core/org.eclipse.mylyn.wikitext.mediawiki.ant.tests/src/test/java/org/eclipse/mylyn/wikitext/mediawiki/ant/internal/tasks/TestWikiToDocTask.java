@@ -24,6 +24,7 @@ import org.apache.tools.ant.Project;
 /**
  * Extension of the {@link WikiToDocTask} for test purposes.
  */
+@SuppressWarnings("nls")
 class TestWikiToDocTask extends WikiToDocTask {
 
 	private Map<String, String> serverContent;
