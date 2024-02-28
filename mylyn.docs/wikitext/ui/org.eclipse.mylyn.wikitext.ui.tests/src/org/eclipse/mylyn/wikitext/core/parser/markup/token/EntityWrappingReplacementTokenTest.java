@@ -24,6 +24,7 @@ import org.junit.Test;
 /**
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class EntityWrappingReplacementTokenTest {
 	@Test
 	public void testFindQuotesAtStartOfLine() {

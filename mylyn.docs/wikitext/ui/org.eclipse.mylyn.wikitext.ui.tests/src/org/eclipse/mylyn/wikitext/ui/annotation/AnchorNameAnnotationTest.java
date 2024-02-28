@@ -21,6 +21,7 @@ import org.junit.Test;
  * @author David Green
  */
 @HeadRequired
+@SuppressWarnings("nls")
 public class AnchorNameAnnotationTest {
 	@Test
 	public void testSimple() {

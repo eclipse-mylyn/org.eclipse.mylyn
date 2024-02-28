@@ -30,6 +30,7 @@ import org.junit.Test;
  * @author David Green
  * @author Peter Friese bug 273355 Support image scaling for Textile -> DocBook
  */
+@SuppressWarnings("nls")
 public class TextileToDocbookTest {
 
 	private MarkupToDocbook textileToDocbook;

@@ -32,6 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 @HeadRequired
+@SuppressWarnings("nls")
 public class MarkupTokenScannerTest extends AbstractDocumentTest {
 
 	private MarkupTokenScanner tokenScanner;

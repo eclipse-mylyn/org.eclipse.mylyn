@@ -26,6 +26,7 @@ import org.junit.Test;
  * @author David Green
  */
 @EclipseRuntimeRequired
+@SuppressWarnings("nls")
 public class OutlineItemAdapterFactoryTest {
 	@Test
 	public void testAdaptsToIWorkbenchAdapter() {

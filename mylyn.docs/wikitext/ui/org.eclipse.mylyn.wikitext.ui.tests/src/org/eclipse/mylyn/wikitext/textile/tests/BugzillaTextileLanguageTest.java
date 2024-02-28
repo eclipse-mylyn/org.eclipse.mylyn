@@ -33,6 +33,7 @@ import org.junit.Test;
  * @author David Green
  */
 @EclipseRuntimeRequired
+@SuppressWarnings("nls")
 public class BugzillaTextileLanguageTest {
 
 	private MarkupParser parser;

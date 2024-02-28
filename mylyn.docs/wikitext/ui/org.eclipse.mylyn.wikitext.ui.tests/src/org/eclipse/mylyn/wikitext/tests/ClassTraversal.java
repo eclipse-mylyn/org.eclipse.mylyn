@@ -33,6 +33,7 @@ import org.osgi.framework.FrameworkUtil;
  *
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class ClassTraversal {
 	private static final Pattern BUNDLE_RESOURCE_35 = Pattern.compile("(\\d+)\\..*");
 

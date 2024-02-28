@@ -26,6 +26,7 @@ import org.junit.Test;
  * @author David Green
  * @see OutlineParserTest
  */
+@SuppressWarnings("nls")
 public class OutlineItemTest {
 	@Test
 	public void testContains() {
