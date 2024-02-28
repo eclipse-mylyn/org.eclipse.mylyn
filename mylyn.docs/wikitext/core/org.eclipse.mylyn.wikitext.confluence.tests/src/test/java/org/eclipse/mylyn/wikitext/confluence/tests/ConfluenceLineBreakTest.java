@@ -18,6 +18,7 @@ import org.eclipse.mylyn.wikitext.confluence.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.toolkit.AbstractMarkupGenerationTest;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class ConfluenceLineBreakTest extends AbstractMarkupGenerationTest<ConfluenceLanguage> {
 
 	@Override

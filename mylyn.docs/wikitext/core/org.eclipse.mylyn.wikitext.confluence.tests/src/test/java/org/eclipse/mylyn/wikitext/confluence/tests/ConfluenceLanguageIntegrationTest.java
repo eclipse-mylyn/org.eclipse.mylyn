@@ -31,6 +31,7 @@ import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvents;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class ConfluenceLanguageIntegrationTest {
 
 	@Test
