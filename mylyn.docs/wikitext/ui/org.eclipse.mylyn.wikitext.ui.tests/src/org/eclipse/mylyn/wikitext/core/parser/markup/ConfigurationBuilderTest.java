@@ -31,6 +31,7 @@ import org.junit.Test;
  *
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class ConfigurationBuilderTest {
 	@Test
 	public void testRepositorySettings() {

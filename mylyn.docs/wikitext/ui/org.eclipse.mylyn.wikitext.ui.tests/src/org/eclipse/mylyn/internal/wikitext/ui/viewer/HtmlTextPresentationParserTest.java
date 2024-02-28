@@ -40,6 +40,7 @@ import org.xml.sax.SAXException;
  * @author David Green
  */
 @HeadRequired
+@SuppressWarnings("nls")
 public class HtmlTextPresentationParserTest {
 
 	private HtmlTextPresentationParser parser;

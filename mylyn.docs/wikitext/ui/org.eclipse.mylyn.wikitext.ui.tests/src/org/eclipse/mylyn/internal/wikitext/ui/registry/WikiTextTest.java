@@ -25,6 +25,7 @@ import org.eclipse.mylyn.wikitext.ui.WikiText;
 import org.junit.Test;
 
 @EclipseRuntimeRequired
+@SuppressWarnings("nls")
 public class WikiTextTest {
 
 	@Test

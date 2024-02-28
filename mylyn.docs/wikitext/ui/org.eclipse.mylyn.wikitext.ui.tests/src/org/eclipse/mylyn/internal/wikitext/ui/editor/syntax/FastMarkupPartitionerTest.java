@@ -26,6 +26,7 @@ import org.junit.Test;
 /**
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 	@Test
 	public void testConnectLargeDocument() throws IOException {

@@ -52,6 +52,7 @@ import org.junit.Test;
  * @author David Green
  */
 @HeadRequired
+@SuppressWarnings("nls")
 public class FileTypesTest extends AbstractTestInWorkspace {
 
 	private IProject project;

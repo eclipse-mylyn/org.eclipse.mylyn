@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Text;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 
+@SuppressWarnings("nls")
 public class ScreenshotOnTimeoutRule extends TimeoutActionRule {
 
 	private static final Duration DEFAULT_TIMEOUT = Duration.ofMinutes(1L);

@@ -16,6 +16,7 @@ package org.eclipse.mylyn.wikitext.tests;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("nls")
 public class TestUtil {
 	public static String tagFragment(String tagName, String html) {
 		Pattern pattern = Pattern.compile("<" + tagName + ".*?>.*?</" + tagName + ">", Pattern.DOTALL);

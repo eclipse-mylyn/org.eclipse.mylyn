@@ -35,6 +35,7 @@ import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
 @HeadRequired
+@SuppressWarnings("nls")
 public abstract class AbstractTestInWorkspace {
 
 	@Rule

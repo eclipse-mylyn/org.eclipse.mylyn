@@ -30,6 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 @EclipseRuntimeRequired
+@SuppressWarnings("nls")
 public class EclipseServiceLocatorTest {
 
 	@Before

@@ -19,6 +19,7 @@ import org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class ServiceLocatorIntegrationTest {
 
 	@Test

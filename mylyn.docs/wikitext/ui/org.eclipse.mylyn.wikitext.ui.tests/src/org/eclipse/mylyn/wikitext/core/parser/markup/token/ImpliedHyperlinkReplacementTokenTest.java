@@ -29,6 +29,7 @@ import org.junit.Test;
  * @author David Green
  * @see ImpliedHyperlinkReplacementToken
  */
+@SuppressWarnings("nls")
 public class ImpliedHyperlinkReplacementTokenTest {
 
 	private Pattern pattern;
