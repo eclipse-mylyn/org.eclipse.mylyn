@@ -26,6 +26,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageProvider;
 import org.eclipse.mylyn.wikitext.parser.tests.MockMarkupLanguage;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class MarkupLanguageProviderTest {
 
 	static class TestLanguageProvider extends MarkupLanguageProvider {

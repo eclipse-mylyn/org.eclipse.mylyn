@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+@SuppressWarnings("nls")
 public class EqualityAsserts {
 
 	public static void assertEquality(Object one, Object two) {

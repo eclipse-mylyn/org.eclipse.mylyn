@@ -31,6 +31,7 @@ import org.eclipse.mylyn.wikitext.util.DefaultXmlStreamWriter;
 import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class XmlStreamWriterAdapterTest {
 
 	private final StringWriter out = new StringWriter();

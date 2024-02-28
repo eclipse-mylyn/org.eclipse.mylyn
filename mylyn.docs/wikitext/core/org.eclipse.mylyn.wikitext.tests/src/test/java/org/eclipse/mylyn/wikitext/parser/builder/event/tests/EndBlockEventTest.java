@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import org.eclipse.mylyn.wikitext.parser.builder.event.EndBlockEvent;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class EndBlockEventTest {
 
 	@Test

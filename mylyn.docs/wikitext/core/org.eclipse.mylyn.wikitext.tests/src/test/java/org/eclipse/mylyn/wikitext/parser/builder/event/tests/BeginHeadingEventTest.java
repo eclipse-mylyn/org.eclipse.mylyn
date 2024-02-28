@@ -22,6 +22,7 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.builder.event.BeginHeadingEvent;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class BeginHeadingEventTest {
 
 	@Test

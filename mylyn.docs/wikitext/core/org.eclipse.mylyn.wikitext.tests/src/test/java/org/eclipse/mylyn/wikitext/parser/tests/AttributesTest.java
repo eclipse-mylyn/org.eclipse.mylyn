@@ -20,6 +20,7 @@ import static org.junit.Assert.assertNotNull;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class AttributesTest {
 
 	@Test

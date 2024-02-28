@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import org.eclipse.mylyn.wikitext.parser.builder.event.CharactersEvent;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class CharactersEventTest {
 
 	@Test

@@ -41,6 +41,7 @@ import com.google.common.io.Resources;
  * @author David Green
  * @author Torkild U. Resheim
  */
+@SuppressWarnings("nls")
 public class XslfoDocumentBuilderIntegrationTest {
 
 	private StringWriter out;

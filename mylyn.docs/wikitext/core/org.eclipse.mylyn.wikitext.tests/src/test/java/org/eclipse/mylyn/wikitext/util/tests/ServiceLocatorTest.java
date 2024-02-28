@@ -47,6 +47,7 @@ import org.junit.Test;
  *
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class ServiceLocatorTest {
 
 	static class TestMarkupLanguage extends MarkupLanguage {

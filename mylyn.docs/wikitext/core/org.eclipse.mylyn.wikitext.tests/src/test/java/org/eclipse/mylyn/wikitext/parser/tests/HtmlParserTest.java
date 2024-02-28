@@ -29,6 +29,7 @@ import org.junit.Test;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+@SuppressWarnings("nls")
 public class HtmlParserTest {
 
 	@Test

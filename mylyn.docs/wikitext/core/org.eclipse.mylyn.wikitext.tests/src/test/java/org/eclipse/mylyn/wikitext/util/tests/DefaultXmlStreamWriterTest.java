@@ -22,6 +22,7 @@ import java.io.StringWriter;
 import org.eclipse.mylyn.wikitext.util.DefaultXmlStreamWriter;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class DefaultXmlStreamWriterTest {
 
 	private final StringWriter out = new StringWriter();
