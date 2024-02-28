@@ -28,6 +28,7 @@ import java.util.Objects;
 
 import org.eclipse.mylyn.wikitext.toolkit.TestResources;
 
+@SuppressWarnings("nls")
 class MediaWikiMockFixture {
 	private final File serverFolder;
 
