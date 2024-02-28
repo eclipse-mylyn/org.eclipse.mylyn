@@ -34,6 +34,7 @@ import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class HtmlSubsetDocumentBuilderTest {
 
 	private StringWriter writer;

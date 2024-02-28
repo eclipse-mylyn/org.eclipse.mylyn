@@ -32,6 +32,7 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class HtmlLanguageBuilderTest {
 
 	private HtmlLanguageBuilder builder;
