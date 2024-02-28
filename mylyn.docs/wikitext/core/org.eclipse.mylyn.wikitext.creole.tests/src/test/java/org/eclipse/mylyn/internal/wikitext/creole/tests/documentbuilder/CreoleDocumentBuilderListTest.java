@@ -25,6 +25,7 @@ import org.junit.Test;
  * @see http://www.wikicreole.org/wiki/Elements
  * @author Kevin de Vlaming
  */
+@SuppressWarnings("nls")
 public class CreoleDocumentBuilderListTest extends AbstractCreoleDocumentBuilderTest {
 	@Test
 	public void testListBulleted() {
@@ -170,21 +171,21 @@ public class CreoleDocumentBuilderListTest extends AbstractCreoleDocumentBuilder
 
 		assertEquals(//
 				"""
-						* item 1
-						** item 1.A.
-						** item 1.B.
-						* item 2
-						## item 2.A.
-						## item 2.B.
+				* item 1
+				** item 1.A.
+				** item 1.B.
+				* item 2
+				## item 2.A.
+				## item 2.B.
 
-						# item 3
-						** item 3.A.
-						** item 3.B.
-						### item 3.B.i.
-						### item 3.B.ii.
-						** item 3.C.\
-						\\\\item 3.C. line 2
-						""", //
+				# item 3
+				** item 3.A.
+				** item 3.B.
+				### item 3.B.i.
+				### item 3.B.ii.
+				** item 3.C.\
+				\\\\item 3.C. line 2
+				""", //
 				markup);
 	}
 

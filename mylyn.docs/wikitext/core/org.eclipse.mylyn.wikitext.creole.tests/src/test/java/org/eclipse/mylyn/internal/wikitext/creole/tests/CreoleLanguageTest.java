@@ -29,6 +29,7 @@ import org.junit.Test;
  * @author Igor Malinin
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class CreoleLanguageTest {
 
 	private MarkupParser parser;
