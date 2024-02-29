@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
 /**
  * @author David Green
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public abstract class AbstractSaxParserTest {
 
 	protected AbstractSaxHtmlParser parser;

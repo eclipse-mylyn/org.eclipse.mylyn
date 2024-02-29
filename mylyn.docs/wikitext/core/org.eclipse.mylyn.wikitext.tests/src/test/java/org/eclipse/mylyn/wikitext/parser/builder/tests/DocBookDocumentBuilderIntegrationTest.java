@@ -27,7 +27,7 @@ import org.junit.Test;
 /**
  * @author David Green
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class DocBookDocumentBuilderIntegrationTest {
 
 	private final static String DOCBOOK_BEGIN = "<?xml version='1.0' ?><!DOCTYPE book PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\"><book><title></title><chapter><title></title>";

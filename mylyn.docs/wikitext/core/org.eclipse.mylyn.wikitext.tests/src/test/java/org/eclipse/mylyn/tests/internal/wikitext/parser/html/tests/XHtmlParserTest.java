@@ -21,6 +21,7 @@ import org.eclipse.mylyn.wikitext.internal.parser.html.XHtmlParser;
  * @author David Green
  * @see XHtmlParser
  */
+@SuppressWarnings("restriction")
 public class XHtmlParserTest extends AbstractSaxParserTest {
 
 	@Override
