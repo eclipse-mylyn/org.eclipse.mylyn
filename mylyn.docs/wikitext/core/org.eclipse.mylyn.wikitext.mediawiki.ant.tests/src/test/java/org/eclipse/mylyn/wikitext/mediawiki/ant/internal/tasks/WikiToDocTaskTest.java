@@ -32,7 +32,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class WikiToDocTaskTest {
 
 	@Rule
