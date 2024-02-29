@@ -31,7 +31,7 @@ import org.junit.Test;
  * @author David Green
  * @see TextileDocumentBuilder
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class TextileDocumentBuilderTest {
 
 	private static final String[] PLATFORM_NEWLINES = { //

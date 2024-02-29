@@ -46,7 +46,7 @@ import org.junit.Test;
  * @author David Green
  * @see TextileLanguageTasksTest
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLanguage> {
 
 	private static final String REGEX_NEWLINE = "(?:\\s*?^)";

@@ -18,7 +18,7 @@ import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 import org.eclipse.mylyn.wikitext.toolkit.AbstractMarkupGenerationTest;
 import org.junit.Test;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class TextileCommentBlockTest extends AbstractMarkupGenerationTest<TextileLanguage> {
 
 	@Test
