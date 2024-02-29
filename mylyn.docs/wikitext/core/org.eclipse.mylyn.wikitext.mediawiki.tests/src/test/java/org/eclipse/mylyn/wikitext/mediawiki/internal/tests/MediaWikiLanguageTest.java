@@ -48,7 +48,7 @@ import com.google.common.io.Resources;
 /**
  * @author David Green
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWikiLanguage> {
 
 	private Locale locale;
