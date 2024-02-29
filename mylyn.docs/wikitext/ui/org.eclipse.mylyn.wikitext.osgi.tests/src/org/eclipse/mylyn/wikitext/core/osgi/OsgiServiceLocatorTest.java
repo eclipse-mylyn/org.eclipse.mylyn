@@ -35,7 +35,7 @@ import org.osgi.framework.BundleContext;
 
 import com.google.common.base.Throwables;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class OsgiServiceLocatorTest {
 
 	@Test

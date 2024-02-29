@@ -20,6 +20,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 
 import com.google.common.base.Strings;
 
+@SuppressWarnings("restriction")
 public class MockMarkupLanguage extends MarkupLanguage {
 	public MockMarkupLanguage(String name) {
 		checkArgument(!Strings.isNullOrEmpty(name));
