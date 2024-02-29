@@ -23,7 +23,7 @@ import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.junit.Before;
 import org.junit.Test;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class TWikiLanguageTest {
 
 	private TWikiLanguage language;
