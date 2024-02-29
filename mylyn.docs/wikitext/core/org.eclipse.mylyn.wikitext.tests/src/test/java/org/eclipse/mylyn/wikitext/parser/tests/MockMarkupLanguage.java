@@ -19,6 +19,7 @@ import java.util.Objects;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 
+@SuppressWarnings("restriction")
 public class MockMarkupLanguage extends MarkupLanguage {
 
 	public MockMarkupLanguage() {

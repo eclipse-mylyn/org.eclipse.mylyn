@@ -23,7 +23,7 @@ import org.eclipse.mylyn.wikitext.util.FormattingXMLStreamWriter;
 import org.junit.Before;
 import org.junit.Test;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class FormattingXMLStreamWriterTest {
 
 	private StringWriter out;

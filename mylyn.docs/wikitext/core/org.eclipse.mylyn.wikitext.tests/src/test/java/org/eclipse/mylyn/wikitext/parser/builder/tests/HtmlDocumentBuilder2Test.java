@@ -48,7 +48,7 @@ import org.junit.Test;
  * @author David Green
  * @author Torkild U. Resheim
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class HtmlDocumentBuilder2Test {
 
 	private MarkupParser parser;

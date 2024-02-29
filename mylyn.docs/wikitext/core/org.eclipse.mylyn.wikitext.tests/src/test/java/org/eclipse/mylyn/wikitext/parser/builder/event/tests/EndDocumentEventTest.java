@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 import org.eclipse.mylyn.wikitext.parser.builder.event.EndDocumentEvent;
 import org.junit.Test;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class EndDocumentEventTest {
 
 	@Test

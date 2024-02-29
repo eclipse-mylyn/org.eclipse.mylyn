@@ -49,7 +49,7 @@ import org.eclipse.mylyn.wikitext.parser.builder.event.LineBreakEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.LinkEvent;
 import org.junit.Test;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class EventDocumentBuilderTest {
 
 	private final EventDocumentBuilder builder = new EventDocumentBuilder();

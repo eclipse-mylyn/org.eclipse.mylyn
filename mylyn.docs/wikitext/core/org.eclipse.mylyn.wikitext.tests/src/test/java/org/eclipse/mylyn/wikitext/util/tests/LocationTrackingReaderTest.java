@@ -26,7 +26,7 @@ import org.junit.Test;
 /**
  * @author David Green
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class LocationTrackingReaderTest {
 	@Test
 	public void testCharOffset() throws IOException {

@@ -20,6 +20,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageProvider;
 import org.eclipse.mylyn.wikitext.parser.tests.MockMarkupLanguage;
 
+@SuppressWarnings("restriction")
 public class MockMarkupLanguageProvider extends MarkupLanguageProvider {
 
 	@Override

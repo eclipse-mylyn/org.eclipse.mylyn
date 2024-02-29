@@ -26,7 +26,7 @@ import org.junit.Test;
 /**
  * @author David Green
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class DocumentProcessorTest {
 	// subclass to work around cross-Bundle package access limitations
 	private static class TestDocumentProcessor extends DocumentProcessor {

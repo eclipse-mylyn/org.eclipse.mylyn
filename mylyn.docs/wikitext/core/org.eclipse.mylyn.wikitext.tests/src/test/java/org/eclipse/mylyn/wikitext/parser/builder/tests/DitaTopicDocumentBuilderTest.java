@@ -31,7 +31,7 @@ import org.eclipse.mylyn.wikitext.util.DefaultXmlStreamWriter;
 import org.junit.Before;
 import org.junit.Test;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class DitaTopicDocumentBuilderTest {
 
 	private MarkupParser parser;
