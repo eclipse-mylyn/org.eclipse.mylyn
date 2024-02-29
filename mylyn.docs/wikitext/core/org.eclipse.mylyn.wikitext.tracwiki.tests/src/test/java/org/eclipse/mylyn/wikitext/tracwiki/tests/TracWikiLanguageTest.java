@@ -33,7 +33,7 @@ import org.junit.Test;
 /**
  * @author David Green
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class TracWikiLanguageTest {
 
 	private MarkupParser parser;
