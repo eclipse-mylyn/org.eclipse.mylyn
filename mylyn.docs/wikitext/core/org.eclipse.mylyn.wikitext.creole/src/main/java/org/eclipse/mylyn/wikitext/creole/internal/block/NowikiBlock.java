@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Igor Malinin and others.
+ * Copyright (c) 2011, 2024 Igor Malinin and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Igor Malinin - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.creole.internal.block;
 
@@ -43,7 +44,7 @@ public class NowikiBlock extends Block {
 				return -1;
 			}
 			if (blockLineCount > 2) {
-				builder.characters("\n");
+				builder.characters("\n"); //$NON-NLS-1$
 			}
 			builder.characters(line);
 		}
