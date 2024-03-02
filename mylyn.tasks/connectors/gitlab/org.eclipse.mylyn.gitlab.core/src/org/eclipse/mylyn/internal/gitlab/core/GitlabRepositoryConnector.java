@@ -14,7 +14,6 @@
 
 package org.eclipse.mylyn.internal.gitlab.core;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -119,18 +118,9 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 		return false;
 	}
 
-	private final PropertyChangeListener repositoryChangeListener4ConfigurationCache = new PropertyChangeListener() {
+	private PropertyChangeListener repositoryChangeListener4ConfigurationCache = null;
 
-		@Override
-		public void propertyChange(PropertyChangeEvent evt) {
-			if (ignoredProperty(evt.getPropertyName())
-					|| evt.getPropertyName().equals("org.eclipse.mylyn.tasklist.repositories.password")) { //$NON-NLS-1$
-				return;
-			}
-			TaskRepository taskRepository = (TaskRepository) evt.getSource();
-			configurationCache.invalidate(new RepositoryKey(taskRepository));
-		}
-	};
+	private PropertyChangeListener repositoryChangeListener4ClientCache;
 
 	protected Caffeine<Object, Object> createCacheBuilder(Duration expireAfterWriteDuration,
 			Duration refreshAfterWriteDuration) {
@@ -151,6 +141,20 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 					repository.addChangeListener(repositoryChangeListener4ConfigurationCache);
 					return Optional.ofNullable(client.getConfiguration(key.getRepository(), context.get()));
 				});
+
+		repositoryChangeListener4ClientCache = evt -> {
+			TaskRepository taskRepository = (TaskRepository) evt.getSource();
+			clientCache.invalidate(new RepositoryKey(taskRepository));
+		};
+
+		repositoryChangeListener4ConfigurationCache = evt -> {
+			if (ignoredProperty(evt.getPropertyName())
+					|| evt.getPropertyName().equals("org.eclipse.mylyn.tasklist.repositories.password")) { //$NON-NLS-1$
+				return;
+			}
+			TaskRepository taskRepository = (TaskRepository) evt.getSource();
+			configurationCache.invalidate(new RepositoryKey(taskRepository));
+		};
 	}
 
 	public GitlabConfiguration getRepositoryConfiguration(TaskRepository repository) throws CoreException {
@@ -309,11 +313,6 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 	public GitlabRestClient getClient(TaskRepository repository) throws CoreException {
 		return clientCache.get(new RepositoryKey(repository));
 	}
-
-	private final PropertyChangeListener repositoryChangeListener4ClientCache = evt -> {
-		TaskRepository taskRepository = (TaskRepository) evt.getSource();
-		this.clientCache.invalidate(new RepositoryKey(taskRepository));
-	};
 
 	private final LoadingCache<RepositoryKey, GitlabRestClient> clientCache = Caffeine.newBuilder()
 			.expireAfterAccess(CLIENT_CACHE_DURATION.getValue(), CLIENT_CACHE_DURATION.getUnit())

@@ -144,7 +144,7 @@ class RestfulGitlabClientTest {
 		}
 		techUsers.sort(Comparator.naturalOrder());
 		String fName = "testdata/getNamespaces" + (techUsers.size() > 0 ? "_" : "") + String.join("_", techUsers)
-		+ ".json";
+				+ ".json";
 
 		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(resultElement);
 		String expected = IOUtils.toString(CommonTestUtil.getResource(this, fName), Charset.defaultCharset());
