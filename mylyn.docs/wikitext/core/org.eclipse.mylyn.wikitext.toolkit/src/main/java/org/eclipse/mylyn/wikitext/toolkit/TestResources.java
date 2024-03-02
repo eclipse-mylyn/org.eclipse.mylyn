@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 David Green and others.
+ * Copyright (c) 2017, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.toolkit;
 
@@ -23,6 +24,7 @@ import com.google.common.io.Resources;
 /**
  * @since 3.0
  */
+@SuppressWarnings("nls")
 public class TestResources {
 
 	public static String load(Class<?> relativeToClass, String path) {

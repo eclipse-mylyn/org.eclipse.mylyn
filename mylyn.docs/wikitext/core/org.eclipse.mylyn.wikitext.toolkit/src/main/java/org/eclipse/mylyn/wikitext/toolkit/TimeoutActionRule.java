@@ -1,3 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2017, 2024 Contributors to the Eclipse Foundation.
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
+ * which accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     see git history
+ *******************************************************************************/
 package org.eclipse.mylyn.wikitext.toolkit;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -16,6 +29,7 @@ import org.junit.runners.model.Statement;
  *
  * @since 3.0
  */
+@SuppressWarnings("nls")
 public abstract class TimeoutActionRule implements TestRule {
 	private Duration timeoutDuration;
 
