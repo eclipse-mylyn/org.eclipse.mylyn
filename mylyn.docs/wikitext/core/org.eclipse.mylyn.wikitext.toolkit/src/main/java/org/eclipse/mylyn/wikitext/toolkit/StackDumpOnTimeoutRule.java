@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Tasktop Technologies Inc. and others.
+ * Copyright (c) 2016, 2024 Tasktop Technologies Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.toolkit;
 
@@ -27,6 +28,7 @@ import org.junit.rules.TestRule;
  *
  * @since 3.0
  */
+@SuppressWarnings("nls")
 public class StackDumpOnTimeoutRule extends TimeoutActionRule {
 
 	private static final Duration DEFAULT_TIMEOUT = Duration.ofMinutes(1L);
