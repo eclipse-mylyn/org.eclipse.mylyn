@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2017 Tasktop Technologies.
+ * Copyright (c) 2011, 2024 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.confluence.internal;
@@ -46,10 +47,10 @@ import com.google.common.base.Strings;
  */
 public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
-	private static final String NEWLINE_REGEX = "(?:\r\n|\r|\n)";
+	private static final String NEWLINE_REGEX = "(?:\r\n|\r|\n)"; //$NON-NLS-1$
 
 	private static final Pattern PATTERN_MULTIPLE_NEWLINES = Pattern
-			.compile("(" + NEWLINE_REGEX + "(?:\\s+" + NEWLINE_REGEX + "|" + NEWLINE_REGEX + ")+)"); //$NON-NLS-1$
+			.compile("(" + NEWLINE_REGEX + "(?:\\s+" + NEWLINE_REGEX + "|" + NEWLINE_REGEX + ")+)"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 	private static final CharMatcher SPAN_MARKUP_CHARACTERS = CharMatcher.anyOf("*_+-^~{}[]?%@"); //$NON-NLS-1$
 
@@ -152,7 +153,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 				if (consecutiveLineBreakCount == 1) {
 					ConfluenceDocumentBuilder.this.emitContent('\n');
 				} else {
-					ConfluenceDocumentBuilder.this.emitContent("\u00A0\n"); // 'NO-BREAK SPACE'
+					ConfluenceDocumentBuilder.this.emitContent("\u00A0\n"); // 'NO-BREAK SPACE' //$NON-NLS-1$
 				}
 			} else if (consecutiveLineBreakCount == 1 || isBlockTypePreservingWhitespace()) {
 				if (isPrefixedBlockTerminatedByNewlines()) {
@@ -201,7 +202,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 					content = CharMatcher.whitespace().trimFrom(content);
 				}
 				if (collapsingConsecutiveNewlines) {
-					content = PATTERN_MULTIPLE_NEWLINES.matcher(content).replaceAll("\n");
+					content = PATTERN_MULTIPLE_NEWLINES.matcher(content).replaceAll("\n"); //$NON-NLS-1$
 				}
 				emitContent(content);
 				emitSuffix(content);
@@ -350,7 +351,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			case WARNING:
 				attributes.appendCssClass(type.name().toLowerCase());
 			case PARAGRAPH:
-				return new ContentBlock(type, "", "", false, false, doubleNewlineDelimiterCount(), //$NON-NLS-1$
+				return new ContentBlock(type, "", "", false, false, doubleNewlineDelimiterCount(), //$NON-NLS-1$ //$NON-NLS-2$
 						doubleNewlineDelimiterCount());
 			case PREFORMATTED:
 				return new ContentBlock(type, "{noformat}", "{noformat}", false, false, doubleNewlineDelimiterCount(), //$NON-NLS-1$//$NON-NLS-2$
@@ -590,7 +591,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	void emitEscapedContent(int c) throws IOException {
 		if (c == '\\') {
-			super.emitContent("&#92;");
+			super.emitContent("&#92;"); //$NON-NLS-1$
 		} else {
 			emitEscapeCharacter(c);
 			super.emitContent(c);
@@ -613,15 +614,15 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	private void writeImageAttributes(Attributes attributes) throws IOException {
 		if (attributes instanceof ImageAttributes imageAttributes) {
-			String attributeMarkup = "";
+			String attributeMarkup = ""; //$NON-NLS-1$
 			if (!Strings.isNullOrEmpty(imageAttributes.getAlt())) {
-				attributeMarkup = "alt=\"" + imageAttributes.getAlt() + "\"";
+				attributeMarkup = "alt=\"" + imageAttributes.getAlt() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			if (!Strings.isNullOrEmpty(imageAttributes.getTitle())) {
 				if (!attributeMarkup.isEmpty()) {
-					attributeMarkup += ",";
+					attributeMarkup += ","; //$NON-NLS-1$
 				}
-				attributeMarkup += "title=\"" + imageAttributes.getTitle() + "\"";
+				attributeMarkup += "title=\"" + imageAttributes.getTitle() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			if (!attributeMarkup.isEmpty()) {
 				super.emitContent('|');

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2017 David Green and others.
+ * Copyright (c) 2007, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.confluence.internal.block;
 
@@ -36,16 +37,16 @@ public class TableBlock extends Block {
 
 	private static final Pattern START_PATTERN = Pattern.compile("\\s*(\\|\\|?.*$)"); //$NON-NLS-1$
 
-	private static final String LINK_REGEX = "(?:\\[[^\\[]*?\\])";
+	private static final String LINK_REGEX = "(?:\\[[^\\[]*?\\])"; //$NON-NLS-1$
 
-	static final String CELL_CONTENT_REGEX = "(?:\\\\\\||[^|\\[]|" + LINK_REGEX + "|\\[)*+";
+	static final String CELL_CONTENT_REGEX = "(?:\\\\\\||[^|\\[]|" + LINK_REGEX + "|\\[)*+"; //$NON-NLS-1$ //$NON-NLS-2$
 
-	private static final Pattern END_OF_CELL_CONTENT_PATTERN = Pattern.compile("(" + CELL_CONTENT_REGEX + ")" //$NON-NLS-1$
+	private static final Pattern END_OF_CELL_CONTENT_PATTERN = Pattern.compile("(" + CELL_CONTENT_REGEX + ")" //$NON-NLS-1$ //$NON-NLS-2$
 			+ "(\\|\\|?\\s*)+?"); //$NON-NLS-1$
 
 	private static final Pattern END_OF_ROW_PATTERN = Pattern.compile("^\\|\\|?\\s*$"); //$NON-NLS-1$
 
-	private static final Pattern TABLE_ROW_PATTERN = Pattern.compile("\\|(\\|)?\\s*" + "(" + CELL_CONTENT_REGEX + ")" //$NON-NLS-1$ //$NON-NLS-2$
+	private static final Pattern TABLE_ROW_PATTERN = Pattern.compile("\\|(\\|)?\\s*" + "(" + CELL_CONTENT_REGEX + ")" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			+ "(\\|\\|?\\s*$)?"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;

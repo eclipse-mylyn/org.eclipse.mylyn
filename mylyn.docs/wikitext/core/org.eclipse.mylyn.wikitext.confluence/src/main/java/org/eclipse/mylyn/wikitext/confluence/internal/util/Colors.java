@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Holger Staudacher and others.
+ * Copyright (c) 2017, 2024 Holger Staudacher and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Holger Staudacher - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.confluence.internal.util;
@@ -19,7 +20,7 @@ import java.util.regex.Pattern;
 public class Colors {
 
 	private static final Pattern RGB_PATTERN = Pattern
-			.compile("rgb\\(\\s*(\\d{1,3}+)\\s*,\\s*(\\d{1,3}+)\\s*,\\s*(\\d{1,3}+)\\s*\\)");
+			.compile("rgb\\(\\s*(\\d{1,3}+)\\s*,\\s*(\\d{1,3}+)\\s*,\\s*(\\d{1,3}+)\\s*\\)"); //$NON-NLS-1$
 
 	public static String asHex(String color) {
 		Matcher rgbMatcher = RGB_PATTERN.matcher(color);
@@ -34,7 +35,7 @@ public class Colors {
 	}
 
 	private static String formatRgbAsHex(int r, int g, int b) {
-		return String.format("#%02x%02x%02x", r, g, b);
+		return String.format("#%02x%02x%02x", r, g, b); //$NON-NLS-1$
 	}
 
 	private Colors() {
