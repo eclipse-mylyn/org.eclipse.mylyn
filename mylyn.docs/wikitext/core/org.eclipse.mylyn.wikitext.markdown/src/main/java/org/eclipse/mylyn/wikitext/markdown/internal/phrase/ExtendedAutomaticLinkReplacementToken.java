@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2020 Fraunhofer FOKUS and others.
+ * Copyright (c) 2020, 2024 Fraunhofer FOKUS and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Max Bureck (Fraunhofer FOKUS) - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.markdown.internal.phrase;
@@ -47,7 +48,7 @@ public class ExtendedAutomaticLinkReplacementToken extends PatternBasedElement {
 	 */
 	private static final String AUTOMATIC_LINK_REGEX = "(?<=^|\\s|\\p{Punct})((https?://(?!/)|www\\.)[a-zA-Z0-9:/?#\\[\\]@!$&'\\(\\)\\*+,;=\\-\\._~%]+)(?=$|\"|\\s|<)"; //$NON-NLS-1$
 
-	private static final Set<String> EMPTY_LINKS = Set.of("www.", "http://", "https://");
+	private static final Set<String> EMPTY_LINKS = Set.of("www.", "http://", "https://"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	@Override
 	protected String getPattern(int groupOffset) {
@@ -65,12 +66,10 @@ public class ExtendedAutomaticLinkReplacementToken extends PatternBasedElement {
 			@Override
 			public void emit() {
 				String href = group(1);
-				int parensBalance = href.codePoints().map(c -> {
-					return switch (c) {
-						case '(' -> -1;
-						case ')' -> +1;
-						default -> 0;
-					};
+				int parensBalance = href.codePoints().map(c -> switch (c) {
+					case '(' -> -1;
+					case ')' -> +1;
+					default -> 0;
 				}).sum();
 				// omit punctuation
 				int endIndex = -1;
