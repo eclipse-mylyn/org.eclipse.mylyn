@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2024 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.maven.internal;
@@ -28,12 +29,12 @@ public class SourceFileTraversal {
 
 	public SourceFileTraversal(File root) {
 		this.root = requireNonNull(root);
-		checkArgument(root.exists(), "Root folder must exist");
-		checkArgument(root.isDirectory(), "Root folder must be a folder");
+		checkArgument(root.exists(), "Root folder must exist"); //$NON-NLS-1$
+		checkArgument(root.isDirectory(), "Root folder must be a folder"); //$NON-NLS-1$
 	}
 
 	public void traverse(Visitor visitor) {
-		traverse("", root, visitor);
+		traverse("", root, visitor); //$NON-NLS-1$
 	}
 
 	void traverse(String relativePath, File file, Visitor visitor) {
@@ -42,7 +43,7 @@ public class SourceFileTraversal {
 		} else if (file.isDirectory()) {
 			File[] children = file.listFiles();
 			if (children != null) {
-				String childRelativePath = file.equals(root) ? "" : file.getName();
+				String childRelativePath = file.equals(root) ? "" : file.getName(); //$NON-NLS-1$
 				if (relativePath.length() > 0) {
 					childRelativePath = relativePath + File.separator + childRelativePath;
 				}

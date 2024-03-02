@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013. 2021 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2024 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.maven.internal;
@@ -32,7 +33,7 @@ public class FileToMarkupLanguage {
 	}
 
 	public FileToMarkupLanguage(Set<MarkupLanguage> markupLanguages) {
-		this.extensionToMarkupLanguage = computeExtensionToMarkupLanguage(requireNonNull(markupLanguages));
+		extensionToMarkupLanguage = computeExtensionToMarkupLanguage(requireNonNull(markupLanguages));
 	}
 
 	public MarkupLanguage get(File file) {
@@ -54,9 +55,9 @@ public class FileToMarkupLanguage {
 	String computeFileExtension(File file) {
 		String name = file.getName();
 		int indexOfDot = name.lastIndexOf('.');
-		if (indexOfDot >= 0 && indexOfDot < (name.length() - 1)) {
+		if (indexOfDot >= 0 && indexOfDot < name.length() - 1) {
 			return name.substring(indexOfDot + 1);
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 }

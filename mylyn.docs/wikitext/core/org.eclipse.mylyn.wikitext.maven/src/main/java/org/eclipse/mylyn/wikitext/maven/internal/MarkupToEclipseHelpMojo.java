@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2022 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2024 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.maven.internal;
 
@@ -98,7 +99,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	protected boolean multipleOutputFiles = false;
 
 	@Parameter(defaultValue = "utf-8")
-	private final String sourceEncoding = "utf-8";
+	private final String sourceEncoding = "utf-8"; //$NON-NLS-1$
 
 	/**
 	 * Indicate if the output should be formatted (true/false). Default is false.
@@ -202,11 +203,11 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 			ServiceLocator serviceLocator = ServiceLocator.getInstance(MarkupToEclipseHelpMojo.class.getClassLoader());
 			Set<MarkupLanguage> markupLanguages = serviceLocator.getAllMarkupLanguages();
 			if (markupLanguages.isEmpty()) {
-				throw new MojoFailureException("No markup languages are available");
+				throw new MojoFailureException("No markup languages are available"); //$NON-NLS-1$
 			}
 
 			getLog().info(
-					format("Generating Eclipse help content from sources: {0} -> {1}", sourceFolder, outputFolder));
+					format("Generating Eclipse help content from sources: {0} -> {1}", sourceFolder, outputFolder)); //$NON-NLS-1$
 
 			final FileToMarkupLanguage fileToMarkupLanguage = new FileToMarkupLanguage(markupLanguages);
 			SourceFileTraversal fileTraversal = new SourceFileTraversal(sourceFolder);
@@ -217,7 +218,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 
 				process(sourceFile, relativePath, fileToMarkupLanguage.get(sourceFile));
 			});
-			getLog().info(format("Processed {0} files", fileCount.get()));
+			getLog().info(format("Processed {0} files", fileCount.get())); //$NON-NLS-1$
 		} catch (BuildFailureException e) {
 			getLog().error(e.getMessage(), e);
 			throw new MojoFailureException(e.getMessage(), e.getCause());
@@ -234,18 +235,18 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 
 	private void copy(File sourceFile, String relativePath) {
 		File targetFolder = new File(outputFolder, relativePath);
-		ensureFolderExists("target folder", targetFolder, true);
+		ensureFolderExists("target folder", targetFolder, true); //$NON-NLS-1$
 		File targetFile = new File(targetFolder, sourceFile.getName());
 		try {
 			Files.copy(sourceFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			throw new BuildFailureException(
-					format("Cannot copy {0} to {1}: {2}", sourceFile, targetFile, e.getMessage()), e);
+					format("Cannot copy {0} to {1}: {2}", sourceFile, targetFile, e.getMessage()), e); //$NON-NLS-1$
 		}
 	}
 
 	protected void processMarkup(File sourceFile, String relativePath, MarkupLanguage markupLanguage) {
-		getLog().info(format("Processing markup file: {0}", sourceFile));
+		getLog().info(format("Processing markup file: {0}", sourceFile)); //$NON-NLS-1$
 
 		String name = sourceFile.getName();
 		if (name.lastIndexOf('.') != -1) {
@@ -257,7 +258,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 
 			if (!htmlOutputFile.getParentFile().exists()) {
 				if (!htmlOutputFile.getParentFile().mkdirs()) {
-					throw new BuildFailureException(format("Cannot create folder {0}", htmlOutputFile.getParentFile()));
+					throw new BuildFailureException(format("Cannot create folder {0}", htmlOutputFile.getParentFile())); //$NON-NLS-1$
 				}
 			}
 
@@ -291,7 +292,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 		try {
 			writer.close();
 		} catch (IOException e) {
-			throw new BuildFailureException(format("Cannot write to file {0}: {1}", file, e.getMessage()));
+			throw new BuildFailureException(format("Cannot write to file {0}: {1}", file, e.getMessage())); //$NON-NLS-1$
 		}
 	}
 
@@ -306,7 +307,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 
 				writer.write(tocXml);
 			} catch (IOException e) {
-				throw new BuildFailureException(format("Cannot write to file {0}: {1}", tocOutputFile, e.getMessage()),
+				throw new BuildFailureException(format("Cannot write to file {0}: {1}", tocOutputFile, e.getMessage()), //$NON-NLS-1$
 						e);
 			} finally {
 				close(writer, tocOutputFile);
@@ -327,14 +328,14 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	}
 
 	protected String calculateHelpPrefix(String relativePath) {
-		String prefix = helpPrefix == null ? "" : helpPrefix;
+		String prefix = helpPrefix == null ? "" : helpPrefix; //$NON-NLS-1$
 		if (relativePath.length() > 0) {
 			if (prefix.length() > 0) {
-				prefix += "/";
+				prefix += "/"; //$NON-NLS-1$
 			}
 			prefix += relativePath;
 		}
-		return prefix.length() == 0 ? null : prefix.replaceAll("\\\\", "/");
+		return prefix.length() == 0 ? null : prefix.replace('\\', '/');
 	}
 
 	private File computeTocFile(File htmlFile, String name) {
@@ -350,7 +351,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 		splittingBuilder.setRootFile(htmlOutputFile);
 		splittingBuilder.setNavigationImages(navigationImages);
 		splittingBuilder
-				.setNavigationImagePath(computeResourcePath(splittingBuilder.getNavigationImagePath(), relativePath));
+		.setNavigationImagePath(computeResourcePath(splittingBuilder.getNavigationImagePath(), relativePath));
 		splittingBuilder.setFormatting(formatOutput);
 		return splittingBuilder;
 	}
@@ -394,13 +395,13 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	}
 
 	protected String computeResourcePath(String resourcePath, String relativePath) {
-		if (resourcePath.startsWith("/") || isAbsoluteUri(resourcePath)) {
+		if (resourcePath.startsWith("/") || isAbsoluteUri(resourcePath)) { //$NON-NLS-1$
 			return resourcePath;
 		}
 		String path = resourcePath;
-		String prefix = relativePath.replaceAll("[^\\\\/]+", "..").replace('\\', '/');
+		String prefix = relativePath.replaceAll("[^\\\\/]+", "..").replace('\\', '/'); //$NON-NLS-1$ //$NON-NLS-2$
 		if (prefix.length() > 0) {
-			if (!resourcePath.startsWith("/")) {
+			if (!resourcePath.startsWith("/")) { //$NON-NLS-1$
 				prefix += '/';
 			}
 			path = prefix + resourcePath;
@@ -412,7 +413,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 		try {
 			return new URI(resourcePath).getScheme() != null;
 		} catch (URISyntaxException e) {
-			throw new BuildFailureException(format("\"{0}\" is not a valid URI", resourcePath), e);
+			throw new BuildFailureException(format("\"{0}\" is not a valid URI", resourcePath), e); //$NON-NLS-1$
 		}
 	}
 
@@ -422,7 +423,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 			writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(outputFile)),
 					StandardCharsets.UTF_8);
 		} catch (IOException e) {
-			throw new BuildFailureException(format("Cannot write to file {0}: {1}", outputFile, e.getMessage()), e);
+			throw new BuildFailureException(format("Cannot write to file {0}: {1}", outputFile, e.getMessage()), e); //$NON-NLS-1$
 		}
 		return writer;
 	}
@@ -436,25 +437,25 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	}
 
 	protected void ensureSourceFolderExists() {
-		ensureFolderExists("Source folder", sourceFolder, false);
+		ensureFolderExists("Source folder", sourceFolder, false); //$NON-NLS-1$
 	}
 
 	protected void ensureOutputFolderExists() {
-		ensureFolderExists("Output folder", outputFolder, true);
+		ensureFolderExists("Output folder", outputFolder, true); //$NON-NLS-1$
 	}
 
 	protected void ensureFolderExists(String name, File folder, boolean createIfMissing) {
 		if (folder.exists()) {
 			if (!folder.isDirectory()) {
-				throw new BuildFailureException(format("{0} exists but is not a folder: {1}", name, folder));
+				throw new BuildFailureException(format("{0} exists but is not a folder: {1}", name, folder)); //$NON-NLS-1$
 			}
 			return;
 		}
 		if (!createIfMissing) {
-			throw new BuildFailureException(format("{0} does not exist: {1}", name, folder));
+			throw new BuildFailureException(format("{0} does not exist: {1}", name, folder)); //$NON-NLS-1$
 		}
 		if (!folder.mkdirs()) {
-			throw new BuildFailureException(format("Cannot create {0}: {1}", name, folder));
+			throw new BuildFailureException(format("Cannot create {0}: {1}", name, folder)); //$NON-NLS-1$
 		}
 	}
 
@@ -462,7 +463,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 		try {
 			return Files.readString(inputFile.toPath(), Charset.forName(sourceEncoding));
 		} catch (IOException e) {
-			throw new BuildFailureException(format("Cannot read source file {0}: {1}", inputFile, e.getMessage()), e);
+			throw new BuildFailureException(format("Cannot read source file {0}: {1}", inputFile, e.getMessage()), e); //$NON-NLS-1$
 		}
 	}
 
