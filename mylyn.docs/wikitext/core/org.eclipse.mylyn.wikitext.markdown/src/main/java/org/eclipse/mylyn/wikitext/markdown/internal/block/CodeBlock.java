@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2024 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  * Contributors:
  *     Stefan Seelmann - initial API and implementation
  *     Alexander Nyßen - support for fenced code blocks.
- *
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.markdown.internal.block;
@@ -62,7 +62,7 @@ public class CodeBlock extends NestableBlock {
 			if (fencedBlock) {
 				String lang = line.substring(3).trim();
 				if (!lang.isEmpty()) {
-					attributes.setCssClass("language-" + lang);
+					attributes.setCssClass("language-" + lang); //$NON-NLS-1$
 				}
 				builder.beginBlock(BlockType.CODE, attributes);
 				blockLineCount++;
@@ -73,12 +73,12 @@ public class CodeBlock extends NestableBlock {
 		}
 		Matcher matcher = fencedBlock
 				? FENCED_BLOCK.matcher(line.substring(offset))
-				: INDENTED_BLOCK.matcher(line.substring(offset));
+						: INDENTED_BLOCK.matcher(line.substring(offset));
 
 		// end code block
 		if (fencedBlock
 				? FENCED_BLOCK_END.matcher(line.substring(offset)).matches() || !matcher.matches()
-				: !matcher.matches()) {
+						: !matcher.matches()) {
 			setClosed(true);
 			return fencedBlock ? -1 : offset;
 		}
