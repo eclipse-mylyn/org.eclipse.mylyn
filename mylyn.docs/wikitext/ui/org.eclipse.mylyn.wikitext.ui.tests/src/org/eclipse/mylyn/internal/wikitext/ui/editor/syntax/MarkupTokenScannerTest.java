@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 David Green and others.
+ * Copyright (c) 2011, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;
@@ -32,7 +33,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 @HeadRequired
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class MarkupTokenScannerTest extends AbstractDocumentTest {
 
 	private MarkupTokenScanner tokenScanner;

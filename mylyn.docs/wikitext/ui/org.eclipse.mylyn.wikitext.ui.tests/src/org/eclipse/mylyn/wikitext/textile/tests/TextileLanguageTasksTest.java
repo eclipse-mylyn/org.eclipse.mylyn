@@ -35,7 +35,7 @@ import com.google.common.io.Resources;
  * @author David Green
  */
 @EclipseRuntimeRequired
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class TextileLanguageTasksTest {
 
 	private MarkupParser parser;
