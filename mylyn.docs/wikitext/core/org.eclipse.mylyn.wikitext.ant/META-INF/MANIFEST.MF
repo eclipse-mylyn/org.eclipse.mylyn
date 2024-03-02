@@ -17,4 +17,6 @@ Import-Package: org.apache.tools.ant,
  org.eclipse.mylyn.wikitext.splitter;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.util;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.validation;version="[4.2,5)"
-Export-Package: org.eclipse.mylyn.wikitext.ant;version="4.2.0";x-internal:=true;uses:="org.apache.tools.ant,org.eclipse.mylyn.wikitext.parser.markup"
+Export-Package: org.eclipse.mylyn.wikitext.ant;version="4.2.0";x-friends:="org.eclipse.mylyn.wikitext.mediawiki.ant";
+  uses:="org.apache.tools.ant,
+   org.eclipse.mylyn.wikitext.parser.markup"
