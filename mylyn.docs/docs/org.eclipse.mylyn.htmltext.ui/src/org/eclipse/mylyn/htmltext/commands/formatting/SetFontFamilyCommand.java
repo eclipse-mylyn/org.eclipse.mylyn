@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2021 Tom Seidel, Remus Software
+ * Copyright (c) 2010, 2024 Tom Seidel, Remus Software and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *
  * Contributors:
  *     Tom Seidel - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.htmltext.commands.formatting;
@@ -33,20 +34,20 @@ public class SetFontFamilyCommand extends Command {
 
 	@Override
 	public String getCommandIdentifier() {
-		return "setfontfamily";
+		return "setfontfamily"; //$NON-NLS-1$
 	}
 
 	@Override
 	public String getCommand() {
-		return "integration.format.setFont('" + setSelectedFontfamily + "');";
+		return "integration.format.setFont('" + setSelectedFontfamily + "');"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public Map<String, String> getAvailableFontfamilies() {
-		String sizeString = String.valueOf(composer.evaluate("return integration.format.getAvailableFonts();"));
-		String[] split = sizeString.split(";");
+		String sizeString = String.valueOf(composer.evaluate("return integration.format.getAvailableFonts();")); //$NON-NLS-1$
+		String[] split = sizeString.split(";"); //$NON-NLS-1$
 		Map<String, String> returnValue = new HashMap<>();
 		for (String element : split) {
-			returnValue.put(element.split("/")[0], element.split("/")[1]);
+			returnValue.put(element.split("/")[0], element.split("/")[1]); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return returnValue;
 
@@ -69,13 +70,13 @@ public class SetFontFamilyCommand extends Command {
 	public void setFontfamilyOfSelection(String sizeOfSelection) {
 		String oldValue = fontfamilyOfSelection;
 		fontfamilyOfSelection = sizeOfSelection;
-		firePropertyChange("fontfamilyOfSelection", oldValue, sizeOfSelection);
+		firePropertyChange("fontfamilyOfSelection", oldValue, sizeOfSelection); //$NON-NLS-1$
 	}
 
 	private class FontfamilyChangeFunction extends BrowserFunction {
 
 		public FontfamilyChangeFunction(Browser browser) {
-			super(browser, "_delegate_selectedfontfamily");
+			super(browser, "_delegate_selectedfontfamily"); //$NON-NLS-1$
 		}
 
 		@Override

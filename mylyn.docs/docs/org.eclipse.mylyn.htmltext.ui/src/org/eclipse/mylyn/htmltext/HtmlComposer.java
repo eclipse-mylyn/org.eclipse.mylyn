@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2021 Tom Seidel, Remus Software
+ * Copyright (c) 2010, 2024 Tom Seidel, Remus Software and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *
  * Contributors:
  *     Tom Seidel - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.htmltext;
@@ -86,7 +87,7 @@ public class HtmlComposer {
 	 */
 	private class ModifiedFunction extends BrowserFunction {
 		public ModifiedFunction(Browser browser) {
-			super(browser, "_delegate_modified");
+			super(browser, "_delegate_modified"); //$NON-NLS-1$
 		}
 
 		@Override
@@ -126,7 +127,7 @@ public class HtmlComposer {
 	private class RenderCompleteFunction extends BrowserFunction {
 
 		public RenderCompleteFunction(Browser browser) {
-			super(browser, "_delegate_init");
+			super(browser, "_delegate_init"); //$NON-NLS-1$
 		}
 
 		@Override
@@ -146,7 +147,7 @@ public class HtmlComposer {
 	private class SelectionChangedFunction extends BrowserFunction {
 
 		public SelectionChangedFunction(Browser browser) {
-			super(browser, "_delegate_selectionChanged");
+			super(browser, "_delegate_selectionChanged"); //$NON-NLS-1$
 		}
 
 		@Override
@@ -165,8 +166,8 @@ public class HtmlComposer {
 				Set<String> keySet = trackedCommands.keySet();
 				for (String string : keySet) {
 					String valueOf = String
-							.valueOf(evaluate("return integration.editor.getCommand('"
-									+ string + "').state;"));
+							.valueOf(evaluate("return integration.editor.getCommand('" //$NON-NLS-1$
+									+ string + "').state;")); //$NON-NLS-1$
 					TriState fromString = TriState.fromString(valueOf);
 					if (fromString != trackedCommands.get(string).getState()) {
 						trackedCommands.get(string).setState(fromString);
@@ -260,12 +261,12 @@ public class HtmlComposer {
 		URL baseUrl;
 		try {
 			baseUrl = FileLocator.resolve(FileLocator.find(FrameworkUtil.getBundle(HtmlComposer.class), new Path(
-					"/eclipsebridge/base.html"), Collections.emptyMap()));
-			browser.setUrl(baseUrl.toString() + (config != null ? "?" + config.toQuery() : ""));
+					"/eclipsebridge/base.html"), Collections.emptyMap())); //$NON-NLS-1$
+			browser.setUrl(baseUrl.toString() + (config != null ? "?" + config.toQuery() : "")); //$NON-NLS-1$ //$NON-NLS-2$
 			browser.addProgressListener(new ProgressAdapter() {
 				@Override
 				public void completed(ProgressEvent event) {
-					browser.execute("integration.eclipseRunning = true;");
+					browser.execute("integration.eclipseRunning = true;"); //$NON-NLS-1$
 					browser.removeProgressListener(this);
 				}
 			});
@@ -415,12 +416,12 @@ public class HtmlComposer {
 				String nanoTime = String.valueOf(System.nanoTime());
 				pendingListenerCallBackMap.put(nanoTime,
 						pendingListeners.get(command));
-				execute("integration.pendingCommandIdentifier = \'" + nanoTime
-						+ "\';");
+				execute("integration.pendingCommandIdentifier = \'" + nanoTime //$NON-NLS-1$
+						+ "\';"); //$NON-NLS-1$
 				execute(command.getCommand());
 				pendingListeners.remove(command);
 			} else {
-				execute("integration.pendingCommandIdentifier = \'\';");
+				execute("integration.pendingCommandIdentifier = \'\';"); //$NON-NLS-1$
 				execute(command.getCommand());
 			}
 		} else {
@@ -974,15 +975,15 @@ public class HtmlComposer {
 
 			@Override
 			public String getCommandIdentifier() {
-				return "set_background_internal";
+				return "set_background_internal"; //$NON-NLS-1$
 			}
 
 			@Override
 			public String getCommand() {
-				String hexValue = color != null ? "#" +ColorConverter
-						.convertRgbToHex(color.getRGB()) : "";
-				return "document.getElementById(\'cke_editor1_arialbl\').nextSibling.style.backgroundColor = \'"
-						+ hexValue + "\';";
+				String hexValue = color != null ? "#" +ColorConverter //$NON-NLS-1$
+						.convertRgbToHex(color.getRGB()) : ""; //$NON-NLS-1$
+				return "document.getElementById(\'cke_editor1_arialbl\').nextSibling.style.backgroundColor = \'" //$NON-NLS-1$
+						+ hexValue + "\';"; //$NON-NLS-1$
 			}
 		});
 	}
@@ -1071,7 +1072,7 @@ public class HtmlComposer {
 	 */
 	public boolean setFocus() {
 		boolean setFocus = browser.setFocus();
-		browser.execute("integration.editor.focus();");
+		browser.execute("integration.editor.focus();"); //$NON-NLS-1$
 		return setFocus;
 	}
 

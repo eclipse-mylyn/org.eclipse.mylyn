@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 Tom Seidel, Remus Software and others
+ * Copyright (c) 2010, 2024 Tom Seidel, Remus Software and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *
  * Contributors:
  *     Tom Seidel - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.htmltext.commands;
@@ -23,12 +24,12 @@ public class SetHtmlCommand extends Command {
 
 	@Override
 	public String getCommandIdentifier() {
-		return "sethtml";
+		return "sethtml"; //$NON-NLS-1$
 	}
 
 	@Override
 	public String getCommand() {
-		return "integration.editor.setData('" + html + "');";
+		return "integration.editor.setData('" + html + "');"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
@@ -37,7 +38,7 @@ public class SetHtmlCommand extends Command {
 	}
 
 	public void setHtml(String htmlToSet) {
-		this.html = htmlToSet.replaceAll("\\'", "\\\\'").replaceAll("\\s", " ");
+		this.html = htmlToSet.replaceAll("\\'", "\\\\'").replaceAll("\\s", " ");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 
 }

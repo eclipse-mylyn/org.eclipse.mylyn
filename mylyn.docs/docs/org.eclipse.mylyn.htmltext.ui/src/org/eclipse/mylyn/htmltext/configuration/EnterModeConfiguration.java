@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Tom Seidel, Remus Software
+ * Copyright (c) 2011, 2012 Tom Seidel, Remus Software and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *
  * Contributors:
  *     Tom Seidel - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.htmltext.configuration;
 
@@ -28,7 +29,7 @@ public class EnterModeConfiguration extends ConfigurationElement {
 
 	public static enum EnterMode {
 
-		BR("BR"), P("P"), DIV("DIV");
+		BR("BR"), P("P"), DIV("DIV");   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 
 		private final String strRepresentation;
 
@@ -42,7 +43,7 @@ public class EnterModeConfiguration extends ConfigurationElement {
 	}
 
 	public EnterModeConfiguration(EnterMode mode) {
-		super("enterMode", mode);
+		super("enterMode", mode); //$NON-NLS-1$
 	}
 
 	@Override

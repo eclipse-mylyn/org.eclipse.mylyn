@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2022 Tom Seidel, Remus Software and others.
+ * Copyright (c) 2011, 2024 Tom Seidel, Remus Software and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *
  * Contributors:
  *     Tom Seidel - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.htmltext.configuration;
 
@@ -46,7 +47,7 @@ public abstract class ConfigurationElement {
 		if (value != null && !value.equals(getDefaultValue())) {
 			String valueForEditor = URLEncoder.encode(getValueForEditor(), StandardCharsets.UTF_8);
 			if (valueForEditor != null) {
-				sb.append(ckConfigElement).append("=").append(valueForEditor);
+				sb.append(ckConfigElement).append("=").append(valueForEditor); //$NON-NLS-1$
 			}
 		}
 		return sb.toString();

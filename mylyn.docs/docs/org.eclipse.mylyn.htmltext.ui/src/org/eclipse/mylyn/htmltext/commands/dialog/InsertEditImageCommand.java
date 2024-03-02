@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 Tom Seidel, Remus Software
+ * Copyright (c) 2010, 2024 Tom Seidel, Remus Software and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *
  * Contributors:
  *     Tom Seidel - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.htmltext.commands.dialog;
@@ -23,7 +24,7 @@ public class InsertEditImageCommand extends Command {
 
 	@Override
 	public String getCommandIdentifier() {
-		return "image";
+		return "image"; //$NON-NLS-1$
 	}
 
 }

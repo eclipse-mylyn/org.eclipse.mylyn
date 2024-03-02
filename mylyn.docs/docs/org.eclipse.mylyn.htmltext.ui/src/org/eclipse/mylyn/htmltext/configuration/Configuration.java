@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2021 Tom Seidel, Remus Software
+ * Copyright (c) 2011, 2021 Tom Seidel, Remus Software and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *
  * Contributors:
  *     Tom Seidel - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.htmltext.configuration;
 
@@ -30,7 +31,7 @@ import org.eclipse.mylyn.htmltext.HtmlComposer;
  */
 public class Configuration {
 
-	private static final String QUERY_SEPARATOR = "&";
+	private static final String QUERY_SEPARATOR = "&"; //$NON-NLS-1$
 	
 	private List<ConfigurationElement> configNodes;
 
