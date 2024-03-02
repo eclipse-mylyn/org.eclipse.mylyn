@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018 Tasktop Technologies.
+ * Copyright (c) 2018, 2024 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Kevin de Vlaming - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.creole.internal;
@@ -139,14 +140,14 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		private final LinkAttributes attributes;
 
 		LinkBlock(LinkAttributes attributes) {
-			super(null, "", "", 0, 0, true, true);
+			super(null, "", "", 0, 0, true, true); //$NON-NLS-1$ //$NON-NLS-2$
 			this.attributes = attributes;
 		}
 
 		@Override
 		protected void emitContent(String content) throws IOException {
 			// [[http://url.com|label]]
-			CreoleDocumentBuilder.this.emitContent("[[");
+			CreoleDocumentBuilder.this.emitContent("[["); //$NON-NLS-1$
 			if (!Strings.isNullOrEmpty(attributes.getHref())) {
 				CreoleDocumentBuilder.this.emitContent(attributes.getHref());
 
@@ -157,7 +158,7 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			if (!Strings.isNullOrEmpty(content)) {
 				CreoleDocumentBuilder.this.emitContent(content);
 			}
-			CreoleDocumentBuilder.this.emitContent("]]");
+			CreoleDocumentBuilder.this.emitContent("]]"); //$NON-NLS-1$
 		}
 
 	}
@@ -165,7 +166,7 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	private class TableCellBlock extends ContentBlock {
 
 		public TableCellBlock(BlockType blockType) {
-			super(blockType, blockType == BlockType.TABLE_CELL_NORMAL ? "|" : "|=", "", 0, 0, true, true);
+			super(blockType, blockType == BlockType.TABLE_CELL_NORMAL ? "|" : "|=", "", 0, 0, true, true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		@Override
@@ -187,7 +188,7 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			case BULLETED_LIST, NUMERIC_LIST -> new NewlineDelimitedBlock(type, doubleNewlineDelimiterCount(), 1);
 			case LIST_ITEM -> {
 				char prefixChar = computeCurrentListType() == BlockType.NUMERIC_LIST ? '#' : '*';
-				yield new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "", 1, 1);
+				yield new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "", 1, 1); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			case PARAGRAPH -> new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
 			case PREFORMATTED, CODE -> new ContentBlock(type, "{{{\n", "\n}}}", 2, 2, false, false); //$NON-NLS-1$ //$NON-NLS-2$
@@ -212,6 +213,7 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		return 2;
 	}
 
+	@SuppressWarnings("nls")
 	@Override
 	protected Block computeSpan(SpanType type, Attributes attributes) {
 		switch (type) {
@@ -219,7 +221,7 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 				if (attributes instanceof LinkAttributes) {
 					return new LinkBlock((LinkAttributes) attributes);
 				}
-				return new ContentBlock("[[", "]]", 0, 0);
+				return new ContentBlock("[[", "]]", 0, 0); //$NON-NLS-2$
 			case ITALIC:
 			case EMPHASIS:
 			case MARK:
@@ -241,7 +243,7 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	@Override
 	protected Block computeHeading(int level, Attributes attributes) {
-		return new ContentBlock(computePrefix('=', level) + " ", "", 1, 2); //$NON-NLS-1$
+		return new ContentBlock(computePrefix('=', level) + " ", "", 1, 2); //$NON-NLS-1$ //$NON-NLS-2$
 
 	}
 
@@ -274,7 +276,7 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		if (url != null) {
 			assertOpenBlock();
 			try {
-				Block imageBlock = new ContentBlock(null, "{{", "}}", 0, 0, false, false);
+				Block imageBlock = new ContentBlock(null, "{{", "}}", 0, 0, false, false); //$NON-NLS-1$//$NON-NLS-2$
 				imageBlock.open();
 				imageBlock.write(url);
 				writeImageAttributes(imageBlock, attributes);
@@ -309,12 +311,12 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	@Override
 	public void imageLink(Attributes linkAttributes, Attributes imageAttributes, String href, String imageUrl) {
-		String altText = "";
+		String altText = ""; //$NON-NLS-1$
 		if (imageAttributes instanceof ImageAttributes
 				&& !Strings.isNullOrEmpty(((ImageAttributes) imageAttributes).getAlt())) {
 			altText = ((ImageAttributes) imageAttributes).getAlt();
 		}
-		link(linkAttributes, href, "{{" + Strings.nullToEmpty(imageUrl) + "}}" + altText);
+		link(linkAttributes, href, "{{" + Strings.nullToEmpty(imageUrl) + "}}" + altText); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
