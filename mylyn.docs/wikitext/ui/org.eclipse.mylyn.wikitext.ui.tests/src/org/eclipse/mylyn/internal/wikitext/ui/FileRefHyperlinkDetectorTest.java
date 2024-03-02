@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016, 2021 Simon Scholz and others.
+ * Copyright (c) 2016, 2024 Simon Scholz and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Simon Scholz - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.ui;
@@ -40,6 +41,7 @@ import org.eclipse.ui.PlatformUI;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 
 	private IProject project;
