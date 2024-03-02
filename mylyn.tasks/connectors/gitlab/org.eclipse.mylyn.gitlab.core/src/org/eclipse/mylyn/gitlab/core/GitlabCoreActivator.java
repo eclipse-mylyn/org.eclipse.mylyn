@@ -98,8 +98,7 @@ public final class GitlabCoreActivator extends Plugin {
 		DEBUG_REGISTRATION = context.registerService(DebugOptionsListener.class, options -> {
 			boolean debugCore = options.getBooleanOption(PLUGIN_ID + DEBUG, false);
 			DEBUG_TRACE = options.newDebugTrace(PLUGIN_ID);
-			DEBUG_REPOSITORY_CONNECTOR = debugCore
-					&& options.getBooleanOption(PLUGIN_ID + REPOSITORY_CONNECTOR, false);
+			DEBUG_REPOSITORY_CONNECTOR = debugCore && options.getBooleanOption(PLUGIN_ID + REPOSITORY_CONNECTOR, false);
 			DEBUG_REST_CLIENT = debugCore && options.getBooleanOption(PLUGIN_ID + REST_CLIENT, false);
 			DEBUG_REST_CLIENT_TRACE = debugCore && options.getBooleanOption(PLUGIN_ID + REST_CLIENT_TRACE, false);
 		}, properties);
