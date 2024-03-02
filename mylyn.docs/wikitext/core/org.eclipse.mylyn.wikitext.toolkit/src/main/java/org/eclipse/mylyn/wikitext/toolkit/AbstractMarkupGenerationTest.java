@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2016 David Green and others.
+ * Copyright (c) 2007, 2024 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.toolkit;
@@ -27,6 +28,7 @@ import org.junit.Before;
  *
  * @since 3.0
  */
+@SuppressWarnings("restriction")
 public abstract class AbstractMarkupGenerationTest<L extends MarkupLanguage> {
 
 	protected MarkupParser parser;
