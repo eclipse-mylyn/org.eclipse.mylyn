@@ -39,11 +39,16 @@ Export-Package: org.eclipse.mylyn.wikitext.internal.parser.html;x-internal:=true
   x-friends:="org.eclipse.mylyn.wikitext.ant,
    org.eclipse.mylyn.wikitext.asciidoc,
    org.eclipse.mylyn.wikitext.commonmark,
-   org.eclipse.mylyn.wikitext.confluence",
+   org.eclipse.mylyn.wikitext.confluence,
+   org.eclipse.mylyn.wikitext.context.ui",
  org.eclipse.mylyn.wikitext.parser.markup.block;version="4.2.0";x-friends:="org.eclipse.mylyn.wikitext.asciidoc",
  org.eclipse.mylyn.wikitext.parser.markup.phrase;version="4.2.0";x-friends:="org.eclipse.mylyn.wikitext.asciidoc",
  org.eclipse.mylyn.wikitext.parser.markup.token;version="4.2.0";x-friends:="org.eclipse.mylyn.wikitext.asciidoc,org.eclipse.mylyn.wikitext.confluence",
- org.eclipse.mylyn.wikitext.parser.outline;version="4.2.0";x-friends:="org.eclipse.mylyn.wikitext.ant,org.eclipse.mylyn.wikitext.asciidoc,org.eclipse.mylyn.wikitext.confluence",
+ org.eclipse.mylyn.wikitext.parser.outline;version="4.2.0";
+  x-friends:="org.eclipse.mylyn.wikitext.ant,
+   org.eclipse.mylyn.wikitext.asciidoc,
+   org.eclipse.mylyn.wikitext.confluence,
+   org.eclipse.mylyn.wikitext.context.ui",
  org.eclipse.mylyn.wikitext.parser.util;version="4.2.0";x-friends:="org.eclipse.mylyn.wikitext.ant",
  org.eclipse.mylyn.wikitext.splitter;version="4.2.0";x-friends:="org.eclipse.mylyn.wikitext.ant",
  org.eclipse.mylyn.wikitext.util;version="4.2.0";
