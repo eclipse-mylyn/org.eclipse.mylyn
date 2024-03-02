@@ -88,7 +88,7 @@
         - gitlab
       vars:
         common_domain_name: "{{ hostvars['localhost'].local_domain }}"
-        gitlabImageVersion: "16.9.0"
+        gitlabImageVersion: "16.9.1"
         gitlabHostURL: "gitlab.{{ hostvars['localhost'].local_domain }}"
     - role: jenkins
       tags:
