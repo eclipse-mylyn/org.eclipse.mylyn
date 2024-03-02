@@ -15,9 +15,7 @@ package org.eclipse.mylyn.gitlab.core;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -82,8 +80,6 @@ public final class GitlabConfiguration implements Serializable {
 
 	private Map<String, JsonElement> groupsDetailsMap = new HashMap<>();
 
-	private List<JsonElement> groups = new ArrayList<>();
-
 	public GitlabConfiguration(String repositoryURL) {
 		this.repositoryURL = repositoryURL;
 	}
@@ -118,6 +114,10 @@ public final class GitlabConfiguration implements Serializable {
 		return projectIDsMap.keySet();
 	}
 
+	public JsonObject getProductWithID(Integer key) {
+		return projectIDsMap.get(key).project;
+	}
+
 	public JsonElement getGroupDetail(String group) {
 		return groupsDetailsMap.get(group);
 	}
@@ -127,7 +127,6 @@ public final class GitlabConfiguration implements Serializable {
 	}
 
 	public void addGroup(JsonElement group) {
-		groups.add(group);
 		groupsDetailsMap.put(group.getAsJsonObject().get("full_path").getAsString(), group); //$NON-NLS-1$
 
 	}
