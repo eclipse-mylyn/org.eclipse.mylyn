@@ -41,6 +41,7 @@ public class GitlabTestFixture extends TestFixture {
 		{
 			put(GitlabCoreActivator.USE_PERSONAL_ACCESS_TOKEN, "true");
 			put(GitlabCoreActivator.PERSONAL_ACCESS_TOKEN, "glpat-Test1nPwd12345");
+			put(GitlabCoreActivator.GROUPS, "eclipse-mylyn");
 		}
 	};
 
@@ -116,10 +117,9 @@ public class GitlabTestFixture extends TestFixture {
 	@Override
 	public TaskRepository repository() {
 		TaskRepository repository = super.repository();
-		repository.setProperty(GitlabCoreActivator.USE_PERSONAL_ACCESS_TOKEN,
-				getProperty(GitlabCoreActivator.USE_PERSONAL_ACCESS_TOKEN));
-		repository.setProperty(GitlabCoreActivator.PERSONAL_ACCESS_TOKEN,
-				getProperty(GitlabCoreActivator.PERSONAL_ACCESS_TOKEN));
+		for (String key : defaultproperties.keySet()) {
+			repository.setProperty(key, getProperty(key));
+		}
 		return repository;
 
 	}

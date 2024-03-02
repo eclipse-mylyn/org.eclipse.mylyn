@@ -13,8 +13,8 @@
 
 package org.eclipse.mylyn.gitlab.core.test;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.annotation.ElementType;
@@ -22,11 +22,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.gitlab.core.GitlabConfiguration;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
+import org.eclipse.mylyn.internal.gitlab.core.GitlabRestClient;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -118,11 +122,15 @@ class RestfulGitlabClientTest {
 		JsonElement resultElement = GitlabTestFixture.current().client().getNamespaces(new NullOperationMonitor());
 		assertNotNull(resultElement);
 		assertTrue(resultElement.isJsonArray());
+		ArrayList<String> techUsers = new ArrayList<>();
 		JsonArray resultArray = resultElement.getAsJsonArray();
-		assertEquals(5, resultArray.size());
 		for (JsonElement resultObj : resultArray) {
 			JsonObject jsonObject = resultObj.getAsJsonObject();
 			JsonElement jsonElement = jsonObject.get("root_repository_size"); //$NON-NLS-1$
+			if ("support-bot".equals(jsonObject.get("path").getAsString())
+					|| "alert-bot".equals(jsonObject.get("path").getAsString())) {
+				techUsers.add(jsonObject.get("path").getAsString());
+			}
 			if (jsonElement != null && !(jsonElement instanceof JsonNull)) {
 				// size of root_repository_size could be 1923 or 1924
 				// so we change the expected value for this field
@@ -134,10 +142,12 @@ class RestfulGitlabClientTest {
 						"https://secure.gravatar.com/avatar/42?s\u003d80\u0026d\u003didenticon"); //$NON-NLS-1$
 			}
 		}
+		techUsers.sort(Comparator.naturalOrder());
+		String fName = "testdata/getNamespaces" + (techUsers.size() > 0 ? "_" : "") + String.join("_", techUsers)
+				+ ".json";
 
 		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(resultElement);
-		String expected = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/getNamespaces.json"), //$NON-NLS-1$
-				Charset.defaultCharset());
+		String expected = IOUtils.toString(CommonTestUtil.getResource(this, fName), Charset.defaultCharset());
 		assertEquals(expected, actual);
 	}
 
@@ -147,15 +157,18 @@ class RestfulGitlabClientTest {
 		JsonElement user = GitlabTestFixture.current().client().getUser(new NullOperationMonitor());
 		assertNotNull(user);
 		JsonObject userObj = user.getAsJsonObject();
-		userObj.addProperty("created_at", "2024-02-14T11:11:11.111Z"); //$NON-NLS-1$ //$NON-NLS-2$
-		userObj.addProperty("confirmed_at", "2024-02-14T11:11:11.112Z"); //$NON-NLS-1$ //$NON-NLS-2$
-		userObj.addProperty("last_activity_on", "2024-02-15"); //$NON-NLS-1$ //$NON-NLS-2$
-		userObj.addProperty("avatar_url", //$NON-NLS-1$
-				"https://secure.gravatar.com/avatar/42?s\u003d80\u0026d\u003didenticon"); //$NON-NLS-1$
+		// remove Date and Time Attributes
+		userObj.remove("created_at"); //$NON-NLS-1$
+		userObj.remove("confirmed_at"); //$NON-NLS-1$
+		userObj.remove("last_activity_on"); //$NON-NLS-1$
+		userObj.remove("last_sign_in_at"); //$NON-NLS-1$
+		userObj.remove("current_sign_in_at"); //$NON-NLS-1$
+		// The avatar_url can change with a newer Gitlab version
+		userObj.remove("avatar_url"); //$NON-NLS-1$
 		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(user);
-		String expected = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/getUser.json"), //$NON-NLS-1$
+		String expectedStr = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/getUser.json"), //$NON-NLS-1$
 				Charset.defaultCharset());
-		assertEquals(expected, actual);
+		assertEquals(expectedStr, actual);
 	}
 
 	@Test
@@ -163,17 +176,26 @@ class RestfulGitlabClientTest {
 	void testGetUsers() throws Exception {
 		JsonElement resultElement = GitlabTestFixture.current().client().getUsers("", new NullOperationMonitor());
 		assertNotNull(resultElement);
+		ArrayList<String> techUsers = new ArrayList<>();
 		for (JsonElement resultObj : resultElement.getAsJsonArray()) {
 			JsonObject jsonObject = resultObj.getAsJsonObject();
-			jsonObject.addProperty("created_at", "2024-02-14T11:11:11.111Z"); //$NON-NLS-1$ //$NON-NLS-2$
-			jsonObject.addProperty("confirmed_at", "2024-02-14T11:11:11.112Z"); //$NON-NLS-1$ //$NON-NLS-2$
-			jsonObject.addProperty("last_activity_on", "2024-02-15"); //$NON-NLS-1$ //$NON-NLS-2$
-			jsonObject.addProperty("avatar_url", //$NON-NLS-1$
-					"https://secure.gravatar.com/avatar/42?s\u003d80\u0026d\u003didenticon"); //$NON-NLS-1$
+			if ("support-bot".equals(jsonObject.get("username").getAsString())
+					|| "alert-bot".equals(jsonObject.get("username").getAsString())) {
+				techUsers.add(jsonObject.get("username").getAsString());
+			}
+			// remove Date and Time Attributes
+			jsonObject.remove("created_at"); //$NON-NLS-1$
+			jsonObject.remove("confirmed_at"); //$NON-NLS-1$
+			jsonObject.remove("last_activity_on"); //$NON-NLS-1$
+			jsonObject.remove("last_sign_in_at"); //$NON-NLS-1$
+			jsonObject.remove("current_sign_in_at"); //$NON-NLS-1$
+			// The avatar_url can change with a newer Gitlab version
+			jsonObject.remove("avatar_url"); //$NON-NLS-1$
 		}
+		techUsers.sort(Comparator.naturalOrder());
+		String fName = "testdata/getUsers" + (techUsers.size() > 0 ? "_" : "") + String.join("_", techUsers) + ".json";
 		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(resultElement);
-		String expected = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/getUsers.json"), //$NON-NLS-1$
-				Charset.defaultCharset());
+		String expected = IOUtils.toString(CommonTestUtil.getResource(this, fName), Charset.defaultCharset());
 		assertEquals(expected, actual);
 	}
 
@@ -188,6 +210,46 @@ class RestfulGitlabClientTest {
 		}
 		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(resultElement);
 		String expected = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/getGroups.json"), //$NON-NLS-1$
+				Charset.defaultCharset());
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	void testgetConfiguration() throws Exception {
+		GitlabRestClient client = GitlabTestFixture.current().client();
+		GitlabConfiguration configuration = client.getConfiguration(client.getTaskRepository(),
+				new NullOperationMonitor());
+		assertNotNull(configuration);
+		JsonObject user = configuration.getUserDetails().getAsJsonObject();
+		// remove Date and Time Attributes
+		user.remove("created_at"); //$NON-NLS-1$
+		user.remove("confirmed_at"); //$NON-NLS-1$
+		user.remove("last_activity_on"); //$NON-NLS-1$
+		user.remove("last_sign_in_at"); //$NON-NLS-1$
+		user.remove("current_sign_in_at"); //$NON-NLS-1$
+		// The avatar_url can change with a newer Gitlab version
+		user.remove("avatar_url"); //$NON-NLS-1$
+
+		for (Integer integer : configuration.getProjectIDs()) {
+			JsonObject project = configuration.getProductWithID(integer);
+			// remove Date and Time Attributes
+			project.remove("created_at"); //$NON-NLS-1$
+			project.remove("updated_at"); //$NON-NLS-1$
+			project.remove("last_activity_at"); //$NON-NLS-1$
+			JsonObject projectContainerPolicy = project.get("container_expiration_policy").getAsJsonObject();
+			projectContainerPolicy.remove("next_run_at");
+			// Attributet that can change during the usage of the Gitlab Test Instance
+			project.remove("open_issues_count"); //$NON-NLS-1$
+			project.remove("runners_token"); //$NON-NLS-1$
+			project.addProperty("auto_devops_enabled", true); //$NON-NLS-1$
+		}
+		for (String string : configuration.getGroupNames()) {
+			JsonObject group = configuration.getGroupDetail(string).getAsJsonObject();
+			group.remove("created_at"); //$NON-NLS-1$
+			group.remove("runners_token"); //$NON-NLS-1$
+		}
+		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(configuration);
+		String expected = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/configuration.json"), //$NON-NLS-1$
 				Charset.defaultCharset());
 		assertEquals(expected, actual);
 	}
