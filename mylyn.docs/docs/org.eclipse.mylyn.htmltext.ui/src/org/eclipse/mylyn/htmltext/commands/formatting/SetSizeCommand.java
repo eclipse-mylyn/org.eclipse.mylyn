@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 Tom Seidel, Remus Software
+ * Copyright (c) 2010, 2024 Tom Seidel, Remus Software and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *
  * Contributors:
  *     Tom Seidel - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.htmltext.commands.formatting;
@@ -30,20 +31,20 @@ public class SetSizeCommand extends Command {
 
 	@Override
 	public String getCommandIdentifier() {
-		return "setsize";
+		return "setsize"; //$NON-NLS-1$
 	}
 
 	@Override
 	public String getCommand() {
-		return "integration.format.setSize(" + setSelectedSize + ");";
+		return "integration.format.setSize(" + setSelectedSize + ");"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public String[] getAvailableSizes() {
-		String sizeString = String.valueOf(composer.evaluate("return integration.format.getAvailableSizes();"));
-		String[] split = sizeString.split(";");
+		String sizeString = String.valueOf(composer.evaluate("return integration.format.getAvailableSizes();")); //$NON-NLS-1$
+		String[] split = sizeString.split(";"); //$NON-NLS-1$
 		String[] returnValue = new String[split.length];
 		for (int i = 0, n = split.length; i < n; i++) {
-			returnValue[i] = split[i].split("/")[0];
+			returnValue[i] = split[i].split("/")[0]; //$NON-NLS-1$
 		}
 		return returnValue;
 
@@ -66,13 +67,13 @@ public class SetSizeCommand extends Command {
 	public void setSizeOfSelection(String sizeOfSelection) {
 		String oldValue = this.sizeOfSelection;
 		this.sizeOfSelection = sizeOfSelection;
-		firePropertyChange("sizeOfSelection", oldValue, sizeOfSelection);
+		firePropertyChange("sizeOfSelection", oldValue, sizeOfSelection); //$NON-NLS-1$
 	}
 
 	private class FormatChangeFunction extends BrowserFunction {
 
 		public FormatChangeFunction(Browser browser) {
-			super(browser, "_delegate_selectedsize");
+			super(browser, "_delegate_selectedsize"); //$NON-NLS-1$
 		}
 
 		@Override

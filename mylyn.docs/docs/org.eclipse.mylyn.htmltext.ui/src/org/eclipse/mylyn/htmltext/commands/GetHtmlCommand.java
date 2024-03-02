@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2021 Tom Seidel, Remus Software and others
+ * Copyright (c) 2010, 2024 Tom Seidel, Remus Software and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *
  * Contributors:
  *     Tom Seidel - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.htmltext.commands;
@@ -21,12 +22,12 @@ public class GetHtmlCommand extends Command {
 
 	@Override
 	public String getCommandIdentifier() {
-		return "gethtml";
+		return "gethtml"; //$NON-NLS-1$
 	}
 
 	@Override
 	public String getCommand() {
-		return "return integration.editor.getData();";
+		return "return integration.editor.getData();"; //$NON-NLS-1$
 	}
 
 	@Override

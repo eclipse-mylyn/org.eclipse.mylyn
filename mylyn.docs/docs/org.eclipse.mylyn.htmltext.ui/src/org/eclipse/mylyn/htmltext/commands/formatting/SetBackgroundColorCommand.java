@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2021 Tom Seidel, Remus Software and others
+ * Copyright (c) 2011, 2024 Tom Seidel, Remus Software and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *
  * Contributors:
  *     Tom Seidel - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.htmltext.commands.formatting;
 
@@ -27,13 +28,13 @@ public class SetBackgroundColorCommand extends Command {
 
 	@Override
 	public String getCommandIdentifier() {
-		return "setBackground";
+		return "setBackground"; //$NON-NLS-1$
 	}
 
 	@Override
 	public String getCommand() {
-		return "new CKEDITOR.style(CKEDITOR.instances.editor1.config['colorButton_backStyle'], { color : '#"
-				 + color + "' } ).apply( CKEDITOR.instances.editor1.document );";
+		return "new CKEDITOR.style(CKEDITOR.instances.editor1.config['colorButton_backStyle'], { color : '#" //$NON-NLS-1$
+				 + color + "' } ).apply( CKEDITOR.instances.editor1.document );"; //$NON-NLS-1$
 	}
 
 	public void setColor(String hexCode) {

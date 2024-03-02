@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Tom Seidel, Remus Software
+ * Copyright (c) 2011, 2024 Tom Seidel, Remus Software and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *
  * Contributors:
  *     Tom Seidel - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.htmltext.configuration;
 
@@ -28,7 +29,7 @@ public class ShiftEnterModeConfiguration extends ConfigurationElement {
 
 
 	public ShiftEnterModeConfiguration(EnterMode mode) {
-		super("shiftEnterMode", mode);
+		super("shiftEnterMode", mode); //$NON-NLS-1$
 	}
 
 	@Override

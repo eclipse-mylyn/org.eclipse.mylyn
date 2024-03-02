@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 Tom Seidel, Remus Software
+ * Copyright (c) 2010, 2024 Tom Seidel, Remus Software and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *
  * Contributors:
  *     Tom Seidel - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.htmltext.commands.formatting;
@@ -30,12 +31,12 @@ public class SetFormatCommand extends Command {
 
 	@Override
 	public String getCommandIdentifier() {
-		return "setformat";
+		return "setformat"; //$NON-NLS-1$
 	}
 
 	@Override
 	public String getCommand() {
-		return "integration.format.setStyle('" + selectedFormat + "');";
+		return "integration.format.setStyle('" + selectedFormat + "');"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public void setFormatToWidget(String selectedFormat) {
@@ -55,13 +56,13 @@ public class SetFormatCommand extends Command {
 	public void setFormatOfSelection(String formatOfSelection) {
 		String oldValue = this.formatOfSelection;
 		this.formatOfSelection = formatOfSelection;
-		firePropertyChange("formatOfSelection", oldValue, formatOfSelection);
+		firePropertyChange("formatOfSelection", oldValue, formatOfSelection); //$NON-NLS-1$
 	}
 
 	private class FormatChangeFunction extends BrowserFunction {
 
 		public FormatChangeFunction(Browser browser) {
-			super(browser, "_delegate_selectedformat");
+			super(browser, "_delegate_selectedformat"); //$NON-NLS-1$
 		}
 
 		@Override
