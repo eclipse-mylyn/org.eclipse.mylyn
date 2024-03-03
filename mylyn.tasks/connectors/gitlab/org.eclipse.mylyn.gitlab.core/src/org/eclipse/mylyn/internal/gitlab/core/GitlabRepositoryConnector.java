@@ -118,7 +118,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 		return false;
 	}
 
-	private PropertyChangeListener repositoryChangeListener4ConfigurationCache = null;
+	private PropertyChangeListener repositoryChangeListener4ConfigurationCache;
 
 	private PropertyChangeListener repositoryChangeListener4ClientCache;
 
@@ -215,7 +215,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 			@NonNull TaskData taskData) {
 		String lastKnownLocalModValue = task.getModificationDate() != null
 				? simpleFormatter.format(task.getModificationDate())
-				: ""; //$NON-NLS-1$
+						: ""; //$NON-NLS-1$
 		TaskAttribute latestRemoteModAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
 		String latestRemoteModValue = latestRemoteModAttribute != null ? latestRemoteModAttribute.getValue() : null;
 		return !Objects.equals(latestRemoteModValue, lastKnownLocalModValue);
