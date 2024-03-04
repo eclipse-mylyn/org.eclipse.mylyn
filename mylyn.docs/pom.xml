@@ -34,7 +34,7 @@
     <properties>
         <releaseVersion>4.2.0</releaseVersion>
         <qualifier>-SNAPSHOT</qualifier>
-        <tycho-version>4.0.4</tycho-version>
+        <tycho-version>4.0.6</tycho-version>
         <tycho.scmUrl>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.docs</tycho.scmUrl>
         <nexus.autoReleaseAfterClose>false</nexus.autoReleaseAfterClose>
     </properties>
@@ -178,7 +178,6 @@
             <plugin>
                 <groupId>org.eclipse.tycho</groupId>
                 <artifactId>tycho-source-plugin</artifactId>
-                <version>${tycho-version}</version>
                 <executions>
                     <execution>
                         <id>generate-pde-source-header</id>
@@ -197,7 +196,6 @@
             <plugin>
                 <groupId>org.eclipse.tycho</groupId>
                 <artifactId>tycho-p2-plugin</artifactId>
-                <version>${tycho-version}</version>
                 <executions>
                     <execution>
                         <id>attached-p2-metadata</id>
