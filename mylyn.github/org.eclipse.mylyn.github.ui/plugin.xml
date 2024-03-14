@@ -328,7 +328,7 @@
       <repository
             addAutomatically="true"
             characterEncoding="UTF-8"
-            label="Eclipse Mylyn GutHub Issues"
+            label="Eclipse Mylyn GitHub Issues"
             repositoryKind="github"
             urlRepository="https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/">
       </repository>
@@ -366,14 +366,14 @@
       <repository
             addAutomatically="true"
             characterEncoding="UTF-8"
-            label="Eclipse Platform GutHub Issues"
+            label="Eclipse Platform GitHub Issues"
             repositoryKind="github"
             urlRepository="https://github.com/eclipse-platform/eclipse.platform/issues/">
       </repository>
       <repository
             addAutomatically="true"
             characterEncoding="UTF-8"
-            label="Eclipse PDE GutHub Issues"
+            label="Eclipse PDE GitHub Issues"
             repositoryKind="github"
             urlRepository="https://github.com/eclipse-pde/eclipse.pde/issues/">
       </repository>
