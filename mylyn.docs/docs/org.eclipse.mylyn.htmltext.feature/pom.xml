@@ -21,7 +21,7 @@
 	<parent>
 		<artifactId>org.eclipse.mylyn.docs-parent</artifactId>
 		<groupId>org.eclipse.mylyn.docs</groupId>
-		<version>4.2.0-SNAPSHOT</version>
+		<version>4.3.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>org.eclipse.mylyn.htmltext.feature</artifactId>
 	<packaging>eclipse-feature</packaging>

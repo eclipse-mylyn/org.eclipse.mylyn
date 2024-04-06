@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.gerrit.core.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Gerrit Connector Core Tests
 Bundle-SymbolicName: org.eclipse.mylyn.gerrit.core.tests;singleton:=true
-Bundle-Version: 4.2.0.qualifier
+Bundle-Version: 4.3.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.gerrit.core
 Bundle-RequiredExecutionEnvironment: JavaSE-17

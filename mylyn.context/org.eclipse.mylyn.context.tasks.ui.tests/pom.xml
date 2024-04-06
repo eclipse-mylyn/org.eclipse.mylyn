@@ -19,7 +19,7 @@
   <parent>
     <groupId>org.eclipse.mylyn</groupId>
     <artifactId>org.eclipse.mylyn.parent</artifactId>
-    <version>4.2.0-SNAPSHOT</version>
+    <version>4.3.0-SNAPSHOT</version>
     <relativePath>../../mylyn.releng/org.eclipse.mylyn.parent</relativePath>
   </parent>
   <artifactId>org.eclipse.mylyn.context.tasks.ui.tests</artifactId>

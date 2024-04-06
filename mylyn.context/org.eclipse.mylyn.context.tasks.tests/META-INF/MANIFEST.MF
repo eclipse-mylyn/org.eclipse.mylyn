@@ -3,23 +3,23 @@ Automatic-Module-Name:
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Context Tasks Tests
 Bundle-SymbolicName: org.eclipse.mylyn.context.tasks.tests;singleton:=true
-Bundle-Version: 4.2.0.qualifier
+Bundle-Version: 4.3.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
  org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.jdt.core;bundle-version="0.0.0",
- org.eclipse.mylyn.commons.core;bundle-version="4.2.0",
- org.eclipse.mylyn.commons.sdk.util;bundle-version="4.2.0",
- org.eclipse.mylyn.context.core;bundle-version="4.2.0",
- org.eclipse.mylyn.context.ui;bundle-version="4.2.0",
- org.eclipse.mylyn.context.sdk.util;bundle-version="4.2.0",
- org.eclipse.mylyn.context.tasks.ui;bundle-version="4.2.0",
- org.eclipse.mylyn.monitor.core;bundle-version="4.2.0",
- org.eclipse.mylyn.monitor.ui;bundle-version="4.2.0",
- org.eclipse.mylyn.tasks.core;bundle-version="4.2.0",
- org.eclipse.mylyn.tasks.tests;bundle-version="4.2.0",
- org.eclipse.mylyn.tasks.ui;bundle-version="4.2.0",
- org.eclipse.mylyn.tests.util;bundle-version="4.2.0",
+ org.eclipse.mylyn.commons.core;bundle-version="4.3.0",
+ org.eclipse.mylyn.commons.sdk.util;bundle-version="4.3.0",
+ org.eclipse.mylyn.context.core;bundle-version="4.3.0",
+ org.eclipse.mylyn.context.ui;bundle-version="4.3.0",
+ org.eclipse.mylyn.context.sdk.util;bundle-version="4.3.0",
+ org.eclipse.mylyn.context.tasks.ui;bundle-version="4.3.0",
+ org.eclipse.mylyn.monitor.core;bundle-version="4.3.0",
+ org.eclipse.mylyn.monitor.ui;bundle-version="4.3.0",
+ org.eclipse.mylyn.tasks.core;bundle-version="4.3.0",
+ org.eclipse.mylyn.tasks.tests;bundle-version="4.3.0",
+ org.eclipse.mylyn.tasks.ui;bundle-version="4.3.0",
+ org.eclipse.mylyn.tests.util;bundle-version="4.3.0",
  org.eclipse.pde;bundle-version="0.0.0",
  org.eclipse.pde.core;bundle-version="0.0.0",
  org.eclipse.ui;bundle-version="0.0.0",
