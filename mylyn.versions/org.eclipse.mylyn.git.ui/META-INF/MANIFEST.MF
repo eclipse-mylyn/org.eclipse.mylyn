@@ -3,17 +3,17 @@ Automatic-Module-Name: org.eclipse.mylyn.git.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.git.ui;singleton:=true
-Bundle-Version: 4.2.0.qualifier
+Bundle-Version: 4.3.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.core.resources;bundle-version="0.0.0",
  org.eclipse.egit.core;bundle-version="0.0.0",
  org.eclipse.egit.ui;bundle-version="0.0.0",
  org.eclipse.jgit;bundle-version="0.0.0",
- org.eclipse.mylyn.commons.core;bundle-version="4.2.0",
- org.eclipse.mylyn.versions.core;bundle-version="4.2.0",
- org.eclipse.mylyn.versions.ui;bundle-version="4.2.0",
- org.eclipse.mylyn.git.core;bundle-version="4.2.0",
+ org.eclipse.mylyn.commons.core;bundle-version="4.3.0",
+ org.eclipse.mylyn.versions.core;bundle-version="4.3.0",
+ org.eclipse.mylyn.versions.ui;bundle-version="4.3.0",
+ org.eclipse.mylyn.git.core;bundle-version="4.3.0",
  org.eclipse.team.core;bundle-version="0.0.0",
  org.eclipse.ui;bundle-version="0.0.0",
  org.eclipse.ui.forms;bundle-version="0.0.0"
