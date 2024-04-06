@@ -42,12 +42,12 @@
 		<dependency>
 			<groupId>org.eclipse.mylyn.docs</groupId>
 			<artifactId>org.eclipse.mylyn.wikitext</artifactId>
-			<version>${project.version}</version>
+			<version>3.0.48.202308291007</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.mylyn.docs</groupId>
 			<artifactId>org.eclipse.mylyn.wikitext.textile</artifactId>
-			<version>${project.version}</version>
+			<version>3.0.48.202308291007</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
