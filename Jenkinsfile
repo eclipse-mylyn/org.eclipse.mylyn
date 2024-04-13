@@ -93,5 +93,29 @@ pipeline {
 				}
 			}
 		}
+		stage('Deploy Mylyn Docs Maven Artifacts') {
+			steps {
+				withCredentials([string(credentialsId: 'gpg-passphrase', variable: 'KEYRING_PASSPHRASE')]) {
+					wrap([$class: 'Xvnc', useXauthority: true]) {
+						sh '''
+							mvn \
+							deploy \
+							-f mylyn.docs/pom.xml \
+							-U -B -V -e \
+							-s /home/jenkins/.m2/settings-deploy-ossrh-docs.xml \
+							$MAVEN_PROFILES \
+							-Possrh \
+							-Dmaven.repo.local=$WORKSPACE/.m2/repository \
+							-Dtycho.buildqualifier.format=yyyyMMddHHmm \
+							-Dmaven.test.failure.ignore=true \
+							-Dmaven.test.error.ignore=true \
+							-Ddash.fail=false \
+							-Dgpg.passphrase="${KEYRING_PASSPHRASE}" \
+							-Dnexus.autoReleaseAfterClose="${PERFORM_RELEASE}"
+						'''
+					}
+				}
+			}
+		}
 	}
 }
