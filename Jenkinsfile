@@ -100,7 +100,6 @@ pipeline {
 						sh '''
 							mvn \
 							deploy \
-							-f mylyn.docs/pom.xml \
 							-U -B -V -e \
 							-s /home/jenkins/.m2/settings-deploy-ossrh-docs.xml \
 							$MAVEN_PROFILES \
