@@ -98,9 +98,11 @@ pipeline {
 				withCredentials([string(credentialsId: 'gpg-passphrase', variable: 'KEYRING_PASSPHRASE')]) {
 					wrap([$class: 'Xvnc', useXauthority: true]) {
 						sh '''
+							ls -al /home/jenkins/.m2
 							mvn \
 							deploy \
-							-U -B -V -e \
+							-f mylyn.docs/pom.xml \
+							-X -U -B -V -e \
 							-s /home/jenkins/.m2/settings-deploy-ossrh-docs.xml \
 							$MAVEN_PROFILES \
 							-Possrh \
