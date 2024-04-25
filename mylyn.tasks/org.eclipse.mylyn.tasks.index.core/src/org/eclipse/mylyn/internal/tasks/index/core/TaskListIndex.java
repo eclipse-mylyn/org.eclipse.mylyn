@@ -839,7 +839,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	 *            the task data, or nul if it's not available
 	 */
 	protected void reindex(ITask task, TaskData taskData) {
-		if ((task == null) || !taskIsIndexable(task, taskData)) {
+		if (task == null || !taskIsIndexable(task, taskData)) {
 			return;
 		}
 		synchronized (reindexQueue) {
@@ -1226,7 +1226,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 			IndexWriter writer;
 			try {
 				writer = createIndexWriter(true);
-			} catch (CorruptIndexException | IndexFormatTooOldException e) {
+			} catch (CorruptIndexException | IndexFormatTooOldException | IllegalArgumentException e) {
 				if (directory instanceof FSDirectory) {
 					cleanDirectory(((FSDirectory) directory).getDirectory().toFile());
 					writer = createIndexWriter(true);
