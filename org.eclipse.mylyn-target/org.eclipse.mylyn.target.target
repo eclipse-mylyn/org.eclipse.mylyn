@@ -94,30 +94,5 @@
 			<unit id="org.mockito.mockito-core" version="0.0.0"/>
 			<unit id="org.objenesis" version="0.0.0"/>
 		</location>
-		<location includeDependencyDepth="none" includeDependencyScopes="compile" includeSource="true" label="Apache Lucene" missingManifest="generate" type="Maven">
-			<dependencies>
-				<dependency>
-					<groupId>org.apache.lucene</groupId>
-					<artifactId>lucene-backward-codecs</artifactId>
-					<version>9.10.0</version>
-					<type>jar</type>
-				</dependency>
-			</dependencies>
-			<instructions>
-<!-- SHA1 09ffcf06f2b8d4a6831c9a3556187ea29ee16b9b -->
-<![CDATA[
-Bundle-Name:            Bundle ${mvnGroupId} : ${mvnArtifactId}
-version:                ${versionmask;===;${version_cleanup;${mvnVersion}}}
-Bundle-SymbolicName:    ${mvnGroupId}.${replacestring;${mvnArtifactId};lucene-}
-Bundle-Version:         ${version}.v20240221-0830
-Eclipse-Wrapped-Bundle: ${mvnGroupId}:${mvnArtifactId}:${mvnVersion}
-Import-Package:         org.apache.lucene.*;version="${range;[==,+);${version}}",\
-                        *
-Export-Package:         *;version="${version}";-noimport:=true
--noextraheaders:        true
--removeheaders:         Private-Package
-]]>
-			</instructions>
-		</location>
 	</locations>
 </target>
