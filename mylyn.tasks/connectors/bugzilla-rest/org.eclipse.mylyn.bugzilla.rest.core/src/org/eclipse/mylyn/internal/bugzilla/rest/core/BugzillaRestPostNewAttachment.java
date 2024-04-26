@@ -104,24 +104,16 @@ public class BugzillaRestPostNewAttachment extends BugzillaRestPostRequest<Bugzi
 		Assert.isNotNull(source);
 		Assert.isNotNull(contentType);
 		ByteArrayOutputStream outb = new ByteArrayOutputStream();
-		InputStream is = null;
 
-		try {
-			is = source.createInputStream(null);
+		try (InputStream is = source.createInputStream(null)) {
 			IOUtils.copy(is, outb);
 		} catch (CoreException | IOException e) {
+			if (e instanceof IOException && e.getSuppressed() != null && e.getSuppressed().length > 0) {
+				throw new BugzillaRestException(
+						Messages.BugzillaRestPostNewAttachment_CouldNotCloseStreamFromSource, e.getSuppressed()[0]);
+			}
 			throw new BugzillaRestException(
 					Messages.BugzillaRestPostNewAttachment_CouldNotGetStreamFromSource, e);
-		} finally {
-			if (is != null) {
-				try {
-					is.close();
-				} catch (IOException e) {
-					throw new BugzillaRestException(
-							Messages.BugzillaRestPostNewAttachment_CouldNotCloseStreamFromSource,
-							e);
-				}
-			}
 		}
 
 		if (description == null) {
@@ -132,24 +124,24 @@ public class BugzillaRestPostNewAttachment extends BugzillaRestPostRequest<Bugzi
 		String dataBase64 = base64.encodeAsString(outb.toByteArray());
 		try {
 			StringWriter stringWriter = new StringWriter();
-			JsonWriter out = new JsonWriter(stringWriter);
-			out.setLenient(true);
-			out.beginObject();
-			addAuthenticationToGson(out, getClient().getLocation());
-			out.name("ids").beginArray().value(Integer.parseInt(bugReportID)).endArray(); //$NON-NLS-1$
-			out.name("is_patch").value(isPatch); //$NON-NLS-1$
-			out.name("summary").value(description); //$NON-NLS-1$
-			out.name("content_type").value(contentType); //$NON-NLS-1$
-			out.name("data").value(dataBase64); //$NON-NLS-1$
-			out.name("file_name").value(filename); //$NON-NLS-1$
-			out.name("is_private").value(isPrivate); //$NON-NLS-1$
-			if (attachmentAttribute != null) {
-				attachmentAttribute.getAttributes().values();
-				Set<TaskAttribute> changed = new HashSet<>(attachmentAttribute.getAttributes().values());
-				BugzillaRestGsonUtil.buildFlags(out, changed, attachmentAttribute);
+			try (JsonWriter out = new JsonWriter(stringWriter)) {
+				out.setLenient(true);
+				out.beginObject();
+				addAuthenticationToGson(out, getClient().getLocation());
+				out.name("ids").beginArray().value(Integer.parseInt(bugReportID)).endArray(); //$NON-NLS-1$
+				out.name("is_patch").value(isPatch); //$NON-NLS-1$
+				out.name("summary").value(description); //$NON-NLS-1$
+				out.name("content_type").value(contentType); //$NON-NLS-1$
+				out.name("data").value(dataBase64); //$NON-NLS-1$
+				out.name("file_name").value(filename); //$NON-NLS-1$
+				out.name("is_private").value(isPrivate); //$NON-NLS-1$
+				if (attachmentAttribute != null) {
+					attachmentAttribute.getAttributes().values();
+					Set<TaskAttribute> changed = new HashSet<>(attachmentAttribute.getAttributes().values());
+					BugzillaRestGsonUtil.buildFlags(out, changed, attachmentAttribute);
+				}
+				out.endObject();
 			}
-			out.endObject();
-			out.close();
 			StringEntity requestEntity = new StringEntity(stringWriter.toString());
 			((HttpPost) request).setEntity(requestEntity);
 		} catch (IOException e) {
