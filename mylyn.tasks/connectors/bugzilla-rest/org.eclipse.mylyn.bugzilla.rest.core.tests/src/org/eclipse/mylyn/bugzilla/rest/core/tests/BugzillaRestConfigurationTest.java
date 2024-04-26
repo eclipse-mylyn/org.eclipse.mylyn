@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.rest.core.tests;
@@ -17,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -72,7 +74,8 @@ public class BugzillaRestConfigurationTest {
 		assertNotNull(configuration);
 		assertEquals(
 				IOUtils.toString(
-						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/configuration.json")),
+						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/configuration.json"),
+						Charset.defaultCharset()),
 				new Gson().toJson(configuration)
 				.replaceAll(actualFixture.getRepositoryUrl(), "http://dummy.url")
 				.replaceAll(actualFixture.getRepositoryUrl().replaceFirst("https://", "http://"),

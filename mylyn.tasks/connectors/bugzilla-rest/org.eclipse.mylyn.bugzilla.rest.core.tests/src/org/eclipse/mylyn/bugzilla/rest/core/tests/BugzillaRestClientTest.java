@@ -28,6 +28,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -233,24 +234,28 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		Collection<Field> fieldCollection = fields.values();
 		assertConfigurationFieldNames(fieldCollection);
 		assertEquals(
-				IOUtils.toString(CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/fields.json")),
+				IOUtils.toString(CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/fields.json"),
+						Charset.defaultCharset()),
 				new Gson().toJson(fields));
 		Map<String, Product> products = configuration.getProducts();
 		assertEquals(
 				IOUtils.toString(
-						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/products.json")),
+						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/products.json"),
+						Charset.defaultCharset()),
 				new Gson().toJson(products));
 		Parameters parameter = configuration.getParameters();
 		assertEquals(
 				IOUtils.toString(
-						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/parameters.json")),
+						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/parameters.json"),
+						Charset.defaultCharset()),
 				new Gson().toJson(parameter)
 				.replaceAll(repository.getRepositoryUrl(), "http://dummy.url")
 				.replaceAll(repository.getRepositoryUrl().replaceFirst("https://", "http://"),
 						"http://dummy.url"));
 		assertEquals(
 				IOUtils.toString(
-						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/configuration.json")),
+						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/configuration.json"),
+						Charset.defaultCharset()),
 				new Gson().toJson(configuration)
 				.replaceAll(repository.getRepositoryUrl(), "http://dummy.url")
 				.replaceAll(repository.getRepositoryUrl().replaceFirst("https://", "http://"),
@@ -265,7 +270,8 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		Collections.sort(fieldNameList);
 		assertEquals(
 				IOUtils.toString(
-						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/fieldName.json")),
+						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/fieldName.json"),
+						Charset.defaultCharset()),
 				new Gson().toJson(fieldNameList));
 	}
 
@@ -295,19 +301,22 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		TaskData taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");
 		assertTrue(taskDataHandler.initializeTaskData(repository, taskData, null, null));
 		assertEquals(
-				IOUtils.toString(CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/taskData.txt")),
+				IOUtils.toString(CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/taskData.txt"),
+						Charset.defaultCharset()),
 				taskData.getRoot().toString());
 		taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");
 		assertTrue(taskDataHandler.initializeTaskData(repository, taskData, taskMappingInit, null));
 		assertEquals(
 				IOUtils.toString(
-						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/taskData1.txt")),
+						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/taskData1.txt"),
+						Charset.defaultCharset()),
 				taskData.getRoot().toString());
 		taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");
 		assertTrue(taskDataHandler.initializeTaskData(repository, taskData, taskMappingSelect, null));
 		assertEquals(
 				IOUtils.toString(
-						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/taskData2.txt")),
+						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/taskData2.txt"),
+						Charset.defaultCharset()),
 				taskData.getRoot().toString());
 	}
 
@@ -572,7 +581,8 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		assertEquals(taskData.getRoot().toString(), taskDataGet.getRoot().toString());
 		assertEquals(
 				IOUtils.toString(
-						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/taskDataFlags.txt")),
+						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/taskDataFlags.txt"),
+						Charset.defaultCharset()),
 				flags.toString());
 	}
 
