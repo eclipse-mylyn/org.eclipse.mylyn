@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2017 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.ui;
@@ -30,7 +31,7 @@ public class BugzillaRestTaskEditorAttachmentPart extends TaskEditorAttachmentPa
 		TableColumnDescriptor[] defined = super.createColumnDescriptors();
 
 		TableColumnDescriptor[] result = Arrays.copyOf(defined, defined.length + 1);
-		result[defined.length] = new TableColumnDescriptor(100, "Flags", SWT.LEFT, false, SWT.DOWN, true);
+		result[defined.length] = new TableColumnDescriptor(100, Messages.BugzillaRestTaskEditorAttachmentPart_Flags, SWT.LEFT, false, SWT.DOWN, true);
 		return result;
 	}
 

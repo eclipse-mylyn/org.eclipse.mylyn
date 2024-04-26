@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
@@ -113,7 +114,7 @@ public class BugzillaRestGsonUtil {
 		if (!setNew.isEmpty()) {
 			out.name(id).beginArray();
 			for (String string : setNew) {
-				if (!"".equals(string)) {
+				if (!"".equals(string)) { //$NON-NLS-1$
 					if (asInteger) {
 						out.value(Integer.parseInt(string));
 					} else {
@@ -133,7 +134,7 @@ public class BugzillaRestGsonUtil {
 	}
 
 	private final Function<String, Integer> convert2Integer = input -> {
-		if ("".equals(input)) {
+		if ("".equals(input)) { //$NON-NLS-1$
 			return null;
 		}
 		return Integer.parseInt(input);

@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
@@ -87,9 +88,9 @@ public class BugzillaRestGetTaskData extends BugzillaRestGetRequest<List<TaskDat
 		if (statusCode != 400 && statusCode != 200) {
 			if (statusCode == HttpStatus.SC_NOT_FOUND) {
 				throw new BugzillaRestResourceNotFoundException(
-						NLS.bind("Requested resource ''{0}'' does not exist", response.getRequestPath()));
+						NLS.bind(Messages.BugzillaRestGetTaskData_RequestedResourceDoesNotExist, response.getRequestPath()));
 			}
-			throw new BugzillaRestException(NLS.bind("Unexpected response from Bugzilla REST server for ''{0}'': {1}",
+			throw new BugzillaRestException(NLS.bind(Messages.BugzillaRestGetTaskData_UnexpectedResponseFromServer,
 					response.getRequestPath(), HttpUtil.getStatusText(statusCode)));
 		}
 

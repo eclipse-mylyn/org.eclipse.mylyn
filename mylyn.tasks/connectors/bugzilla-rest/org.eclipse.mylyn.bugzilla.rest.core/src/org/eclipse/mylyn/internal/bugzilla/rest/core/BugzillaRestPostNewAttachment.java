@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2015 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
@@ -110,14 +111,14 @@ public class BugzillaRestPostNewAttachment extends BugzillaRestPostRequest<Bugzi
 			IOUtils.copy(is, outb);
 		} catch (CoreException | IOException e) {
 			throw new BugzillaRestException(
-					"BugzillaRestPostNewAttachment.createHttpRequestBase could not get stream form source", e);
+					Messages.BugzillaRestPostNewAttachment_CouldNotGetStreamFromSource, e);
 		} finally {
 			if (is != null) {
 				try {
 					is.close();
 				} catch (IOException e) {
 					throw new BugzillaRestException(
-							"BugzillaRestPostNewAttachment.createHttpRequestBase could not cloase stream form source",
+							Messages.BugzillaRestPostNewAttachment_CouldNotCloseStreamFromSource,
 							e);
 				}
 			}
@@ -125,7 +126,7 @@ public class BugzillaRestPostNewAttachment extends BugzillaRestPostRequest<Bugzi
 
 		if (description == null) {
 			throw new BugzillaRestException(new CoreException(new Status(IStatus.WARNING, BugzillaRestCore.ID_PLUGIN,
-					"Description required when submitting attachments")));
+					Messages.BugzillaRestPostNewAttachment_DesccriptionRequiredWhenSubmittingAttachments)));
 		}
 		Base64 base64 = new Base64();
 		String dataBase64 = base64.encodeAsString(outb.toByteArray());
@@ -153,7 +154,7 @@ public class BugzillaRestPostNewAttachment extends BugzillaRestPostRequest<Bugzi
 			((HttpPost) request).setEntity(requestEntity);
 		} catch (IOException e) {
 			throw new BugzillaRestException(
-					"BugzillaRestPostNewAttachment.createHttpRequestBase could not create RequestEntity", e);
+					Messages.BugzillaRestPostNewAttachment_CouldNotCreateRequestEntity, e);
 		}
 	}
 
@@ -177,10 +178,12 @@ public class BugzillaRestPostNewAttachment extends BugzillaRestPostRequest<Bugzi
 		if (statusCode != 400 && statusCode != 201) {
 			if (statusCode == HttpStatus.SC_NOT_FOUND) {
 				throw new BugzillaRestResourceNotFoundException(
-						NLS.bind("Requested resource ''{0}'' does not exist", response.getRequestPath()));
+						NLS.bind(Messages.BugzillaRestPostNewAttachment_RequestedResourceDoesNotExist,
+								response.getRequestPath()));
 			}
-			throw new BugzillaRestException(NLS.bind("Unexpected response from Bugzilla REST server for ''{0}'': {1}",
-					response.getRequestPath(), HttpUtil.getStatusText(statusCode)));
+			throw new BugzillaRestException(
+					NLS.bind(Messages.BugzillaRestPostNewAttachment_UnexpectedResponseFromServer,
+							response.getRequestPath(), HttpUtil.getStatusText(statusCode)));
 		}
 
 	}
@@ -195,8 +198,9 @@ public class BugzillaRestPostNewAttachment extends BugzillaRestPostRequest<Bugzi
 			default -> {
 				BugzillaRestStatus status = parseErrorFromJson(in);
 				throw new BugzillaRestException(
-						NLS.bind("{2}  (status: {1} from {0})", new String[] { response.getRequestPath(),
-								HttpUtil.getStatusText(response.getStatusCode()), status.getMessage() }));
+						NLS.bind(Messages.BugzillaRestPostNewAttachment_StatusFromServer,
+								new String[] { response.getRequestPath(),
+										HttpUtil.getStatusText(response.getStatusCode()), status.getMessage() }));
 			}
 		};
 	}

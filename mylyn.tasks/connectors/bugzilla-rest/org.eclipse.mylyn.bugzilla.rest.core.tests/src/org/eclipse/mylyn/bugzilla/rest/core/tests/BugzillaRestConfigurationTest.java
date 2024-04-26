@@ -35,7 +35,7 @@ import org.junit.runner.RunWith;
 
 import com.google.gson.Gson;
 
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "nls", "restriction" })
 @RunWith(Junit4TestFixtureRunner.class)
 @FixtureDefinition(fixtureClass = BugzillaRestTestFixture.class, fixtureType = "bugzillaREST")
 //@RunOnlyWhenProperty(property = "default", value = "1")
@@ -74,9 +74,9 @@ public class BugzillaRestConfigurationTest {
 				IOUtils.toString(
 						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/configuration.json")),
 				new Gson().toJson(configuration)
-						.replaceAll(actualFixture.getRepositoryUrl(), "http://dummy.url")
-						.replaceAll(actualFixture.getRepositoryUrl().replaceFirst("https://", "http://"),
-								"http://dummy.url"));
+				.replaceAll(actualFixture.getRepositoryUrl(), "http://dummy.url")
+				.replaceAll(actualFixture.getRepositoryUrl().replaceFirst("https://", "http://"),
+						"http://dummy.url"));
 
 	}
 

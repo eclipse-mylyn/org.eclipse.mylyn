@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.rest.core.tests;
@@ -33,6 +34,7 @@ import org.junit.Test;
 
 import com.google.gson.Gson;
 
+@SuppressWarnings({ "nls", "restriction" })
 public class BugzillaRestFlagMapperTest {
 
 	private TaskData mockTestData;

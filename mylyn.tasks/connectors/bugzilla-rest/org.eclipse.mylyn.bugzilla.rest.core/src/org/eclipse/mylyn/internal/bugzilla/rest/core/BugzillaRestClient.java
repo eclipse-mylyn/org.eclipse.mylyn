@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
@@ -91,7 +92,7 @@ public class BugzillaRestClient {
 		RepositoryLocation location = getClient().getLocation();
 		if (location.getBooleanPropery(IBugzillaRestConstants.REPOSITORY_USE_API_KEY)) {
 			UserCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
-			Objects.requireNonNull(credentials, "Authentication requested without valid credentials");
+			Objects.requireNonNull(credentials, Messages.BugzillaRestClient_MissingValidCredentials);
 			String url = MessageFormat.format("/valid_login?login={0}&api_key={1}", //$NON-NLS-1$
 					credentials.getUserName(), location.getProperty(IBugzillaRestConstants.REPOSITORY_API_KEY));
 

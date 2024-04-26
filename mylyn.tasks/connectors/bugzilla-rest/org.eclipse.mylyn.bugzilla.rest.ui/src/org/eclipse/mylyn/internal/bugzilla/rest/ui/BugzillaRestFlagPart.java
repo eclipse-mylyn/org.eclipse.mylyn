@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -153,13 +153,13 @@ public class BugzillaRestFlagPart extends AbstractTaskEditorPart {
 		}
 
 		if (used > 0) {
-			infoOverlayText = NLS.bind(" {0} Flags ({1} set)", String.valueOf(unused + used), String.valueOf(used));
+			infoOverlayText = NLS.bind(Messages.BugzillaRestFlagPart_infoOverlayText_flags_set, String.valueOf(unused + used), String.valueOf(used));
 		} else {
-			infoOverlayText = NLS.bind(" {0} Flags", String.valueOf(unused + used));
+			infoOverlayText = NLS.bind(Messages.BugzillaRestFlagPart_infoOverlayText_flags, String.valueOf(unused + used));
 		}
 
-		usedDetail = NLS.bind("{0} {1}", used == 1 ? "{0} Flags is" : "set flags are", usedDetail);
-		unusedDetail = NLS.bind("{0} {1}", unused == 1 ? "{0} Flags is" : "unused flags are", unusedDetail);
+		usedDetail = NLS.bind("{0} {1}", used == 1 ? Messages.BugzillaRestFlagPart_usedDetail_flags_singular : Messages.BugzillaRestFlagPart_usedDetail_flags_plural, usedDetail); //$NON-NLS-1$
+		unusedDetail = NLS.bind("{0} {1}", unused == 1 ? Messages.BugzillaRestFlagPart_unusedDetail_flags_singular : Messages.BugzillaRestFlagPart_unusedDetail_flags_plural, unusedDetail); //$NON-NLS-1$
 		if (used > 0 && unused > 0) {
 			infoOverlayTooltipText = NLS.bind("{0}\n{1}", usedDetail, unusedDetail); //$NON-NLS-1$
 		} else {

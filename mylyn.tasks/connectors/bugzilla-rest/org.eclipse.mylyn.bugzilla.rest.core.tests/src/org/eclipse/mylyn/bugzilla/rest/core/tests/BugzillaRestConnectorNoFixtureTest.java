@@ -1,3 +1,17 @@
+/*******************************************************************************
+ * Copyright (c) 2013 Frank Becker and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     Frank Becker - initial API and implementation
+ *     See git history
+ *******************************************************************************/
+
 package org.eclipse.mylyn.bugzilla.rest.core.tests;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -16,6 +30,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings({ "nls", "restriction" })
 public class BugzillaRestConnectorNoFixtureTest {
 
 	private BugzillaRestConnector connector;
@@ -51,8 +66,8 @@ public class BugzillaRestConnectorNoFixtureTest {
 		Date now = new Date();
 		task.setAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey(), "" + now.getTime());
 		taskData.getRoot()
-				.createAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey())
-				.setValue("" + (now.getTime() + 1));
+		.createAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey())
+		.setValue("" + (now.getTime() + 1));
 		assertTrue(connector.hasTaskChanged(repository, task, taskData));
 	}
 
@@ -63,8 +78,8 @@ public class BugzillaRestConnectorNoFixtureTest {
 		TaskTask task = new TaskTask(repository.getConnectorKind(), repository.getRepositoryUrl(), "123");
 		Date now = new Date();
 		taskData.getRoot()
-				.createAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey())
-				.setValue("" + now.getTime());
+		.createAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey())
+		.setValue("" + now.getTime());
 		assertTrue(connector.hasTaskChanged(repository, task, taskData));
 	}
 
@@ -76,8 +91,8 @@ public class BugzillaRestConnectorNoFixtureTest {
 		Date now = new Date();
 		task.setAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey(), "" + now.getTime());
 		taskData.getRoot()
-				.createAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey())
-				.setValue("" + now.getTime());
+		.createAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey())
+		.setValue("" + now.getTime());
 		assertTrue(!connector.hasTaskChanged(repository, task, taskData));
 	}
 

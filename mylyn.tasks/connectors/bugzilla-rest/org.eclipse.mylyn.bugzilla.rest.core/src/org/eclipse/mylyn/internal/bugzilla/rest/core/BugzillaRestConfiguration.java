@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
@@ -198,13 +199,13 @@ public class BugzillaRestConfiguration implements Serializable {
 			return getParameters().getDefaultseverity();
 		} else if (attributeId.equals("platform")) { //$NON-NLS-1$
 			if (getParameters().getDefaultplatform() == null || getParameters().getDefaultplatform().isEmpty()) {
-				return "All";
+				return Messages.BugzillaRestConfiguration_PlatformAll;
 			} else {
 				return getParameters().getDefaultplatform();
 			}
 		} else if (attributeId.equals("os")) { //$NON-NLS-1$
 			if (getParameters().getDefaultopsys() == null || getParameters().getDefaultopsys().isEmpty()) {
-				return "All";
+				return Messages.BugzillaRestConfiguration_OsAll;
 			} else {
 				return getParameters().getDefaultopsys();
 			}
@@ -230,7 +231,7 @@ public class BugzillaRestConfiguration implements Serializable {
 				yield TaskAttribute.TYPE_URL;
 			default: {
 				Status status = new Status(IStatus.INFO, BugzillaRestCore.ID_PLUGIN,
-						"unknown custom field type " + fieldTyp);
+						Messages.BugzillaRestConfiguration_UnknownCustomFieldType + fieldTyp);
 				StatusHandler.log(status);
 				throw new CoreException(status);
 			}

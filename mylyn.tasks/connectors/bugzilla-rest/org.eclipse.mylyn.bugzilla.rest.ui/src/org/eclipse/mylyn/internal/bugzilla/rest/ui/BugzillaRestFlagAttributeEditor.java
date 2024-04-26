@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2016 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.ui;
@@ -168,7 +169,7 @@ public class BugzillaRestFlagAttributeEditor extends AbstractAttributeEditor {
 //				}
 
 				selfLink = new ImageHyperlink(requesteeComposite, SWT.NO_FOCUS);
-				selfLink.setToolTipText("Insert My User ID");
+				selfLink.setToolTipText(Messages.BugzillaRestFlagAttributeEditor_ToolTip_InsertMyUserId);
 				selfLink.setActiveImage(CommonImages.getImage(CommonImages.PERSON_ME_SMALL));
 				selfLink.setHoverImage(CommonImages.getImage(CommonImages.PERSON_ME_SMALL));
 				selfLink.setEnabled(enabled);

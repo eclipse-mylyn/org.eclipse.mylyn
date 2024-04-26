@@ -9,7 +9,8 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
- *******************************************************************************/
+ *     See git history
+ ******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.rest.test.support;
 
@@ -48,6 +49,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
+@SuppressWarnings({ "nls", "restriction" })
 public class BugzillaRestHarness {
 	private final BugzillaRestTestFixture fixture;
 
@@ -89,8 +91,8 @@ public class BugzillaRestHarness {
 				result = new TaskData(mapper, repository().getConnectorKind(), repository().getRepositoryUrl(), ""); //$NON-NLS-1$
 				result.getRoot().createAttribute("cf_dropdown").setValue("one");
 				result.getRoot()
-						.createAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
-						.setValue("M1");
+				.createAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
+				.setValue("M1");
 			}
 			return result;
 		}
