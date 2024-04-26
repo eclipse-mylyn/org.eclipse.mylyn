@@ -25,6 +25,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonWriter;
 
+@SuppressWarnings("nls")
 public class BugzillaRestFlagMapper {
 
 	private String requestee;

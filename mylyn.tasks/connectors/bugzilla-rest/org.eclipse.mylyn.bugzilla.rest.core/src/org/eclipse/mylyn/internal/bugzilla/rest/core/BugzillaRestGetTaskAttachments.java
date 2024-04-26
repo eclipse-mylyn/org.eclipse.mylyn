@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
@@ -96,7 +97,7 @@ public class BugzillaRestGetTaskAttachments extends BugzillaRestGetRequest<Array
 								"Can not parse Date (" + attachmentObject.get("creation_time").getAsString() + ")"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
 					attachmentMapper.setContentType(attachmentObject.get("content_type").getAsString()); //$NON-NLS-1$
-					attachmentMapper.setAttachmentIsPrivate(attachmentObject.get("is_private").getAsBoolean());
+					attachmentMapper.setAttachmentIsPrivate(attachmentObject.get("is_private").getAsBoolean()); //$NON-NLS-1$
 					attachmentMapper.setDeprecated(attachmentObject.get("is_obsolete") //$NON-NLS-1$
 							.getAsBoolean());
 					attachmentMapper.setDescription(attachmentObject.get("summary").getAsString()); //$NON-NLS-1$

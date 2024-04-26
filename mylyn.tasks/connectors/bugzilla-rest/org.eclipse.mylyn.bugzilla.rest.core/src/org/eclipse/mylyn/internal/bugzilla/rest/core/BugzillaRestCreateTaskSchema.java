@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
@@ -40,7 +41,7 @@ public class BugzillaRestCreateTaskSchema extends AbstractTaskSchema {
 			new AbstractMap.SimpleEntry<>(getDefault().ASSIGNED_TO.getKey(), "assigned_to"), //$NON-NLS-1$
 			new AbstractMap.SimpleEntry<>(getDefault().OS.getKey(), "op_sys"), //$NON-NLS-1$
 			new AbstractMap.SimpleEntry<>(getDefault().VERSION.getKey(), "version") //$NON-NLS-1$
-	);
+			);
 
 	public static String getFieldNameFromAttributeName(String attributeName) {
 		String result = attribute2FieldMapper.get(attributeName);
@@ -65,9 +66,9 @@ public class BugzillaRestCreateTaskSchema extends AbstractTaskSchema {
 
 	public final Field DESCRIPTION = inheritFrom(parent.DESCRIPTION).addFlags(Flag.REQUIRED).create();
 
-	public final Field OS = createField("os", "OS", TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
+	public final Field OS = createField("os", "OS", TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public final Field PLATFORM = createField("platform", "Platform", TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
+	public final Field PLATFORM = createField("platform", "Platform", TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE); //$NON-NLS-1$
 
 	public final Field PRIORITY = inheritFrom(parent.PRIORITY).create();
 
@@ -75,7 +76,7 @@ public class BugzillaRestCreateTaskSchema extends AbstractTaskSchema {
 
 	public final Field STATUS = inheritFrom(parent.STATUS).create();
 
-	public final Field ALIAS = createField("alias", "Alias", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE);
+	public final Field ALIAS = createField("alias", "Alias", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE); //$NON-NLS-1$
 
 	public final Field ASSIGNED_TO = inheritFrom(parent.USER_ASSIGNED).label("Assigned to")
 			.dependsOn(COMPONENT.getKey())
@@ -83,24 +84,24 @@ public class BugzillaRestCreateTaskSchema extends AbstractTaskSchema {
 
 	public final Field CC = createField(TaskAttribute.USER_CC, "CC", TaskAttribute.TYPE_PERSON, Flag.PEOPLE);
 
-	public final Field DESCRIPTION_IS_PRIVATE = createField("description_is_private", "Description is private",
+	public final Field DESCRIPTION_IS_PRIVATE = createField("description_is_private", "Description is private", //$NON-NLS-1$
 			TaskAttribute.TYPE_BOOLEAN, Flag.ATTRIBUTE);
 
-	public final Field QA_CONTACT = createField("qa_contact", "QA Contact", TaskAttribute.TYPE_PERSON, null,
+	public final Field QA_CONTACT = createField("qa_contact", "QA Contact", TaskAttribute.TYPE_PERSON, null, //$NON-NLS-1$
 			COMPONENT.getKey(), Flag.PEOPLE);
 
-	public final Field TARGET_MILESTONE = createField("target_milestone", "Target milestone",
+	public final Field TARGET_MILESTONE = createField("target_milestone", "Target milestone", //$NON-NLS-1$
 			TaskAttribute.TYPE_SINGLE_SELECT, null, PRODUCT.getKey(), Flag.ATTRIBUTE, Flag.REQUIRED);
 
 	public final Field RESOLUTION = inheritFrom(parent.RESOLUTION).create();
 
 	public final Field OPERATION = createField(TaskAttribute.OPERATION, "Operation", TaskAttribute.TYPE_OPERATION);
 
-	public final Field DEPENDS_ON = createField("depends_on", "Depends on:", TaskAttribute.TYPE_TASK_DEPENDENCY,
+	public final Field DEPENDS_ON = createField("depends_on", "Depends on:", TaskAttribute.TYPE_TASK_DEPENDENCY, //$NON-NLS-1$
 			Flag.ATTRIBUTE);
 
-	public final Field BLOCKS = createField("blocks", "Blocks:", TaskAttribute.TYPE_TASK_DEPENDENCY, Flag.ATTRIBUTE);
+	public final Field BLOCKS = createField("blocks", "Blocks:", TaskAttribute.TYPE_TASK_DEPENDENCY, Flag.ATTRIBUTE); //$NON-NLS-1$
 
-	public final Field KEYWORDS = createField("keywords", "Keywords", IBugzillaRestConstants.EDITOR_TYPE_KEYWORD,
+	public final Field KEYWORDS = createField("keywords", "Keywords", IBugzillaRestConstants.EDITOR_TYPE_KEYWORD, //$NON-NLS-1$
 			Flag.ATTRIBUTE);
 }

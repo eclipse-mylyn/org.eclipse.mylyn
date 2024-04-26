@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
@@ -56,7 +57,7 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 			new AbstractMap.SimpleEntry<>(getDefault().DUPE_OF.getKey(), "dup_id"), //$NON-NLS-1$
 			new AbstractMap.SimpleEntry<>("resolutionInput", "resolution"), //$NON-NLS-1$  //$NON-NLS-2$
 			new AbstractMap.SimpleEntry<>(getDefault().DATE_MODIFICATION.getKey(), "last_change_time") //$NON-NLS-1$
-	);
+			);
 
 	public static String getAttributeNameFromFieldName(String fieldName) {
 		String result = field2AttributeFieldMapper.get(fieldName);
@@ -80,7 +81,7 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 
 	private final DefaultTaskSchema parent = DefaultTaskSchema.getInstance();
 
-	public final Field BUG_ID = createField("bug_id", "ID:", TaskAttribute.TYPE_SHORT_TEXT, Flag.REQUIRED);
+	public final Field BUG_ID = createField("bug_id", "ID:", TaskAttribute.TYPE_SHORT_TEXT, Flag.REQUIRED); //$NON-NLS-1$
 
 	public final Field PRODUCT = inheritFrom(parent.PRODUCT).addFlags(Flag.REQUIRED).create();
 
@@ -95,9 +96,9 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 
 	public final Field DESCRIPTION = inheritFrom(parent.DESCRIPTION).addFlags(Flag.REQUIRED, Flag.READ_ONLY).create();
 
-	public final Field OS = createField("os", "OS", TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
+	public final Field OS = createField("os", "OS", TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE); //$NON-NLS-1$
 
-	public final Field PLATFORM = createField("platform", "Platform", TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
+	public final Field PLATFORM = createField("platform", "Platform", TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE); //$NON-NLS-1$
 
 	public final Field PRIORITY = inheritFrom(parent.PRIORITY).create();
 
@@ -105,18 +106,18 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 
 	public final Field STATUS = inheritFrom(parent.STATUS).create();
 
-	public final Field ALIAS = createField("alias", "Alias", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE);
+	public final Field ALIAS = createField("alias", "Alias", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE); //$NON-NLS-1$
 
 	public final Field ASSIGNED_TO = inheritFrom(parent.USER_ASSIGNED).label("Assigned to")
 			.dependsOn(COMPONENT.getKey())
 			.create();
 
-	public final Field ADD_CC = createField("addCC", "Add CC", TaskAttribute.TYPE_MULTI_LABEL, Flag.PEOPLE);
+	public final Field ADD_CC = createField("addCC", "Add CC", TaskAttribute.TYPE_MULTI_LABEL, Flag.PEOPLE); //$NON-NLS-1$
 
 	public final Field CC = createField(TaskAttribute.USER_CC, "Remove CC\n(Selet to remove)",
 			IBugzillaRestConstants.EDITOR_TYPE_CC, Flag.PEOPLE);
 
-	public final Field REMOVE_CC = createField("removeCC", "CC selected for remove",
+	public final Field REMOVE_CC = createField("removeCC", "CC selected for remove", //$NON-NLS-1$
 			IBugzillaRestConstants.EDITOR_TYPE_CC);
 
 	public final Field ADD_SELF_CC = inheritFrom(parent.ADD_SELF_CC).create();
@@ -125,10 +126,10 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 
 	public final Field COMMENT_NUMBER = inheritFrom(parent.COMMENT_NUMBER).addFlags(Flag.ATTRIBUTE).create();
 
-	public final Field QA_CONTACT = createField("qa_contact", "QA Contact", TaskAttribute.TYPE_PERSON, null,
+	public final Field QA_CONTACT = createField("qa_contact", "QA Contact", TaskAttribute.TYPE_PERSON, null, //$NON-NLS-1$
 			COMPONENT.getKey(), Flag.PEOPLE);
 
-	public final Field TARGET_MILESTONE = createField("target_milestone", "Target milestone",
+	public final Field TARGET_MILESTONE = createField("target_milestone", "Target milestone", //$NON-NLS-1$
 			TaskAttribute.TYPE_SINGLE_SELECT, null, PRODUCT.getKey(), Flag.ATTRIBUTE, Flag.REQUIRED);
 
 	public final Field RESOLUTION = inheritFrom(parent.RESOLUTION).removeFlags(Flag.READ_ONLY).create();
@@ -137,22 +138,22 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 
 	public final Field NEW_COMMENT = inheritFrom(parent.NEW_COMMENT).create();
 
-	public final Field DUPE_OF = createField("dupe_of", "Dup", TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
+	public final Field DUPE_OF = createField("dupe_of", "Dup", TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID); //$NON-NLS-1$
 
-	public final Field DEPENDS_ON = createField("depends_on", "Depends on:", TaskAttribute.TYPE_TASK_DEPENDENCY,
+	public final Field DEPENDS_ON = createField("depends_on", "Depends on:", TaskAttribute.TYPE_TASK_DEPENDENCY, //$NON-NLS-1$
 			Flag.ATTRIBUTE);
 
-	public final Field BLOCKS = createField("blocks", "Blocks:", TaskAttribute.TYPE_TASK_DEPENDENCY, Flag.ATTRIBUTE);
+	public final Field BLOCKS = createField("blocks", "Blocks:", TaskAttribute.TYPE_TASK_DEPENDENCY, Flag.ATTRIBUTE); //$NON-NLS-1$
 
-	public final Field KEYWORDS = createField("keywords", "Keywords", IBugzillaRestConstants.EDITOR_TYPE_KEYWORD,
+	public final Field KEYWORDS = createField("keywords", "Keywords", IBugzillaRestConstants.EDITOR_TYPE_KEYWORD, //$NON-NLS-1$
 			Flag.ATTRIBUTE);
 
 	public final Field DATE_MODIFICATION = inheritFrom(parent.DATE_MODIFICATION).create();
 
-	public final Field RESET_QA_CONTACT = createField("reset_qa_contact", "Reset QA Contact to default",
+	public final Field RESET_QA_CONTACT = createField("reset_qa_contact", "Reset QA Contact to default", //$NON-NLS-1$
 			TaskAttribute.TYPE_BOOLEAN, Flag.PEOPLE);
 
-	public final Field RESET_ASSIGNED_TO = createField("reset_assigned_to", "Reassign to default assignee",
+	public final Field RESET_ASSIGNED_TO = createField("reset_assigned_to", "Reassign to default assignee", //$NON-NLS-1$
 			TaskAttribute.TYPE_BOOLEAN, Flag.PEOPLE);
 
 	@Override

@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
@@ -76,8 +77,8 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 
 	protected String baseUrl() {
 		String url = getClient().getLocation().getUrl();
-		if (!url.endsWith("/rest.cgi")) {
-			url += "/rest.cgi";
+		if (!url.endsWith("/rest.cgi")) { //$NON-NLS-1$
+			url += "/rest.cgi"; //$NON-NLS-1$
 		}
 		return url;
 	}
