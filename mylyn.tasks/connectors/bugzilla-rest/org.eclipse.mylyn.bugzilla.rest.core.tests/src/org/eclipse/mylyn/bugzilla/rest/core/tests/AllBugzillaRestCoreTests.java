@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.rest.core.tests;
@@ -25,8 +26,9 @@ import org.junit.runners.Suite;
 
 @RunWith(ManagedSuite.class)
 @Suite.SuiteClasses({ RepositoryKeyTest.class, BugzillaRestFlagMapperTest.class,
-		BugzillaRestConnectorNoFixtureTest.class })
+	BugzillaRestConnectorNoFixtureTest.class })
 @TestConfigurationProperty()
+@SuppressWarnings("restriction")
 public class AllBugzillaRestCoreTests {
 	static {
 		if (CommonTestUtil.fixProxyConfiguration()) {

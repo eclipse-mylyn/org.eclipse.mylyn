@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2017 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.ui;
@@ -35,16 +36,16 @@ public class BugzillaRestAttachmentTableLabelProvider extends AttachmentTableLab
 
 		for (TaskAttribute taskAttribute : attachment.getTaskAttribute().getAttributes().values()) {
 			if (taskAttribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG)) {
-				TaskAttribute stateAttribute = taskAttribute.getAttribute("state");
+				TaskAttribute stateAttribute = taskAttribute.getAttribute("state"); //$NON-NLS-1$
 				if (text.length() > 0) {
-					text.append("\n");
+					text.append("\n"); //$NON-NLS-1$
 				}
 				text.append(stateAttribute.getMetaData().getLabel());
-				text.append(": ");
+				text.append(": "); //$NON-NLS-1$
 				text.append(stateAttribute.getValue());
-				TaskAttribute requesteeAttribute = taskAttribute.getAttribute("requestee");
+				TaskAttribute requesteeAttribute = taskAttribute.getAttribute("requestee"); //$NON-NLS-1$
 				if (!requesteeAttribute.getValue().isEmpty()) {
-					text.append(" ");
+					text.append(" "); //$NON-NLS-1$
 					text.append(requesteeAttribute.getValue(), StyledString.COUNTER_STYLER);
 				}
 

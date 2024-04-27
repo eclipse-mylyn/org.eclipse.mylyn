@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -39,7 +39,7 @@ public class BugzillaRestUiUtil {
 		}
 		return new BugzillaRestSearchQueryPage(Messages.BugzillaRestUiUtil_CreateQueryFromURL, repository, null,
 				SimpleURLQueryPageSchema.getInstance(), taskData,
-				new QueryPageDetails(true, "buglist.cgi?", Messages.BugzillaRestUiUtil_EnterQueryParameter, //$NON-NLS-1$
+				new QueryPageDetails(true, "buglist.cgi?", Messages.BugzillaRestUiUtil_EnterQueryParameters, //$NON-NLS-1$
 						Messages.BugzillaRestUiUtil_EnterTitleAndURL,
 						"([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]+)", "SimpleURLQueryPage")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
@@ -59,7 +59,7 @@ public class BugzillaRestUiUtil {
 		return new BugzillaRestSearchQueryPage(Messages.BugzillaRestUiUtil_CreateQueryFromForm, repository, null,
 				BugzillaRestSearchQueryPageSchema.getInstance(), taskData,
 				new QueryPageDetails(true, "buglist.cgi?", Messages.BugzillaRestUiUtil_FillForm, //$NON-NLS-1$
-						Messages.BugzillaRestUiUtil_enterTitleAndFillForm,
+						Messages.BugzillaRestUiUtil_EnterTitleAndFillForm,
 						"([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]+)", null)); //$NON-NLS-1$
 	}
 
@@ -94,7 +94,7 @@ public class BugzillaRestUiUtil {
 		return new BugzillaRestSearchQueryPage(Messages.BugzillaRestUiUtil_CreateQueryFromURL, repository, query,
 				SimpleURLQueryPageSchema.getInstance(), taskData,
 				new QueryPageDetails(true, "buglist.cgi?", Messages.BugzillaRestUiUtil_EnterQueryParameters, //$NON-NLS-1$
-						Messages.BugzillaRestUiUtil_EnterTitleAndURL1,
+						Messages.BugzillaRestUiUtil_EnterTitleAndURL,
 						"([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]+)", "SimpleURLQueryPage")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
@@ -103,7 +103,7 @@ public class BugzillaRestUiUtil {
 		try {
 			BugzillaRestSearchQueryPageSchema.getInstance().initialize(taskData);
 			connectorREST.getTaskDataHandler()
-					.initializeTaskData(repository, taskData, null, new NullProgressMonitor());
+			.initializeTaskData(repository, taskData, null, new NullProgressMonitor());
 			BugzillaRestSearchQueryPageSchema.getInstance().initialize(taskData);
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
@@ -111,7 +111,7 @@ public class BugzillaRestUiUtil {
 		}
 		return new BugzillaRestSearchQueryPage(Messages.BugzillaRestUiUtil_CreateQueryFromForm, repository, query,
 				BugzillaRestSearchQueryPageSchema.getInstance(), taskData,
-				new QueryPageDetails(true, "buglist.cgi?", Messages.BugzillaRestUiUtil_fillForm, //$NON-NLS-1$
+				new QueryPageDetails(true, "buglist.cgi?", Messages.BugzillaRestUiUtil_FillForm, //$NON-NLS-1$
 						Messages.BugzillaRestUiUtil_EnterTitleAndFillForm,
 						"([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]+)", null)); //$NON-NLS-1$
 	}

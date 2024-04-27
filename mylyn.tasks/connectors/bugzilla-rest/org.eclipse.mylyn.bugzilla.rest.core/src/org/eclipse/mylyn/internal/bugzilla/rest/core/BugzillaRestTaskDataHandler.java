@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2013 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
@@ -45,14 +46,14 @@ public class BugzillaRestTaskDataHandler extends AbstractTaskDataHandler {
 			Set<TaskAttribute> oldAttributes, IProgressMonitor monitor) throws CoreException {
 		monitor = Policy.monitorFor(monitor);
 		try {
-			monitor.beginTask("Submitting_task", IProgressMonitor.UNKNOWN);
+			monitor.beginTask(Messages.BugzillaRestTaskDataHandler_SubmittingTask, IProgressMonitor.UNKNOWN);
 			BugzillaRestClient client = connector.getClient(repository);
 			try {
-				IOperationMonitor progress = OperationUtil.convert(monitor, "post taskdata", 3);
+				IOperationMonitor progress = OperationUtil.convert(monitor, Messages.BugzillaRestTaskDataHandler_PostTaskdata, 3);
 				return client.postTaskData(taskData, oldAttributes, progress);
 			} catch (BugzillaRestException e) {
 				throw new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, 2,
-						"Error post taskdata.\n\n" + e.getMessage(), e));
+						Messages.BugzillaRestTaskDataHandler_ErrorPostTaskdata + e.getMessage(), e));
 			}
 		} finally {
 			monitor.done();
@@ -112,15 +113,15 @@ public class BugzillaRestTaskDataHandler extends AbstractTaskDataHandler {
 			final TaskDataCollector collector, IProgressMonitor monitor) throws CoreException {
 		monitor = Policy.monitorFor(monitor);
 		try {
-			monitor.beginTask("retrive_task", IProgressMonitor.UNKNOWN);
+			monitor.beginTask(Messages.BugzillaRestTaskDataHandler_RetrieveTask, IProgressMonitor.UNKNOWN);
 			BugzillaRestClient client = connector.getClient(repository);
 			try {
-				IOperationMonitor progress = OperationUtil.convert(monitor, "post taskdata", 3);
+				IOperationMonitor progress = OperationUtil.convert(monitor, Messages.BugzillaRestTaskDataHandler_PostTaskdata, 3);
 				progress.addFlag(OperationFlag.BACKGROUND);
 				client.getTaskData(taskIds, repository, collector, progress);
 			} catch (BugzillaRestException e) {
 				throw new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, 2,
-						"Error get taskdata.\n\n" + e.getMessage(), e));
+						Messages.BugzillaRestTaskDataHandler_ErrorGetTaskdata + e.getMessage(), e));
 			}
 		} finally {
 			monitor.done();

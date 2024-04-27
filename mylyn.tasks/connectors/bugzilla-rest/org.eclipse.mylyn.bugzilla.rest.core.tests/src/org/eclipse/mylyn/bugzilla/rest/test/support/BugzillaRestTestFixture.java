@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.rest.test.support;
@@ -27,6 +28,7 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestCore;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.IBugzillaRestConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
+@SuppressWarnings({ "nls", "restriction" })
 public class BugzillaRestTestFixture extends RepositoryTestFixture {
 
 	private static final String API_KEY_ENABLED_PROPERTY = "api_key_enabled";

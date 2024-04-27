@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2016 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
@@ -40,77 +41,77 @@ public class BugzillaRestAttachmentMapper extends TaskAttachmentMapper {
 			TaskAttribute child = taskAttribute.createMappedAttribute(TaskAttribute.ATTACHMENT_AUTHOR);
 			TaskAttributeMetaData defaults = child.getMetaData().defaults();
 			defaults.setType(TaskAttribute.TYPE_PERSON);
-			defaults.setLabel("Attachment Author:");
+			defaults.setLabel(Messages.BugzillaRestAttachmentMapper_AttachmentAuthor);
 			mapper.setRepositoryPerson(child, getAuthor());
 		}
 		if (getContentType() != null) {
 			TaskAttribute child = taskAttribute.createMappedAttribute(TaskAttribute.ATTACHMENT_CONTENT_TYPE);
 			TaskAttributeMetaData defaults = child.getMetaData().defaults();
 			defaults.setType(TaskAttribute.TYPE_SHORT_TEXT);
-			defaults.setLabel("Content Type:");
+			defaults.setLabel(Messages.BugzillaRestAttachmentMapper_ContentType);
 			mapper.setValue(child, getContentType());
 		}
 		if (getCreationDate() != null) {
 			TaskAttribute child = taskAttribute.createMappedAttribute(TaskAttribute.ATTACHMENT_DATE);
 			TaskAttributeMetaData defaults = child.getMetaData().defaults();
 			defaults.setType(TaskAttribute.TYPE_DATE);
-			defaults.setLabel("Creation Date:");
+			defaults.setLabel(Messages.BugzillaRestAttachmentMapper_CreationDate);
 			mapper.setDateValue(child, getCreationDate());
 		}
 		if (getDescription() != null) {
 			TaskAttribute child = taskAttribute.createMappedAttribute(TaskAttribute.ATTACHMENT_DESCRIPTION);
 			TaskAttributeMetaData defaults = child.getMetaData().defaults();
 			defaults.setType(TaskAttribute.TYPE_SHORT_TEXT);
-			defaults.setLabel("Description:");
+			defaults.setLabel(Messages.BugzillaRestAttachmentMapper_Description);
 			mapper.setValue(child, getDescription());
 		}
 		if (getFileName() != null) {
 			TaskAttribute child = taskAttribute.createMappedAttribute(TaskAttribute.ATTACHMENT_FILENAME);
 			TaskAttributeMetaData defaults = child.getMetaData().defaults();
 			defaults.setType(TaskAttribute.TYPE_SHORT_TEXT);
-			defaults.setLabel("Filename:");
+			defaults.setLabel(Messages.BugzillaRestAttachmentMapper_Filename);
 			mapper.setValue(child, getFileName());
 		}
 		if (isDeprecated() != null) {
 			TaskAttribute child = taskAttribute.createMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
 			TaskAttributeMetaData defaults = child.getMetaData().defaults();
 			defaults.setType(TaskAttribute.TYPE_BOOLEAN);
-			defaults.setLabel("obsolete");
+			defaults.setLabel(Messages.BugzillaRestAttachmentMapper_Obsolete);
 			mapper.setBooleanValue(child, isDeprecated());
 		}
 		if (isPatch() != null) {
 			TaskAttribute child = taskAttribute.createMappedAttribute(TaskAttribute.ATTACHMENT_IS_PATCH);
 			TaskAttributeMetaData defaults = child.getMetaData().defaults();
 			defaults.setType(TaskAttribute.TYPE_BOOLEAN);
-			defaults.setLabel("patch");
+			defaults.setLabel(Messages.BugzillaRestAttachmentMapper_Patch);
 			mapper.setBooleanValue(child, isPatch());
 		}
 		if (getLength() != null) {
 			TaskAttribute child = taskAttribute.createMappedAttribute(TaskAttribute.ATTACHMENT_SIZE);
 			TaskAttributeMetaData defaults = child.getMetaData().defaults();
 			defaults.setType(TaskAttribute.TYPE_SHORT_TEXT);
-			defaults.setLabel("Size in Bytes:");
+			defaults.setLabel(Messages.BugzillaRestAttachmentMapper_SizeInBytes);
 			mapper.setLongValue(child, getLength());
 		}
 		if (getUrl() != null) {
 			TaskAttribute child = taskAttribute.createMappedAttribute(TaskAttribute.ATTACHMENT_URL);
 			TaskAttributeMetaData defaults = child.getMetaData().defaults();
 			defaults.setType(TaskAttribute.TYPE_URL);
-			defaults.setLabel("URL:");
+			defaults.setLabel(Messages.BugzillaRestAttachmentMapper_URL);
 			mapper.setValue(child, getUrl());
 		}
 		if (getDeltaDate() != null) {
 			TaskAttribute child = taskAttribute.createMappedAttribute("delta_ts"); //$NON-NLS-1$
 			TaskAttributeMetaData defaults = child.getMetaData().defaults();
 			defaults.setType(TaskAttribute.TYPE_DATE);
-			defaults.setLabel("Modification Date");
+			defaults.setLabel(Messages.BugzillaRestAttachmentMapper_ModificationDate);
 			mapper.setDateValue(child, getDeltaDate());
 		}
 		if (getAttachmentIsPrivate() != null) {
 			TaskAttribute child = taskAttribute.createMappedAttribute("is_private"); //$NON-NLS-1$
 			TaskAttributeMetaData defaults = child.getMetaData().defaults();
 			defaults.setType(TaskAttribute.TYPE_BOOLEAN);
-			defaults.setLabel("private");
+			defaults.setLabel(Messages.BugzillaRestAttachmentMapper_Private);
 			mapper.setBooleanValue(child, getAttachmentIsPrivate());
 		}
 	}

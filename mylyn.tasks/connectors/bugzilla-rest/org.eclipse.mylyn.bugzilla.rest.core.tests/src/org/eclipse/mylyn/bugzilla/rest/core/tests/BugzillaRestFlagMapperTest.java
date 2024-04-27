@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.rest.core.tests;
@@ -19,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
@@ -33,6 +35,7 @@ import org.junit.Test;
 
 import com.google.gson.Gson;
 
+@SuppressWarnings({ "nls", "restriction" })
 public class BugzillaRestFlagMapperTest {
 
 	private TaskData mockTestData;
@@ -46,7 +49,8 @@ public class BugzillaRestFlagMapperTest {
 
 	@Test
 	public void testReadFromJson() throws IOException {
-		String jsonElement = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.json"));
+		String jsonElement = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.json"),
+				Charset.defaultCharset());
 
 		BugzillaRestFlagMapper flagMapper = new Gson().fromJson(jsonElement, BugzillaRestFlagMapper.class);
 		assertThat(flagMapper.getCreationDate(), is("2016-10-22T14:19:13Z"));
@@ -62,7 +66,8 @@ public class BugzillaRestFlagMapperTest {
 
 	@Test
 	public void testReadFromJson1() throws IOException {
-		String jsonElement = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag1.json"));
+		String jsonElement = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag1.json"),
+				Charset.defaultCharset());
 
 		BugzillaRestFlagMapper flagMapper = new Gson().fromJson(jsonElement, BugzillaRestFlagMapper.class);
 		assertThat(flagMapper.getCreationDate(), is("2016-10-22T14:19:13Z"));
@@ -88,7 +93,7 @@ public class BugzillaRestFlagMapperTest {
 		flagMapper.setSetter("tests@mylyn.eclipse.org");
 		flagMapper.setState("-");
 		flagMapper.setTypeId(1);
-		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.json")),
+		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.json"), Charset.defaultCharset()),
 				new Gson().toJson(flagMapper));
 	}
 
@@ -104,61 +109,71 @@ public class BugzillaRestFlagMapperTest {
 		flagMapper.setSetter("tests@mylyn.eclipse.org");
 		flagMapper.setState("?");
 		flagMapper.setTypeId(1);
-		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag1.json")),
+		assertEquals(
+				IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag1.json"), Charset.defaultCharset()),
 				new Gson().toJson(flagMapper));
 	}
 
 	@Test
 	public void testApplyToTaskAttribute() throws IOException {
-		String jsonElement = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.json"));
+		String jsonElement = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.json"),
+				Charset.defaultCharset());
 
 		BugzillaRestFlagMapper flagMapper = new Gson().fromJson(jsonElement, BugzillaRestFlagMapper.class);
 		TaskAttribute taskAttribute = mockTestData.getRoot()
 				.createAttribute(IBugzillaRestConstants.KIND_FLAG_TYPE + "11");
 		flagMapper.applyTo(taskAttribute);
-		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.txt")), taskAttribute.toString());
+		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.txt"), Charset.defaultCharset()),
+				taskAttribute.toString(),
+				Charset.defaultCharset());
 	}
 
 	@Test
 	public void testApplyToTaskAttribute1() throws IOException {
-		String jsonElement = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag1.json"));
+		String jsonElement = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag1.json"),
+				Charset.defaultCharset());
 
 		BugzillaRestFlagMapper flagMapper = new Gson().fromJson(jsonElement, BugzillaRestFlagMapper.class);
 		TaskAttribute taskAttribute = mockTestData.getRoot()
 				.createAttribute(IBugzillaRestConstants.KIND_FLAG_TYPE + "11");
 		flagMapper.applyTo(taskAttribute);
-		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag1.txt")),
+		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag1.txt"), Charset.defaultCharset()),
 				taskAttribute.toString());
 	}
 
 	@Test
 	public void testCreateFromTaskAttribute() throws IOException {
-		String jsonElement = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.json"));
+		String jsonElement = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.json"),
+				Charset.defaultCharset());
 
 		BugzillaRestFlagMapper flagMapper = new Gson().fromJson(jsonElement, BugzillaRestFlagMapper.class);
 		TaskAttribute taskAttribute = mockTestData.getRoot()
 				.createAttribute(IBugzillaRestConstants.KIND_FLAG_TYPE + "11");
 		flagMapper.applyTo(taskAttribute);
-		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.txt")), taskAttribute.toString());
+		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.txt"),
+				Charset.defaultCharset()), taskAttribute.toString(),
+				Charset.defaultCharset());
 
 		flagMapper = BugzillaRestFlagMapper.createFrom(taskAttribute);
-		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.json")),
+		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.json"), Charset.defaultCharset()),
 				new Gson().toJson(flagMapper));
 	}
 
 	@Test
 	public void testCreateFromTaskAttribute1() throws IOException {
-		String jsonElement = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag1.json"));
+		String jsonElement = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag1.json"),
+				Charset.defaultCharset());
 
 		BugzillaRestFlagMapper flagMapper = new Gson().fromJson(jsonElement, BugzillaRestFlagMapper.class);
 		TaskAttribute taskAttribute = mockTestData.getRoot()
 				.createAttribute(IBugzillaRestConstants.KIND_FLAG_TYPE + "11");
 		flagMapper.applyTo(taskAttribute);
-		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag1.txt")),
+		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag1.txt"), Charset.defaultCharset()),
 				taskAttribute.toString());
 
 		flagMapper = BugzillaRestFlagMapper.createFrom(taskAttribute);
-		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag1.json")),
+		assertEquals(
+				IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag1.json"), Charset.defaultCharset()),
 				new Gson().toJson(flagMapper));
 	}
 

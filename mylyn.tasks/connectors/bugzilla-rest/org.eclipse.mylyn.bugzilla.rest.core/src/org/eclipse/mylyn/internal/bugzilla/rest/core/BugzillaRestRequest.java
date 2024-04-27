@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
@@ -76,8 +77,8 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 
 	protected String baseUrl() {
 		String url = getClient().getLocation().getUrl();
-		if (!url.endsWith("/rest.cgi")) {
-			url += "/rest.cgi";
+		if (!url.endsWith("/rest.cgi")) { //$NON-NLS-1$
+			url += "/rest.cgi"; //$NON-NLS-1$
 		}
 		return url;
 	}
@@ -137,9 +138,9 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 		if (statusCode != expected && statusCode != HttpStatus.SC_BAD_REQUEST) {
 			if (statusCode == HttpStatus.SC_NOT_FOUND) {
 				throw new BugzillaRestResourceNotFoundException(
-						NLS.bind("Requested resource ''{0}'' does not exist", response.getRequestPath()));
+						NLS.bind(Messages.BugzillaRestRequest_ResourceDoesNotExist, response.getRequestPath()));
 			}
-			throw new BugzillaRestException(NLS.bind("Unexpected response from Bugzilla REST server for ''{0}'': {1}",
+			throw new BugzillaRestException(NLS.bind(Messages.BugzillaRestRequest_UnexpectedResponseFromServer,
 					response.getRequestPath(), HttpUtil.getStatusText(statusCode)));
 		}
 	}
@@ -174,7 +175,7 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 	protected void addAuthenticationToGson(JsonWriter out, RepositoryLocation location) {
 		try {
 			if (location.getBooleanPropery(IBugzillaRestConstants.REPOSITORY_USE_API_KEY)) {
-				out.name("Bugzilla_api_key").value(location.getProperty(IBugzillaRestConstants.REPOSITORY_API_KEY));
+				out.name("Bugzilla_api_key").value(location.getProperty(IBugzillaRestConstants.REPOSITORY_API_KEY)); //$NON-NLS-1$
 			} else {
 				UserCredentials credentials = getCredentials();
 

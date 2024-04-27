@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
@@ -83,7 +84,7 @@ public class BugzillaRestClient {
 
 		VersionResponse versionResponse = new BugzillaRestUnauthenticatedGetRequest<VersionResponse>(client, "/version", //$NON-NLS-1$
 				new TypeToken<VersionResponse>() {
-				}).run(monitor);
+		}).run(monitor);
 		return new BugzillaRestVersion(versionResponse.getVersion());
 	}
 
@@ -91,13 +92,13 @@ public class BugzillaRestClient {
 		RepositoryLocation location = getClient().getLocation();
 		if (location.getBooleanPropery(IBugzillaRestConstants.REPOSITORY_USE_API_KEY)) {
 			UserCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
-			Objects.requireNonNull(credentials, "Authentication requested without valid credentials");
+			Objects.requireNonNull(credentials, Messages.BugzillaRestClient_MissingValidCredentials);
 			String url = MessageFormat.format("/valid_login?login={0}&api_key={1}", //$NON-NLS-1$
 					credentials.getUserName(), location.getProperty(IBugzillaRestConstants.REPOSITORY_API_KEY));
 
 			BooleanResult response = new BugzillaRestUnauthenticatedGetRequest<BooleanResult>(client, url,
 					new TypeToken<BooleanResult>() {
-					}).run(monitor);
+			}).run(monitor);
 			return response.getResult();
 		} else {
 			LoginToken validateResponse = new BugzillaRestLoginRequest(client).run(monitor);
@@ -123,7 +124,7 @@ public class BugzillaRestClient {
 			return config;
 		} catch (Exception e) {
 			StatusHandler
-					.log(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, "Could not get the Configuration", e)); //$NON-NLS-1$
+			.log(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, "Could not get the Configuration", e)); //$NON-NLS-1$
 			return null;
 		}
 	}
@@ -149,7 +150,7 @@ public class BugzillaRestClient {
 	public ParameterResponse getParameters(IOperationMonitor monitor) throws BugzillaRestException {
 		return new BugzillaRestGetRequest<ParameterResponse>(client, "/parameters?", //$NON-NLS-1$
 				new TypeToken<ParameterResponse>() {
-				}).run(monitor);
+		}).run(monitor);
 	}
 
 	public RepositoryResponse postTaskData(TaskData taskData, Set<TaskAttribute> oldAttributes,
@@ -182,7 +183,7 @@ public class BugzillaRestClient {
 				taskIds.stream().map(removeLeadingZero).collect(Collectors.toList()), MAX_RETRIEVED_PER_QUERY);
 
 		for (List<String> list : partitions) {
-			String urlIDList = "id=" + list.stream().filter(Objects::nonNull).collect(Collectors.joining("id="));
+			String urlIDList = "id=" + list.stream().filter(Objects::nonNull).collect(Collectors.joining("id=")); //$NON-NLS-1$ //$NON-NLS-2$
 			try {
 
 				List<TaskData> taskDataArray = new BugzillaRestGetTaskData(client, connector, urlIDList, taskRepository)
@@ -245,7 +246,7 @@ public class BugzillaRestClient {
 	public void addAttachment(String bugReportID, String comment, AbstractTaskAttachmentSource source,
 			TaskAttribute attachmentAttribute, IOperationMonitor monitor) throws BugzillaRestException {
 		new BugzillaRestPostNewAttachment(client, bugReportID, comment, source, attachmentAttribute, monitor)
-				.run(monitor);
+		.run(monitor);
 	}
 
 }

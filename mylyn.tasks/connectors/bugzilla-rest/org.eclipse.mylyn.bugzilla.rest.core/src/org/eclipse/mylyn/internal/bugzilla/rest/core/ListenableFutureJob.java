@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Sam Davis - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
@@ -82,7 +83,7 @@ public abstract class ListenableFutureJob<V> extends Job /* implements Listenabl
 			Thread.sleep(250);
 		}
 		if (!done) {
-			throw new TimeoutException("ListenableFutureJob.get() could not get the result!");
+			throw new TimeoutException(Messages.ListenableFutureJob_TimeoutWaitingForResult);
 		}
 		return resultObject;
 	}

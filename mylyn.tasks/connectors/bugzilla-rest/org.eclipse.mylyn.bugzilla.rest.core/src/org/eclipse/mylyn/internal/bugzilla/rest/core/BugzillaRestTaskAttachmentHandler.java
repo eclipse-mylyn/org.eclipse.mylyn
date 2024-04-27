@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2016 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
@@ -73,14 +74,14 @@ public class BugzillaRestTaskAttachmentHandler extends AbstractTaskAttachmentHan
 			@Nullable TaskAttribute attachmentAttribute, @Nullable IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = Policy.monitorFor(monitor);
-			monitor.beginTask("addAttachment Data", IProgressMonitor.UNKNOWN);
+			monitor.beginTask(Messages.BugzillaRestTaskAttachmentHandler_AddAttachmentData, IProgressMonitor.UNKNOWN);
 			BugzillaRestClient client = connector.getClient(repository);
 			try {
-				IOperationMonitor progress = OperationUtil.convert(monitor, "get Attachment Data", 3);
+				IOperationMonitor progress = OperationUtil.convert(monitor, Messages.BugzillaRestTaskAttachmentHandler_GetAttachmentData, 3);
 				client.addAttachment(task.getTaskId(), comment, source, attachmentAttribute, progress);
 			} catch (BugzillaRestException e) {
 				throw new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, 2,
-						"Error add attachment data.\n\n" + e.getMessage(), e));
+						Messages.BugzillaRestTaskAttachmentHandler_ErrorAddAttachmentData + e.getMessage(), e));
 			}
 		} finally {
 			monitor.done();

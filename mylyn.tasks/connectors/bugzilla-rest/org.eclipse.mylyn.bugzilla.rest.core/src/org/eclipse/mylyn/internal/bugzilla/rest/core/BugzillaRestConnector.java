@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
@@ -139,7 +140,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 					public Optional<BugzillaRestConfiguration> reload(RepositoryKey key,
 							Optional<BugzillaRestConfiguration> oldValue) throws Exception {
 						ListenableFutureJob<Optional<BugzillaRestConfiguration>> job = new ListenableFutureJob<>(
-								"") {
+								"") { //$NON-NLS-1$
 
 							@Override
 							protected IStatus run(IProgressMonitor monitor) {
@@ -180,7 +181,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getLabel() {
-		return "Bugzilla 5.0 or later with REST";
+		return Messages.BugzillaRestConnector_Bugzilla_5_OrLater;
 	}
 
 	@Override
@@ -223,16 +224,16 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 			ISynchronizationSession session, IProgressMonitor monitor) {
 		monitor = Policy.monitorFor(monitor);
 		try {
-			monitor.beginTask("performQuery", IProgressMonitor.UNKNOWN);
+			monitor.beginTask(Messages.BugzillaRestConnector_PerformQuery, IProgressMonitor.UNKNOWN);
 			BugzillaRestClient client = getClient(repository);
 			IOperationMonitor progress = OperationUtil.convert(monitor, "performQuery", 3); //$NON-NLS-1$
 			return client.performQuery(repository, query, collector, progress);
 		} catch (CoreException e) {
 			return new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, IStatus.INFO,
-					"CoreException from performQuery", e);
+					Messages.BugzillaRestConnector_CoreExceptionFromPerformQuery, e);
 		} catch (BugzillaRestException e) {
 			return new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, IStatus.INFO,
-					"BugzillaRestException from performQuery", e);
+					Messages.BugzillaRestConnector_BugzillaRestExceptionFromPerformQuery, e);
 		} finally {
 			monitor.done();
 		}
@@ -268,7 +269,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 				}
 			} catch (CoreException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN,
-						"Error during get BugzillaRestConfiguration", e));
+						Messages.BugzillaRestConnector_ErrorDuringGetBugzillaRestConfiguration, e));
 			}
 		}
 		if (taskData.isPartial()) {
@@ -387,7 +388,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 			BugzillaRestClient client = createClient(repository);
 			if (!client.validate(OperationUtil.convert(monitor))) {
 				throw new CoreException(
-						new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, "repository is invalide"));
+						new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, Messages.BugzillaRestConnector_RepositoryIsInvalid));
 			}
 			BugzillaRestVersion version = client.getVersion(OperationUtil.convert(monitor));
 			return new RepositoryInfo(new RepositoryVersion(version.toString()));

@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
@@ -125,16 +126,16 @@ public class BugzillaRestConfiguration implements Serializable {
 			TaskAttribute attribute = data.getRoot().getAttribute(key);
 			if (!key.equals(SCHEMA.PRODUCT.getKey())) {
 				String configName = mapTaskAttributeKey2ConfigurationFields(key);
-				if ("addCC".equals(configName) || "removeCC".equals(configName)
-						|| "reset_qa_contact".equals(configName)) {
+				if ("addCC".equals(configName) || "removeCC".equals(configName) //$NON-NLS-1$ //$NON-NLS-2$
+						|| "reset_qa_contact".equals(configName)) { //$NON-NLS-1$
 					continue;
 				}
 				Field configField = getFieldWithName(configName);
 				if (configField == null) {
 					continue;
 				}
-				if (configName.equals("component") || configName.equals("version")
-						|| configName.equals("target_milestone")) {
+				if (configName.equals("component") || configName.equals("version") //$NON-NLS-1$ //$NON-NLS-2$
+						|| configName.equals("target_milestone")) { //$NON-NLS-1$
 					if (attribute.getOptions().size() == 1 && attribute.getValue().isEmpty()) {
 						attribute.setValue((String) attribute.getOptions().values().toArray()[0]);
 					}
@@ -142,7 +143,7 @@ public class BugzillaRestConfiguration implements Serializable {
 					FieldValues[] val = configField.getValues();
 					if (val != null && val.length > 0) {
 						for (FieldValues fieldValues : val) {
-							if (configName.equals("bug_status")) {
+							if (configName.equals("bug_status")) { //$NON-NLS-1$
 								if (fieldValues.getName() == null) {
 									for (StatusTransition bugzillaRestBugStatusTransition : fieldValues
 											.getCanChangeTo()) {
@@ -196,20 +197,20 @@ public class BugzillaRestConfiguration implements Serializable {
 			return getParameters().getDefaultpriority();
 		} else if (attributeId.equals(TaskAttribute.SEVERITY)) {
 			return getParameters().getDefaultseverity();
-		} else if (attributeId.equals("platform")) {
+		} else if (attributeId.equals("platform")) { //$NON-NLS-1$
 			if (getParameters().getDefaultplatform() == null || getParameters().getDefaultplatform().isEmpty()) {
-				return "All";
+				return Messages.BugzillaRestConfiguration_PlatformAll;
 			} else {
 				return getParameters().getDefaultplatform();
 			}
-		} else if (attributeId.equals("os")) {
+		} else if (attributeId.equals("os")) { //$NON-NLS-1$
 			if (getParameters().getDefaultopsys() == null || getParameters().getDefaultopsys().isEmpty()) {
-				return "All";
+				return Messages.BugzillaRestConfiguration_OsAll;
 			} else {
 				return getParameters().getDefaultopsys();
 			}
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	private String getAttributeTypFromFieldTyp(int fieldTyp) throws CoreException {
@@ -230,7 +231,7 @@ public class BugzillaRestConfiguration implements Serializable {
 				yield TaskAttribute.TYPE_URL;
 			default: {
 				Status status = new Status(IStatus.INFO, BugzillaRestCore.ID_PLUGIN,
-						"unknown custom field type " + fieldTyp);
+						Messages.BugzillaRestConfiguration_UnknownCustomFieldType + fieldTyp);
 				StatusHandler.log(status);
 				throw new CoreException(status);
 			}
@@ -239,8 +240,8 @@ public class BugzillaRestConfiguration implements Serializable {
 
 	private String mapTaskAttributeKey2ConfigurationFields(String taskAttributeKey) {
 		String resultString;
-		if (taskAttributeKey.equals("task.common.summary")) {
-			resultString = "short_desc";
+		if (taskAttributeKey.equals("task.common.summary")) { //$NON-NLS-1$
+			resultString = "short_desc"; //$NON-NLS-1$
 		} else if (taskAttributeKey.equals(TaskAttribute.PRODUCT) //
 				|| taskAttributeKey.equals(TaskAttribute.RESOLUTION) //
 				|| taskAttributeKey.equals(TaskAttribute.PRIORITY) //
@@ -248,27 +249,27 @@ public class BugzillaRestConfiguration implements Serializable {
 				|| taskAttributeKey.equals(TaskAttribute.VERSION)) {
 			resultString = taskAttributeKey.substring(12);
 		} else if (taskAttributeKey.equals(TaskAttribute.STATUS)) {
-			resultString = "bug_status";
+			resultString = "bug_status"; //$NON-NLS-1$
 		} else if (taskAttributeKey.equals(TaskAttribute.USER_ASSIGNED)) {
-			resultString = "assigned_to";
+			resultString = "assigned_to"; //$NON-NLS-1$
 		} else if (taskAttributeKey.equals(TaskAttribute.USER_CC)) {
-			resultString = "cc";
+			resultString = "cc"; //$NON-NLS-1$
 		} else if (taskAttributeKey.equals(TaskAttribute.DESCRIPTION)) {
-			resultString = "longdesc";
-		} else if (taskAttributeKey.equals("description_is_private")) {
-			resultString = "longdescs.isprivate";
-		} else if (taskAttributeKey.equals("os")) {
-			resultString = "op_sys";
-		} else if (taskAttributeKey.equals("platform")) {
-			resultString = "rep_platform";
+			resultString = "longdesc"; //$NON-NLS-1$
+		} else if (taskAttributeKey.equals("description_is_private")) { //$NON-NLS-1$
+			resultString = "longdescs.isprivate"; //$NON-NLS-1$
+		} else if (taskAttributeKey.equals("os")) { //$NON-NLS-1$
+			resultString = "op_sys"; //$NON-NLS-1$
+		} else if (taskAttributeKey.equals("platform")) { //$NON-NLS-1$
+			resultString = "rep_platform"; //$NON-NLS-1$
 		} else if (taskAttributeKey.equals(TaskAttribute.SEVERITY)) {
-			resultString = "bug_severity";
-		} else if (taskAttributeKey.equals("comment")) {
-			resultString = "longdesc";
-		} else if (taskAttributeKey.equals("blocks")) {
-			resultString = "blocked";
-		} else if (taskAttributeKey.equals("depends_on")) {
-			resultString = "dependson";
+			resultString = "bug_severity"; //$NON-NLS-1$
+		} else if (taskAttributeKey.equals("comment")) { //$NON-NLS-1$
+			resultString = "longdesc"; //$NON-NLS-1$
+		} else if (taskAttributeKey.equals("blocks")) { //$NON-NLS-1$
+			resultString = "blocked"; //$NON-NLS-1$
+		} else if (taskAttributeKey.equals("depends_on")) { //$NON-NLS-1$
+			resultString = "dependson"; //$NON-NLS-1$
 		} else {
 
 			resultString = taskAttributeKey;
@@ -391,16 +392,16 @@ public class BugzillaRestConfiguration implements Serializable {
 		}
 		TaskAttribute attribute = bugReport.getRoot()
 				.createAttribute(TaskAttribute.PREFIX_OPERATION + attributeStatusValue);
-		if (attributeStatusValue.equals("RESOLVED")) {
+		if (attributeStatusValue.equals("RESOLVED")) { //$NON-NLS-1$
 			attribute.getMetaData()
-					.putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
-							BugzillaRestTaskSchema.getDefault().RESOLUTION.getKey());
+			.putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
+					BugzillaRestTaskSchema.getDefault().RESOLUTION.getKey());
 		}
 
 		TaskOperation.applyTo(attribute, attributeStatusValue, attributeStatusValue);
 		// set as default
 		TaskOperation.applyTo(operationAttribute, attributeStatusValue, attributeStatusValue);
-		Field status = getFieldWithName("bug_status");
+		Field status = getFieldWithName("bug_status"); //$NON-NLS-1$
 		for (FieldValues fieldValues : status.getValues()) {
 			if ((attributeStatusValue == null || attributeStatusValue.isEmpty()) && fieldValues.getName() == null
 					|| attributeStatusValue != null && attributeStatusValue.equals(fieldValues.getName())) {
@@ -408,15 +409,15 @@ public class BugzillaRestConfiguration implements Serializable {
 					attribute = bugReport.getRoot()
 							.createAttribute(TaskAttribute.PREFIX_OPERATION + statusTransition.name);
 					TaskOperation.applyTo(attribute, statusTransition.name, statusTransition.name);
-					if (statusTransition.name != null && statusTransition.name.equals("RESOLVED")) {
+					if (statusTransition.name != null && statusTransition.name.equals("RESOLVED")) { //$NON-NLS-1$
 						TaskAttribute attrResolvedInput = attribute.getTaskData()
 								.getRoot()
-								.createAttribute("resolutionInput");
+								.createAttribute("resolutionInput"); //$NON-NLS-1$
 						attrResolvedInput.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
-						attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, "resolutionInput");
-						Field resolution = getFieldWithName("resolution");
+						attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, "resolutionInput"); //$NON-NLS-1$
+						Field resolution = getFieldWithName("resolution"); //$NON-NLS-1$
 						for (FieldValues resolutionValues : resolution.getValues()) {
-							if (resolutionValues.getName().compareTo("DUPLICATE") != 0) {
+							if (resolutionValues.getName().compareTo("DUPLICATE") != 0) { //$NON-NLS-1$
 								attrResolvedInput.putOption(resolutionValues.getName(), resolutionValues.getName());
 							}
 						}
@@ -424,8 +425,8 @@ public class BugzillaRestConfiguration implements Serializable {
 				}
 			}
 		}
-		attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + "duplicate");
-		TaskOperation.applyTo(attribute, "duplicate", "Mark as Duplicate");
+		attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + "duplicate"); //$NON-NLS-1$
+		TaskOperation.applyTo(attribute, "duplicate", "Mark as Duplicate"); //$NON-NLS-1$ //$NON-NLS-2$
 		TaskAttribute attrResolvedInput = attribute.getTaskData()
 				.getRoot()
 				.getAttribute(BugzillaRestTaskSchema.getDefault().DUPE_OF.getKey());
@@ -553,7 +554,7 @@ public class BugzillaRestConfiguration implements Serializable {
 
 	public void updateKeyword(TaskData taskData) {
 		TaskAttribute attributeKeywords = taskData.getRoot().getMappedAttribute(SCHEMA.KEYWORDS.getKey());
-		Field keywords = getFieldWithName("keywords");
+		Field keywords = getFieldWithName("keywords"); //$NON-NLS-1$
 		FieldValues[] keywordList = keywords.getValues();
 		attributeKeywords.clearOptions();
 		for (FieldValues fieldValues : keywordList) {

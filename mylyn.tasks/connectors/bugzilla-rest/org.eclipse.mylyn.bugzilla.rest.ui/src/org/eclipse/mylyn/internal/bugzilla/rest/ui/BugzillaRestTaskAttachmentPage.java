@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2016 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.rest.ui;
@@ -113,7 +114,7 @@ public class BugzillaRestTaskAttachmentPage extends TaskAttachmentPage {
 				TaskAttribute stateAttribute = attribute.getTaskData()
 						.getAttributeMapper()
 						.getAssoctiatedAttribute(attribute);
-				TaskAttribute requesteeAttribute = attribute.getAttribute("requestee");
+				TaskAttribute requesteeAttribute = attribute.getAttribute("requestee"); //$NON-NLS-1$
 				Label flagLiteral = new Label(flagComposite, SWT.NONE);
 				flagLiteral.setText(stateAttribute.getMetaData().getLabel());
 				flagLiteral.setToolTipText(attribute.getMetaData().getValue(TaskAttribute.META_DESCRIPTION));
@@ -178,7 +179,7 @@ public class BugzillaRestTaskAttachmentPage extends TaskAttachmentPage {
 				ExpandableComposite.COMPACT | ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
 		flagExpandComposite.setFont(container.getFont());
 		flagExpandComposite.setBackground(container.getBackground());
-		flagExpandComposite.setText("Advanced");
+		flagExpandComposite.setText(Messages.BugzillaRestTaskAttachmentPage_FlagLabel_Advanced);
 		flagExpandComposite.setLayout(new GridLayout(3, false));
 		GridData g = new GridData(SWT.FILL, SWT.TOP, true, false);
 		g.horizontalSpan = 3;

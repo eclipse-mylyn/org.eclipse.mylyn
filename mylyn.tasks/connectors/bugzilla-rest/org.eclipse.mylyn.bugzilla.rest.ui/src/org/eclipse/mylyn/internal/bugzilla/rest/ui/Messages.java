@@ -20,6 +20,20 @@ public class Messages extends NLS {
 
 	public static String BugzillaKeywordAttributeEditor_Select_X;
 
+	public static String BugzillaRestFlagAttributeEditor_ToolTip_InsertMyUserId;
+
+	public static String BugzillaRestFlagPart_infoOverlayText_flags;
+
+	public static String BugzillaRestFlagPart_infoOverlayText_flags_set;
+
+	public static String BugzillaRestFlagPart_unusedDetail_flags_plural;
+
+	public static String BugzillaRestFlagPart_unusedDetail_flags_singular;
+
+	public static String BugzillaRestFlagPart_usedDetail_flags_plural;
+
+	public static String BugzillaRestFlagPart_usedDetail_flags_singular;
+
 	public static String BugzillaRestRepositorySettingsPage_api_key;
 
 	public static String BugzillaRestRepositorySettingsPage_Please_create_or_copy_the_API_Key_from;
@@ -35,6 +49,10 @@ public class Messages extends NLS {
 	public static String BugzillaRestSearchQueryPage_PropertiesForNewQuery;
 
 	public static String BugzillaRestSearchQueryPage_PropertiesForQuery;
+
+	public static String BugzillaRestTaskAttachmentPage_FlagLabel_Advanced;
+
+	public static String BugzillaRestTaskEditorAttachmentPart_Flags;
 
 	public static String BugzillaRestTaskEditorPageFactory_Bugzilla;
 
