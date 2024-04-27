@@ -140,20 +140,20 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 
 	public final Field DUPE_OF = createField("dupe_of", Messages.BugzillaRestTaskSchema_Dup_Of, TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID); //$NON-NLS-1$
 
-	public final Field DEPENDS_ON = createField("depends_on", Messages.BugzillaRestTaskSchema_13, TaskAttribute.TYPE_TASK_DEPENDENCY, //$NON-NLS-1$
+	public final Field DEPENDS_ON = createField("depends_on", Messages.BugzillaRestTaskSchema_Depends_On, TaskAttribute.TYPE_TASK_DEPENDENCY, //$NON-NLS-1$
 			Flag.ATTRIBUTE);
 
-	public final Field BLOCKS = createField("blocks", Messages.BugzillaRestTaskSchema_14, TaskAttribute.TYPE_TASK_DEPENDENCY, Flag.ATTRIBUTE); //$NON-NLS-1$
+	public final Field BLOCKS = createField("blocks", Messages.BugzillaRestTaskSchema_Blocks, TaskAttribute.TYPE_TASK_DEPENDENCY, Flag.ATTRIBUTE); //$NON-NLS-1$
 
-	public final Field KEYWORDS = createField("keywords", Messages.BugzillaRestTaskSchema_15, IBugzillaRestConstants.EDITOR_TYPE_KEYWORD, //$NON-NLS-1$
+	public final Field KEYWORDS = createField("keywords", Messages.BugzillaRestTaskSchema_Keywords, IBugzillaRestConstants.EDITOR_TYPE_KEYWORD, //$NON-NLS-1$
 			Flag.ATTRIBUTE);
 
 	public final Field DATE_MODIFICATION = inheritFrom(parent.DATE_MODIFICATION).create();
 
-	public final Field RESET_QA_CONTACT = createField("reset_qa_contact", Messages.BugzillaRestTaskSchema_16, //$NON-NLS-1$
+	public final Field RESET_QA_CONTACT = createField("reset_qa_contact", Messages.BugzillaRestTaskSchema_Reset_Qa_Contact, //$NON-NLS-1$
 			TaskAttribute.TYPE_BOOLEAN, Flag.PEOPLE);
 
-	public final Field RESET_ASSIGNED_TO = createField("reset_assigned_to", Messages.BugzillaRestTaskSchema_17, //$NON-NLS-1$
+	public final Field RESET_ASSIGNED_TO = createField("reset_assigned_to", Messages.BugzillaRestTaskSchema_Reset_Assigned_To, //$NON-NLS-1$
 			TaskAttribute.TYPE_BOOLEAN, Flag.PEOPLE);
 
 	@Override

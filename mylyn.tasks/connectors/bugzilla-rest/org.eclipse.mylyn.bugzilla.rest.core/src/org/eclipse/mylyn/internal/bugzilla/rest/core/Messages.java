@@ -120,15 +120,15 @@ public class Messages extends NLS {
 
 	public static String BugzillaRestTaskDataHandler_SubmittingTask;
 
-	public static String BugzillaRestTaskSchema_13;
+	public static String BugzillaRestTaskSchema_Depends_On;
 
-	public static String BugzillaRestTaskSchema_14;
+	public static String BugzillaRestTaskSchema_Blocks;
 
-	public static String BugzillaRestTaskSchema_15;
+	public static String BugzillaRestTaskSchema_Keywords;
 
-	public static String BugzillaRestTaskSchema_16;
+	public static String BugzillaRestTaskSchema_Reset_Qa_Contact;
 
-	public static String BugzillaRestTaskSchema_17;
+	public static String BugzillaRestTaskSchema_Reset_Assigned_To;
 
 	public static String BugzillaRestTaskSchema_Add_CC;
 
