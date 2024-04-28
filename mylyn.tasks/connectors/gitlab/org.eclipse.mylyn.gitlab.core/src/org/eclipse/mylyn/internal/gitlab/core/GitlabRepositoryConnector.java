@@ -175,7 +175,7 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 			GitlabConfiguration result = configurationOptional.isPresent() ? configurationOptional.get() : null;
 			if (GitlabCoreActivator.DEBUG_REPOSITORY_CONNECTOR) {
 				endTime = System.currentTimeMillis();
-				traceExitResult = result.toString() + " " + (endTime - startTime) + " ms"; //$NON-NLS-1$ //$NON-NLS-2$
+				traceExitResult = result == null ? "[null]" : result.toString() + " " + (endTime - startTime) + " ms"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 			return result;
 		} finally {

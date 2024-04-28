@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.gitlab.core.test;
@@ -29,6 +30,7 @@ import org.eclipse.mylyn.internal.gitlab.core.GitlabRestClient;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tests.util.TestFixture;
 
+@SuppressWarnings({ "nls", "restriction" })
 public class GitlabTestFixture extends TestFixture {
 	private final Map<String, String> properties;
 

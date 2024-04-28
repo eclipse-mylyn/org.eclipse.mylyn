@@ -672,7 +672,7 @@ public class GitlabRestClient {
 			config.updateProductOptions(result);
 		}
 		if (GitlabCoreActivator.DEBUG_REST_CLIENT) {
-			GitlabCoreActivator.DEBUG_TRACE.traceExit(GitlabCoreActivator.REST_CLIENT, result.toString());
+			GitlabCoreActivator.DEBUG_TRACE.traceExit(GitlabCoreActivator.REST_CLIENT, result);
 		}
 		return result;
 	}
