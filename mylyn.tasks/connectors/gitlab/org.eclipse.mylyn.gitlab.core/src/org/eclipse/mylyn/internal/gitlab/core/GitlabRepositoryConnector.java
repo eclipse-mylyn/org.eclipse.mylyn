@@ -40,6 +40,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.gitlab.core.Duration;
 import org.eclipse.mylyn.gitlab.core.GitlabConfiguration;
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;
@@ -356,7 +357,8 @@ public class GitlabRepositoryConnector extends AbstractRepositoryConnector {
 		UserCredentials credentials = new UserCredentials(credentials1.getUserName(), credentials1.getPassword(), null,
 				true);
 		location.setCredentials(AuthenticationType.REPOSITORY, credentials);
-		GitlabRestClient client = new GitlabRestClient(location, this, repository);
+		var httpClient = new CommonHttpClient(location);
+		GitlabRestClient client = new GitlabRestClient(location, httpClient, this, repository);
 
 		return client;
 	}

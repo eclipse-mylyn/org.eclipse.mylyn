@@ -103,9 +103,10 @@ public class GitlabRestClient {
 	public static String AUTHORIZATION_HEADER = "authorization_header"; //$NON-NLS-1$
 
 	@SuppressWarnings("restriction")
-	public GitlabRestClient(RepositoryLocation location, GitlabRepositoryConnector connector,
+	public GitlabRestClient(RepositoryLocation location, CommonHttpClient client,
+			GitlabRepositoryConnector connector,
 			TaskRepository taskRepository) {
-		client = new CommonHttpClient(location);
+		this.client = client;
 		this.connector = connector;
 		this.taskRepository = taskRepository;
 	}
@@ -1256,7 +1257,7 @@ public class GitlabRestClient {
 		for (JsonElement project : (JsonArray) projects) {
 			JsonObject projectObject = (JsonObject) project;
 			JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor); //$NON-NLS-1$
-			JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor); //$NON-NLS-1$
+			JsonArray milestones = getProjectMilestones(projectObject, monitor);
 			config.addProject(projectObject, labels, milestones);
 		}
 		if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
@@ -1278,7 +1279,7 @@ public class GitlabRestClient {
 					}
 					JsonObject projectObject = projectDetail;
 					JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor); //$NON-NLS-1$
-					JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor); //$NON-NLS-1$
+					JsonArray milestones = getProjectMilestones(projectObject, monitor);
 					if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 						GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
 								/* repository.getRepositoryUrl() + */ "get Project: (" + (i + 1) + "/" //$NON-NLS-1$ //$NON-NLS-2$
@@ -1314,7 +1315,7 @@ public class GitlabRestClient {
 					JsonElement project = projectsArray.get(j);
 					JsonObject projectObject = (JsonObject) project;
 					JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor); //$NON-NLS-1$
-					JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor); //$NON-NLS-1$
+					JsonArray milestones = getProjectMilestones(projectObject, monitor);
 					if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 						GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
 								/* repository.getRepositoryUrl() + */ "get Group (" + (i + 1) + "/" + groupList.length //$NON-NLS-1$ //$NON-NLS-2$
@@ -1532,7 +1533,12 @@ public class GitlabRestClient {
 		return jsonArray;
 	}
 
-	public JsonArray getProjectMilestones(String projectid, IOperationMonitor monitor) throws GitlabException {
+	public JsonArray getProjectMilestones(JsonObject project, IOperationMonitor monitor) throws GitlabException {
+		String projectid = project.get("id").getAsString();
+		boolean issuesEnabled = project.get("issues_enabled").getAsBoolean();
+		if (!issuesEnabled) {
+			return new JsonArray(0);
+		}
 		getAccessTokenIfNotPresent(monitor);
 		JsonArray jsonArray = new GitlabJSonArrayOperation(client,
 				"/projects/" + projectid + "/milestones?include_parent_milestones=true") { //$NON-NLS-1$ //$NON-NLS-2$
