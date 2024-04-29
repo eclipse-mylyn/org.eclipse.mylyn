@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.core;
@@ -73,6 +74,7 @@ import junit.framework.TestCase;
 /**
  * @author Benjamin Muskalla
  */
+@SuppressWarnings("nls")
 public class SynchronizeTasksJobTest extends TestCase {
 
 	private final class DeltaCountingTaskListChangeListener implements ITaskListChangeListener {

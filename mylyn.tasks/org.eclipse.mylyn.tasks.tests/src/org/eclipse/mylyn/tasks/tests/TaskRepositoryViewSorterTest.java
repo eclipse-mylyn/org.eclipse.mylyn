@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -20,6 +21,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class TaskRepositoryViewSorterTest extends TestCase {
 
 	public void testCategorySorting() {

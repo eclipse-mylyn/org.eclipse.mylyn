@@ -10,6 +10,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - porting to SimRel 2022-12
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.ui.editors;
@@ -35,7 +36,9 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class AbstractTaskEditorPageTest {
+
 	public class TestAbstractTaskEditorPage extends AbstractTaskEditorPage {
 		private TestAbstractTaskEditorPage(TaskEditor editor, String connectorKind) {
 			super(editor, connectorKind);

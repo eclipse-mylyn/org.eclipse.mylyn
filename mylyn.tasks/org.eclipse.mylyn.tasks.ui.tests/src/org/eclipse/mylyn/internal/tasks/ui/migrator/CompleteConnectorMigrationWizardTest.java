@@ -10,6 +10,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - porting to SimRel 2022-12
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.migrator;
@@ -54,6 +55,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
+@SuppressWarnings("nls")
 public class CompleteConnectorMigrationWizardTest {
 
 	private CompleteConnectorMigrationWizard wizard;

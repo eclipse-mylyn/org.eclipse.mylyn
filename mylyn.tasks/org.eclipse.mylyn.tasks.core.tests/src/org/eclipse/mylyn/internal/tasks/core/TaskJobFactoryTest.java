@@ -10,6 +10,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - porting to SimRel 2022-12
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.core;
@@ -31,6 +32,7 @@ import org.eclipse.mylyn.tasks.core.sync.TaskJob;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class TaskJobFactoryTest extends TestCase {
 	private TaskJobFactory jobFactory;
 

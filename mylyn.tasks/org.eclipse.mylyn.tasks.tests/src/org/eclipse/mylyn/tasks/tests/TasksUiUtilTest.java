@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -36,6 +37,7 @@ import junit.framework.TestCase;
  * @author Shawn Minto
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class TasksUiUtilTest extends TestCase {
 
 	private TaskCategory cat1;

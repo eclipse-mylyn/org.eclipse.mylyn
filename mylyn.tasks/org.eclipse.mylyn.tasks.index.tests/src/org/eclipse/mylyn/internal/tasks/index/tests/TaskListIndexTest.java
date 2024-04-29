@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.index.tests;
@@ -53,6 +54,7 @@ import org.junit.Test;
 /**
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class TaskListIndexTest extends AbstractTaskListIndexTest {
 
 	private static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_SUMMARY = DefaultTaskSchema

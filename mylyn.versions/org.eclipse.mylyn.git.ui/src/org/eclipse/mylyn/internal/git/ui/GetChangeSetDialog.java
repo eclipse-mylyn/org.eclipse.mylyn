@@ -58,6 +58,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * 
  * @author Sebastien Dubois
  */
+@SuppressWarnings("nls")
 public class GetChangeSetDialog extends FormDialog {
 
 	/**

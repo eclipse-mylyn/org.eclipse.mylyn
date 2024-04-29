@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.support;
@@ -27,6 +28,7 @@ import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 
+@SuppressWarnings("nls")
 public class MockRepositoryConnectorAdapter implements IAdapterFactory {
 	public final static class DynamicMockRepositoryConnectorUi extends MockRepositoryConnectorUi {
 

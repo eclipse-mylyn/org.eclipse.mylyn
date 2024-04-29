@@ -10,6 +10,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - porting to SimRel 2022-12
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.ui.wizards;
@@ -47,6 +48,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class AbstractRepositorySettingsPageTest {
 
 	public static class TestRepositorySettingsPage extends AbstractRepositorySettingsPage {

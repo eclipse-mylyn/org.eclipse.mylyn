@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui;
@@ -18,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class OpenRepositoryTaskJobTest {
 
 	@Test

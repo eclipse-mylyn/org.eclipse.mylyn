@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.ui;
@@ -44,6 +45,7 @@ import junit.framework.TestCase;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class TaskListFilterTest extends TestCase {
 
 	private TaskListView view;

@@ -11,6 +11,7 @@
  *     Tasktop Technologies - initial API and implementation
  *     David Green - fix for bug 266693
  *     Abner Ballardo - fix for bug 288427
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.ui.editor;
@@ -36,6 +37,7 @@ import junit.framework.TestCase;
  * @author Steffen Pingel
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class TaskUrlHyperlinkDetectorTest extends TestCase {
 
 	private TaskRepository repository;

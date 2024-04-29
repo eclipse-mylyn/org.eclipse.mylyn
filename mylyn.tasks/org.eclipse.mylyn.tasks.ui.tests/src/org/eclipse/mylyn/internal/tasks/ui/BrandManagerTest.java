@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui;
@@ -29,7 +30,7 @@ import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.widgets.Display;
 import org.junit.Test;
 
-@SuppressWarnings("restriction")
+@SuppressWarnings("nls")
 public class BrandManagerTest {
 	private final BrandManager brandManager = new BrandManager();
 

@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.connector;
@@ -20,6 +21,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
+@SuppressWarnings("nls")
 public class MockRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 	private String brand;

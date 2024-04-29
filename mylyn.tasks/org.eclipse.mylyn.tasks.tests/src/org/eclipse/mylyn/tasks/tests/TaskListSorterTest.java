@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -12,6 +12,7 @@
  *     George Lindholm - improvements
  *     Frank Becker - improvements for bug 212967
  *     Julio Gesser - fixes for bug 303509
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -44,6 +45,7 @@ import junit.framework.TestCase;
  * @author Frank Becker
  * @author Julio Gesser
  */
+@SuppressWarnings("nls")
 public class TaskListSorterTest extends TestCase {
 
 	public void testSortWithError() {

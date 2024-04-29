@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -36,6 +37,7 @@ import junit.framework.TestCase;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class NewTaskWizardRepositorySelectionTest extends TestCase {
 
 	// see bug 203801

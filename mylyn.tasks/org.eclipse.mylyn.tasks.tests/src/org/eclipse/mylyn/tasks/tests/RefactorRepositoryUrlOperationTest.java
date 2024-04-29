@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -38,6 +39,7 @@ import junit.framework.TestCase;
  * @author Robert Elves
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class RefactorRepositoryUrlOperationTest extends TestCase {
 
 	private TaskList taskList;

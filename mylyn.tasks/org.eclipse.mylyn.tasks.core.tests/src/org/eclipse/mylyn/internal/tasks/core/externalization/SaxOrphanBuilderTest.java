@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.core.externalization;
@@ -24,6 +25,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.helpers.AttributesImpl;
 
+@SuppressWarnings("nls")
 public class SaxOrphanBuilderTest {
 
 	private SaxOrphanBuilder builder;
