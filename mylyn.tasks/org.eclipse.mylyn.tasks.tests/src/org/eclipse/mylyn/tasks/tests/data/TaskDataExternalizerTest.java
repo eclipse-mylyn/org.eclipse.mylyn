@@ -62,14 +62,11 @@ public class TaskDataExternalizerTest extends TestCase {
 	}
 
 	public void testReadWrite() throws Exception {
-		ZipInputStream in = new ZipInputStream(
-				CommonTestUtil.getResource(this, "testdata/taskdata-1.0-bug-219897.zip"));
 		ITaskDataWorkingCopy state;
-		try {
+		try (ZipInputStream in = new ZipInputStream(
+				CommonTestUtil.getResource(this, "testdata/taskdata-1.0-bug-219897.zip"))) {
 			in.getNextEntry();
 			state = externalizer.readState(in);
-		} finally {
-			in.close();
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		externalizer.writeState(out, state);

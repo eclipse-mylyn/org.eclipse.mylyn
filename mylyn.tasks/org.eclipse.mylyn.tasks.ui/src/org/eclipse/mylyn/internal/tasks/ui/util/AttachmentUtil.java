@@ -1,15 +1,16 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Peter Stibrany - improvements for bug 271197
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.util;
@@ -139,8 +140,7 @@ public class AttachmentUtil {
 				File targetFile = TasksUiPlugin.getContextStore().getFileForContext(task);
 				try {
 					boolean exceptionThrown = true;
-					OutputStream out = new BufferedOutputStream(new FileOutputStream(targetFile));
-					try (out) {
+					try (OutputStream out = new BufferedOutputStream(new FileOutputStream(targetFile))) {
 						AttachmentUtil.downloadAttachment(attachment, out, monitor);
 						exceptionThrown = false;
 					} catch (CoreException e) {
@@ -164,9 +164,9 @@ public class AttachmentUtil {
 						((CoreException) e.getCause()).getStatus());
 			} else {
 				StatusManager.getManager()
-						.handle(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Unexpected error while retrieving context", e), //$NON-NLS-1$
-								StatusManager.SHOW | StatusManager.LOG);
+				.handle(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Unexpected error while retrieving context", e), //$NON-NLS-1$
+						StatusManager.SHOW | StatusManager.LOG);
 			}
 			return false;
 		} catch (InterruptedException ignored) {
@@ -214,8 +214,8 @@ public class AttachmentUtil {
 			});
 		} catch (InvocationTargetException e) {
 			StatusManager.getManager()
-					.handle(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"Unexpected error while attaching context", e), StatusManager.SHOW | StatusManager.LOG); //$NON-NLS-1$
+			.handle(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Unexpected error while attaching context", e), StatusManager.SHOW | StatusManager.LOG); //$NON-NLS-1$
 			return false;
 		} catch (InterruptedException ignored) {
 			// canceled
@@ -280,9 +280,8 @@ public class AttachmentUtil {
 						RepositoryStatus.ERROR_INTERNAL, "The repository does not support attachments.")); //$NON-NLS-1$
 			}
 
-			InputStream in = handler.getContent(attachment.getTaskRepository(), attachment.getTask(),
-					attachment.getTaskAttribute(), monitor);
-			try {
+			try (InputStream in = handler.getContent(attachment.getTaskRepository(), attachment.getTask(),
+					attachment.getTaskAttribute(), monitor)) {
 				byte[] buffer = new byte[BUFFER_SIZE];
 				while (true) {
 					Policy.checkCanceled(monitor);
@@ -293,16 +292,14 @@ public class AttachmentUtil {
 					out.write(buffer, 0, count);
 				}
 			} catch (IOException e) {
-				throw new CoreException(new RepositoryStatus(attachment.getTaskRepository(), IStatus.ERROR,
-						TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_IO, "IO error reading attachment: " //$NON-NLS-1$
-								+ e.getMessage(),
-						e));
-			} finally {
-				try {
-					in.close();
-				} catch (IOException e) {
+				if (e.getSuppressed() != null && e.getSuppressed().length > 0) {
 					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-							"Error closing attachment stream", e)); //$NON-NLS-1$
+							"Error closing attachment stream", e.getSuppressed()[0])); //$NON-NLS-1$
+				} else {
+					throw new CoreException(new RepositoryStatus(attachment.getTaskRepository(), IStatus.ERROR,
+							TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_IO, "IO error reading attachment: " //$NON-NLS-1$
+							+ e.getMessage(),
+							e));
 				}
 			}
 		} finally {

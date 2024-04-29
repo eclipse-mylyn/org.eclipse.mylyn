@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -39,7 +39,7 @@ import junit.framework.TestCase;
 
 /**
  * Test task attachment jobs.
- * 
+ *
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
@@ -106,14 +106,11 @@ public class TaskAttachmentTest extends TestCase {
 
 		assertEquals(Status.OK_STATUS, job.getResult());
 
-		RandomAccessFile raf = new RandomAccessFile(file, "r");
-		byte[] data = new byte[expected.getBytes().length];
-		try {
+		try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
+			byte[] data = new byte[expected.getBytes().length];
 			raf.readFully(data);
-		} finally {
-			raf.close();
+			assertEquals(expected, new String(data));
 		}
-		assertEquals(expected, new String(data));
 	}
 
 	public void testDownloadAttachmentJobExceptionThrown() throws Exception {

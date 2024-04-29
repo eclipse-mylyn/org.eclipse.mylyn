@@ -86,21 +86,11 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 				String queryString = String.format(
 						"action=query&titles=%s&generator=images&prop=imageinfo&iiprop=url&format=xml%s", //$NON-NLS-1$
 						URLEncoder.encode(pageName, StandardCharsets.UTF_8), gimcontinue == null
-								? "" //$NON-NLS-1$
+						? "" //$NON-NLS-1$
 								: "&gimcontinue=" + URLEncoder.encode(gimcontinue, StandardCharsets.UTF_8)); //$NON-NLS-1$
 				apiUrl = new URL(base + "api.php?" + queryString); //$NON-NLS-1$
 			} catch (Exception e) {
 				throw new BuildException("Cannot compose API URL", e); //$NON-NLS-1$
-			}
-
-			Reader input;
-			try {
-
-				log("Fetching " + apiUrl, Project.MSG_VERBOSE); //$NON-NLS-1$
-
-				input = createInputReader(apiUrl);
-			} catch (IOException e) {
-				throw new BuildException(String.format("Cannot contact %s: %s", apiUrl, e.getMessage()), e); //$NON-NLS-1$
 			}
 
 			try {
@@ -110,18 +100,19 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 
 				xmlReader.setContentHandler(contentHandler);
 
-				try {
-					xmlReader.parse(new InputSource(input));
-					gimcontinue = contentHandler.getGimcontinue();
-				} catch (IOException e) {
-					throw new BuildException(String.format("Unexpected exception retrieving data from %s", apiUrl), e); //$NON-NLS-1$
-				} finally {
+				log("Fetching " + apiUrl, Project.MSG_VERBOSE); //$NON-NLS-1$
+				try (Reader input = createInputReader(apiUrl)) {
 					try {
-						input.close();
+						xmlReader.parse(new InputSource(input));
+						gimcontinue = contentHandler.getGimcontinue();
 					} catch (IOException e) {
-						// ignore
+						throw new BuildException(String.format("Unexpected exception retrieving data from %s", apiUrl), //$NON-NLS-1$
+								e);
 					}
+				} catch (IOException e) {
+					throw new BuildException(String.format("Cannot contact %s: %s", apiUrl, e.getMessage()), e); //$NON-NLS-1$
 				}
+
 			} catch (SAXException e) {
 				throw new BuildException("Unexpected error in XML content", e); //$NON-NLS-1$
 			} catch (ParserConfigurationException e) {

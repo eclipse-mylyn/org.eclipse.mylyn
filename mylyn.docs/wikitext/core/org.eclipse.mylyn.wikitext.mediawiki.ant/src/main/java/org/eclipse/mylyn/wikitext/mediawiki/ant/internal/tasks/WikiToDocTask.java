@@ -481,8 +481,8 @@ public class WikiToDocTask extends MarkupTask {
 			appendum = appendum.replace("{title}", computeTitle(path)); //$NON-NLS-1$
 			content += appendum;
 			getProject()
-					.log(MessageFormat.format(Messages.getString("WikiToDocTask_appending_markup_to_page"), path.name, //$NON-NLS-1$
-							appendum), Project.MSG_VERBOSE);
+			.log(MessageFormat.format(Messages.getString("WikiToDocTask_appending_markup_to_page"), path.name, //$NON-NLS-1$
+					appendum), Project.MSG_VERBOSE);
 		}
 		return content;
 	}
@@ -498,18 +498,8 @@ public class WikiToDocTask extends MarkupTask {
 								pathDir.getAbsolutePath()));
 			}
 		}
-		Writer writer;
-		try {
-			writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(htmlOutputFile)),
-					StandardCharsets.UTF_8);
-		} catch (Exception e) {
-			throw new BuildException(
-					MessageFormat.format(Messages.getString("WikiToDocTask_cannot_create_output_file"), htmlOutputFile, //$NON-NLS-1$
-							e.getMessage()),
-					e);
-		}
-
-		try {
+		try (Writer writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(htmlOutputFile)),
+				StandardCharsets.UTF_8)) {
 			HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer, formatOutput);
 			for (Stylesheet stylesheet : stylesheets) {
 				HtmlDocumentBuilder.Stylesheet builderStylesheet = createBuilderStylesheet(pathDir, stylesheet);
@@ -552,13 +542,16 @@ public class WikiToDocTask extends MarkupTask {
 
 			parser.parse(markupContent);
 
-		} finally {
-			try {
-				writer.close();
-			} catch (Exception e) {
+		} catch (Exception e) {
+			if (e.getSuppressed() != null && e.getSuppressed().length > 0) {
 				throw new BuildException(MessageFormat.format(
 						Messages.getString("WikiToDocTask_cannot_write_output_file"), htmlOutputFile, //$NON-NLS-1$
-						e.getMessage()), e);
+						e.getMessage()), e.getSuppressed()[0]);
+			} else {
+				throw new BuildException(
+						MessageFormat.format(Messages.getString("WikiToDocTask_cannot_create_output_file"), //$NON-NLS-1$
+								htmlOutputFile, e.getMessage()),
+						e);
 			}
 		}
 	}
@@ -604,7 +597,7 @@ public class WikiToDocTask extends MarkupTask {
 			String markupContent) {
 		SplittingStrategy splittingStrategy = multipleOutputFiles
 				? new DefaultSplittingStrategy()
-				: new NoSplittingStrategy();
+						: new NoSplittingStrategy();
 		SplittingOutlineParser outlineParser = new SplittingOutlineParser();
 		outlineParser.setMarkupLanguage(markupLanguage);
 		outlineParser.setSplittingStrategy(splittingStrategy);
