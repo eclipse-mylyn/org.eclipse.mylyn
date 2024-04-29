@@ -1,13 +1,14 @@
 /*******************************************************************************
  * Copyright (c) 2000, 2013 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.net;
@@ -17,7 +18,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.ProgressMonitorWrapper;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 import org.eclipse.mylyn.internal.commons.net.InfiniteSubProgressMonitor;
 
@@ -105,9 +106,9 @@ public class Policy {
 			return monitor;
 		}
 		if (monitor instanceof BackgroundProgressMonitor) {
-			return new BackgroundProgressMonitor(new SubProgressMonitor(monitor, ticks));
+			return new BackgroundProgressMonitor(SubMonitor.convert(monitor, ticks));
 		}
-		return new SubProgressMonitor(monitor, ticks);
+		return SubMonitor.convert(monitor, ticks);
 	}
 
 	/**

@@ -12,6 +12,7 @@
  *     Tasktop Technologies - improvements
  *     Eugene Kuleshov - improvements
  *     Benjamin Muskalla - fix for bug 291992
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
@@ -32,7 +33,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
@@ -335,7 +336,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 		@Override
 		public boolean matchItem(Object item) {
-			if (!(item instanceof ITask) || (!showCompletedTasks && ((ITask) item).isCompleted())) {
+			if (!(item instanceof ITask) || !showCompletedTasks && ((ITask) item).isCompleted()) {
 				return false;
 			}
 			if (!elements.isEmpty()) {
@@ -573,7 +574,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		}
 		progressMonitor.worked(10);
 
-		SubProgressMonitor subMonitor = new SubProgressMonitor(progressMonitor, 90);
+		SubMonitor subMonitor = SubMonitor.convert(progressMonitor, 90);
 		subMonitor.beginTask(Messages.TaskSelectionDialog_Scanning_tasks, allTasks.size());
 		for (ITask task : allTasks) {
 			contentProvider.add(task, itemsFilter);

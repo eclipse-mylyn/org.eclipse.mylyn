@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.core.sync;
@@ -29,7 +30,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
@@ -46,7 +47,7 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * Updates the task list.
- * 
+ *
  * @author Steffen Pingel
  */
 public class SynchronizeRepositoriesJob extends SynchronizationJob {
@@ -137,7 +138,7 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 						monitor.worked(20);
 					} else {
 						// occasionally request update of repository configuration attributes as part of background synchronizations
-						updateRepositoryConfiguration(repository, connector, new SubProgressMonitor(monitor, 20));
+						updateRepositoryConfiguration(repository, connector, SubMonitor.convert(monitor, 20));
 					}
 
 					if (TRACE_ENABLED) {
@@ -188,7 +189,7 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 		if (isUser()) {
 			job.schedule();
 		} else {
-			job.run(new SubProgressMonitor(monitor, 80));
+			job.run(SubMonitor.convert(monitor, 80));
 		}
 	}
 

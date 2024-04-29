@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Peter Stibrany - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui;
@@ -25,7 +26,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.mylyn.commons.core.ICoreRunnable;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -61,7 +62,7 @@ class DownloadAndOpenTaskAttachmentJob implements ICoreRunnable {
 	public void run(IProgressMonitor monitor) throws CoreException {
 		monitor.beginTask(jobName, IProgressMonitor.UNKNOWN);
 		try {
-			IStatus result = execute(new SubProgressMonitor(monitor, 100));
+			IStatus result = execute(SubMonitor.convert(monitor, 100));
 			if (result != null && !result.isOK()) {
 				throw new CoreException(result);
 			}

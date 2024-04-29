@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.core.sync;
@@ -31,7 +32,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
@@ -187,7 +188,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 					updateQueryStatus(null);
 					try {
-						boolean success = preSynchronization(session, new SubProgressMonitor(monitor, 20));
+						boolean success = preSynchronization(session, SubMonitor.convert(monitor, 20));
 
 						if (success && session.needsPerformQueries() || isUser()) {
 							// synchronize queries, tasks changed within query are added to set of tasks to be synchronized
@@ -216,7 +217,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 					job.setSession(session);
 					if (!tasksToBeSynchronized.isEmpty()) {
 						Policy.checkCanceled(monitor);
-						IStatus result = job.run(new SubProgressMonitor(monitor, 30));
+						IStatus result = job.run(SubMonitor.convert(monitor, 30));
 						if (result == Status.CANCEL_STATUS) {
 							throw new OperationCanceledException();
 						}
@@ -234,7 +235,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 					}
 
 					// hook into the connector for synchronization time stamp management
-					postSynchronization(session, new SubProgressMonitor(monitor, 10));
+					postSynchronization(session, SubMonitor.convert(monitor, 10));
 				} finally {
 					Job.getJobManager().endRule(rule);
 				}
@@ -242,7 +243,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				return Status.CANCEL_STATUS;
 			} catch (Exception e) {
 				StatusHandler
-						.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Synchronization failed", e)); //$NON-NLS-1$
+				.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Synchronization failed", e)); //$NON-NLS-1$
 			} catch (LinkageError e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 						NLS.bind("Synchronization for connector ''{0}'' failed", connector.getConnectorKind()), e)); //$NON-NLS-1$
@@ -260,7 +261,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			Policy.checkCanceled(monitor);
 			monitor.subTask(MessageFormat.format(Messages.SynchronizeQueriesJob_Synchronizing_query_X,
 					repositoryQuery.getSummary()));
-			synchronizeQuery(repositoryQuery, session, new SubProgressMonitor(monitor, 20));
+			synchronizeQuery(repositoryQuery, session, SubMonitor.convert(monitor, 20));
 		}
 	}
 

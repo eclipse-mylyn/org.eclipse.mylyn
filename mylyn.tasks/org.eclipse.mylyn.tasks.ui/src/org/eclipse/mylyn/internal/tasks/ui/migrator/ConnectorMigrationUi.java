@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.migrator;
@@ -32,7 +33,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -198,7 +199,7 @@ public class ConnectorMigrationUi {
 			String backupFolder = TasksUiPlugin.getDefault().getBackupFolderPath();
 			new File(backupFolder).mkdirs();
 			String fileName = getBackupFileName(new Date());
-			new TaskDataSnapshotOperation(backupFolder, fileName).run(new SubProgressMonitor(monitor, 1));
+			new TaskDataSnapshotOperation(backupFolder, fileName).run(SubMonitor.convert(monitor, 1));
 			// also take a snapshot because user might try to restore from snapshot
 			PlatformUI.getWorkbench().getDisplay().syncExec(() -> backupManager.backupNow(true));
 			monitor.worked(1);
