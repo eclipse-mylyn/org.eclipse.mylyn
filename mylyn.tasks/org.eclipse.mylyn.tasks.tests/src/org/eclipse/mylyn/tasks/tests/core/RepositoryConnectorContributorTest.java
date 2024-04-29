@@ -121,7 +121,7 @@ public class RepositoryConnectorContributorTest extends TestCase {
 				.getBrandManager()
 				.getDefaultOverlayIcon(DynamicMockRepositoryConnector.CONNECTOR_KIND);
 		assertNotNull("Expected overlay image contributed by MockRepositoryConnectorAdapter", overlay);
-		assertEquals(8, overlay.getImageData().height);
+		assertEquals(8, overlay.getImageData(100).height);
 	}
 
 	@Test

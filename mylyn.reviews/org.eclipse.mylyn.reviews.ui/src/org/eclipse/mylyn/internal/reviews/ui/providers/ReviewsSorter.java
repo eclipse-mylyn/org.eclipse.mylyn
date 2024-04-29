@@ -1,13 +1,14 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2013 Ericsson
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Miles Parker (Tasktop Technologies) - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.reviews.ui.providers;
@@ -15,7 +16,7 @@ package org.eclipse.mylyn.internal.reviews.ui.providers;
 import java.util.Date;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.reviews.core.model.IDated;
 import org.eclipse.mylyn.reviews.core.model.IIndexed;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
@@ -29,10 +30,10 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItem;
  * <li>Orderable Items (Locations, Comments without dates)</li>
  * <li>Other Review Items (Files, by full path name)</li>
  * </ol>
- * 
+ *
  * @author Miles Parker
  */
-public class ReviewsSorter extends ViewerSorter {
+public class ReviewsSorter extends ViewerComparator {
 
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {

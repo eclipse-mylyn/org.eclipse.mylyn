@@ -58,7 +58,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class ConnectorMigrationUiTest {
 
 	private ConnectorMigrator migrator;

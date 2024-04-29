@@ -311,7 +311,7 @@ public class RichTextEditor {
 					return adapter.cast(repository);
 				}
 				if (adapter == ITask.class) {
-					return task;
+					return adapter.cast(task);
 				}
 				return null;
 			}

@@ -76,7 +76,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class ConnectorMigratorTest {
 
 	public class SpyTasksState extends DefaultTasksState {

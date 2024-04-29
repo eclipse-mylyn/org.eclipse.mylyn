@@ -18,7 +18,7 @@ import java.util.Date;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
@@ -69,7 +69,7 @@ public class TaskListInterestSorterTest extends TestCase {
 		}
 	}
 
-	public class FallbackSorter extends ViewerSorter {
+	public class FallbackSorter extends ViewerComparator {
 		@Override
 		public int compare(Viewer v, Object o1, Object o2) {
 			if (o1 == task1) {

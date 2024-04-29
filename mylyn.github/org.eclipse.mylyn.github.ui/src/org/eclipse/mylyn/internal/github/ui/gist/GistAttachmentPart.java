@@ -155,7 +155,6 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 		super.dispose();
 	}
 
-	@SuppressWarnings("unused")
 	private void createAttachmentTable(FormToolkit toolkit, final Composite attachmentsComposite) {
 		attachmentsTable = toolkit.createTable(attachmentsComposite, SWT.MULTI | SWT.FULL_SELECTION);
 		attachmentsTable.setLinesVisible(true);

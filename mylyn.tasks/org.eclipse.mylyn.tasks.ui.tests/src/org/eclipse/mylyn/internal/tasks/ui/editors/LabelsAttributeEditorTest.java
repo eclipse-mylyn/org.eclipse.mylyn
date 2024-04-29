@@ -31,7 +31,7 @@ import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
 import org.junit.Before;
 import org.junit.Test;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class LabelsAttributeEditorTest {
 
 	private TaskData taskData;

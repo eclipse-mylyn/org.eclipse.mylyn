@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -35,7 +35,7 @@ import junit.framework.TestCase;
 /**
  * @author Steffen Pingel
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class PerspectiveRestoreTest extends TestCase {
 
 	private static final String ID_RESOURCE_PERSPECTIVE = "org.eclipse.ui.resourcePerspective";
@@ -54,16 +54,16 @@ public class PerspectiveRestoreTest extends TestCase {
 				.getPreferenceStore()
 				.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES);
 		ContextUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES, true);
+		.getPreferenceStore()
+		.setValue(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES, true);
 	}
 
 	@Override
 	@After
 	public void tearDown() throws Exception {
 		ContextUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES, previousSetting);
+		.getPreferenceStore()
+		.setValue(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES, previousSetting);
 		TestFixture.resetTaskListAndRepositories();
 	}
 

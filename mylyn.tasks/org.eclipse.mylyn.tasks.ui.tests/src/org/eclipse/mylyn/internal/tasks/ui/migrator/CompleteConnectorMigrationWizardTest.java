@@ -55,7 +55,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class CompleteConnectorMigrationWizardTest {
 
 	private CompleteConnectorMigrationWizard wizard;
@@ -102,7 +102,7 @@ public class CompleteConnectorMigrationWizardTest {
 		assertEquals(
 				"Migration will remove your old queries. Please ensure you have created the new queries you want. "
 						+ "Your old and new queries are shown below and you can edit them by double-clicking.",
-				firstPage.getMessage());
+						firstPage.getMessage());
 		assertTrue(firstPage.getControl() instanceof Composite);
 		Composite control = (Composite) firstPage.getControl();
 		assertEquals(4, control.getChildren().length);
@@ -120,9 +120,9 @@ public class CompleteConnectorMigrationWizardTest {
 		assertEquals("Have You Recreated Your Queries?", firstPage.getTitle());
 		assertEquals(
 				"""
-						Migration will remove your old queries. Some queries could not be automatically migrated.\s\
-						Please review your old and new queries and edit or create new ones as needed.\s\
-						Your old and new queries are shown below and you can edit them by double-clicking.""",
+				Migration will remove your old queries. Some queries could not be automatically migrated.\s\
+				Please review your old and new queries and edit or create new ones as needed.\s\
+				Your old and new queries are shown below and you can edit them by double-clicking.""",
 				firstPage.getMessage());
 		assertTrue(firstPage.getControl() instanceof Composite);
 		Composite control = (Composite) firstPage.getControl();
@@ -185,11 +185,11 @@ public class CompleteConnectorMigrationWizardTest {
 						+ "You will be prompted when migration is complete."));
 		assertTrue(text.contains(
 				"""
-						You will be able to\s\
-						undo the migration by selecting "Restore Tasks from History" in the Task List view menu and choosing the\s\
-						connector-migration-*.zip file stored in <workspace>/.metadata/.mylyn/backup. This will restore your task\s\
-						list and repositories to the state they were in before the migration, but any data stored by 3rd party\s\
-						plugins for Mylyn may be lost"""));
+				You will be able to\s\
+				undo the migration by selecting "Restore Tasks from History" in the Task List view menu and choosing the\s\
+				connector-migration-*.zip file stored in <workspace>/.metadata/.mylyn/backup. This will restore your task\s\
+				list and repositories to the state they were in before the migration, but any data stored by 3rd party\s\
+				plugins for Mylyn may be lost"""));
 	}
 
 	@Test

@@ -49,7 +49,7 @@ import org.junit.Test;
 //FIXME: AF: enable tests
 //https://github.com/eclipse-mylyn/org.eclipse.mylyn.reviews/issues/5
 @Ignore
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class GerritUrlHandlerTest {
 
 	private final TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND,

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2012 GitHub Inc. and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     GitHub Inc. - initial API and implementation
@@ -29,11 +29,11 @@ import org.junit.Test;
 /**
  * Unit tests of
  * {@link GerritConnectorUi#findHyperlinks(org.eclipse.mylyn.tasks.core.TaskRepository, org.eclipse.mylyn.tasks.core.ITask, String, int, int)}
- * 
+ *
  * @author Kevin Sawicki
  * @author Steffen Pingel
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class ChangeIdHyperlinkTest {
 
 	private TaskRepository repository;
