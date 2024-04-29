@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.core;
@@ -20,6 +21,7 @@ import junit.framework.TestCase;
 /**
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class FileTaskAttachmentSourceTest extends TestCase {
 
 	public void testGetContentTypeFromFilename() {

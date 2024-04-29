@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -41,6 +42,7 @@ import junit.framework.Assert;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class TaskTestUtil {
 
 	public static File getLocalFile(String path) {

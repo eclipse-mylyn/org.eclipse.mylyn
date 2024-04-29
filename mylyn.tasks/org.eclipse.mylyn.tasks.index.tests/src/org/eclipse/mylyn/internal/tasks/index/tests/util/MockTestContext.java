@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.index.tests.util;
@@ -45,6 +46,7 @@ import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 /**
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class MockTestContext {
 
 	private final TaskList taskList;

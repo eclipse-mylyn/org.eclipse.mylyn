@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.core;
@@ -24,6 +25,7 @@ import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class TaskJobFactoryTest extends TestCase {
 	private static abstract class JobCreator {
 		public abstract SynchronizationJob createJob();

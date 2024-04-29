@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -16,6 +17,7 @@ package org.eclipse.mylyn.tasks.tests;
 /**
  * An exception for testing handing of RuntimeExceptions. Has no stack trace to reduce the size of log messages.
  */
+@SuppressWarnings("nls")
 public class TestException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 

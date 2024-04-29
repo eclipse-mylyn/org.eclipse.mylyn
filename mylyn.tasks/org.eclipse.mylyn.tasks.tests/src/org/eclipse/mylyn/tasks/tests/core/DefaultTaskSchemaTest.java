@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.core;
@@ -30,6 +31,7 @@ import junit.framework.TestCase;
  * @author Steffen Pingel
  * @author Miles Parker
  */
+@SuppressWarnings("nls")
 public class DefaultTaskSchemaTest extends TestCase {
 
 	private class TestSchema extends AbstractTaskSchema {

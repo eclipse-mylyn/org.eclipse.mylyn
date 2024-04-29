@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.connector;
@@ -35,6 +36,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * @author Shawn Minto
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	public static final String CONNECTOR_KIND = "mock";

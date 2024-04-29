@@ -13,6 +13,7 @@
  *     Eugene Kuleshov - improvements
  *     Frank Becker - improvements
  *     Alexander Fedorov - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
@@ -171,6 +172,7 @@ import org.eclipse.ui.themes.IThemeManager;
  * @author Eugene Kuleshov
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class TaskListView extends AbstractTaskListView implements IPropertyChangeListener, IShowInTarget {
 
 	private static final String ID_SEPARATOR_FILTERS = "filters"; //$NON-NLS-1$

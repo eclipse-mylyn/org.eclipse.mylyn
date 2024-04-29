@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -22,6 +23,7 @@ import junit.framework.TestCase;
 /**
  * @author Alexei Trebounskikh
  */
+@SuppressWarnings("nls")
 public class TaskDataFileManagerTest extends TestCase {
 
 	private class TestTaskDataFileManager extends TaskDataFileManager {

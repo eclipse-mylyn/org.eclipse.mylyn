@@ -9,6 +9,7 @@
  *
  *     Eugene Kuleshov - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tests.integration;
@@ -26,6 +27,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * @author Eugene Kuleshov
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class RepositoryConnectorsTest extends TestCase {
 
 	private final AbstractRepositoryConnector connector;

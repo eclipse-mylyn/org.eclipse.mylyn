@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.core;
@@ -31,6 +32,7 @@ import junit.framework.TestCase;
  * @author Rob Elves
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class TaskListUnmatchedContainerTest extends TestCase {
 
 	private TaskList taskList;

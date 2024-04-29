@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -33,6 +34,7 @@ import junit.framework.TestCase;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class TaskRepositoryCredentialsTest extends TestCase {
 
 	private static final String AUTH_REPOSITORY = "org.eclipse.mylyn.tasklist.repositories";

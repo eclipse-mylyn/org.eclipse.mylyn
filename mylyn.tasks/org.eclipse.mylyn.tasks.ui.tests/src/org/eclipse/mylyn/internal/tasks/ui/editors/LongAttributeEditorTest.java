@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -23,6 +24,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class LongAttributeEditorTest {
 
 	private final TaskData data = new TaskData(mock(TaskAttributeMapper.class), "kind", "url", "id");

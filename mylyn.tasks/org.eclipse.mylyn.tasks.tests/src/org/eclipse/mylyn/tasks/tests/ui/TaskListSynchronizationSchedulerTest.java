@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.ui;
@@ -33,6 +34,7 @@ import junit.framework.TestCase;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class TaskListSynchronizationSchedulerTest extends TestCase {
 
 	private class TestConnector extends MockRepositoryConnector {

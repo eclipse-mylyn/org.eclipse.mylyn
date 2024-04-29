@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.bugs;
@@ -37,6 +38,7 @@ import junit.framework.TestCase;
 /**
  * @author Frank Becker
  */
+@SuppressWarnings("nls")
 public class SupportHandlerManagerTest extends TestCase {
 
 	private TaskRepository mockRepository;

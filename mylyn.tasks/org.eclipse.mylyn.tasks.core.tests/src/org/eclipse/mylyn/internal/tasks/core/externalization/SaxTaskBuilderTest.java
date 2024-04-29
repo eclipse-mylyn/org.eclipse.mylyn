@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.core.externalization;
@@ -37,6 +38,7 @@ import org.junit.Test;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
+@SuppressWarnings("nls")
 public class SaxTaskBuilderTest {
 
 	private SaxTaskBuilder builder;

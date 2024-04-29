@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.ui;
@@ -38,6 +39,7 @@ import junit.framework.TestCase;
  * @author Sam Davis
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class MultipleTaskHyperlinkDetectorTest extends TestCase {
 
 	protected MockRepositoryConnectorUi connectorUi1;

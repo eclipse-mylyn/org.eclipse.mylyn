@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.connector;
@@ -32,6 +33,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskMapper;
  * @author Frank Becker
  * @author Benjamin Muskalla
  */
+@SuppressWarnings("nls")
 public class MockTaskDataHandler extends AbstractTaskDataHandler {
 
 	private final MockRepositoryConnectorWithTaskDataHandler connector;

@@ -10,6 +10,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - porting to SimRel 2022-12
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.migrator;
@@ -55,7 +56,9 @@ import org.eclipse.ui.PlatformUI;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class ConnectorMigrationWizardTest {
+
 	public class TestConnectorMigrationWizard extends ConnectorMigrationWizard {
 		private TestConnectorMigrationWizard(ConnectorMigrator migrator) {
 			super(migrator);
@@ -105,7 +108,7 @@ public class ConnectorMigrationWizardTest {
 		assertEquals(
 				"Support is ending for some connectors, but replacement connectors are installed. This wizard will help you "
 						+ "migrate your configuration and data to the new connectors.",
-				firstPage.getMessage());
+						firstPage.getMessage());
 		assertTrue(firstPage.getControl() instanceof Composite);
 		Composite control = (Composite) firstPage.getControl();
 		assertEquals(1, control.getChildren().length);
@@ -120,10 +123,10 @@ public class ConnectorMigrationWizardTest {
 		assertEquals("Select Connectors", secondPage.getTitle());
 		assertEquals(
 				"""
-						Select the connectors to migrate. Your task list and repositories will be backed up before migration; you can\s\
-						undo the migration by selecting "Restore Tasks from History" in the Task List view\s\
-						menu and choosing the\s\
-						connector-migration-*.zip file stored in <workspace>/.metadata/.mylyn/backup.""",
+				Select the connectors to migrate. Your task list and repositories will be backed up before migration; you can\s\
+				undo the migration by selecting "Restore Tasks from History" in the Task List view\s\
+				menu and choosing the\s\
+				connector-migration-*.zip file stored in <workspace>/.metadata/.mylyn/backup.""",
 				secondPage.getDescription());
 		assertTrue(secondPage.getControl() instanceof Composite);
 		Composite control = (Composite) secondPage.getControl();
@@ -197,7 +200,7 @@ public class ConnectorMigrationWizardTest {
 	public void performFinishSetsErrorMessage() throws InvocationTargetException, InterruptedException, IOException {
 		IWizardContainer container = createWizard(new ConnectorMigrationWizard(migrator));
 		doThrow(new InvocationTargetException(new IOException("Backup failed"))).when(container)
-				.run(any(Boolean.class), any(Boolean.class), any(IRunnableWithProgress.class));
+		.run(any(Boolean.class), any(Boolean.class), any(IRunnableWithProgress.class));
 		wizard.performFinish();
 		assertEquals("Backup failed", container.getCurrentPage().getErrorMessage());
 	}

@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.ui;
@@ -37,6 +38,7 @@ import junit.framework.TestCase;
 /**
  * @author Benjamin Muskalla
  */
+@SuppressWarnings("nls")
 public class AbstractRepositoryConnectorUiTest extends TestCase {
 
 	private AbstractRepositoryConnectorUi connectorUi;

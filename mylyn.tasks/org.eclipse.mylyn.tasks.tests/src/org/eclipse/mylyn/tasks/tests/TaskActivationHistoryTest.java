@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -40,6 +41,7 @@ import junit.framework.TestCase;
  * @author Frank Becker
  * @author Wesley Coelho
  */
+@SuppressWarnings("nls")
 public class TaskActivationHistoryTest extends TestCase {
 
 	private TaskActivationHistory history;

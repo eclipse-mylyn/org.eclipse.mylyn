@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.core;
@@ -38,6 +39,7 @@ import org.junit.Test;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class RepositoryConnectorContributorTest extends TestCase {
 
 	private final IBrandManager manager = TasksUiPlugin.getDefault().getBrandManager();

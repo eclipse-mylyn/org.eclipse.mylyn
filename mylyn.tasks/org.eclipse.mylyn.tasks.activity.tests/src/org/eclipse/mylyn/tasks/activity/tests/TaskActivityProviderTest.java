@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.activity.tests;
@@ -36,7 +37,7 @@ import org.junit.Test;
  * @author Steffen Pingel
  * @author Timur Achmetow
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "nls", "restriction" })
 public class TaskActivityProviderTest {
 
 	protected List<ActivityEvent> events = new ArrayList<>();

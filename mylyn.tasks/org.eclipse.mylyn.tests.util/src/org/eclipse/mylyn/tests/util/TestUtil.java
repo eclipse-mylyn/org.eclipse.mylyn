@@ -10,6 +10,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Pawel Niewiadomski - fixes for bug 288347
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tests.util;
@@ -28,6 +29,7 @@ import junit.framework.AssertionFailedError;
  * @deprecated use {@link CommonTestUtil} instead
  */
 @Deprecated
+@SuppressWarnings("nls")
 public class TestUtil {
 
 	public static final String KEY_CREDENTIALS_FILE = "mylyn.credentials";

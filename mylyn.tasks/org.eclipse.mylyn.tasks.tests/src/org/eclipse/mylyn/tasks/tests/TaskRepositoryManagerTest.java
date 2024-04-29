@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -52,6 +53,7 @@ import junit.framework.TestCase;
  * @author Mik Kersten
  * @author Rob Elves
  */
+@SuppressWarnings("nls")
 public class TaskRepositoryManagerTest extends TestCase {
 
 	private static final String DEFAULT_KIND = MockRepositoryConnector.CONNECTOR_KIND;
