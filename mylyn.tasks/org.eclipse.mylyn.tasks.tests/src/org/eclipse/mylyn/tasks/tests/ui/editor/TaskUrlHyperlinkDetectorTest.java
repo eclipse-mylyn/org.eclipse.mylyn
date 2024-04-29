@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -51,9 +51,8 @@ public class TaskUrlHyperlinkDetectorTest extends TestCase {
 		AbstractHyperlinkDetector detector = new TaskUrlHyperlinkDetector();
 		detector.setContext(new IAdaptable() {
 			@Override
-			@SuppressWarnings("rawtypes")
-			public Object getAdapter(Class adapter) {
-				return repository;
+			public <T> T getAdapter(Class<T> adapter) {
+				return adapter.cast(repository);
 			}
 		});
 		return detector.detectHyperlinks(new TextViewer() {

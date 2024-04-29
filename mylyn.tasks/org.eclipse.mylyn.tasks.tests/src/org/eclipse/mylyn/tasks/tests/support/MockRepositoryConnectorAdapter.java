@@ -48,13 +48,13 @@ public class MockRepositoryConnectorAdapter implements IAdapterFactory {
 	private static final Class<?>[] ADAPTER_LIST = { AbstractRepositoryConnector.class };
 
 	@Override
-	public Object getAdapter(Object adaptableObject, @SuppressWarnings("rawtypes") Class adapterType) {
+	public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
 		if (adaptableObject instanceof MockRepositoryConnector) {
 			final AbstractRepositoryConnector connector = (AbstractRepositoryConnector) adaptableObject;
 			if (adapterType == AbstractRepositoryConnectorUi.class) {
-				return new DynamicMockRepositoryConnectorUi(connector);
+				return adapterType.cast(new DynamicMockRepositoryConnectorUi(connector));
 			} else if (adapterType == RepositoryConnectorBranding.class) {
-				return new RepositoryConnectorBranding() {
+				return adapterType.cast(new RepositoryConnectorBranding() {
 					@Override
 					public InputStream getOverlayImageData() throws IOException {
 						return CommonTestUtil.getResource(this, "testdata/icons/mock-overlay.gif");
@@ -106,15 +106,14 @@ public class MockRepositoryConnectorAdapter implements IAdapterFactory {
 						}
 						return super.getBrandingImageData(brand);
 					}
-				};
+				});
 			}
 		}
 		return null;
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
-	public Class[] getAdapterList() {
+	public Class<?>[] getAdapterList() {
 		return ADAPTER_LIST;
 	}
 

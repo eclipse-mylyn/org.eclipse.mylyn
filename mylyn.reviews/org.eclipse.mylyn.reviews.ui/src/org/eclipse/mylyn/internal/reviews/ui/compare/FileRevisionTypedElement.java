@@ -1,13 +1,14 @@
 /*******************************************************************************
  * Copyright (c) 2013, Ericsson AB and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Sebastien Dubois (Ericsson) - Adapted to use with Mylyn Reviews
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.reviews.ui.compare;
 
@@ -31,7 +32,7 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 
 /**
  * An {@link ITypedElement} wrapper for {@link IFileRevision} for use with Mylyn Reviews
- * 
+ *
  * @author Sebastien Dubois
  */
 public class FileRevisionTypedElement implements IAdaptable, IStreamContentAccessor, ITypedElement {
@@ -52,7 +53,7 @@ public class FileRevisionTypedElement implements IAdaptable, IStreamContentAcces
 	}
 
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	public <T> T getAdapter(Class<T> adapter) {
 		if (ISharedDocumentAdapter.class.equals(adapter)) {
 			synchronized (this) {
 				if (sharedDocumentAdapter == null) {
@@ -69,7 +70,7 @@ public class FileRevisionTypedElement implements IAdaptable, IStreamContentAcces
 						}
 					};
 				}
-				return sharedDocumentAdapter;
+				return adapter.cast(sharedDocumentAdapter);
 			}
 		}
 		return Platform.getAdapterManager().getAdapter(this, adapter);

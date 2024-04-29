@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2009 Eugene Kuleshov and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Eugene Kuleshov - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.workingsets;
@@ -22,7 +23,7 @@ import org.eclipse.ui.IPersistableElement;
 
 /**
  * Adapter factory used to adapt AbstractTaskContainer to IPersistableElement
- * 
+ *
  * @author Eugene Kuleshov
  */
 public class TaskWorkingSetAdapterFactory implements IAdapterFactory {
@@ -33,16 +34,14 @@ public class TaskWorkingSetAdapterFactory implements IAdapterFactory {
 	private static final Class[] ADAPTER_TYPES = { IPersistableElement.class };
 
 	@Override
-	@SuppressWarnings("rawtypes")
-	public Class[] getAdapterList() {
+	public Class<?>[] getAdapterList() {
 		return ADAPTER_TYPES;
 	}
 
 	@Override
-	@SuppressWarnings("rawtypes")
-	public Object getAdapter(final Object adaptableObject, Class adapterType) {
+	public <T> T getAdapter(final Object adaptableObject, Class<T> adapterType) {
 		if (adapterType == IPersistableElement.class && adaptableObject instanceof AbstractTaskContainer) {
-			return new IPersistableElement() {
+			return adapterType.cast(new IPersistableElement() {
 				@Override
 				public void saveState(IMemento memento) {
 					IRepositoryElement container = (IRepositoryElement) adaptableObject;
@@ -53,9 +52,9 @@ public class TaskWorkingSetAdapterFactory implements IAdapterFactory {
 				public String getFactoryId() {
 					return TASK_ELEMENT_FACTORY_ID;
 				}
-			};
+			});
 		} else if (adapterType == IPersistableElement.class && adaptableObject instanceof IProject) {
-			return new IPersistableElement() {
+			return adapterType.cast(new IPersistableElement() {
 				@Override
 				public void saveState(IMemento memento) {
 					IProject project = (IProject) adaptableObject;
@@ -66,7 +65,7 @@ public class TaskWorkingSetAdapterFactory implements IAdapterFactory {
 				public String getFactoryId() {
 					return TASK_ELEMENT_FACTORY_ID;
 				}
-			};
+			});
 		}
 		return null;
 	}

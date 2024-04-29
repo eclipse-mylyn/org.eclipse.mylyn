@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -12,6 +12,7 @@
  *     Raphael Ackermann - spell checking support on bug 195514
  *     Jingwen Ou - extensibility improvements
  *     David Green - fix for bug 256702
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -64,7 +65,7 @@ import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * A text attribute editor that can switch between a editor, preview and source view.
- * 
+ *
  * @author Raphael Ackermann
  * @author Steffen Pingel
  * @author Jingwen Ou
@@ -305,9 +306,9 @@ public class RichTextEditor {
 	@SuppressWarnings({ "rawtypes" })
 	private IAdaptable createHyperlinkDetectorContext() {
 		return new IAdaptable() {
-			public Object getAdapter(Class adapter) {
+			public <T> T getAdapter(Class<T> adapter) {
 				if (adapter == TaskRepository.class) {
-					return repository;
+					return adapter.cast(repository);
 				}
 				if (adapter == ITask.class) {
 					return task;
@@ -685,7 +686,7 @@ public class RichTextEditor {
 
 	/**
 	 * Sets the background color for all instantiated viewers
-	 * 
+	 *
 	 * @param color
 	 */
 	public void setBackground(Color color) {
