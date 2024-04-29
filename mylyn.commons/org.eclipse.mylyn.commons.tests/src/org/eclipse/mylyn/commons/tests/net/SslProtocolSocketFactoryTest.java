@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.net;
@@ -48,31 +49,31 @@ public class SslProtocolSocketFactoryTest extends TestCase {
 
 	public void testTrustAllSslProtocolSocketFactory() throws Exception {
 		SecureProtocolSocketFactory factory = new PollingSslProtocolSocketFactory();
-		Socket s;
 
-		s = factory.createSocket(proxyAddress.getHostName(), proxyAddress.getPort());
-		assertNotNull(s);
-		assertTrue(s.isConnected());
-		s.close();
+		try (Socket s = factory.createSocket(proxyAddress.getHostName(), proxyAddress.getPort())) {
+			assertNotNull(s);
+			assertTrue(s.isConnected());
+		}
 
-		InetAddress anyHost = new Socket().getLocalAddress();
+		try (Socket socket = new Socket()) {
+			InetAddress anyHost = socket.getLocalAddress();
 
-		s = factory.createSocket(proxyAddress.getHostName(), proxyAddress.getPort(), anyHost, 0);
-		assertNotNull(s);
-		assertTrue(s.isConnected());
-		s.close();
+			try (Socket s = factory.createSocket(proxyAddress.getHostName(), proxyAddress.getPort(), anyHost, 0)) {
+				assertNotNull(s);
+				assertTrue(s.isConnected());
+			}
 
-		HttpConnectionParams params = new HttpConnectionParams();
-		s = factory.createSocket(proxyAddress.getHostName(), proxyAddress.getPort(), anyHost, 0, params);
-		assertNotNull(s);
-		assertTrue(s.isConnected());
-		s.close();
+			HttpConnectionParams params = new HttpConnectionParams();
+			try (Socket s = factory.createSocket(proxyAddress.getHostName(), proxyAddress.getPort(), anyHost, 0, params)) {
+				assertNotNull(s);
+				assertTrue(s.isConnected());
+			}
 
-		params.setConnectionTimeout(1000);
-		s = factory.createSocket(proxyAddress.getHostName(), proxyAddress.getPort(), anyHost, 0, params);
-		assertNotNull(s);
-		assertTrue(s.isConnected());
-		s.close();
+			params.setConnectionTimeout(1000);
+			try (Socket s = factory.createSocket(proxyAddress.getHostName(), proxyAddress.getPort(), anyHost, 0, params)) {
+				assertNotNull(s);
+				assertTrue(s.isConnected());
+			}
+		}
 	}
-
 }

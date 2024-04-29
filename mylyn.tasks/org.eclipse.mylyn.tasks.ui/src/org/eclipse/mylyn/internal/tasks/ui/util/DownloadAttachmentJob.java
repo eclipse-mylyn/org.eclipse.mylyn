@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -48,8 +48,7 @@ public class DownloadAttachmentJob extends Job {
 		try {
 			try {
 				boolean exceptionThrown = true;
-				OutputStream out = new BufferedOutputStream(new FileOutputStream(targetFile));
-				try (out) {
+				try (OutputStream out = new BufferedOutputStream(new FileOutputStream(targetFile))) {
 					AttachmentUtil.downloadAttachment(attachment, out, monitor);
 					exceptionThrown = false;
 				} finally {
@@ -60,7 +59,7 @@ public class DownloadAttachmentJob extends Job {
 			} catch (IOException e) {
 				throw new CoreException(new RepositoryStatus(attachment.getTaskRepository(), IStatus.ERROR,
 						TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_IO, "IO error writing attachment: " //$NON-NLS-1$
-								+ e.getMessage(),
+						+ e.getMessage(),
 						e));
 			}
 		} catch (final CoreException e) {

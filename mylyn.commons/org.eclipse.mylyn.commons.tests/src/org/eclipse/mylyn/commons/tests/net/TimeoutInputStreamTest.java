@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2024 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -69,13 +69,13 @@ public class TimeoutInputStreamTest extends TestCase {
 	}
 
 	public void testClose() throws Exception {
-		TimeoutInputStream in = new TimeoutInputStream(stream, 1, 500, 500);
-		assertEquals(0, in.read());
-		value = -1;
-		// clear buffer
-		in.read();
-		assertEquals(-1, in.read());
-		in.close();
+		try (TimeoutInputStream in = new TimeoutInputStream(stream, 1, 500, 500)) {
+			assertEquals(0, in.read());
+			value = -1;
+			// clear buffer
+			in.read();
+			assertEquals(-1, in.read());
+		}
 		Thread.sleep(200);
 		assertEquals(0, ((ThreadPoolExecutor) CommonsNetPlugin.getExecutorService()).getActiveCount());
 	}

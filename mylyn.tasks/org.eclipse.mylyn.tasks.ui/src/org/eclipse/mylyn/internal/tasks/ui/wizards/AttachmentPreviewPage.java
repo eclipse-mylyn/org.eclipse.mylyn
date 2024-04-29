@@ -1,15 +1,16 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Jeff Pound and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Jeff Pound - initial API and implementation
  *     Tasktop Technologies - improvement
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
@@ -56,7 +57,7 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * Shows a preview of an attachment.
- * 
+ *
  * @author Jeff Pound
  * @author Steffen Pingel
  */
@@ -237,8 +238,8 @@ public class AttachmentPreviewPage extends WizardPage {
 			getContainer().run(true, false, monitor -> {
 				try {
 					monitor.beginTask(Messages.AttachmentPreviewPage_Preparing_preview, IProgressMonitor.UNKNOWN);
-					final InputStream in = model.getSource().createInputStream(monitor);
-					try {
+
+					try (final InputStream in = model.getSource().createInputStream(monitor)) {
 						if (isTextAttachment()) {
 							StringBuilder content = new StringBuilder();
 							BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -266,13 +267,12 @@ public class AttachmentPreviewPage extends WizardPage {
 							});
 						}
 					} catch (IOException e) {
-						throw new InvocationTargetException(e);
-					} finally {
-						try {
-							in.close();
-						} catch (IOException e) {
+						if (e.getSuppressed() != null && e.getSuppressed().length > 0) {
 							StatusHandler.log(
-									new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to close file", e)); //$NON-NLS-1$
+									new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to close file", //$NON-NLS-1$
+											e.getSuppressed()[0]));
+						} else {
+							throw new InvocationTargetException(e);
 						}
 					}
 				} catch (CoreException e) {

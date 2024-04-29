@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -53,29 +53,27 @@ public class TaskRepositoriesExternalizer {
 	public static final String PROPERTY_VALUE = "value"; //$NON-NLS-1$
 
 	public void writeRepositoriesToXML(Collection<TaskRepository> repositories, File file) {
-		ZipOutputStream outputStream = null;
 		try {
 			if (!file.exists()) {
 				file.createNewFile();
 			}
 
-			outputStream = new ZipOutputStream(new FileOutputStream(file));
-			writeRepositories(repositories, outputStream);
-			outputStream.close();
-
-		} catch (IOException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not write: " //$NON-NLS-1$
-					+ file.getAbsolutePath(), e));
-		} finally {
-			if (outputStream != null) {
-				try {
-					outputStream.close();
-				} catch (IOException e) {
+			try (ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(file))) {
+				writeRepositories(repositories, outputStream);
+			} catch (IOException e) {
+				if (e.getSuppressed() != null && e.getSuppressed().length > 0) {
 					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not close: " //$NON-NLS-1$
+							+ file.getAbsolutePath(), e.getSuppressed()[0]));
+				} else {
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not write: " //$NON-NLS-1$
 							+ file.getAbsolutePath(), e));
 				}
 			}
+		} catch (IOException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not write: " //$NON-NLS-1$
+					+ file.getAbsolutePath(), e));
 		}
+
 	}
 
 	/**
@@ -101,9 +99,7 @@ public class TaskRepositoriesExternalizer {
 		if (!file.exists()) {
 			return null;
 		}
-		InputStream inputStream = null;
-		try {
-			inputStream = new ZipInputStream(new FileInputStream(file));
+		try (InputStream inputStream = new ZipInputStream(new FileInputStream(file))) {
 
 			// search for REPOSITORIES entry
 			ZipEntry entry = ((ZipInputStream) inputStream).getNextEntry();
@@ -124,20 +120,16 @@ public class TaskRepositoriesExternalizer {
 			reader.parse(new InputSource(inputStream));
 			return contentHandler.getRepositories();
 		} catch (Throwable e) {
-			file.renameTo(new File(file.getAbsolutePath() + "-save")); //$NON-NLS-1$
-			StatusHandler.log(
-					new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error reading task repositories", e)); //$NON-NLS-1$
-			return null;
-		} finally {
-			if (inputStream != null) {
-				try {
-					inputStream.close();
-				} catch (IOException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-							"Error closing task repositories file", e)); //$NON-NLS-1$
-				}
+			if (e.getSuppressed() != null && e.getSuppressed().length > 0) {
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+						"Error closing task repositories file", e.getSuppressed()[0])); //$NON-NLS-1$
+			} else {
+				file.renameTo(new File(file.getAbsolutePath() + "-save")); //$NON-NLS-1$
+				StatusHandler.log(
+						new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error reading task repositories", e)); //$NON-NLS-1$
 			}
+			return null;
 		}
-	}
 
+	}
 }

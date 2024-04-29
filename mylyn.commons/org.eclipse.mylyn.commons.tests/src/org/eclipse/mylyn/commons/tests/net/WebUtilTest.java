@@ -272,9 +272,9 @@ public class WebUtilTest extends TestCase {
 		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(200, statusCode);
 
-		PollingInputStream in = new PollingInputStream(
-				new TimeoutInputStream(method.getResponseBodyAsStream(), 8192, 500L, -1), 1, new NullProgressMonitor());
-		try (in) {
+		try (PollingInputStream in = new PollingInputStream(
+				new TimeoutInputStream(method.getResponseBodyAsStream(), 8192, 500L, -1), 1,
+				new NullProgressMonitor())) {
 			in.read();
 			fail("expected InterruptedIOException");
 		} catch (InterruptedIOException e) {

@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2006, 2024 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.core;
@@ -47,16 +48,15 @@ public class Html2TextReaderTest extends TestCase {
 
 		Reader reader = new StringReader(input);
 
-		Html2TextReader htmlReader = new Html2TextReader(reader);
+		try (Html2TextReader htmlReader = new Html2TextReader(reader)) {
+			String result = htmlReader.getString();
 
-		String result = htmlReader.getString();
+			if (DEBUG) {
+				System.out.println("<" + result + "/>");
+			}
 
-		if (DEBUG) {
-			System.out.println("<" + result + "/>");
+			assertEquals(expectedOutput, result);
 		}
-
-		assertEquals(expectedOutput, result);
-		htmlReader.close();
 	}
 
 	public void test0() throws IOException {

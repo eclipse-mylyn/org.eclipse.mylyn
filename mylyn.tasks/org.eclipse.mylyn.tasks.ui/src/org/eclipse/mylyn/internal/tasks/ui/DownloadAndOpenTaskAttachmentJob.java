@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2011 Peter Stibrany and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -86,15 +86,21 @@ class DownloadAndOpenTaskAttachmentJob implements ICoreRunnable {
 		file.deleteOnExit();
 
 		boolean ok = false;
-		BufferedOutputStream fos = null;
-		try {
-			fos = new BufferedOutputStream(new FileOutputStream(file));
+		try (BufferedOutputStream fos = new BufferedOutputStream(new FileOutputStream(file))) {
 			AttachmentUtil.downloadAttachment(attachment, fos, monitor);
 			ok = true;
 
 		} catch (IOException e) {
-			return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					Messages.DownloadAndOpenTaskAttachmentJob_failedToDownloadAttachment, e);
+			if (e.getSuppressed() != null && e.getSuppressed().length > 0) {
+				if (ok) {
+					file.delete();
+					return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							Messages.DownloadAndOpenTaskAttachmentJob_failedToDownloadAttachment, e.getSuppressed()[0]);
+				}
+			} else {
+				return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						Messages.DownloadAndOpenTaskAttachmentJob_failedToDownloadAttachment, e);
+			}
 		} catch (CoreException e) {
 			int s = IStatus.ERROR;
 			if (e.getStatus() != null && e.getStatus().getCode() == IStatus.CANCEL) {
@@ -103,19 +109,6 @@ class DownloadAndOpenTaskAttachmentJob implements ICoreRunnable {
 			return new Status(s, TasksUiPlugin.ID_PLUGIN,
 					Messages.DownloadAndOpenTaskAttachmentJob_failedToDownloadAttachment, e);
 		} finally {
-			// (fos != null) only when there is some problem, in other cases we nulled fos already
-			if (fos != null) {
-				try {
-					fos.close();
-				} catch (IOException e) {
-					if (ok) {
-						file.delete();
-						return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								Messages.DownloadAndOpenTaskAttachmentJob_failedToDownloadAttachment, e);
-					}
-				}
-			}
-
 			if (!ok) {
 				file.delete();
 			}

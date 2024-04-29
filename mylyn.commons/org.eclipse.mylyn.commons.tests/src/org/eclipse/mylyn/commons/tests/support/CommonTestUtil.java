@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2000, 2024 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
@@ -229,16 +229,8 @@ public class CommonTestUtil {
 	}
 
 	public static void write(String fileName, StringBuffer content) throws IOException {
-		Writer writer = new FileWriter(fileName);
-		try {
+		try (Writer writer = new FileWriter(fileName)) {
 			writer.write(content.toString());
-		} finally {
-			try {
-				writer.close();
-			} catch (IOException e) {
-				// don't need to catch this
-			}
 		}
 	}
-
 }
