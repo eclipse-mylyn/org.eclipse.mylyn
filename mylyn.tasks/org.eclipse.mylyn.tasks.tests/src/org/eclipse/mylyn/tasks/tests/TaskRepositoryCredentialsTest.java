@@ -78,14 +78,13 @@ public class TaskRepositoryCredentialsTest extends TestCase {
 		taskRepository.flushAuthenticationCredentials();
 	}
 
-	@SuppressWarnings("deprecation")
 	public void testPlatformAuthHandlerAvailable() throws Exception {
 		if (!TestUtils.isCompatibilityAuthInstalled()) {
 			System.err.println("Skipping TaskRepositoryCredentialsTest.testPlatformAuthHandlerAvailable()");
 			return;
 		}
 		URL url = new URL("http://mylyn");
-		AuthorizationHandler.addAuthorizationInfo(url, "", "", Collections.EMPTY_MAP);
+		AuthorizationHandler.addAuthorizationInfo(url, "", "", Collections.emptyMap());
 		assertNotNull("Tests require org.eclipse.core.runtime.compatibility.auth",
 				AuthorizationHandler.getAuthorizationInfo(url, "", ""));
 	}

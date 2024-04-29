@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 /**
  * @author Steffen Pingel
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class TaskContextStoreTest extends TestCase {
 
 	private TaskContextStore store;
@@ -135,8 +135,8 @@ public class TaskContextStoreTest extends TestCase {
 
 	private void addTime(ITask task, long time) {
 		MonitorUiPlugin.getDefault()
-				.getActivityContextManager()
-				.addActivityTime(task.getHandleIdentifier(), 1, 1 + time);
+		.getActivityContextManager()
+		.addActivityTime(task.getHandleIdentifier(), 1, 1 + time);
 	}
 
 }

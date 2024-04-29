@@ -47,7 +47,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class AttributeEditorToolkitTest {
 	public class TestAttributeEditorToolkit extends AttributeEditorToolkit {
 

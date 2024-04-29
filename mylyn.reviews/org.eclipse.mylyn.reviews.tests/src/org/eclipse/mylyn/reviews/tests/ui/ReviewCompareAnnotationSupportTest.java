@@ -9,6 +9,7 @@
  *
  *     Guy Perron - initial API and implementation
  *     ArSysOp - adapt to SimRel 2022-12
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.reviews.tests.ui;
@@ -34,6 +35,7 @@ import junit.framework.TestCase;
 /**
  * @author Guy Perron
  */
+@SuppressWarnings("restriction")
 public class ReviewCompareAnnotationSupportTest extends TestCase {
 
 	@Spy
@@ -45,7 +47,7 @@ public class ReviewCompareAnnotationSupportTest extends TestCase {
 		super.setUp();
 		MockitoAnnotations.initMocks(this);
 		doNothing().when(rcaSupportspy)
-				.moveToAnnotation((MergeSourceViewer) any(), (MergeSourceViewer) any(), (Position) any());
+		.moveToAnnotation((MergeSourceViewer) any(), (MergeSourceViewer) any(), (Position) any());
 
 	}
 
