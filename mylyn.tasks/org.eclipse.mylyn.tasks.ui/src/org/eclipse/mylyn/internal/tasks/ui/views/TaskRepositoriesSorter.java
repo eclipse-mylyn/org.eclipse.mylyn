@@ -1,33 +1,32 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * @author Mik Kersten
  */
-public class TaskRepositoriesSorter extends ViewerSorter {
+public class TaskRepositoriesSorter extends ViewerComparator {
 
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
-		if (e1 instanceof TaskRepository t1 && e2 instanceof TaskRepository) {
-			TaskRepository t2 = (TaskRepository) e2;
-
+		if (e1 instanceof TaskRepository t1 && e2 instanceof TaskRepository t2) {
 			String label1 = t1.getRepositoryLabel();
 			String label2 = t2.getRepositoryLabel();
 

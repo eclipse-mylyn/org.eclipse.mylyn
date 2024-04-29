@@ -614,7 +614,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		getViewer().setCellModifier(taskListCellModifier);
 
 		tableSorter = new TaskListSorter();
-		getViewer().setSorter(tableSorter);
+		getViewer().setComparator(tableSorter);
 
 		applyPresentation(CategorizedPresentation.ID);
 
