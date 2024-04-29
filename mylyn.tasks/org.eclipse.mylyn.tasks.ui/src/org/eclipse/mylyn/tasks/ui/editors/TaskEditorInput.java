@@ -1,15 +1,16 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Eric Booth - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.ui.editors;
@@ -28,7 +29,7 @@ import org.eclipse.ui.IPersistableElement;
 
 /**
  * Input for task editors.
- * 
+ *
  * @author Eric Booth
  * @author Rob Elves
  * @author Mik Kersten
@@ -71,7 +72,7 @@ public class TaskEditorInput extends PlatformObject implements IEditorInput, IPe
 		if (this == obj) {
 			return true;
 		}
-		if ((obj == null) || (getClass() != obj.getClass())) {
+		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
 		TaskEditorInput other = (TaskEditorInput) obj;
@@ -90,10 +91,9 @@ public class TaskEditorInput extends PlatformObject implements IEditorInput, IPe
 	 * @since 2.0
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public Object getAdapter(Class adapter) {
+	public <T> T getAdapter(Class<T> adapter) {
 		if (adapter == IEditorInput.class) {
-			return this;
+			return adapter.cast(this);
 		}
 		return super.getAdapter(adapter);
 	}
@@ -155,7 +155,7 @@ public class TaskEditorInput extends PlatformObject implements IEditorInput, IPe
 
 	/**
 	 * Returns the task if the task is in the task list; returns <code>null</code> otherwise.
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	public ITask getTask() {

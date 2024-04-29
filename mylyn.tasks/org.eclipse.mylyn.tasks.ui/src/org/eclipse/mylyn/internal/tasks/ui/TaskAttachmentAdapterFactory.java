@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2010 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui;
@@ -23,16 +24,14 @@ public class TaskAttachmentAdapterFactory implements IAdapterFactory {
 	private static final Class[] ADAPTER_TYPES = { IActionFilter.class };
 
 	@Override
-	@SuppressWarnings("rawtypes")
-	public Class[] getAdapterList() {
+	public Class<?>[] getAdapterList() {
 		return ADAPTER_TYPES;
 	}
 
 	@Override
-	@SuppressWarnings("rawtypes")
-	public Object getAdapter(Object adaptableObject, Class adapterType) {
+	public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
 		if (adaptableObject instanceof TaskAttachment) {
-			return (IActionFilter) (target, name, value) -> {
+			return adapterType.cast((IActionFilter) (target, name, value) -> {
 				TaskAttachment taskAttachment = (TaskAttachment) target;
 				if ("connectorKind".equals(name)) { //$NON-NLS-1$
 					return value.equals(taskAttachment.getConnectorKind());
@@ -44,7 +43,7 @@ public class TaskAttachmentAdapterFactory implements IAdapterFactory {
 					return Boolean.parseBoolean(value) == taskAttachment.isPatch();
 				}
 				return false;
-			};
+			});
 		}
 		// ignore
 		return null;
