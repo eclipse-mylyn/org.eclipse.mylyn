@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
@@ -17,7 +18,7 @@ import java.text.Collator;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryElement;
@@ -37,7 +38,7 @@ import org.eclipse.ui.IMemento;
 /**
  * @author Mik Kersten
  */
-public class TaskListSorter extends ViewerSorter {
+public class TaskListSorter extends ViewerComparator {
 
 	private static final String MEMENTO_KEY_SORTER = "sorter"; //$NON-NLS-1$
 
@@ -101,9 +102,8 @@ public class TaskListSorter extends ViewerSorter {
 			ITask element1 = (ITask) o1;
 			ITask element2 = (ITask) o2;
 			return taskComparator.compare(element1, element2);
-		} else if (o1 instanceof ScheduledTaskContainer dateRangeTaskContainer1 && o2 instanceof ScheduledTaskContainer) {
+		} else if (o1 instanceof ScheduledTaskContainer dateRangeTaskContainer1 && o2 instanceof ScheduledTaskContainer dateRangeTaskContainer2) {
 			// scheduled Mode compare
-			ScheduledTaskContainer dateRangeTaskContainer2 = (ScheduledTaskContainer) o2;
 			return dateRangeTaskContainer1.getDateRange().compareTo(dateRangeTaskContainer2.getDateRange());
 		} else {
 			updateKey(key1, o1);

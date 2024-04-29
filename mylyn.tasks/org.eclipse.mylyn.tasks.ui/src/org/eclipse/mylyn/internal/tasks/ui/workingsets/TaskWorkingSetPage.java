@@ -1,15 +1,16 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Eugene Kuleshov and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Eugene Kuleshov - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.workingsets;
@@ -36,7 +37,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -70,7 +71,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 /**
  * Adapted from org.eclipse.ui.internal.ide.dialogs.ResourceWorkingSetPage
- * 
+ *
  * @author Eugene Kuleshov
  * @author Mik Kersten
  * @author David Green fix for bug 274390
@@ -309,7 +310,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		}
 	}
 
-	class CustomSorter extends ViewerSorter {
+	class CustomSorter extends ViewerComparator {
 
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
@@ -438,7 +439,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 		treeViewer.setLabelProvider(new DecoratingLabelProvider(new AggregateLabelProvider(),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
-		treeViewer.setSorter(new CustomSorter());
+		treeViewer.setComparator(new CustomSorter());
 
 		ArrayList<Object> containers = new ArrayList<>();
 		containers.addAll(TasksUi.getRepositoryManager().getAllRepositories());

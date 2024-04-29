@@ -230,7 +230,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 				new SearchResultsLabelProvider(searchResultProvider, viewer),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), null);
 		viewer.setLabelProvider(styledLabelProvider);
-		viewer.setSorter(searchResultSorter);
+		viewer.setComparator(searchResultSorter);
 
 		Transfer[] dragTypes = { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance() };
 
