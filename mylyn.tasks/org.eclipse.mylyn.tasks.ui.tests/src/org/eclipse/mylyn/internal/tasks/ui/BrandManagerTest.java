@@ -135,7 +135,7 @@ public class BrandManagerTest {
 	private ImageDescriptor imageDescriptor(int size) {
 		ImageDescriptor mock = mock(ImageDescriptor.class);
 		ImageData data = new ImageData(size, size, 1, new PaletteData(1, 1, 1));
-		when(mock.getImageData()).thenReturn(data);
+		when(mock.getImageData(100)).thenReturn(data);
 		return mock;
 	}
 
