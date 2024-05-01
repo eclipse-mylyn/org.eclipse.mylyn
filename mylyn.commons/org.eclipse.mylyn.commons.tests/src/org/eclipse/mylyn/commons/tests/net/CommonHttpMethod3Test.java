@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2024 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -26,6 +26,8 @@ import org.eclipse.mylyn.commons.tests.net.WebUtilTest.StubProgressMonitor;
 import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 import org.eclipse.mylyn.internal.commons.net.http.CommonGetMethod3;
 import org.eclipse.mylyn.internal.commons.net.http.CommonPostMethod3;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import junit.framework.TestCase;
 
@@ -35,11 +37,15 @@ import junit.framework.TestCase;
 @SuppressWarnings("nls")
 public class CommonHttpMethod3Test extends TestCase {
 
+	@Test
+	@Ignore("No CI Server")
 	public void testGetOpenStreamAndCancel() throws Exception {
 		CommonGetMethod3 method = new CommonGetMethod3("/");
 		openStreamAndCancel(method);
 	}
 
+	@Test
+	@Ignore("No CI Server")
 	public void testPostOpenStreamAndCancel() throws Exception {
 		CommonPostMethod3 method = new CommonPostMethod3("/");
 		openStreamAndCancel(method);

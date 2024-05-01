@@ -27,11 +27,13 @@ import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.swt.widgets.Shell;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 @FixtureDefinition(fixtureClass = TckFixture.class, fixtureType = "bugzillaREST")
 @RunOnlyWhenProperty(property = "default", value = "1")
 @SuppressWarnings({ "nls", "restriction" })
+@Ignore("No CI Server")
 public class AbstractRepositorySettingsPageTest extends AbstractTckTest {
 	private WizardDialog dialog;
 

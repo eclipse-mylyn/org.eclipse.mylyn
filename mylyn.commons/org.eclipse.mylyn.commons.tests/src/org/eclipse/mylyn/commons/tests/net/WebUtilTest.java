@@ -51,6 +51,8 @@ import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 import org.eclipse.mylyn.internal.commons.net.PollingInputStream;
 import org.eclipse.mylyn.internal.commons.net.PollingSslProtocolSocketFactory;
 import org.eclipse.mylyn.internal.commons.net.TimeoutInputStream;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import junit.framework.TestCase;
 
@@ -161,6 +163,8 @@ public class WebUtilTest extends TestCase {
 		assertEquals(CoreUtil.TEST_MODE ? 20 : MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT, params.getMaxTotalConnections());
 	}
 
+	@Test
+	@Ignore("No CI Server")
 	public void testExecute() throws Exception {
 		StubProgressMonitor monitor = new StubProgressMonitor();
 		HttpClient client = new HttpClient();
@@ -251,6 +255,8 @@ public class WebUtilTest extends TestCase {
 				}), monitor);
 	}
 
+	@Test
+	@Ignore("No CI Server")
 	public void testReadTimeout() throws Exception {
 		// wait 5 seconds for thread pool to be idle
 		for (int i = 0; i < 10; i++) {
@@ -580,6 +586,8 @@ public class WebUtilTest extends TestCase {
 				WebUtil.getRequestPath(url));
 	}
 
+	@Test
+	@Ignore("No CI Server")
 	public void testGetTitleFromUrl() throws Exception {
 		assertEquals("Eclipse Mylyn Open Source Project",
 				WebUtil.getTitleFromUrl(new WebLocation(TestUrl.DEFAULT.getHttpOk().toString()), null));

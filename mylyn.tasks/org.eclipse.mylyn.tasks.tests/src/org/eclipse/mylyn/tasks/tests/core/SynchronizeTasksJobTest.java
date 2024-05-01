@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -67,6 +67,8 @@ import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.tests.connector.MockTaskDataHandler;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestFixture;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import junit.framework.TestCase;
 
@@ -165,6 +167,8 @@ public class SynchronizeTasksJobTest extends TestCase {
 		job.run(new NullProgressMonitor());
 	}
 
+	@Test
+	@Ignore("No CI Server")
 	public void testMonitorWithSingleTaskData() throws Exception {
 		AbstractRepositoryConnector connector = new MockRepositoryConnector();
 		ITask task = new MockTask("1");
@@ -194,6 +198,8 @@ public class SynchronizeTasksJobTest extends TestCase {
 		listener.tearDown();
 	}
 
+	@Test
+	@Ignore("No CI Server")
 	public void testMonitorWithMultiTaskData() throws Exception {
 		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
 			@Override
@@ -633,6 +639,8 @@ public class SynchronizeTasksJobTest extends TestCase {
 		log.removeLogListener(listener);
 	}
 
+	@Test
+	@Ignore("No CI Server")
 	public void testTasksForSeveralRepositories() throws Exception {
 		final List<String> requestedTaskIds = new ArrayList<>();
 		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {

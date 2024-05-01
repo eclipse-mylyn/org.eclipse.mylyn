@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2024 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -136,6 +136,7 @@ public class CommonHttpClientTest {
 	}
 
 	@Test(expected = SSLException.class)
+	@Ignore("No CI Server")
 	public void testCertificateAuthenticationNoCertificate() throws Exception {
 		if (!CommonTestUtil.isHttpsProxyBroken()) {
 			System.err.println(
@@ -159,6 +160,7 @@ public class CommonHttpClientTest {
 	}
 
 	@Test
+	@Ignore("No CI Server")
 	public void testExecuteGet() throws IOException {
 		RepositoryLocation location = new RepositoryLocation("http://mylyn.org");
 		CommonHttpClient client = new CommonHttpClient(location);
@@ -172,6 +174,7 @@ public class CommonHttpClientTest {
 	}
 
 	@Test
+	@Ignore("No CI Server")
 	public void testGetRequest() throws Exception {
 		RepositoryLocation location = new RepositoryLocation();
 		location.setUrl("http://mylyn.org/");
@@ -187,6 +190,7 @@ public class CommonHttpClientTest {
 	}
 
 	@Test
+	@Ignore("No CI Server")
 	public void testHttpAuthenticationTypeHttp() throws Exception {
 		RepositoryLocation location = new RepositoryLocation();
 		location.setUrl("http://mylyn.org/");
@@ -205,6 +209,7 @@ public class CommonHttpClientTest {
 	}
 
 	@Test
+	@Ignore("No CI Server")
 	public void testHttpAuthenticationTypeRepository() throws Exception {
 		RepositoryLocation location = new RepositoryLocation();
 		location.setUrl("http://mylyn.org/");
