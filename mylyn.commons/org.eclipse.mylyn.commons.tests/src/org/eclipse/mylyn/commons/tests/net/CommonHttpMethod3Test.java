@@ -9,9 +9,14 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.net;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,23 +34,21 @@ import org.eclipse.mylyn.internal.commons.net.http.CommonPostMethod3;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import junit.framework.TestCase;
-
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class CommonHttpMethod3Test extends TestCase {
+public class CommonHttpMethod3Test {
 
-	@Test
 	@Ignore("No CI Server")
+	@Test
 	public void testGetOpenStreamAndCancel() throws Exception {
 		CommonGetMethod3 method = new CommonGetMethod3("/");
 		openStreamAndCancel(method);
 	}
 
-	@Test
 	@Ignore("No CI Server")
+	@Test
 	public void testPostOpenStreamAndCancel() throws Exception {
 		CommonPostMethod3 method = new CommonPostMethod3("/");
 		openStreamAndCancel(method);

@@ -9,9 +9,13 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.notifications.tests.feed;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.net.HttpURLConnection;
 
@@ -23,17 +27,15 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import junit.framework.TestCase;
 
 /**
  * @author Robert Elves
  */
 @SuppressWarnings("nls")
-public class ServiceMessageManagerTest extends TestCase {
+public class ServiceMessageManagerTest {
 
 	private static final String MESSAGE_XML_URL = "http://mylyn.org/message.xml";
 
-	@Override
 	@Before
 	public void setUp() {
 		if (CommonTestUtil.fixProxyConfiguration()) {
