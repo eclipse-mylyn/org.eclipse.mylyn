@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2024 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -13,20 +13,26 @@
 
 package org.eclipse.mylyn.commons.tests.workbench.browser;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.workbench.EditorHandle;
 import org.eclipse.mylyn.commons.workbench.browser.AbstractUrlHandler;
 import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class BrowserUtilTest extends TestCase {
+public class BrowserUtilTest {
 
 	public static class LowPriorityHandler extends AbstractUrlHandler {
 
@@ -65,20 +71,22 @@ public class BrowserUtilTest extends TestCase {
 
 	}
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		HighPriorityHandler.handle = null;
 		HighPriorityHandler.queried = false;
 		LowPriorityHandler.handle = null;
 		LowPriorityHandler.queried = false;
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		HighPriorityHandler.handle = null;
 		LowPriorityHandler.handle = null;
 	}
 
+	@Ignore("No CI Server")
+	@Test
 	public void testUrlHandlerPriorityNullHandle() {
 		if (CommonTestUtil.skipBrowserTests()) {
 			System.err.println("Skipping BrowserUtilTest.testUrlHandlerPriorityNullHandle() to avoid browser crash");
@@ -89,6 +97,7 @@ public class BrowserUtilTest extends TestCase {
 		assertTrue(HighPriorityHandler.queried);
 	}
 
+	@Test
 	public void testUrlHandlerPriorityLow() {
 		if (CommonTestUtil.skipBrowserTests()) {
 			System.err.println("Skipping BrowserUtilTest.testUrlHandlerPriorityLow() to avoid browser crash");
@@ -102,6 +111,7 @@ public class BrowserUtilTest extends TestCase {
 		assertTrue(HighPriorityHandler.queried);
 	}
 
+	@Test
 	public void testUrlHandlerPriorityHigh() {
 		if (CommonTestUtil.skipBrowserTests()) {
 			System.err.println("Skipping BrowserUtilTest.testUrlHandlerPriorityHigh() to avoid browser crash");
