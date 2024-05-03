@@ -13,6 +13,13 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -67,15 +74,15 @@ import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.tests.connector.MockTaskDataHandler;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestFixture;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import junit.framework.TestCase;
 
 /**
  * @author Benjamin Muskalla
  */
-public class SynchronizeTasksJobTest extends TestCase {
+public class SynchronizeTasksJobTest {
 
 	private final class DeltaCountingTaskListChangeListener implements ITaskListChangeListener {
 
@@ -109,8 +116,8 @@ public class SynchronizeTasksJobTest extends TestCase {
 
 	private TaskDataStore taskDataStore;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		tasksModel = TasksUi.getRepositoryModel();
 		taskDataManager = (TaskDataManager) TasksUi.getTaskDataManager();
 		repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, MockRepositoryConnector.REPOSITORY_URL);
@@ -118,16 +125,18 @@ public class SynchronizeTasksJobTest extends TestCase {
 		taskDataStore = new TaskDataStore(TasksUi.getRepositoryManager());
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		TestFixture.resetTaskList();
 	}
 
+	@Test
 	public void testRunsExclusivly() throws Exception {
 		SynchronizeTasksJob job = createSyncJob(null, Collections.<ITask> emptySet());
 		assertTrue(job.getRule() instanceof MutexSchedulingRule);
 	}
 
+	@Test
 	public void testSyncWithSingleTaskDataCanceled() throws Exception {
 		DeltaCountingTaskListChangeListener listener = new DeltaCountingTaskListChangeListener();
 
@@ -150,6 +159,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		listener.tearDown();
 	}
 
+	@Test
 	public void testSyncWithSingleTaskDataRandomException() throws Exception {
 		AbstractRepositoryConnector connector = new MockRepositoryConnector() {
 			@Override
@@ -167,8 +177,8 @@ public class SynchronizeTasksJobTest extends TestCase {
 		job.run(new NullProgressMonitor());
 	}
 
-	@Test
 	@Ignore("No CI Server")
+	@Test
 	public void testMonitorWithSingleTaskData() throws Exception {
 		AbstractRepositoryConnector connector = new MockRepositoryConnector();
 		ITask task = new MockTask("1");
@@ -182,6 +192,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		assertEquals("beginTask|subTask|subTask|done", monitor.getProgressLog());
 	}
 
+	@Test
 	public void testResetTaskStatusBeforeSync() throws Exception {
 		DeltaCountingTaskListChangeListener listener = new DeltaCountingTaskListChangeListener();
 		AbstractRepositoryConnector connector = new MockRepositoryConnector();
@@ -198,8 +209,8 @@ public class SynchronizeTasksJobTest extends TestCase {
 		listener.tearDown();
 	}
 
-	@Test
 	@Ignore("No CI Server")
+	@Test
 	public void testMonitorWithMultiTaskData() throws Exception {
 		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
 			@Override
@@ -228,6 +239,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		assertEquals("beginTask|subTask|done", monitor.getProgressLog());
 	}
 
+	@Test
 	public void testGetSingleTaskDataError() throws Exception {
 		final IStatus status = new Status(IStatus.WARNING, "bundle", "error");
 		AbstractRepositoryConnector connector = new MockRepositoryConnector() {
@@ -243,6 +255,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		assertEquals(status, ((AbstractTask) task).getStatus());
 	}
 
+	@Test
 	public void testMultipleErrors() throws Exception {
 		final IStatus status = new Status(IStatus.WARNING, "bundle", "error");
 		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
@@ -283,6 +296,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		listener.tearDown();
 	}
 
+	@Test
 	public void testGetSingleTaskDataNull() throws Exception {
 		AbstractRepositoryConnector connector = new MockRepositoryConnector() {
 			@Override
@@ -301,6 +315,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		assertEquals(ITasksCoreConstants.ID_PLUGIN, status.getPlugin());
 	}
 
+	@Test
 	public void testGetSingleTaskData() throws Exception {
 		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
 			@Override
@@ -333,6 +348,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		assertTrue(putTaskData.get());
 	}
 
+	@Test
 	public void testGetSingleTaskDataPutFails() throws Exception {
 		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
 			@Override
@@ -359,6 +375,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		assertEquals(status, ((AbstractTask) task).getStatus());
 	}
 
+	@Test
 	public void testGetMultiTaskData() throws Exception {
 		final AtomicBoolean multiGotCalled = new AtomicBoolean();
 		DeltaCountingTaskListChangeListener listener = new DeltaCountingTaskListChangeListener();
@@ -408,6 +425,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		listener.tearDown();
 	}
 
+	@Test
 	public void testGetMultiTaskDataPutIntoManager() throws Exception {
 		final MockRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
 
@@ -453,6 +471,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		assertEquals("error", ((AbstractTask) task3).getStatus().getMessage());
 	}
 
+	@Test
 	public void testGetMultiTaskDataFails() throws Exception {
 		final Status errorStatus = new Status(IStatus.ERROR, "bundle", "error");
 		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
@@ -483,6 +502,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		assertEquals(errorStatus, ((AbstractTask) task2).getStatus());
 	}
 
+	@Test
 	public void testGetSingleTaskDataWithRelations() throws Exception {
 		final List<String> requestedTaskIds = new ArrayList<>();
 		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
@@ -531,10 +551,12 @@ public class SynchronizeTasksJobTest extends TestCase {
 		assertTrue(requestedTaskIds.contains("1"));
 	}
 
+	@Test
 	public void testGetSingleTaskDataWithRelationsAndRemoveRelation() throws Exception {
 		getSingleTaskDataWithRelationsAndRemoveRelation(true);
 	}
 
+	@Test
 	public void testGetSingleTaskDataWithRelationsDisabled() throws Exception {
 		getSingleTaskDataWithRelationsAndRemoveRelation(false);
 	}
@@ -602,6 +624,7 @@ public class SynchronizeTasksJobTest extends TestCase {
 		assertTrue(children.contains(taskToBecomeSubtask));
 	}
 
+	@Test
 	public void testErrorOnRelationRetrieval() throws Exception {
 		final List<String> requestedTaskIds = new ArrayList<>();
 		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
@@ -639,8 +662,8 @@ public class SynchronizeTasksJobTest extends TestCase {
 		log.removeLogListener(listener);
 	}
 
-	@Test
 	@Ignore("No CI Server")
+	@Test
 	public void testTasksForSeveralRepositories() throws Exception {
 		final List<String> requestedTaskIds = new ArrayList<>();
 		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
