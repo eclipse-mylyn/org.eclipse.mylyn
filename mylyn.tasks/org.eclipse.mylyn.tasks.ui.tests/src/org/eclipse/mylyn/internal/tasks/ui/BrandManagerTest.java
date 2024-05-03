@@ -28,6 +28,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.widgets.Display;
+import org.junit.Ignore;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
@@ -90,6 +91,7 @@ public class BrandManagerTest {
 	}
 
 	@Test
+	@Ignore("No CI Server")
 	public void testGetOverlayIcon() {
 		brandManager.addOverlayIcon("mock1", "org.mylyn", imageDescriptor(1));
 		brandManager.addOverlayIcon("mock1", "org.eclipse", imageDescriptor(2));

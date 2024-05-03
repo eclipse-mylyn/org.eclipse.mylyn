@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2024 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -30,6 +30,7 @@ import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -73,6 +74,7 @@ public class CommonHttpResponseTest {
 	}
 
 	@Test
+	@Ignore("No CI Server")
 	public void testCancel() throws Exception {
 		monitor.setCanceled(true);
 		InputStream in = response.getResponseEntityAsStream();
@@ -86,6 +88,7 @@ public class CommonHttpResponseTest {
 	}
 
 	@Test
+	@Ignore("No CI Server")
 	public void testCancelAfterRead() throws Exception {
 		InputStream in = response.getResponseEntityAsStream();
 		in.read();

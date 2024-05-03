@@ -8,12 +8,18 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.net;
 
 import static org.eclipse.mylyn.commons.tests.net.NetUtilTest.MAX_HTTP_HOST_CONNECTIONS_DEFAULT;
 import static org.eclipse.mylyn.commons.tests.net.NetUtilTest.MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.InterruptedIOException;
 import java.net.ConnectException;
@@ -51,14 +57,16 @@ import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 import org.eclipse.mylyn.internal.commons.net.PollingInputStream;
 import org.eclipse.mylyn.internal.commons.net.PollingSslProtocolSocketFactory;
 import org.eclipse.mylyn.internal.commons.net.TimeoutInputStream;
-
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class WebUtilTest extends TestCase {
+public class WebUtilTest {
 
 	static class StubProgressMonitor implements IProgressMonitor {
 
@@ -109,9 +117,8 @@ public class WebUtilTest extends TestCase {
 	public WebUtilTest() {
 	}
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		server = new MockServer();
 		int proxyPort = server.startAndWait();
 		assert proxyPort > 0;
@@ -120,13 +127,12 @@ public class WebUtilTest extends TestCase {
 		client = new HttpClient();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-
+	@After
+	public void tearDown() throws Exception {
 		server.stop();
 	}
 
+	@Test
 	public void testConnectCancelStalledConnect() throws Exception {
 		final StubProgressMonitor monitor = new StubProgressMonitor();
 		String host = "google.com";
@@ -150,6 +156,7 @@ public class WebUtilTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testConfigureClient() throws Exception {
 		WebLocation location = new WebLocation(TestUrl.DEFAULT.getHttpOk().toString());
 
@@ -161,6 +168,8 @@ public class WebUtilTest extends TestCase {
 		assertEquals(CoreUtil.TEST_MODE ? 20 : MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT, params.getMaxTotalConnections());
 	}
 
+	@Ignore("No CI Server")
+	@Test
 	public void testExecute() throws Exception {
 		StubProgressMonitor monitor = new StubProgressMonitor();
 		HttpClient client = new HttpClient();
@@ -176,6 +185,7 @@ public class WebUtilTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testExecuteCancelStalledConnect() throws Exception {
 		final StubProgressMonitor monitor = new StubProgressMonitor();
 		HttpClient client = new HttpClient();
@@ -204,6 +214,7 @@ public class WebUtilTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testExecuteAlreadyCancelled() throws Exception {
 		StubProgressMonitor monitor = new StubProgressMonitor();
 		HttpClient client = new HttpClient();
@@ -221,6 +232,7 @@ public class WebUtilTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testConfigureHttpClient() {
 		HttpClient client = new HttpClient();
 
@@ -236,6 +248,7 @@ public class WebUtilTest extends TestCase {
 		// TODO test timeouts
 	}
 
+	@Test
 	public void testCreateHostConfigurationProxy() throws Exception {
 		StubProgressMonitor monitor = new StubProgressMonitor();
 		HttpClient client = new HttpClient();
@@ -251,6 +264,8 @@ public class WebUtilTest extends TestCase {
 				}), monitor);
 	}
 
+	@Ignore("No CI Server")
+	@Test
 	public void testReadTimeout() throws Exception {
 		// wait 5 seconds for thread pool to be idle
 		for (int i = 0; i < 10; i++) {
@@ -284,6 +299,7 @@ public class WebUtilTest extends TestCase {
 		assertEquals(0, ((ThreadPoolExecutor) CommonsNetPlugin.getExecutorService()).getActiveCount());
 	}
 
+	@Test
 	public void testLocationConnect() throws Exception {
 		String url = "http://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
 		AbstractWebLocation location = new WebLocation(url, null, null, null);
@@ -299,6 +315,7 @@ public class WebUtilTest extends TestCase {
 		assertEquals("GET / HTTP/1.1", request.request);
 	}
 
+	@Test
 	public void testLocationConnectSsl() throws Exception {
 		String url = "https://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
 		AbstractWebLocation location = new WebLocation(url, null, null, null);
@@ -325,6 +342,7 @@ public class WebUtilTest extends TestCase {
 		assertFalse(server.hasRequest());
 	}
 
+	@Test
 	public void testLocationConnectProxy() throws Exception {
 		String url = "http://foo/bar";
 		final Proxy proxy = new Proxy(Type.HTTP, proxyAddress);
@@ -341,6 +359,7 @@ public class WebUtilTest extends TestCase {
 		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
 	}
 
+	@Test
 	public void testLocationConnectProxyHttpAuth() throws Exception {
 		String url = "http://foo/bar";
 		final Proxy proxy = new Proxy(Type.HTTP, proxyAddress);
@@ -363,6 +382,7 @@ public class WebUtilTest extends TestCase {
 		assertEquals("Basic dXNlcjpwYXNz", request.getHeaderValue("Authorization"));
 	}
 
+	@Test
 	public void testLocationConnectProxyNoProxyCredentials() throws Exception {
 		String url = "http://foo/bar";
 		final Proxy proxy = new Proxy(Type.HTTP, proxyAddress);
@@ -384,6 +404,7 @@ public class WebUtilTest extends TestCase {
 		assertFalse("Expected HttpClient to close connection", server.hasRequest());
 	}
 
+	@Test
 	public void testLocationConnectProxyProxyCredentials() throws Exception {
 		String url = "http://foo/bar";
 		final Proxy proxy = new AuthenticatedProxy(Type.HTTP, proxyAddress, "proxyUser", "proxyPass");
@@ -405,6 +426,7 @@ public class WebUtilTest extends TestCase {
 		assertEquals("Basic cHJveHlVc2VyOnByb3h5UGFzcw==", request.getHeaderValue("Proxy-Authorization"));
 	}
 
+	@Test
 	public void testLocationConnectProxyProxyCredentialsHttpAuth() throws Exception {
 		String url = "http://foo/bar";
 		final Proxy proxy = new AuthenticatedProxy(Type.HTTP, proxyAddress, "proxyUser", "proxyPass");
@@ -426,6 +448,7 @@ public class WebUtilTest extends TestCase {
 		assertEquals("Basic dXNlcjpwYXNz", request.getHeaderValue("Authorization"));
 	}
 
+	@Test
 	public void testLocationSslConnectProxy() throws Exception {
 		String url = "https://foo/bar";
 		final Proxy proxy = new Proxy(Type.HTTP, proxyAddress);
@@ -442,6 +465,7 @@ public class WebUtilTest extends TestCase {
 		assertEquals("CONNECT foo:443 HTTP/1.1", request.request);
 	}
 
+	@Test
 	public void testLocationSslConnectProxyProxyCredentials() throws Exception {
 		String url = "https://foo/bar";
 		final Proxy proxy = new AuthenticatedProxy(Type.HTTP, proxyAddress, "proxyUser", "proxyPass");
@@ -461,6 +485,7 @@ public class WebUtilTest extends TestCase {
 		assertEquals("Basic cHJveHlVc2VyOnByb3h5UGFzcw==", request.getHeaderValue("Proxy-Authorization"));
 	}
 
+	@Test
 	public void testLocationSslConnectProxyNoProxyCredentials() throws Exception {
 		String url = "https://foo/bar";
 		final Proxy proxy = new Proxy(Type.HTTP, proxyAddress);
@@ -482,6 +507,7 @@ public class WebUtilTest extends TestCase {
 		assertFalse("Expected HttpClient to close connection", server.hasRequest());
 	}
 
+	@Test
 	public void testLocationSslConnectProxyTimeout() throws Exception {
 		String url = "https://foo/bar";
 		final Proxy proxy = new Proxy(Type.HTTP, proxyAddress);
@@ -504,6 +530,7 @@ public class WebUtilTest extends TestCase {
 		assertEquals("CONNECT foo:443 HTTP/1.1", request.request);
 	}
 
+	@Test
 	public void testLocationConnectSslClientCert() throws Exception {
 		if (CommonTestUtil.isCertificateAuthBroken()) {
 			return; // skip test
@@ -522,6 +549,7 @@ public class WebUtilTest extends TestCase {
 		assertEquals(200, statusCode);
 	}
 
+	@Test
 	public void testGetUserAgent() {
 		String userAgent = WebUtil.getUserAgent(null);
 		assertEquals(userAgent, WebUtil.getUserAgent(""));
@@ -536,6 +564,7 @@ public class WebUtilTest extends TestCase {
 		assertTrue(userAgent.contains(" abc "));
 	}
 
+	@Test
 	public void testUrlParsers() {
 		String url = "https://example.com:444/folder/file.txt";
 		assertEquals(444, WebUtil.getPort(url));
@@ -580,6 +609,8 @@ public class WebUtilTest extends TestCase {
 				WebUtil.getRequestPath(url));
 	}
 
+	@Ignore("No CI Server")
+	@Test
 	public void testGetTitleFromUrl() throws Exception {
 		assertEquals("Eclipse Mylyn Open Source Project",
 				WebUtil.getTitleFromUrl(new WebLocation(TestUrl.DEFAULT.getHttpOk().toString()), null));
@@ -597,6 +628,7 @@ public class WebUtilTest extends TestCase {
 	/**
 	 * Default encoding needs to be set to non-UTF8 encoding for this test to be meaningful, e.g. <code>-Dfile.encoding=ISO-8859-1</code>.
 	 */
+	@Test
 	public void testGetTitleFromUrlUtf8() throws Exception {
 		String message = """
 				HTTP/1.1 200 OK
@@ -617,13 +649,17 @@ public class WebUtilTest extends TestCase {
 	}
 
 	// FIXME
-//	public void testGetPlatformProxyDefault() {
+	@Test
+	@Ignore
+	public void testGetPlatformProxyDefault() {
 //		assertNull(WebUtil.getProxy("mylyn.eclipse.org", Type.HTTP));
 //		assertNull(WebUtil.getProxy("mylyn.eclipse.org", Type.DIRECT));
 //		assertNull(WebUtil.getProxy("mylyn.eclipse.org", Type.SOCKS));
-//	}
+	}
 
-//	public void testGetPlatformProxy() {
+	@Test
+	@Ignore
+	public void testGetPlatformProxy() {
 //		IProxyService defaultProxyService = WebUtil.getProxyService();
 //		try {
 //			StubProxyService proxyService = new StubProxyService();
@@ -637,6 +673,5 @@ public class WebUtilTest extends TestCase {
 //		} finally {
 //			WebUtil.setProxyService(defaultProxyService);
 //		}
-//	}
-
+	}
 }

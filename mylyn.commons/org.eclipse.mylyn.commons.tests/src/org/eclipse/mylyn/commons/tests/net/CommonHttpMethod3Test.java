@@ -1,17 +1,22 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2024 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.net;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,20 +31,24 @@ import org.eclipse.mylyn.commons.tests.net.WebUtilTest.StubProgressMonitor;
 import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 import org.eclipse.mylyn.internal.commons.net.http.CommonGetMethod3;
 import org.eclipse.mylyn.internal.commons.net.http.CommonPostMethod3;
-
-import junit.framework.TestCase;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class CommonHttpMethod3Test extends TestCase {
+public class CommonHttpMethod3Test {
 
+	@Ignore("No CI Server")
+	@Test
 	public void testGetOpenStreamAndCancel() throws Exception {
 		CommonGetMethod3 method = new CommonGetMethod3("/");
 		openStreamAndCancel(method);
 	}
 
+	@Ignore("No CI Server")
+	@Test
 	public void testPostOpenStreamAndCancel() throws Exception {
 		CommonPostMethod3 method = new CommonPostMethod3("/");
 		openStreamAndCancel(method);

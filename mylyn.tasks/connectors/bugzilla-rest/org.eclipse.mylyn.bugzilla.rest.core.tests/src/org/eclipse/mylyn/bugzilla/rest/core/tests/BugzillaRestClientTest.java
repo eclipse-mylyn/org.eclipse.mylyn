@@ -83,6 +83,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -97,6 +98,7 @@ import com.google.gson.Gson;
 // the value in the fixture.
 // Note: When there is no fixture with this property no tests get executed
 //@RunOnlyWhenProperty(property = "default", value = "1")
+@Ignore("No CI Server")
 public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	private final BugzillaRestTestFixture actualFixture;
 
