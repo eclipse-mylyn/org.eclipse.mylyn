@@ -22,12 +22,14 @@ import org.eclipse.mylyn.bugzilla.rest.tests.TckFixture;
 import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner.FixtureDefinition;
 import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner.RunOnlyWhenProperty;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.junit.Ignore;
 import org.junit.Test;
 
 @FixtureDefinition(fixtureClass = TckFixture.class, fixtureType = "bugzillaREST")
 @RunOnlyWhenProperty(property = "default", value = "1")
 
 @SuppressWarnings("nls")
+@Ignore("No CI Server")
 public class AbstractRepositoryConnectorTest extends AbstractTckTest {
 
 	public AbstractRepositoryConnectorTest(TckFixture fixture) {

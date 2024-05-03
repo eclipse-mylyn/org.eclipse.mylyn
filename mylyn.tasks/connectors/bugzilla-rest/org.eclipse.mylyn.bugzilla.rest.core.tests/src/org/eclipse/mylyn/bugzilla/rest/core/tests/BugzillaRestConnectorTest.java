@@ -43,6 +43,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -51,6 +52,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 @RunWith(Junit4TestFixtureRunner.class)
 @FixtureDefinition(fixtureClass = BugzillaRestTestFixture.class, fixtureType = "bugzillaREST")
 @SuppressWarnings({ "nls", "restriction" })
+@Ignore("No CI Server")
 public class BugzillaRestConnectorTest {
 	private final BugzillaRestTestFixture actualFixture;
 

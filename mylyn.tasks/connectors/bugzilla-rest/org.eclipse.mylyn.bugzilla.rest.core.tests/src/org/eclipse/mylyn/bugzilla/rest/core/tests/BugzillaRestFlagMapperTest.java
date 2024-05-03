@@ -31,6 +31,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.gson.Gson;
@@ -115,6 +116,7 @@ public class BugzillaRestFlagMapperTest {
 	}
 
 	@Test
+	@Ignore("No CI Server")
 	public void testApplyToTaskAttribute() throws IOException {
 		String jsonElement = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.json"),
 				Charset.defaultCharset());
@@ -142,6 +144,7 @@ public class BugzillaRestFlagMapperTest {
 	}
 
 	@Test
+	@Ignore("No CI Server")
 	public void testCreateFromTaskAttribute() throws IOException {
 		String jsonElement = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.json"),
 				Charset.defaultCharset());

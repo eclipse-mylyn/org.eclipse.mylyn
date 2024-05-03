@@ -39,6 +39,7 @@ public class AllJenkinsTests {
 			CommonTestUtil.dumpSystemInfo(System.err);
 		}
 		TestConfiguration testConfiguration = ManagedSuite.getTestConfigurationOrCreateDefault();
+		testConfiguration.setLocalOnly(true); // No CI Server
 		TestSuite suite = new ManagedTestSuite(AllJenkinsTests.class.getName());
 		addTests(suite, testConfiguration);
 		return suite;

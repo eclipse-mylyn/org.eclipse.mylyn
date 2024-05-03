@@ -9,9 +9,14 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.notifications.tests.core;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,15 +33,15 @@ import org.eclipse.mylyn.commons.notifications.core.IFilterable;
 import org.eclipse.mylyn.commons.notifications.core.NotificationEnvironment;
 import org.eclipse.mylyn.internal.commons.notifications.feed.FeedEntry;
 import org.eclipse.osgi.service.resolver.VersionRange;
+import org.junit.Before;
+import org.junit.Test;
 import org.osgi.framework.Version;
-
-import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class NotificationEnvironmentTest extends TestCase {
+public class NotificationEnvironmentTest {
 
 	private class StubEntry extends FeedEntry implements IAdaptable, IFilterable {
 
@@ -75,8 +80,8 @@ public class NotificationEnvironmentTest extends TestCase {
 
 	Set<String> installedFeatures;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		installedFeatures = new HashSet<>();
 		System.setProperty("EnvironmentTest", "2");
 		environment = new NotificationEnvironment() {
@@ -87,12 +92,14 @@ public class NotificationEnvironmentTest extends TestCase {
 		};
 	}
 
+	@Test
 	public void testGetRuntimeVersion() {
 		Version runtimeVersion = environment.getRuntimeVersion();
-		assertTrue("Expected value between 11.0-18.0, got " + runtimeVersion,
-				new VersionRange("[11.0.0,18.0.0)").isIncluded(runtimeVersion));
+		assertTrue("Expected value between 11.0-25.0, got " + runtimeVersion,
+				new VersionRange("[11.0.0,25.0.0)").isIncluded(runtimeVersion));
 	}
 
+	@Test
 	public void testGetPlatformVersion() {
 		Version platformVersion = environment.getPlatformVersion();
 		if (Platform.isRunning()) {
@@ -103,16 +110,18 @@ public class NotificationEnvironmentTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetFrameworkVersion() {
 		Version frameworkVersion = environment.getFrameworkVersion();
 		if (Platform.isRunning()) {
-			assertTrue("Expected value > 3.6, got " + frameworkVersion,
-					new VersionRange("3.6.0").isIncluded(frameworkVersion));
+			assertTrue("Expected value > 4.0, got " + frameworkVersion,
+					new VersionRange("4.0.0").isIncluded(frameworkVersion));
 		} else {
 			assertEquals(CoreUtil.getFrameworkVersion(), frameworkVersion);
 		}
 	}
 
+	@Test
 	public void testMatchesFrameworkVersion() {
 		Map<String, String> values = new HashMap<>();
 		assertTrue(environment.matches(new StubEntry(values), null));
@@ -124,6 +133,7 @@ public class NotificationEnvironmentTest extends TestCase {
 		assertTrue(environment.matches(new StubEntry(values), null));
 	}
 
+	@Test
 	public void testMatchesRequires() {
 		Map<String, String> values = new HashMap<>();
 		values.put("requires", "org.eclipse.mylyn");
@@ -133,6 +143,7 @@ public class NotificationEnvironmentTest extends TestCase {
 		assertTrue(environment.matches(new StubEntry(values), null));
 	}
 
+	@Test
 	public void testMatchesConflicts() {
 		Map<String, String> values = new HashMap<>();
 		values.put("conflicts", "org.eclipse.mylyn");
@@ -142,6 +153,7 @@ public class NotificationEnvironmentTest extends TestCase {
 		assertFalse(environment.matches(new StubEntry(values), null));
 	}
 
+	@Test
 	public void testMatchesRequiresConflicts() {
 		Map<String, String> values = new HashMap<>();
 		values.put("requires", "org.eclipse.mylyn");
@@ -155,6 +167,7 @@ public class NotificationEnvironmentTest extends TestCase {
 		assertFalse(environment.matches(new StubEntry(values), null));
 	}
 
+	@Test
 	public void testMatchesFilter() {
 		Map<String, String> values = new HashMap<>();
 		values.put("filter", "(EnvironmentTest<=1)");

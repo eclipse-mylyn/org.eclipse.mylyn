@@ -23,12 +23,14 @@ import org.eclipse.mylyn.bugzilla.rest.tests.TckFixture;
 import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner.FixtureDefinition;
 import org.eclipse.mylyn.tasks.core.RepositoryInfo;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 @FixtureDefinition(fixtureClass = TckFixture.class, fixtureType = "bugzillaREST")
 @SuppressWarnings("nls")
+@Ignore("No CI Server")
 public class ValidationTest extends AbstractTckTest {
 
 	public ValidationTest(TckFixture fixture) {
