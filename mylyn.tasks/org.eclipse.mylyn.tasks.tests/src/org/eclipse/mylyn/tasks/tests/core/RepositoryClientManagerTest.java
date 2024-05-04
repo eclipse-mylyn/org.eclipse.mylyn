@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.core;
@@ -24,6 +25,7 @@ import junit.framework.TestCase;
 /**
  * @author Benjamin Muskalla
  */
+@SuppressWarnings("nls")
 public class RepositoryClientManagerTest extends TestCase {
 
 	public static class MyConfig implements Serializable {

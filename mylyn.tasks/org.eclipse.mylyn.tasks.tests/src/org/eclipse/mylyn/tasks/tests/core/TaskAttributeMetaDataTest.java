@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.core;
@@ -29,6 +30,7 @@ import junit.framework.TestCase;
 /**
  * @author Benjamin Muskalla
  */
+@SuppressWarnings("nls")
 public class TaskAttributeMetaDataTest extends TestCase {
 
 	private TaskData data;

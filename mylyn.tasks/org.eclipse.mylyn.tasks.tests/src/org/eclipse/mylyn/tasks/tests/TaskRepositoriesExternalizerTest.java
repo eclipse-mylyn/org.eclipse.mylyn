@@ -1,15 +1,16 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2008 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Erik Ramfelt - bug 168782
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -26,6 +27,7 @@ import junit.framework.TestCase;
 /**
  * @author Rob Elves
  */
+@SuppressWarnings("nls")
 public class TaskRepositoriesExternalizerTest extends TestCase {
 
 	private Set<TaskRepository> taskRepositories = new HashSet<>();

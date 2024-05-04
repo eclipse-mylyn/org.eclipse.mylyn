@@ -10,6 +10,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -39,6 +40,7 @@ import junit.framework.TestCase;
  * @author Robert Elves
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class TaskDataStoreTest extends TestCase {
 
 	private static final String MOCK_ID = "1";

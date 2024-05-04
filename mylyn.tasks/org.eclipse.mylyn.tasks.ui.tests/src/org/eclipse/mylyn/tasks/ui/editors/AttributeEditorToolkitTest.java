@@ -10,6 +10,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - porting to SimRel 2022-12
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.ui.editors;
@@ -46,6 +47,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
+@SuppressWarnings({ "nls", "restriction" })
 public class AttributeEditorToolkitTest {
 	public class TestAttributeEditorToolkit extends AttributeEditorToolkit {
 
@@ -121,7 +123,7 @@ public class AttributeEditorToolkitTest {
 	private void assertOptionsProposalProvider(boolean isMultiSelect, boolean isPerson) {
 		taskAttribute.getMetaData().setKind(isPerson ? TaskAttribute.KIND_PEOPLE : TaskAttribute.KIND_DEFAULT);
 		taskAttribute.getMetaData()
-				.setType(isMultiSelect ? TaskAttribute.TYPE_MULTI_SELECT : TaskAttribute.TYPE_SINGLE_SELECT);
+		.setType(isMultiSelect ? TaskAttribute.TYPE_MULTI_SELECT : TaskAttribute.TYPE_SINGLE_SELECT);
 		LabelsAttributeEditor editor = new LabelsAttributeEditor(taskDataModel, taskAttribute);
 		editor.createControl(WorkbenchUtil.getShell(), formToolkit);
 		toolkit.adapt(editor);

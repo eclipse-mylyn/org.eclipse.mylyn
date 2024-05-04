@@ -10,6 +10,7 @@
  * Contributors:
  *     Willian Mitsuda - initial API and implementation
  *     Frank Becker - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -26,6 +27,7 @@ import junit.framework.TestCase;
  * @author Willian Mitsuda
  * @author Frank Becker
  */
+@SuppressWarnings("nls")
 public class AttachmentSizeFormatterTest extends TestCase {
 
 	public void testInvalidString() {

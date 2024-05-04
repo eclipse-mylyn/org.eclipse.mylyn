@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
@@ -23,6 +24,7 @@ import org.eclipse.mylyn.tasks.tests.connector.MockRepositorySettingsPage;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class NewRepositoryWizardTest {
 
 	private NewRepositoryWizard wizard;

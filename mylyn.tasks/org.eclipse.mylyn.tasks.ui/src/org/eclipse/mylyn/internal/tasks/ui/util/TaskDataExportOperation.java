@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.util;
@@ -23,7 +24,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.commons.net.Policy;
@@ -33,7 +34,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 
 /**
  * Zips task data up to specified directly and filename.
- * 
+ *
  * @author Wesley Coelho
  * @author Mik Kersten
  * @author Rob Elves TODO: Move into internal.tasks.core
@@ -67,7 +68,7 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 				monitor.beginTask(EXPORT_JOB_LABEL, filesToExport.size() + 1);
 
 				Job.getJobManager()
-						.beginRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE, new SubProgressMonitor(monitor, 1));
+				.beginRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE, SubMonitor.convert(monitor, 1));
 
 				ZipFileUtil.createZipFile(getDestinationFile(), new ArrayList<>(filesToExport),
 						TasksUiPlugin.getDefault().getDataDirectory(), monitor);

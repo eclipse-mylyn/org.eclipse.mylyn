@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.ui.wizards;
@@ -28,6 +29,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class AbstractRepositoryQueryPage2Test {
 
 	private final class TestRepositoryQueryPage extends AbstractRepositoryQueryPage2 {

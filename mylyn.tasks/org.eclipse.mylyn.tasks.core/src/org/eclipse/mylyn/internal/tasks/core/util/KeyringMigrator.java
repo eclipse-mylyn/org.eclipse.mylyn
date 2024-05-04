@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.core.util;
@@ -69,7 +70,6 @@ public abstract class KeyringMigrator<T> {
 		return getAuthorizationInfo(new URL(url), authRealm, authScheme);
 	}
 
-	@SuppressWarnings("deprecation")
 	protected Map<String, String> getAuthorizationInfo(URL url, String realm, String scheme)
 			throws MalformedURLException {
 		return AuthorizationHandler.getAuthorizationInfo(url, realm, scheme);

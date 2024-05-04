@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.tests.util;
 
@@ -23,6 +24,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * @author David Green
  * @since 3.5
  */
+@SuppressWarnings("nls")
 public class UrlBuilder {
 	private final StringBuilder buf = new StringBuilder(512);
 

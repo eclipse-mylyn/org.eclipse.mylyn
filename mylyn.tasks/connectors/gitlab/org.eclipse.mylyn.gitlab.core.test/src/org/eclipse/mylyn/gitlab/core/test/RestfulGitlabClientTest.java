@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2023 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.gitlab.core.test;
@@ -44,6 +45,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
+@SuppressWarnings({ "nls", "restriction" })
 class RestfulGitlabClientTest {
 
 	@BeforeAll
@@ -144,7 +146,7 @@ class RestfulGitlabClientTest {
 		}
 		techUsers.sort(Comparator.naturalOrder());
 		String fName = "testdata/getNamespaces" + (techUsers.size() > 0 ? "_" : "") + String.join("_", techUsers)
-				+ ".json";
+		+ ".json";
 
 		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(resultElement);
 		String expected = IOUtils.toString(CommonTestUtil.getResource(this, fName), Charset.defaultCharset());

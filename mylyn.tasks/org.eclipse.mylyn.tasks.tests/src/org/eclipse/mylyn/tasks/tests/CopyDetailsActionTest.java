@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -33,6 +34,7 @@ import junit.framework.TestCase;
  * @author Steffen Pingel
  * @author Thomas Ehrnhoefer
  */
+@SuppressWarnings("nls")
 public class CopyDetailsActionTest extends TestCase {
 
 //	public void testIdLabelIncluded() {

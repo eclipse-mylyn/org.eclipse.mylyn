@@ -1,15 +1,16 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Pawel Niewiadomski - fixes for bug 288347
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tests.util;
@@ -28,6 +29,7 @@ import junit.framework.AssertionFailedError;
  * @deprecated use {@link CommonTestUtil} instead
  */
 @Deprecated
+@SuppressWarnings({ "nls", "restriction" })
 public class TestUtil {
 
 	public static final String KEY_CREDENTIALS_FILE = "mylyn.credentials";

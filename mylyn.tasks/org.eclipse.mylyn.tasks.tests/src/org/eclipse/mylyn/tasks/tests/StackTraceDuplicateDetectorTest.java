@@ -10,6 +10,7 @@
  * Contributors:
  *     Jeff Pound - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -21,6 +22,7 @@ import junit.framework.TestCase;
 /**
  * @author Jeff Pound
  */
+@SuppressWarnings("nls")
 public class StackTraceDuplicateDetectorTest extends TestCase {
 
 	public void testStackTrace() throws Exception {

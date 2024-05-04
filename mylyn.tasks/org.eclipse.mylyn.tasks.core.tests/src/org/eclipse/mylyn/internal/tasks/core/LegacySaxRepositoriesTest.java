@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.core;
@@ -30,6 +31,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+@SuppressWarnings("nls")
 public class LegacySaxRepositoriesTest {
 
 	private class SaxRepositoriesContentHandlerVersion1 extends DefaultHandler {

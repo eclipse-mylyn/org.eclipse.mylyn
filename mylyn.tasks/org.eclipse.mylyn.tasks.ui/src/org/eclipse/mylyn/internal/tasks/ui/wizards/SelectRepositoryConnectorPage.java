@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
@@ -112,7 +113,7 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 		viewer = new TableViewer(container, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new ConnectorBrandContentProvider(TasksUiPlugin.getDefault().getBrandManager(),
 				TasksUi.getRepositoryManager().getRepositoryConnectors()));
-		viewer.setSorter(new TaskRepositoriesSorter());
+		viewer.setComparator(new TaskRepositoriesSorter());
 		viewer.setLabelProvider(new DecoratingLabelProvider(new TaskRepositoryLabelProvider(),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 		viewer.setInput(TasksUi.getRepositoryManager().getRepositoryConnectors());

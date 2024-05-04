@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -35,7 +35,7 @@ import junit.framework.TestCase;
 /**
  * @author Steffen Pingel
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class ContextMementoMigratorTest extends TestCase {
 
 	private static final String ID_PLANNING_PERSPECTIVE = "org.eclipse.mylyn.tasks.ui.perspectives.planning";
@@ -66,9 +66,9 @@ public class ContextMementoMigratorTest extends TestCase {
 	@Test
 	public void testMigratePreferencesDelete() throws Exception {
 		ContextUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ContextMementoMigrator.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier(),
-						ID_PLANNING_PERSPECTIVE);
+		.getPreferenceStore()
+		.setValue(ContextMementoMigrator.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier(),
+				ID_PLANNING_PERSPECTIVE);
 
 		ContextMementoMigrator migrator = new ContextMementoMigrator(ContextUiPlugin.getDefault().getStateManager());
 		migrator.setDeleteOldDataEnabled(true);
@@ -76,16 +76,16 @@ public class ContextMementoMigratorTest extends TestCase {
 		assertEquals(IStatus.OK, status.getSeverity());
 		assertEquals("",
 				ContextUiPlugin.getDefault()
-						.getPreferenceStore()
-						.getString(ContextMementoMigrator.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier()));
+				.getPreferenceStore()
+				.getString(ContextMementoMigrator.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier()));
 	}
 
 	@Test
 	public void testMigratePreferences() throws Exception {
 		ContextUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ContextMementoMigrator.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier(),
-						ID_PLANNING_PERSPECTIVE);
+		.getPreferenceStore()
+		.setValue(ContextMementoMigrator.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier(),
+				ID_PLANNING_PERSPECTIVE);
 
 		IStatus status = new ContextMementoMigrator(ContextUiPlugin.getDefault().getStateManager())
 				.migrateContextMementos(SubMonitor.convert(null));
@@ -101,8 +101,8 @@ public class ContextMementoMigratorTest extends TestCase {
 		assertEquals(ID_PLANNING_PERSPECTIVE, memento.getString("activeId"));
 		assertEquals(ID_PLANNING_PERSPECTIVE,
 				ContextUiPlugin.getDefault()
-						.getPreferenceStore()
-						.getString(ContextMementoMigrator.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier()));
+				.getPreferenceStore()
+				.getString(ContextMementoMigrator.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier()));
 	}
 
 }

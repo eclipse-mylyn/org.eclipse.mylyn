@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2009, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tests.util;
@@ -42,6 +43,7 @@ import junit.framework.TestSuite;
  * @author Steffen Pingel
  * @author Thomas Ehrnhoefer
  */
+@SuppressWarnings({ "nls", "restriction" })
 public abstract class TestFixture {
 
 	private final class Activation extends TestCase {

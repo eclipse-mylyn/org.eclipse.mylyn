@@ -8,6 +8,7 @@
  *
  * Contributors:
  *   Ericsson - Initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.git.ui.connector;
 
@@ -41,6 +42,7 @@ import org.eclipse.mylyn.versions.ui.spi.ScmConnectorUi;
  * 
  * @author Alvaro Sanchez-Leon
  */
+@SuppressWarnings("nls")
 public class GitConnectorUi extends ScmConnectorUi {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.git.ui"; //$NON-NLS-1$

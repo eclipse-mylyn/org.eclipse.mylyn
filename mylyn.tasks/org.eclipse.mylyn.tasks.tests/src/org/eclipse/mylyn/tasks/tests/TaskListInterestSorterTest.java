@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -17,7 +18,7 @@ import java.util.Date;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
@@ -27,6 +28,7 @@ import org.eclipse.swt.widgets.Control;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class TaskListInterestSorterTest extends TestCase {
 
 	private TaskListInterestSorter sorter;
@@ -67,7 +69,7 @@ public class TaskListInterestSorterTest extends TestCase {
 		}
 	}
 
-	public class FallbackSorter extends ViewerSorter {
+	public class FallbackSorter extends ViewerComparator {
 		@Override
 		public int compare(Viewer v, Object o1, Object o2) {
 			if (o1 == task1) {

@@ -1,16 +1,17 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Frank Becker - improvements
  *     Perforce - enhancements for bug 319469
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.search;
@@ -74,7 +75,7 @@ import org.eclipse.ui.part.IShowInTargetList;
 
 /**
  * Displays the results of a Repository search.
- * 
+ *
  * @see org.eclipse.search.ui.text.AbstractTextSearchViewPage
  * @author Rob Elves
  * @author Mik Kersten
@@ -229,7 +230,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 				new SearchResultsLabelProvider(searchResultProvider, viewer),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), null);
 		viewer.setLabelProvider(styledLabelProvider);
-		viewer.setSorter(searchResultSorter);
+		viewer.setComparator(searchResultSorter);
 
 		Transfer[] dragTypes = { LocalSelectionTransfer.getTransfer(), FileTransfer.getInstance() };
 
@@ -257,13 +258,13 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		FilteredTree searchTree = new EnhancedFilteredTree(treeComposite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL,
 				new SubstringPatternFilter() {
 
-					@Override
-					public void setPattern(String patternString) {
-						styledLabelProvider.setPattern(patternString);
-						super.setPattern(patternString);
-					}
+			@Override
+			public void setPattern(String patternString) {
+				styledLabelProvider.setPattern(patternString);
+				super.setPattern(patternString);
+			}
 
-				}, true);
+		}, true);
 		return searchTree.getViewer();
 	}
 
@@ -317,9 +318,8 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	}
 
 	@Override
-	@SuppressWarnings("rawtypes")
-	public Object getAdapter(Class adapter) {
-		return getAdapterDelegate(adapter);
+	public <T> T getAdapter(Class<T> adapter) {
+		return adapter.cast(getAdapterDelegate(adapter));
 	}
 
 	private Object getAdapterDelegate(Class<?> adapter) {

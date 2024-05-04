@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -132,9 +132,7 @@ public abstract class RepositoryClientManager<T, C extends Serializable> impleme
 			return;
 		}
 
-		ObjectInputStream in = null;
-		try {
-			in = new OsgiAwareObjectInputStream(new FileInputStream(cacheFile));
+		try (ObjectInputStream in = new OsgiAwareObjectInputStream(new FileInputStream(cacheFile))) {
 			int size = in.readInt();
 			for (int i = 0; i < size; i++) {
 				String url = (String) in.readObject();
@@ -145,14 +143,6 @@ public abstract class RepositoryClientManager<T, C extends Serializable> impleme
 			}
 		} catch (Throwable e) {
 			handleError("The respository configuration cache could not be read", e); //$NON-NLS-1$
-		} finally {
-			if (in != null) {
-				try {
-					in.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
 		}
 
 	}

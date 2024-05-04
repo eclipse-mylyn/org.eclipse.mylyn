@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -24,6 +25,7 @@ import org.junit.Test;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class OptionsProposalProviderTest extends TestCase {
 
 	@Override

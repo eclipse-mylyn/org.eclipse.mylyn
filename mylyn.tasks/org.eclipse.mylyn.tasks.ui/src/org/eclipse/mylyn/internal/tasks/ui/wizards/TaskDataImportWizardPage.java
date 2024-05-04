@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
@@ -45,6 +46,7 @@ import com.ibm.icu.text.DateFormat;
  * @author Mik Kersten
  * @author Rob Elves (Adaption to Import wizard)
  */
+@SuppressWarnings("nls")
 public class TaskDataImportWizardPage extends WizardPage {
 
 	private Button browseButtonZip = null;

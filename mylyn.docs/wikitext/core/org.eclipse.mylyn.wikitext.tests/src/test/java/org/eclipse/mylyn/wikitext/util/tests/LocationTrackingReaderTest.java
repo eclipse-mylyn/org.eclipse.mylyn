@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.util.tests;
 
@@ -32,14 +33,15 @@ public class LocationTrackingReaderTest {
 	public void testCharOffset() throws IOException {
 		String content = "aaflkjsdf \nas;dfj asl;fj\r\naslfkjasd";
 		int count = 0;
-		LocationTrackingReader reader = new LocationTrackingReader(new StringReader(content), 16);
-		int c;
-		while ((c = reader.read()) != -1) {
-			++count;
-			assertEquals(content.charAt(count - 1), (char) c);
-			assertEquals(count - 1, reader.getOffset());
+		try (LocationTrackingReader reader = new LocationTrackingReader(new StringReader(content), 16)) {
+			int c;
+			while ((c = reader.read()) != -1) {
+				++count;
+				assertEquals(content.charAt(count - 1), (char) c);
+				assertEquals(count - 1, reader.getOffset());
+			}
+			assertEquals(content.length(), count);
 		}
-		assertEquals(content.length(), count);
 	}
 
 	@Test
@@ -52,24 +54,24 @@ public class LocationTrackingReaderTest {
 	}
 
 	private void doTest(String content, int[] lineOffsets, int bufSize) throws IOException {
-		LocationTrackingReader reader = new LocationTrackingReader(new StringReader(content), bufSize);
-		BufferedReader refReader = new BufferedReader(new StringReader(content));
+		try (LocationTrackingReader reader = new LocationTrackingReader(new StringReader(content), bufSize);
+				BufferedReader refReader = new BufferedReader(new StringReader(content))) {
+			int lineNumber = 0;
+			String testLine = null;
+			String refLine = null;
+			do {
+				int expectedOffset = lineOffsets[lineNumber++];
+				testLine = reader.readLine();
+				refLine = refReader.readLine();
 
-		int lineNumber = 0;
-		String testLine = null;
-		String refLine = null;
-		do {
-			int expectedOffset = lineOffsets[lineNumber++];
-			testLine = reader.readLine();
-			refLine = refReader.readLine();
+				assertEquals(refLine, testLine);
+				assertEquals(expectedOffset, reader.getLineOffset());
+				assertEquals(lineNumber - 1, reader.getLineNumber());
+			} while (testLine != null && refLine != null);
 
-			assertEquals(refLine, testLine);
-			assertEquals(expectedOffset, reader.getLineOffset());
-			assertEquals(lineNumber - 1, reader.getLineNumber());
-		} while (testLine != null && refLine != null);
-
-		assertNull(refLine);
-		assertNull(testLine);
+			assertNull(refLine);
+			assertNull(testLine);
+		}
 	}
 
 	@Test

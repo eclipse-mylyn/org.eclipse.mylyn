@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.commands;
@@ -72,7 +73,7 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 					org.eclipse.mylyn.internal.tasks.ui.editors.Messages.TaskEditorPlanningPart_Confirm_Activity_Time_Deletion,
 					org.eclipse.mylyn.internal.tasks.ui.editors.Messages.TaskEditorPlanningPart_Do_you_wish_to_reset_your_activity_time_on_this_task_)) {
 				MonitorUi.getActivityContextManager()
-						.removeActivityTime(task.getHandleIdentifier(), 0l, System.currentTimeMillis());
+				.removeActivityTime(task.getHandleIdentifier(), 0l, System.currentTimeMillis());
 			}
 		}
 	}
@@ -136,11 +137,10 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 
 	private static class MarkTaskReadOperation extends AbstractOperation {
 		private final IAdaptable info = new IAdaptable() {
-			@SuppressWarnings("rawtypes")
 			@Override
-			public Object getAdapter(Class adapter) {
+			public <T> T getAdapter(Class<T> adapter) {
 				if (adapter == Shell.class) {
-					return shell;
+					return adapter.cast(shell);
 				}
 				return null;
 			}
@@ -221,7 +221,7 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 		Shell shell = HandlerUtil.getActiveShell(event);
 		String label = markRead
 				? Messages.MarkTaskHandler_MarkTasksReadOperation
-				: Messages.MarkTaskHandler_MarkTasksUnreadOperation;
+						: Messages.MarkTaskHandler_MarkTasksUnreadOperation;
 		MarkTaskReadOperation operation = new MarkTaskReadOperation(shell, label, markRead, tasks);
 		operation.execute();
 	}

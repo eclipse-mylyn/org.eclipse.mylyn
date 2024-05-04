@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.mylyn.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Tests
 Bundle-SymbolicName: org.eclipse.mylyn.tests;singleton:=true

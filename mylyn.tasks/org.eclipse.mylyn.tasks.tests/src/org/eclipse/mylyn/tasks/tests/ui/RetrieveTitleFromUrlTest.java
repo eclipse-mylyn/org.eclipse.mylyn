@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.ui;
@@ -25,6 +26,7 @@ import junit.framework.TestCase;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class RetrieveTitleFromUrlTest extends TestCase {
 
 	private final AtomicReference<String> retrievedTitle = new AtomicReference<>();

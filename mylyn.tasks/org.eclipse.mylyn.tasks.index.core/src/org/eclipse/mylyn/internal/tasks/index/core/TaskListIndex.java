@@ -640,7 +640,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		if (!Platform.isRunning() && reindexDelay != 0L) {
 			// job join() behaviour is not the same when platform is not running
 			Logger.getLogger(TaskListIndex.class.getName())
-					.warning("Index job joining may not work properly when Eclipse platform is not running"); //$NON-NLS-1$
+			.warning("Index job joining may not work properly when Eclipse platform is not running"); //$NON-NLS-1$
 		}
 		maintainIndexJob.join();
 	}
@@ -1079,9 +1079,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		try {
 			try {
 				if (!rebuildIndex) {
-					try {
-						IndexReader reader = DirectoryReader.open(directory);
-						reader.close();
+					try (IndexReader reader = DirectoryReader.open(directory)) {
 					} catch (CorruptIndexException e) {
 						rebuildIndex = true;
 					}
@@ -1223,18 +1221,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 		monitor.beginTask(Messages.TaskListIndex_task_rebuilding_index, taskListState.indexableTasks.size());
 		try {
-			IndexWriter writer;
-			try {
-				writer = createIndexWriter(true);
-			} catch (CorruptIndexException | IndexFormatTooOldException | IllegalArgumentException e) {
-				if (directory instanceof FSDirectory) {
-					cleanDirectory(((FSDirectory) directory).getDirectory().toFile());
-					writer = createIndexWriter(true);
-				} else {
-					throw e;
-				}
-			}
-			try {
+			try (IndexWriter writer = createIndexWriter()) {
 
 				for (ITask task : taskListState.indexableTasks) {
 					if (taskIsIndexable(task, null)) {
@@ -1251,13 +1238,27 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 				synchronized (this) {
 					rebuildIndex = false;
 				}
-			} finally {
-				writer.close();
 			}
 		} finally {
 			monitor.done();
 		}
 		return multiStatus;
+	}
+
+	private IndexWriter createIndexWriter()
+			throws LockObtainFailedException, IOException, CorruptIndexException {
+		IndexWriter writer;
+		try {
+			writer = createIndexWriter(true);
+		} catch (CorruptIndexException | IndexFormatTooOldException | IllegalArgumentException e) {
+			if (directory instanceof FSDirectory) {
+				cleanDirectory(((FSDirectory) directory).getDirectory().toFile());
+				writer = createIndexWriter(true);
+			} else {
+				throw e;
+			}
+		}
+		return writer;
 	}
 
 	private void cleanDirectory(File file) throws IOException {

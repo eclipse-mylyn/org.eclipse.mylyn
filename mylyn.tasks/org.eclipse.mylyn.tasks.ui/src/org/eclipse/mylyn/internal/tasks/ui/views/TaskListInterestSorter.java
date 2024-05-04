@@ -1,20 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2009 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
@@ -29,13 +30,13 @@ import org.eclipse.mylyn.tasks.core.ITaskContainer;
 /**
  * @author Mik Kersten
  */
-public class TaskListInterestSorter extends ViewerSorter {
+public class TaskListInterestSorter extends ViewerComparator {
 
 	private final TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
 
-	private ViewerSorter configuredSorter;
+	private ViewerComparator configuredSorter;
 
-	public void setconfiguredSorter(ViewerSorter configuredSorter) {
+	public void setconfiguredSorter(ViewerComparator configuredSorter) {
 		this.configuredSorter = configuredSorter;
 	}
 
@@ -46,8 +47,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 		} else if (o2 instanceof ITaskContainer && o1 instanceof UnmatchedTaskContainer) {
 			return 1;
 		}
-		if (o1 instanceof ScheduledTaskContainer dateRangeTaskContainer1 && o2 instanceof ScheduledTaskContainer) {
-			ScheduledTaskContainer dateRangeTaskContainer2 = (ScheduledTaskContainer) o2;
+		if (o1 instanceof ScheduledTaskContainer dateRangeTaskContainer1 && o2 instanceof ScheduledTaskContainer dateRangeTaskContainer2) {
 			return dateRangeTaskContainer1.getDateRange().compareTo(dateRangeTaskContainer2.getDateRange());
 		} else if (o1 instanceof ITaskContainer && o2 instanceof ScheduledTaskContainer) {
 			return -1;

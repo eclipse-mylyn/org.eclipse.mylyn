@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.data;
@@ -39,6 +40,7 @@ import junit.framework.TestCase;
  * @author Steffen Pingel
  * @author Shawn Minto
  */
+@SuppressWarnings("nls")
 public class XmlExternalizationTest extends TestCase {
 
 	private class SimpleCharacterReader extends DefaultHandler {

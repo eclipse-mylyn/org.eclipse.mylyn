@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
@@ -18,7 +19,7 @@ import java.util.Set;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.commons.workbench.AdaptiveRefreshPolicy.IFilteredTreeListener;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
@@ -43,7 +44,7 @@ public class FocusTaskListAction implements IFilteredTreeListener, IViewActionDe
 
 	private Set<AbstractTaskListFilter> previousFilters = new HashSet<>();
 
-	private ViewerSorter previousSorter;
+	private ViewerComparator previousSorter;
 
 	private final TaskListInterestFilter taskListInterestFilter = new TaskListInterestFilter();
 
@@ -112,7 +113,7 @@ public class FocusTaskListAction implements IFilteredTreeListener, IViewActionDe
 				}
 				// Setting sorter causes root refresh
 				taskListInterestSorter.setconfiguredSorter(previousSorter);
-				taskListView.getViewer().setSorter(taskListInterestSorter);
+				taskListView.getViewer().setComparator(taskListInterestSorter);
 				taskListView.getViewer().expandAll();
 
 				showProgressBar(true);
@@ -145,7 +146,7 @@ public class FocusTaskListAction implements IFilteredTreeListener, IViewActionDe
 						}
 					}
 				}
-				taskListView.getViewer().setSorter(previousSorter);
+				taskListView.getViewer().setComparator(previousSorter);
 				showProgressBar(false);
 			} finally {
 				taskListView.getViewer().getControl().setRedraw(true);
@@ -160,13 +161,13 @@ public class FocusTaskListAction implements IFilteredTreeListener, IViewActionDe
 
 		if (!taskListView.isFocusedMode()) {
 			TasksUiPlugin.getDefault()
-					.getPreferenceStore()
-					.setValue(ITasksUiPreferenceConstants.TASK_LIST_FOCUSED, true);
+			.getPreferenceStore()
+			.setValue(ITasksUiPreferenceConstants.TASK_LIST_FOCUSED, true);
 			installInterestFilter();
 		} else {
 			TasksUiPlugin.getDefault()
-					.getPreferenceStore()
-					.setValue(ITasksUiPreferenceConstants.TASK_LIST_FOCUSED, false);
+			.getPreferenceStore()
+			.setValue(ITasksUiPreferenceConstants.TASK_LIST_FOCUSED, false);
 			uninstallInterestFilter();
 		}
 	}

@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.ui.editor;
@@ -27,6 +28,7 @@ import junit.framework.TestCase;
 /**
  * @author Leo Dos Santos
  */
+@SuppressWarnings("nls")
 public class TaskEditorExtensionsTest extends TestCase {
 
 	private static final String ID_TEXTILE_EXTENSION = "org.eclipse.mylyn.tasks.tests.editor.mock.textile";

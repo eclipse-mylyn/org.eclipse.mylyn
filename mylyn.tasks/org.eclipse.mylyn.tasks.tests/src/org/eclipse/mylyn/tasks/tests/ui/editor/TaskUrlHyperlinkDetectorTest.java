@@ -1,16 +1,17 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     David Green - fix for bug 266693
  *     Abner Ballardo - fix for bug 288427
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.ui.editor;
@@ -36,6 +37,7 @@ import junit.framework.TestCase;
  * @author Steffen Pingel
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class TaskUrlHyperlinkDetectorTest extends TestCase {
 
 	private TaskRepository repository;
@@ -49,9 +51,8 @@ public class TaskUrlHyperlinkDetectorTest extends TestCase {
 		AbstractHyperlinkDetector detector = new TaskUrlHyperlinkDetector();
 		detector.setContext(new IAdaptable() {
 			@Override
-			@SuppressWarnings("rawtypes")
-			public Object getAdapter(Class adapter) {
-				return repository;
+			public <T> T getAdapter(Class<T> adapter) {
+				return adapter.cast(repository);
 			}
 		});
 		return detector.detectHyperlinks(new TextViewer() {

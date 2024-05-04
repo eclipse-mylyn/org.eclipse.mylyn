@@ -12,6 +12,7 @@
  *     Frank Becker - improvements
  *     Helen Bershadskaya - improvements for bug 242445
  *     Atlassian - fixes for bug 316113
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.ui.wizards;
@@ -104,7 +105,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
  * @since 2.0
  */
 public abstract class AbstractRepositorySettingsPage extends AbstractTaskRepositoryPage
-		implements ITaskRepositoryPage, IAdaptable {
+implements ITaskRepositoryPage, IAdaptable {
 
 	protected static final String PREFS_PAGE_ID_NET_PROXY = "org.eclipse.ui.net.NetPreferences"; //$NON-NLS-1$
 
@@ -310,7 +311,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		if (repository != null && !repository.getConnectorKind().equals(getConnectorKind())) {
 			throw new IllegalArgumentException(
 					"connectorKind of repository does not match connectorKind of page, expected '" + getConnectorKind() //$NON-NLS-1$
-							+ "', got '" + repository.getConnectorKind() + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+					+ "', got '" + repository.getConnectorKind() + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		updateBrandFromRepository();
 		setNeedsRepositoryCredentials(true);
@@ -456,10 +457,10 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		}
 
 		GridDataFactory.fillDefaults()
-				.hint(300, SWT.DEFAULT)
-				.grab(true, false)
-				.span(2, SWT.DEFAULT)
-				.applyTo(serverUrlCombo);
+		.hint(300, SWT.DEFAULT)
+		.grab(true, false)
+		.span(2, SWT.DEFAULT)
+		.applyTo(serverUrlCombo);
 
 		repositoryLabelEditor = new StringFieldEditor("", LABEL_REPOSITORY_LABEL, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
 				compositeContainer) {
@@ -864,7 +865,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 					}
 				} catch (Throwable t) {
 					StatusHandler
-							.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not set field value", t)); //$NON-NLS-1$
+					.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not set field value", t)); //$NON-NLS-1$
 				}
 			}
 		}
@@ -880,10 +881,10 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 		certAuthButton = new Button(certAuthComp, SWT.CHECK);
 		GridDataFactory.fillDefaults()
-				.indent(0, 5)
-				.align(SWT.LEFT, SWT.TOP)
-				.span(3, SWT.DEFAULT)
-				.applyTo(certAuthButton);
+		.indent(0, 5)
+		.align(SWT.LEFT, SWT.TOP)
+		.span(3, SWT.DEFAULT)
+		.applyTo(certAuthButton);
 
 		certAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enable_certificate_authentification);
 
@@ -977,10 +978,10 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 		httpAuthButton = new Button(httpAuthComp, SWT.CHECK);
 		GridDataFactory.fillDefaults()
-				.indent(0, 5)
-				.align(SWT.LEFT, SWT.TOP)
-				.span(3, SWT.DEFAULT)
-				.applyTo(httpAuthButton);
+		.indent(0, 5)
+		.align(SWT.LEFT, SWT.TOP)
+		.span(3, SWT.DEFAULT)
+		.applyTo(httpAuthButton);
 
 		httpAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enable_http_authentication);
 
@@ -1302,15 +1303,13 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 //	}
 
 	protected void setEncoding(String encoding) {
-		if (encoding.equals(TaskRepository.DEFAULT_CHARACTER_ENCODING)) {
+		if (encoding.equals(TaskRepository.DEFAULT_CHARACTER_ENCODING) || otherEncodingCombo.indexOf(encoding) == -1) {
 			setDefaultEncoding();
-		} else if (otherEncodingCombo.indexOf(encoding) != -1) {
+		} else {
 			defaultEncoding.setSelection(false);
 			otherEncodingCombo.setEnabled(true);
 			otherEncoding.setSelection(true);
 			otherEncodingCombo.select(otherEncodingCombo.indexOf(encoding));
-		} else {
-			setDefaultEncoding();
 		}
 	}
 
@@ -1842,12 +1841,10 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			return null;
 		}
 
-		if (defaultEncoding.getSelection()) {
+		if (defaultEncoding.getSelection() || otherEncodingCombo.getSelectionIndex() <= -1) {
 			return TaskRepository.DEFAULT_CHARACTER_ENCODING;
-		} else if (otherEncodingCombo.getSelectionIndex() > -1) {
-			return otherEncodingCombo.getItem(otherEncodingCombo.getSelectionIndex());
 		} else {
-			return TaskRepository.DEFAULT_CHARACTER_ENCODING;
+			return otherEncodingCombo.getItem(otherEncodingCombo.getSelectionIndex());
 		}
 	}
 
@@ -2206,9 +2203,9 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			});
 		} catch (InvocationTargetException e) {
 			StatusManager.getManager()
-					.handle(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							Messages.AbstractRepositorySettingsPage_Internal_error_validating_repository, e),
-							StatusManager.SHOW | StatusManager.LOG);
+			.handle(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					Messages.AbstractRepositorySettingsPage_Internal_error_validating_repository, e),
+					StatusManager.SHOW | StatusManager.LOG);
 			return;
 		} catch (InterruptedException e) {
 			// canceled
@@ -2313,9 +2310,9 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 * @see IAdaptable#getAdapter(Class)
 	 */
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	public <T> T getAdapter(Class<T> adapter) {
 		if (adapter == IValidatable.class) {
-			return new IValidatable() {
+			return adapter.cast(new IValidatable() {
 				@Override
 				public void validate() {
 					AbstractRepositorySettingsPage.this.validateSettings();
@@ -2330,7 +2327,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 				public boolean canValidate() {
 					return AbstractRepositorySettingsPage.this.canValidate();
 				}
-			};
+			});
 		}
 		return null;
 	}

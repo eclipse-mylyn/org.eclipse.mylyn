@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.core.sync;
@@ -28,7 +29,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -126,7 +127,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 									taskRepository.getRepositoryLabel()));
 							this.taskRepository = taskRepository;
 							Set<ITask> repositoryTasks = tasksByRepository.get(taskRepository);
-							run(repositoryTasks, new SubProgressMonitor(monitor, repositoryTasks.size() * 100));
+							run(repositoryTasks, SubMonitor.convert(monitor, repositoryTasks.size() * 100));
 						}
 					} finally {
 						monitor.done();
@@ -203,7 +204,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 					for (ITask task : tasks) {
 						resetStatus(task);
 					}
-					synchronizeTasks(new SubProgressMonitor(monitor, tasks.size() * 100), taskRepository, tasks);
+					synchronizeTasks(SubMonitor.convert(monitor, tasks.size() * 100), taskRepository, tasks);
 				} catch (CoreException e) {
 					for (ITask task : tasks) {
 						updateStatus(taskRepository, task, e.getStatus());
@@ -214,7 +215,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 					Policy.checkCanceled(monitor);
 					resetStatus(task);
 					try {
-						synchronizeTask(new SubProgressMonitor(monitor, 100), task);
+						synchronizeTask(SubMonitor.convert(monitor, 100), task);
 					} catch (CoreException e) {
 						updateStatus(taskRepository, task, e.getStatus());
 					}

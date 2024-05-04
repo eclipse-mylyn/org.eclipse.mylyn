@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Willian Mitsuda - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -22,6 +23,7 @@ import junit.framework.TestCase;
  * 
  * @author Willian Mitsuda
  */
+@SuppressWarnings("nls")
 public class CommentQuoterTest extends TestCase {
 
 	public void testNoWrapping() {

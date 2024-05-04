@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -83,7 +84,7 @@ public class UserAttributeEditor extends AbstractAttributeEditor {
 		if (profileImage != null) {
 			data = new ImageData(new ByteArrayInputStream(profileImage.getData()));
 		} else {
-			data = CommonImages.PERSON_LARGE.getImageData();
+			data = CommonImages.PERSON_LARGE.getImageData(100);
 		}
 
 		if (data.width != imageSize || data.height != imageSize) {

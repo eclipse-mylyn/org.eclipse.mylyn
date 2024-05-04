@@ -13,6 +13,7 @@
  *     Eugene Kuleshov - improvements
  *     Frank Becker - improvements
  *     Alexander Fedorov - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
@@ -171,6 +172,7 @@ import org.eclipse.ui.themes.IThemeManager;
  * @author Eugene Kuleshov
  * @author David Green
  */
+@SuppressWarnings("nls")
 public class TaskListView extends AbstractTaskListView implements IPropertyChangeListener, IShowInTarget {
 
 	private static final String ID_SEPARATOR_FILTERS = "filters"; //$NON-NLS-1$
@@ -612,7 +614,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		getViewer().setCellModifier(taskListCellModifier);
 
 		tableSorter = new TaskListSorter();
-		getViewer().setSorter(tableSorter);
+		getViewer().setComparator(tableSorter);
 
 		applyPresentation(CategorizedPresentation.ID);
 
@@ -633,7 +635,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 			public void mouseUp(MouseEvent event) {
 				// avoid activation in case the event was actually triggered as a side-effect of a tree expansion
 				long currentTime = System.currentTimeMillis();
-				if ((currentTime - lastExpansionTime < 150 && currentTime >= lastExpansionTime) || (event.button == 3)) {
+				if (currentTime - lastExpansionTime < 150 && currentTime >= lastExpansionTime || event.button == 3) {
 					// button3 is used for the context menu so we ignore the mouseDown Event
 					return;
 				}
@@ -750,8 +752,8 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 			message.setImage(Dialog.DLG_IMG_MESSAGE_INFO);
 			serviceMessageControl.setMessage(message);
 			TasksUiPlugin.getDefault()
-					.getPreferenceStore()
-					.setValue(ITasksUiPreferenceConstants.WELCOME_MESSAGE, Boolean.toString(true));
+			.getPreferenceStore()
+			.setValue(ITasksUiPreferenceConstants.WELCOME_MESSAGE, Boolean.toString(true));
 		}
 
 		ServiceMessageManager serviceMessageManager = TasksUiPlugin.getDefault().getServiceMessageManager();
@@ -1486,11 +1488,10 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
-	public Object getAdapter(Class adapter) {
+	public <T> T getAdapter(Class<T> adapter) {
 		if (adapter == ISizeProvider.class) {
-			return new ISizeProvider() {
+			return adapter.cast(new ISizeProvider() {
 				@Override
 				public int getSizeFlags(boolean width) {
 					if (width) {
@@ -1513,11 +1514,12 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 					}
 					return preferredResult;
 				}
-			};
+			});
 		} else if (adapter == IShowInTargetList.class) {
-			return (IShowInTargetList) () -> new String[] { "org.eclipse.team.ui.GenericHistoryView" };
+			return adapter.cast((IShowInTargetList) () -> new String[] { "org.eclipse.team.ui.GenericHistoryView" });
 		} else if (adapter == IShowInSource.class) {
-			return (IShowInSource) () -> new ShowInContext(getViewer().getInput(), getViewer().getSelection());
+			return adapter
+					.cast((IShowInSource) () -> new ShowInContext(getViewer().getInput(), getViewer().getSelection()));
 		}
 		return super.getAdapter(adapter);
 	}

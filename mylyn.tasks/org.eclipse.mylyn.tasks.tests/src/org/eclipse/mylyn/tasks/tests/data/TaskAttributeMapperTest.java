@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.data;
@@ -27,6 +28,7 @@ import junit.framework.TestCase;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class TaskAttributeMapperTest extends TestCase {
 
 	TaskRepository taskRepository = new TaskRepository("kind", "repository");

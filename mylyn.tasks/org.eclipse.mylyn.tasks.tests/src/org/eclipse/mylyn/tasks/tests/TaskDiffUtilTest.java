@@ -10,6 +10,7 @@
  * Contributors:
  *     Eugene Kuleshov - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -36,6 +37,7 @@ import junit.framework.TestCase;
  * @author Steffen Pingel
  * @author Robert Elves
  */
+@SuppressWarnings("nls")
 public class TaskDiffUtilTest extends TestCase {
 
 	public void testFoldSpaces() {
