@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -12,6 +12,7 @@
  *     David Green - fixes for bug 237503
  *     Frank Becker - fixes for bug 252300
  *	   Kevin Sawicki - fixes for bug 306029
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.ui.editors;
@@ -158,7 +159,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @since 3.0
  */
 public abstract class AbstractTaskEditorPage extends TaskFormPage
-		implements ISelectionProvider, ISelectionChangedListener {
+implements ISelectionProvider, ISelectionChangedListener {
 
 	/**
 	 * Causes the form page to reflow on resize.
@@ -285,11 +286,11 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 				} else {
 					getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Task_has_incoming_changes,
 							IMessageProvider.WARNING, new HyperlinkAdapter() {
-								@Override
-								public void linkActivated(HyperlinkEvent e) {
-									AbstractTaskEditorPage.this.refresh();
-								}
-							});
+						@Override
+						public void linkActivated(HyperlinkEvent e) {
+							AbstractTaskEditorPage.this.refresh();
+						}
+					});
 					setSubmitEnabled(false);
 				}
 			});
@@ -883,12 +884,12 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error saving task", e)); //$NON-NLS-1$
 				getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Could_not_save_task, IMessageProvider.ERROR,
 						new HyperlinkAdapter() {
-							@Override
-							public void linkActivated(HyperlinkEvent event) {
-								TasksUiInternal.displayStatus(Messages.AbstractTaskEditorPage_Save_failed,
-										e.getStatus());
-							}
-						});
+					@Override
+					public void linkActivated(HyperlinkEvent event) {
+						TasksUiInternal.displayStatus(Messages.AbstractTaskEditorPage_Save_failed,
+								e.getStatus());
+					}
+				});
 			}
 		}
 		// update the summary of unsubmitted repository tasks
@@ -1211,7 +1212,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 		} else {
 			message = Messages.AbstractTaskEditorPage_Submit_failed;
 		}
-		return message.replace('\n', ' ').replace('\r', ' '); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		return message.replace('\n', ' ').replace('\r', ' ');
 	}
 
 	@Override
@@ -1268,19 +1269,19 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 				if (ID_PART_ACTIONS.equals(part.getPartId())) {
 					// do not expand horizontally
 					GridDataFactory.fillDefaults()
-							.align(SWT.FILL, SWT.FILL)
-							.grab(false, false)
-							.applyTo(part.getControl());
+					.align(SWT.FILL, SWT.FILL)
+					.grab(false, false)
+					.applyTo(part.getControl());
 				} else if (part.getExpandVertically()) {
 					GridDataFactory.fillDefaults()
-							.align(SWT.FILL, SWT.FILL)
-							.grab(true, true)
-							.applyTo(part.getControl());
+					.align(SWT.FILL, SWT.FILL)
+					.grab(true, true)
+					.applyTo(part.getControl());
 				} else {
 					GridDataFactory.fillDefaults()
-							.align(SWT.FILL, SWT.TOP)
-							.grab(true, false)
-							.applyTo(part.getControl());
+					.align(SWT.FILL, SWT.TOP)
+					.grab(true, false)
+					.applyTo(part.getControl());
 				}
 				// for outline
 				if (ID_PART_COMMENTS.equals(part.getPartId())) {
@@ -1489,7 +1490,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 		if (selection instanceof TextSelection) {
 			// only update global actions
 			((TaskEditorActionContributor) getEditorSite().getActionBarContributor())
-					.updateSelectableActions(event.getSelection());
+			.updateSelectableActions(event.getSelection());
 			return;
 		}
 		if (selection.isEmpty()) {
@@ -1576,13 +1577,13 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 		if (taskData == null) {
 			getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Synchronize_to_retrieve_task_data,
 					IMessageProvider.WARNING, new HyperlinkAdapter() {
-						@Override
-						public void linkActivated(HyperlinkEvent e) {
-							if (synchronizeEditorAction != null) {
-								synchronizeEditorAction.run();
-							}
-						}
-					});
+				@Override
+				public void linkActivated(HyperlinkEvent e) {
+					if (synchronizeEditorAction != null) {
+						synchronizeEditorAction.run();
+					}
+				}
+			});
 		}
 		if (getTaskEditor().getMessage() == null
 				&& TasksUiPlugin.getTaskList().getTask(task.getRepositoryUrl(), task.getTaskId()) == null) {
@@ -1703,7 +1704,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 	}
 
 	void expandLastComment() {
-		if (getManagedForm() == null || getManagedForm().getForm().isDisposed() || (taskData == null)) {
+		if (getManagedForm() == null || getManagedForm().getForm().isDisposed() || taskData == null) {
 			return;
 		}
 

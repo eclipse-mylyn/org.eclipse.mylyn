@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.data;
@@ -34,6 +35,7 @@ import junit.framework.TestCase;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class TaskDataExternalizerTest extends TestCase {
 
 	private TaskDataExternalizer externalizer;
@@ -60,14 +62,11 @@ public class TaskDataExternalizerTest extends TestCase {
 	}
 
 	public void testReadWrite() throws Exception {
-		ZipInputStream in = new ZipInputStream(
-				CommonTestUtil.getResource(this, "testdata/taskdata-1.0-bug-219897.zip"));
 		ITaskDataWorkingCopy state;
-		try {
+		try (ZipInputStream in = new ZipInputStream(
+				CommonTestUtil.getResource(this, "testdata/taskdata-1.0-bug-219897.zip"))) {
 			in.getNextEntry();
 			state = externalizer.readState(in);
-		} finally {
-			in.close();
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		externalizer.writeState(out, state);

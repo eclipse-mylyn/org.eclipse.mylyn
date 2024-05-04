@@ -1,13 +1,14 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2008 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.ui;
@@ -65,7 +66,7 @@ public class TaskListImageDescriptor extends CompositeImageDescriptor {
 	}
 
 	private ImageData getImageData(ImageDescriptor descriptor) {
-		ImageData data = descriptor.getImageData();
+		ImageData data = descriptor.getImageData(100);
 		// see bug 51965: getImageData can return null
 		if (data == null) {
 			data = DEFAULT_IMAGE_DATA;

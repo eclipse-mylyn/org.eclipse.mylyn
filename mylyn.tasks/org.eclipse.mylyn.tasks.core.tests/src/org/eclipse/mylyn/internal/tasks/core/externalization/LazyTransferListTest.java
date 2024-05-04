@@ -10,6 +10,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - porting to SimRel 2022-12
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.core.externalization;
@@ -29,6 +30,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("nls")
 public class LazyTransferListTest {
 
 	private ITransferList taskList;

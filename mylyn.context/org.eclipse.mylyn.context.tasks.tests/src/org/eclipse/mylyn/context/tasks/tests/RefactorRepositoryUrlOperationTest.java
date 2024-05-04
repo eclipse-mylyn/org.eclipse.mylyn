@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2013 Tasktop Technologies.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -38,7 +38,7 @@ import junit.framework.TestCase;
  * @author Robert Elves
  * @author Steffen Pingel
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls", "restriction" })
 public class RefactorRepositoryUrlOperationTest extends TestCase {
 
 	private TaskList taskList;
@@ -91,16 +91,16 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		assertEquals(0, metaContext.getInteractionHistory().size());
 
 		ContextCorePlugin.getContextManager()
-				.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-						InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(), "origin",
-						null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate.getTime(),
-						endDate.getTime()));
+		.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(), "origin",
+				null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate.getTime(),
+				endDate.getTime()));
 
 		ContextCorePlugin.getContextManager()
-				.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-						InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task2.getHandleIdentifier(), "origin",
-						null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate2.getTime(),
-						endDate2.getTime()));
+		.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task2.getHandleIdentifier(), "origin",
+				null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate2.getTime(),
+				endDate2.getTime()));
 
 		assertEquals(2, metaContext.getInteractionHistory().size());
 		assertEquals(5 * 60 * 1000, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));

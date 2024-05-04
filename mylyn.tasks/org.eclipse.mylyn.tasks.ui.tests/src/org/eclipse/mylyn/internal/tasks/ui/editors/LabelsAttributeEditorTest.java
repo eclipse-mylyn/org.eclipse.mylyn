@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -30,6 +31,7 @@ import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings({ "nls", "restriction" })
 public class LabelsAttributeEditorTest {
 
 	private TaskData taskData;

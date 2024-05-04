@@ -10,6 +10,7 @@
  * Contributors:
  *     Frank Becker - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -42,6 +43,7 @@ import junit.framework.TestCase;
  * @author Frank Becker
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class PersonProposalProviderTest extends TestCase {
 
 	final private static Comparator<IContentProposal> CONTENT_COMPARATOR = Comparator.comparing(IContentProposal::getContent);

@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -29,6 +30,7 @@ import junit.framework.TestCase;
  * @author Wesley Coelho
  * @author Mik Kersten (rewrite)
  */
+@SuppressWarnings("nls")
 public class BackgroundSaveTest extends TestCase {
 
 	public void testBackgroundSave() throws InterruptedException, IOException {

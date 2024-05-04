@@ -10,6 +10,7 @@
  * Contributors:
  *     Ken Sueda - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -45,6 +46,7 @@ import junit.framework.TestCase;
  * @author Ken Sueda
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class TaskListUiTest extends TestCase {
 
 	private TaskCategory cat1 = null;

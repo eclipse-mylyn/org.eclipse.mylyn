@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -36,11 +37,12 @@ import junit.framework.TestCase;
 
 /**
  * Test case for the Task Export Wizard
- * 
+ *
  * @author Wesley Coelho
  * @author Mik Kersten
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class TaskDataExportTest extends TestCase {
 
 	private File destinationDir;
@@ -73,12 +75,13 @@ public class TaskDataExportTest extends TestCase {
 
 	private List<String> getEntries(File file) throws IOException {
 		ArrayList<String> entries = new ArrayList<>();
-		ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(file));
-		try (zipInputStream) {
-			ZipEntry entry = zipInputStream.getNextEntry();
-			while (entry != null) {
-				entries.add(entry.getName());
-				entry = zipInputStream.getNextEntry();
+		try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(file))) {
+			try (zipInputStream) {
+				ZipEntry entry = zipInputStream.getNextEntry();
+				while (entry != null) {
+					entries.add(entry.getName());
+					entry = zipInputStream.getNextEntry();
+				}
 			}
 		}
 		Collections.sort(entries);

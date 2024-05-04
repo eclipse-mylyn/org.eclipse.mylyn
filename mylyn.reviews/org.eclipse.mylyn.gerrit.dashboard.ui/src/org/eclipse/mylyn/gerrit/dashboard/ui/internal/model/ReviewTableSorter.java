@@ -1,25 +1,26 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2014 Ericsson
- * 
+ *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
- * 
+ *
  * Description:
  * 	This class implements the implementation of the Dashboard-Gerrit UI view column sorter.
- * 
+ *
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the view sorter
  *   Francois Chouinard - Refined the sorting of 1) dates and 2) flags
  *   Marc-Andre Laperle - Add Status to dashboard
+ *   See git history
  ******************************************************************************/
 package org.eclipse.mylyn.gerrit.dashboard.ui.internal.model;
 
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.gerrit.dashboard.core.GerritTask;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -32,7 +33,7 @@ import org.eclipse.swt.widgets.TreeItem;
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
  */
-public class ReviewTableSorter extends ViewerSorter {
+public class ReviewTableSorter extends ViewerComparator {
 
 	// ------------------------------------------------------------------------
 	// Attributes
@@ -71,9 +72,7 @@ public class ReviewTableSorter extends ViewerSorter {
 		int result = 0;
 
 		// We are dealing with GerritTask:s but just in case...
-		if (viewer instanceof TableViewer && item1 instanceof GerritTask task1 && item2 instanceof GerritTask) {
-
-			GerritTask task2 = (GerritTask) item2;
+		if (viewer instanceof TableViewer && item1 instanceof GerritTask task1 && item2 instanceof GerritTask task2) {
 
 			String val1 = null;
 			String val2 = null;
@@ -205,7 +204,7 @@ public class ReviewTableSorter extends ViewerSorter {
 
 	/**
 	 * Bind a sorter to each table column
-	 * 
+	 *
 	 * @param aTableViewer
 	 */
 	public static void bind(final TableViewer aTableViewer) {

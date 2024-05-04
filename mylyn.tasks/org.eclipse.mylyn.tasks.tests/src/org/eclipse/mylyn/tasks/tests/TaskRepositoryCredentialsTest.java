@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -33,6 +34,7 @@ import junit.framework.TestCase;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class TaskRepositoryCredentialsTest extends TestCase {
 
 	private static final String AUTH_REPOSITORY = "org.eclipse.mylyn.tasklist.repositories";
@@ -76,14 +78,13 @@ public class TaskRepositoryCredentialsTest extends TestCase {
 		taskRepository.flushAuthenticationCredentials();
 	}
 
-	@SuppressWarnings("deprecation")
 	public void testPlatformAuthHandlerAvailable() throws Exception {
 		if (!TestUtils.isCompatibilityAuthInstalled()) {
 			System.err.println("Skipping TaskRepositoryCredentialsTest.testPlatformAuthHandlerAvailable()");
 			return;
 		}
 		URL url = new URL("http://mylyn");
-		AuthorizationHandler.addAuthorizationInfo(url, "", "", Collections.EMPTY_MAP);
+		AuthorizationHandler.addAuthorizationInfo(url, "", "", Collections.emptyMap());
 		assertNotNull("Tests require org.eclipse.core.runtime.compatibility.auth",
 				AuthorizationHandler.getAuthorizationInfo(url, "", ""));
 	}

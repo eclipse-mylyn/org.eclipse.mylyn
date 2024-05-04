@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.connector;
@@ -33,6 +34,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class MockRepositoryConnectorUi extends AbstractRepositoryConnectorUi {
 
 	private static Pattern HYPERLINK_PATTERN = Pattern.compile("(\\d+)");

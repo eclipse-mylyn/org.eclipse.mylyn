@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.migrator;
@@ -38,7 +39,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -147,10 +148,10 @@ public class CompleteConnectorMigrationWizard extends Wizard {
 				Text text = new Text(c, SWT.READ_ONLY | SWT.MULTI | SWT.WRAP);
 				text.setText(Messages.CompleteConnectorMigrationWizard_second_page_text);
 				GridDataFactory.fillDefaults()
-						.align(SWT.FILL, SWT.FILL)
-						.grab(true, true)
-						.hint(600, SWT.DEFAULT)
-						.applyTo(text);
+				.align(SWT.FILL, SWT.FILL)
+				.grab(true, true)
+				.hint(600, SWT.DEFAULT)
+				.applyTo(text);
 				setControl(c);
 			}
 
@@ -167,7 +168,7 @@ public class CompleteConnectorMigrationWizard extends Wizard {
 		GridDataFactory.fillDefaults().grab(false, true).hint(500, SWT.DEFAULT).applyTo(viewer.getControl());
 		viewer.setContentProvider(new MapContentProvider(queries));
 		viewer.setInput(queries);
-		viewer.setSorter(new ViewerSorter());
+		viewer.setComparator(new ViewerComparator());
 		viewer.setLabelProvider(new TaskElementLabelProvider() {
 			private final TaskRepositoryLabelProvider repositoryLabelProvider = new TaskRepositoryLabelProvider();
 

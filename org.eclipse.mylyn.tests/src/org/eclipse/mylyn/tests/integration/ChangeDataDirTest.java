@@ -1,20 +1,19 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tests.integration;
 
 import java.io.File;
-
-import junit.framework.TestCase;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
@@ -27,12 +26,15 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 
+import junit.framework.TestCase;
+
 /**
  * Tests changes to the main data directory location.
- * 
+ *
  * @author Wesley Coelho
  * @author Mik Kersten (rewrites)
  */
+@SuppressWarnings("nls")
 public class ChangeDataDirTest extends TestCase {
 
 	private String newDataDir;

@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.ant.internal.tests;
@@ -68,9 +69,8 @@ public abstract class AbstractTestAntTask {
 	}
 
 	protected String getContent(File file) throws IOException {
-		Reader reader = new InputStreamReader(new BufferedInputStream(new FileInputStream(file)),
-				StandardCharsets.UTF_8);
-		try (reader) {
+		try (Reader reader = new InputStreamReader(new BufferedInputStream(new FileInputStream(file)),
+				StandardCharsets.UTF_8)) {
 			StringWriter writer = new StringWriter();
 			int i;
 			while ((i = reader.read()) != -1) {

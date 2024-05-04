@@ -1,15 +1,16 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Frank Becker - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -156,14 +157,13 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 		return targets;
 	}
 
-	@SuppressWarnings("rawtypes")
 	private IAdaptable getDefaultHyperlinkTarget() {
 		IAdaptable context = new IAdaptable() {
-			public Object getAdapter(Class adapter) {
+			public <T> T getAdapter(Class<T> adapter) {
 				if (adapter == TaskRepository.class) {
-					return getTaskRepository();
+					return adapter.cast(getTaskRepository());
 				} else if (adapter == ITask.class) {
-					return getTask();
+					return adapter.cast(getTask());
 				}
 				return null;
 			}

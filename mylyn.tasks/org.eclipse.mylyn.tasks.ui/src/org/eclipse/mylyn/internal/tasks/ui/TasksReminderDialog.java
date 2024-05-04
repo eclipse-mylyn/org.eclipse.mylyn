@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2009 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Ken Sueda - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui;
@@ -23,7 +24,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -117,7 +118,7 @@ public class TasksReminderDialog extends Dialog {
 		column.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				tableViewer.setSorter(new ReminderTaskSorter(ReminderTaskSorter.DESCRIPTION));
+				tableViewer.setComparator(new ReminderTaskSorter(ReminderTaskSorter.DESCRIPTION));
 
 			}
 		});
@@ -128,7 +129,7 @@ public class TasksReminderDialog extends Dialog {
 		column.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				tableViewer.setSorter(new ReminderTaskSorter(ReminderTaskSorter.PRIORITY));
+				tableViewer.setComparator(new ReminderTaskSorter(ReminderTaskSorter.PRIORITY));
 			}
 		});
 
@@ -138,7 +139,7 @@ public class TasksReminderDialog extends Dialog {
 		column.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				tableViewer.setSorter(new ReminderTaskSorter(ReminderTaskSorter.DATE));
+				tableViewer.setComparator(new ReminderTaskSorter(ReminderTaskSorter.DATE));
 			}
 		});
 	}
@@ -225,7 +226,7 @@ public class TasksReminderDialog extends Dialog {
 
 	}
 
-	private static class ReminderTaskSorter extends ViewerSorter {
+	private static class ReminderTaskSorter extends ViewerComparator {
 
 		public final static int DESCRIPTION = 1;
 

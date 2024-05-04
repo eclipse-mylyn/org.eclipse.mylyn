@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2009 Eugene Kuleshov and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Eugene Kuleshov - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui;
@@ -23,7 +24,7 @@ import org.eclipse.ui.IActionFilter;
 
 /**
  * Adapter factory for adapting TaskRepository to org.eclipse.ui.IActionFilter
- * 
+ *
  * @author Eugene Kuleshov
  */
 public class TaskRepositoryAdapterFactory implements IAdapterFactory {
@@ -32,16 +33,14 @@ public class TaskRepositoryAdapterFactory implements IAdapterFactory {
 	private static final Class[] ADAPTER_TYPES = { IActionFilter.class };
 
 	@Override
-	@SuppressWarnings("rawtypes")
-	public Class[] getAdapterList() {
+	public Class<?>[] getAdapterList() {
 		return ADAPTER_TYPES;
 	}
 
 	@Override
-	@SuppressWarnings("rawtypes")
-	public Object getAdapter(final Object adaptable, Class adapterType) {
+	public <T> T getAdapter(final Object adaptable, Class<T> adapterType) {
 		if (adaptable instanceof TaskRepository) {
-			return (IActionFilter) (target, name, value) -> {
+			return adapterType.cast((IActionFilter) (target, name, value) -> {
 				TaskRepository repository = (TaskRepository) target;
 				if ("offline".equals(name)) { //$NON-NLS-1$
 					return Boolean.parseBoolean(value) == repository.isOffline();
@@ -59,7 +58,7 @@ public class TaskRepositoryAdapterFactory implements IAdapterFactory {
 					return !repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND);
 				}
 				return false;
-			};
+			});
 		}
 		return null;
 	}

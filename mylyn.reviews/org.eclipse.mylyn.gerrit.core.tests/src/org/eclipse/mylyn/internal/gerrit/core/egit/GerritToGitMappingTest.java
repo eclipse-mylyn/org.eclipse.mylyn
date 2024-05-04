@@ -9,6 +9,7 @@
  *
  *     Sascha Scholz (SAP) - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.egit;
@@ -44,6 +45,7 @@ import com.google.gerrit.common.data.GerritConfig;
  * @author Sascha Scholz
  * @author Steffen Pingel
  */
+@SuppressWarnings("restriction")
 public class GerritToGitMappingTest {
 
 	private static final String GERRIT_GIT_HOST = "egit.eclipse.org"; //$NON-NLS-1$

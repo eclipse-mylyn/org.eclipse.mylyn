@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.connector;
@@ -18,6 +19,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class MockRepositoryQuery extends RepositoryQuery {
 
 	public String MOCK_QUERY_URL = MockRepositoryConnector.REPOSITORY_URL + ".query";

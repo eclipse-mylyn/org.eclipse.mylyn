@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.util;
@@ -27,6 +28,7 @@ import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 
 import junit.framework.TestCase;
 
+@SuppressWarnings("nls")
 public class MockRepositoryConnectorTestCase extends TestCase {
 
 	protected AbstractRepositoryConnector connectorWithUrl;

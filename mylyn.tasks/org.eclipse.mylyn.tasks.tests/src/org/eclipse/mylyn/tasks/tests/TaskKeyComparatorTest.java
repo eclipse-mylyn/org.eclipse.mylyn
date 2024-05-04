@@ -10,6 +10,7 @@
  * Contributors:
  *     Eugene Kulehsov - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -24,6 +25,7 @@ import junit.framework.TestCase;
  * @author Eugene Kuleshov - bug 129511
  * @author Mik Kersten
  */
+@SuppressWarnings("nls")
 public class TaskKeyComparatorTest extends TestCase {
 
 	public void testPatterns() {

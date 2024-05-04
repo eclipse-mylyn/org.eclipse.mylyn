@@ -1,13 +1,14 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2015, Ericsson AB and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Sebastien Dubois (Ericsson) - Adapted to use with Mylyn Reviews
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.ui.egit;
@@ -35,7 +36,7 @@ import org.eclipse.team.core.history.IFileRevision;
 
 /**
  * A collection of common utility functions used to resolve the Git File Revisions
- * 
+ *
  * @author Sebastien Dubois
  */
 public class GitFileRevisionUtils {
@@ -101,8 +102,7 @@ public class GitFileRevisionUtils {
 
 		return new IStorage() {
 			@Override
-			@SuppressWarnings("rawtypes")
-			public Object getAdapter(Class adapter) {
+			public <T> T getAdapter(Class<T> adapter) {
 				return null;
 			}
 

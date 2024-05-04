@@ -10,6 +10,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - porting to SimRel 2022-12
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.migrator;
@@ -75,7 +76,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 
+@SuppressWarnings({ "nls", "restriction" })
 public class ConnectorMigratorTest {
+
 	public class SpyTasksState extends DefaultTasksState {
 
 		TaskActivityManager taskActivityManager = spy(super.getTaskActivityManager());
@@ -388,7 +391,7 @@ public class ConnectorMigratorTest {
 		TaskData taskData2 = new TaskData(mock(TaskAttributeMapper.class), "mock.new", repository.getRepositoryUrl(),
 				"2.migrated");
 		doReturn(taskData2).when(migrator)
-				.getTaskData(eq("key2"), eq(newConnector), any(TaskRepository.class), any(IProgressMonitor.class));
+		.getTaskData(eq("key2"), eq(newConnector), any(TaskRepository.class), any(IProgressMonitor.class));
 		ITask task1 = new TaskTask("mock", "http://mock", "1");
 		task1.setTaskKey("key1");
 		((AbstractTask) task1).setSynchronizationState(SynchronizationState.INCOMING_NEW);
@@ -428,12 +431,12 @@ public class ConnectorMigratorTest {
 		verify(migrationUi).delete(Set.of(task1, task2), repository, newRepository, monitor);
 		assertEquals(SynchronizationState.INCOMING_NEW,
 				tasksState.getTaskList()
-						.getTask(repository.getRepositoryUrl(), "1.migrated")
-						.getSynchronizationState());
+				.getTask(repository.getRepositoryUrl(), "1.migrated")
+				.getSynchronizationState());
 		assertEquals(SynchronizationState.INCOMING,
 				tasksState.getTaskList()
-						.getTask(repository.getRepositoryUrl(), "2.migrated")
-						.getSynchronizationState());
+				.getTask(repository.getRepositoryUrl(), "2.migrated")
+				.getSynchronizationState());
 
 		assertEquals(Set.of(taskOtherRepo, task1Migrated, task2Migrated),
 				Set.copyOf(tasksState.getTaskList().getAllTasks()));
@@ -449,11 +452,11 @@ public class ConnectorMigratorTest {
 		TaskData taskData1 = new TaskData(mock(TaskAttributeMapper.class), "mock.new", repository.getRepositoryUrl(),
 				"1");
 		doReturn(taskData1).when(migrator)
-				.getTaskData(eq("key1"), eq(newConnector), any(TaskRepository.class), any(IProgressMonitor.class));
+		.getTaskData(eq("key1"), eq(newConnector), any(TaskRepository.class), any(IProgressMonitor.class));
 		TaskData taskData2 = new TaskData(mock(TaskAttributeMapper.class), "mock.new", repository.getRepositoryUrl(),
 				"2");
 		doReturn(taskData2).when(migrator)
-				.getTaskData(eq("key2"), eq(newConnector), any(TaskRepository.class), any(IProgressMonitor.class));
+		.getTaskData(eq("key2"), eq(newConnector), any(TaskRepository.class), any(IProgressMonitor.class));
 		ITask task1 = new TaskTask("mock", "http://mock", "1");
 		task1.setTaskKey("key1");
 		((AbstractTask) task1).setSynchronizationState(SynchronizationState.INCOMING_NEW);

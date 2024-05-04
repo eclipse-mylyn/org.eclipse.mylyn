@@ -10,6 +10,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - migrate to Equinox p2
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui;
@@ -138,6 +139,7 @@ import org.osgi.util.tracker.ServiceTracker;
  * @author Mik Kersten
  * @since 3.0
  */
+@SuppressWarnings("nls")
 public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static final int DEFAULT_LINK_PROVIDER_TIMEOUT = 5 * 1000;
