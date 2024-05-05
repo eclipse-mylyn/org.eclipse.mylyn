@@ -178,7 +178,10 @@ public class CoreUtil {
 		return result;
 	}
 
-	private static Version parseRuntimeVersion(String versionString) {
+	/**
+	 * @since 4.3
+	 */
+	public static Version parseRuntimeVersion(String versionString) {
 		if (versionString != null) {
 			int firstSeparator = versionString.indexOf('.');
 			if (firstSeparator != -1) {
