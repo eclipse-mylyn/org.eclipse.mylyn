@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.core;
@@ -173,10 +174,7 @@ public class CoreUtil {
 	 * @return {@link Version#emptyVersion} if the version can not be determined
 	 */
 	public static Version getRuntimeVersion() {
-		Version result = parseRuntimeVersion(System.getProperty("java.runtime.version")); //$NON-NLS-1$
-		if (result == Version.emptyVersion) {
-			result = parseRuntimeVersion(System.getProperty("java.version")); //$NON-NLS-1$
-		}
+		Version result = parseRuntimeVersion(Runtime.version().toString());
 		return result;
 	}
 
@@ -189,7 +187,7 @@ public class CoreUtil {
 					if (secondSeparator != -1) {
 						int index = findLastNumberIndex(versionString, secondSeparator);
 						String qualifier = versionString.substring(index + 1);
-						if (qualifier.startsWith("_") && qualifier.length() > 1) { //$NON-NLS-1$
+						if ((qualifier.startsWith("_") || qualifier.startsWith("+")) && qualifier.length() > 1) { //$NON-NLS-1$
 							versionString = versionString.substring(0, index + 1) + "." + qualifier.substring(1); //$NON-NLS-1$
 						} else {
 							versionString = versionString.substring(0, index + 1);
@@ -200,6 +198,12 @@ public class CoreUtil {
 							versionString.substring(0, findLastNumberIndex(versionString, firstSeparator) + 1));
 				} catch (IllegalArgumentException e) {
 					// ignore
+				}
+			} else { // Java 22 seems to have changed the format for some reason to "nn+nn"
+				int plusSeparator = versionString.indexOf('+');
+				if (plusSeparator != -1) {
+					return new Version(
+							versionString.substring(0, plusSeparator));
 				}
 			}
 		}
