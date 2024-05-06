@@ -28,7 +28,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.widgets.Display;
-import org.junit.Ignore;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
@@ -91,7 +90,6 @@ public class BrandManagerTest {
 	}
 
 	@Test
-	@Ignore("No CI Server")
 	public void testGetOverlayIcon() {
 		brandManager.addOverlayIcon("mock1", "org.mylyn", imageDescriptor(1));
 		brandManager.addOverlayIcon("mock1", "org.eclipse", imageDescriptor(2));
@@ -110,16 +108,16 @@ public class BrandManagerTest {
 		assertEquals(null, brandManager.getOverlayIcon(repository("mock2", null)));
 
 		brandManager.addDefaultOverlayIcon("mock2", imageDescriptor(5));
-		assertEquals(5, brandManager.getOverlayIcon("mock2", "org.eclipse").getImageData().height);
-		assertEquals(5, brandManager.getOverlayIcon(repository("mock2", "org.eclipse")).getImageData().height);
-		assertEquals(5, brandManager.getOverlayIcon("mock2", null).getImageData().height);
-		assertEquals(5, brandManager.getOverlayIcon(repository("mock2", null)).getImageData().height);
+		assertEquals(5, brandManager.getOverlayIcon("mock2", "org.eclipse").getImageData(100).height);
+		assertEquals(5, brandManager.getOverlayIcon(repository("mock2", "org.eclipse")).getImageData(100).height);
+		assertEquals(5, brandManager.getOverlayIcon("mock2", null).getImageData(100).height);
+		assertEquals(5, brandManager.getOverlayIcon(repository("mock2", null)).getImageData(100).height);
 	}
 
 	private void assertOverlayIconHeight(int expectedHeight, String connectorKind, String brand) {
-		assertEquals(expectedHeight, brandManager.getOverlayIcon(connectorKind, brand).getImageData().height);
+		assertEquals(expectedHeight, brandManager.getOverlayIcon(connectorKind, brand).getImageData(100).height);
 		assertEquals(expectedHeight,
-				brandManager.getOverlayIcon(repository(connectorKind, brand)).getImageData().height);
+				brandManager.getOverlayIcon(repository(connectorKind, brand)).getImageData(100).height);
 	}
 
 	private void assertBrands() {
