@@ -66,11 +66,13 @@ Export-Package: org.eclipse.mylyn.internal.provisional.tasks.ui.wizards;x-intern
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Localization: plugin
 Import-Package: com.google.common.base;version="31.1.0",
- com.google.common.collect;version="31.1.0",
  com.google.common.net;version="31.1.0",
  com.ibm.icu.text,
+ net.bytebuddy.agent;version="[1.14.0,2.0.0)",
  org.apache.commons.collections4;version="4.4.0",
  org.apache.commons.collections4.bidimap;version="4.4.0",
+ org.apache.commons.collections4.keyvalue;version="[4.4.0,5.0.0)",
+ org.apache.commons.collections4.map;version="[4.4.0,5.0.0)",
  org.apache.commons.collections4.multimap;version="4.4.0",
  org.apache.commons.httpclient;version="3.1.0",
  org.apache.commons.lang3;version="3.13.0",

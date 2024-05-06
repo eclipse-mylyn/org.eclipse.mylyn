@@ -57,9 +57,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.osgi.util.NLS;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
-
 /**
  * Allows users to migrate their data from an old connector to a new one for the same repository. Performs the following steps:
  *
@@ -98,6 +95,11 @@ public class ConnectorMigrator {
 		public SynchronizationState getSyncState() {
 			return syncState;
 		}
+
+		@Override
+		public String toString() {
+			return "OldTaskState [oldTask=" + oldTask + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+		}
 	}
 
 	private final Map<String, String> connectorKinds;
@@ -112,7 +114,7 @@ public class ConnectorMigrator {
 
 	private final Map<TaskRepository, TaskRepository> repositories = new HashMap<>();
 
-	private final Table<TaskRepository, String, OldTaskState> oldTasksStates = HashBasedTable.create();
+	private final TaskStateBag oldTasksStates2 = new TaskStateBag();
 
 	private Map<ITask, AbstractTaskCategory> categories;
 
@@ -121,6 +123,27 @@ public class ConnectorMigrator {
 	private boolean anyQueriesMigrated;
 
 	private boolean allQueriesMigrated = true;
+
+	private class TaskStateBag {
+		private Map<TaskRepository, Map<String, OldTaskState>> bag = new HashMap<>();
+
+		public void put(TaskRepository taskRepository, String taskKey, OldTaskState oldTaskState) {
+			bag.computeIfAbsent(taskRepository, key -> new HashMap<>()).put(taskKey, oldTaskState);
+		}
+
+		public OldTaskState get(TaskRepository repository, String taskKey) {
+			return bag.get(repository).get(taskKey);
+		}
+
+		public void clear(TaskRepository repository) {
+			bag.remove(repository);
+		}
+
+		@Override
+		public String toString() {
+			return "TaskStateBag [bag=" + bag + "]";
+		}
+	}
 
 	public ConnectorMigrator(Map<String, String> connectorKinds, String explanatoryText, TasksState tasksState,
 			ConnectorMigrationUi migrationUi) {
@@ -179,7 +202,7 @@ public class ConnectorMigrator {
 					.filter(isTaskForConnector(repository.getConnectorKind()))
 					.collect(Collectors.toUnmodifiableSet());
 			for (ITask task : tasksToMigrate) {
-				oldTasksStates.put(newRepository, task.getTaskKey(), new OldTaskState(task));
+				oldTasksStates2.put(newRepository, task.getTaskKey(), new OldTaskState(task));
 			}
 			migrateQueries(repository, newRepository, monitor);
 			disconnect(repository);
@@ -351,7 +374,7 @@ public class ConnectorMigrator {
 				}
 			}
 			if (newTask instanceof AbstractTask) {
-				OldTaskState oldTaskState = oldTasksStates.get(newRepository, oldTask.getTaskKey());
+				OldTaskState oldTaskState = oldTasksStates2.get(newRepository, oldTask.getTaskKey());
 				if (oldTaskState == null) {
 					oldTaskState = new OldTaskState(oldTask);
 				}
@@ -361,7 +384,8 @@ public class ConnectorMigrator {
 				migratePrivateData((AbstractTask) oldTask, (AbstractTask) newTask, monitor);
 			}
 		}
-		oldTasksStates.row(newRepository).clear();
+		oldTasksStates2.clear(newRepository);
+
 		migrateTaskContext(migratedTasks);
 		getMigrationUi().delete(tasksToMigrate, oldRepository, newRepository, monitor);
 		for (ITask task : tasksToSynchronize) {

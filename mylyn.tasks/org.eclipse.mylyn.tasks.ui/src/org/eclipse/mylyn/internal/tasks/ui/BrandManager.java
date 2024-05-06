@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.map.LinkedMap;
+import org.apache.commons.collections4.map.MultiKeyMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -29,18 +31,15 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.graphics.Image;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
-
 public class BrandManager implements IBrandManager {
 
 	private final MultiValuedMap<String, String> brands = new HashSetValuedHashMap<>();
 
-	private final Table<String, String, Image> brandingIcons = HashBasedTable.create();
+	private final MultiKeyMap<String, Image> brandingIcons = MultiKeyMap.multiKeyMap(new LinkedMap<>());
 
-	private final Table<String, String, ImageDescriptor> overlayIcons = HashBasedTable.create();
+	private final MultiKeyMap<String, ImageDescriptor> overlayIcons = MultiKeyMap.multiKeyMap(new LinkedMap<>());
 
-	private final Table<String, String, String> connectorLabels = HashBasedTable.create();
+	private final MultiKeyMap<String, String> connectorLabels = MultiKeyMap.multiKeyMap(new LinkedMap<>());
 
 	private final Map<String, Image> defaultBrandingIcons = new HashMap<>();
 
