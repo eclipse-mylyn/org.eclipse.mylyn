@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2016 David Green and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -14,11 +14,11 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.apache.tika.mime.MediaType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -29,9 +29,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IPluginContribution;
-
-import com.google.common.collect.Multimap;
-import com.google.common.net.MediaType;
 
 /**
  * @author David Green
@@ -59,7 +56,7 @@ public class TaskEditorExtensions {
 
 	/**
 	 * Contributes an extension to the {@link TaskEditor}.
-	 * 
+	 *
 	 * @param pluginId
 	 *            the id of the contributing plug-in, may be <code>null</code>
 	 * @param id
@@ -96,7 +93,7 @@ public class TaskEditorExtensions {
 
 	/**
 	 * get a task editor extension for a specific repository
-	 * 
+	 *
 	 * @param taskRepository
 	 * @return the extension, or null if there is none
 	 * @see #getDefaultTaskEditorExtension(TaskRepository)
@@ -113,7 +110,7 @@ public class TaskEditorExtensions {
 
 	/**
 	 * get a task editor extension for a specific task attribute
-	 * 
+	 *
 	 * @param taskRepository
 	 * @param taskAttribute
 	 * @return the extension, or null if there is none
@@ -127,12 +124,10 @@ public class TaskEditorExtensions {
 		if (input != null) {
 			try {
 				MediaType media = MediaType.parse(input);
-				Multimap<String, String> parameters = media.parameters();
+				Map<String, String> parameters = media.getParameters();
 				if (parameters.containsKey(MARKUP_KEY)) {
-					Iterator<String> iter = parameters.get(MARKUP_KEY).iterator();
-					String markup = iter.next();
-					Iterator<String> baseMarkupIterator = parameters.get(BASE_MARKUP_KEY).iterator();
-					String baseMarkup = baseMarkupIterator.hasNext() ? baseMarkupIterator.next() : ""; //$NON-NLS-1$
+					String markup = parameters.get(MARKUP_KEY);
+					String baseMarkup = parameters.containsKey(BASE_MARKUP_KEY) ? parameters.get(BASE_MARKUP_KEY) : ""; //$NON-NLS-1$
 
 					SortedSet<RegisteredTaskEditorExtension> extensions = getTaskEditorExtensions();
 					for (RegisteredTaskEditorExtension extension : extensions) {
@@ -164,7 +159,7 @@ public class TaskEditorExtensions {
 
 	/**
 	 * Get the default task editor extension id for the given task repository
-	 * 
+	 *
 	 * @param taskRepository
 	 * @return the default task editor extension id or null if there is no default
 	 */
@@ -174,7 +169,7 @@ public class TaskEditorExtensions {
 
 	/**
 	 * Get the default task editor extension id for the given kind of connector
-	 * 
+	 *
 	 * @param connectorKind
 	 *            the kind of connector
 	 * @return the default task editor extension id or null if there is no default
@@ -186,7 +181,7 @@ public class TaskEditorExtensions {
 
 	/**
 	 * get a default task editor extension for a specific repository
-	 * 
+	 *
 	 * @param taskRepository
 	 * @return the extension, or null if there is none
 	 * @see #getTaskEditorExtension(TaskRepository)
@@ -209,7 +204,7 @@ public class TaskEditorExtensions {
 	}
 
 	public static class RegisteredTaskEditorExtension
-			implements Comparable<RegisteredTaskEditorExtension>, IPluginContribution {
+	implements Comparable<RegisteredTaskEditorExtension>, IPluginContribution {
 
 		private final String id;
 
