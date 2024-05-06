@@ -15,6 +15,12 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylyn.commons.net;bundle-version="4.2.0",
  com.google.gson,
  org.eclipse.mylyn.commons.sdk.util;bundle-version="4.2.0",
- org.eclipse.mylyn.tests.util;bundle-version="4.2.0"
+ org.eclipse.mylyn.tests.util;bundle-version="4.2.0",
+ org.eclipse.mylyn.commons.repositories.http.core,
+ org.mockito.mockito-core,
+ net.bytebuddy.byte-buddy,
+ net.bytebuddy.byte-buddy-agent,
+ org.apache.httpcomponents.httpclient,
+ org.apache.httpcomponents.httpcore
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.eclipse.mylyn.gitlab.core.test

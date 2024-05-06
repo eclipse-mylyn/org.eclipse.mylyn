@@ -91,6 +91,10 @@ import com.google.gson.stream.JsonWriter;
 
 public class GitlabRestClient {
 
+	private static final String ID_KEY = "id"; //$NON-NLS-1$
+
+	private static final String PROJECT_ISSUES_ENABLED_KEY = "issues_enabled"; //$NON-NLS-1$
+
 	@SuppressWarnings("restriction")
 	private final CommonHttpClient client;
 
@@ -103,9 +107,10 @@ public class GitlabRestClient {
 	public static String AUTHORIZATION_HEADER = "authorization_header"; //$NON-NLS-1$
 
 	@SuppressWarnings("restriction")
-	public GitlabRestClient(RepositoryLocation location, GitlabRepositoryConnector connector,
+	public GitlabRestClient(RepositoryLocation location, CommonHttpClient client,
+			GitlabRepositoryConnector connector,
 			TaskRepository taskRepository) {
-		client = new CommonHttpClient(location);
+		this.client = client;
 		this.connector = connector;
 		this.taskRepository = taskRepository;
 	}
@@ -406,7 +411,7 @@ public class GitlabRestClient {
 			if (GitlabTaskSchema.getDefault().TASK_MILESTONE.getKey().equals(attributeId) && attribute != null
 					&& entry.getValue() != null && entry.getValue().isJsonObject()) {
 				JsonObject obj = (JsonObject) entry.getValue();
-				attribute.setValue(obj.get("id").getAsString()); //$NON-NLS-1$
+				attribute.setValue(obj.get(ID_KEY).getAsString());
 			}
 		}
 		return response;
@@ -532,43 +537,40 @@ public class GitlabRestClient {
 			}
 			if (discussions != null) {
 				int commentIdx = 0;
-				TaskAttribute attrib = null;
 				for (JsonElement jsonElement : discussions) {
 					JsonObject discussion = (JsonObject) jsonElement;
 
 					JsonArray notesArray = discussion.get("notes").getAsJsonArray(); //$NON-NLS-1$
+					String projectId = discussion.get(ID_KEY).getAsString();
+					TaskAttribute attrib;
 					if (discussion.get("individual_note").getAsBoolean()) { //$NON-NLS-1$
 						JsonObject note = notesArray.get(0).getAsJsonObject();
+						String noteId = note.get(ID_KEY).getAsString();
 						if (!note.get("system").getAsBoolean()) { //$NON-NLS-1$
 							attrib = createNoteTaskAttribute(repository, result.getRoot(), commentIdx++, note);
-							attrib.createAttribute("discussions").setValue(discussion.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
-							attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
-							attrib.createAttribute("note_id").setValue(note.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 						} else {
 							attrib = createActivityEventTaskAttribute(repository, result.getRoot(), note);
-							attrib.createAttribute("discussions").setValue(discussion.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
-							attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
-							attrib.createAttribute("note_id").setValue(note.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 						}
+						attrib.createAttribute("discussions").setValue(projectId); //$NON-NLS-1$
+						attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
+						attrib.createAttribute("note_id").setValue(noteId); //$NON-NLS-1$
 					} else {
 						TaskAttribute reply = null;
-						for (JsonElement jsonElement2 : notesArray) {
-							JsonObject note = jsonElement2.getAsJsonObject();
+						for (JsonElement noteElement : notesArray) {
+							JsonObject note = noteElement.getAsJsonObject();
+							String noteId = note.get(ID_KEY).getAsString();
 							if (!note.get("system").getAsBoolean()) { //$NON-NLS-1$
 								attrib = createNoteTaskAttribute(repository, reply == null ? result.getRoot() : reply,
 										commentIdx++, note);
 								if (reply == null) {
 									reply = attrib.createAttribute("reply"); //$NON-NLS-1$
 								}
-								attrib.createAttribute("discussions").setValue(discussion.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
-								attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
-								attrib.createAttribute("note_id").setValue(note.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 							} else {
 								attrib = createActivityEventTaskAttribute(repository, result.getRoot(), note);
-								attrib.createAttribute("discussions").setValue(discussion.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
-								attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
-								attrib.createAttribute("note_id").setValue(note.get("id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
 							}
+							attrib.createAttribute("discussions").setValue(projectId); //$NON-NLS-1$
+							attrib.createAttribute("noteable_id").setValue(note.get("noteable_id").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
+							attrib.createAttribute("note_id").setValue(noteId); //$NON-NLS-1$
 						}
 					}
 				}
@@ -1246,7 +1248,7 @@ public class GitlabRestClient {
 		}
 		GitlabConfiguration config = new GitlabConfiguration(repository.getUrl());
 		JsonObject user = getUser(monitor);
-		config.setUserID(user.get("id").getAsBigInteger()); //$NON-NLS-1$
+		config.setUserID(user.get(ID_KEY).getAsBigInteger());
 		config.setUserDetails(user);
 		if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 			GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
@@ -1255,8 +1257,8 @@ public class GitlabRestClient {
 		JsonElement projects = getProjects("/users/" + config.getUserID(), monitor); //$NON-NLS-1$
 		for (JsonElement project : (JsonArray) projects) {
 			JsonObject projectObject = (JsonObject) project;
-			JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor); //$NON-NLS-1$
-			JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor); //$NON-NLS-1$
+			JsonArray labels = getProjectLabels(projectObject.get(ID_KEY).getAsString(), monitor);
+			JsonArray milestones = getProjectMilestones(projectObject, monitor);
 			config.addProject(projectObject, labels, milestones);
 		}
 		if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
@@ -1277,8 +1279,8 @@ public class GitlabRestClient {
 										+ projectList.length + "): " + project + " "); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					JsonObject projectObject = projectDetail;
-					JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor); //$NON-NLS-1$
-					JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor); //$NON-NLS-1$
+					JsonArray labels = getProjectLabels(projectObject.get(ID_KEY).getAsString(), monitor);
+					JsonArray milestones = getProjectMilestones(projectObject, monitor);
 					if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 						GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
 								/* repository.getRepositoryUrl() + */ "get Project: (" + (i + 1) + "/" //$NON-NLS-1$ //$NON-NLS-2$
@@ -1313,13 +1315,14 @@ public class GitlabRestClient {
 				for (int j = 0; j < projectsArray.size(); j++) {
 					JsonElement project = projectsArray.get(j);
 					JsonObject projectObject = (JsonObject) project;
-					JsonArray labels = getProjectLabels(projectObject.get("id").getAsString(), monitor); //$NON-NLS-1$
-					JsonArray milestones = getProjectMilestones(projectObject.get("id").getAsString(), monitor); //$NON-NLS-1$
+					String projectId = projectObject.get(ID_KEY).getAsString();
+					JsonArray labels = getProjectLabels(projectId, monitor);
+					JsonArray milestones = getProjectMilestones(projectObject, monitor);
 					if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 						GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
 								/* repository.getRepositoryUrl() + */ "get Group (" + (i + 1) + "/" + groupList.length //$NON-NLS-1$ //$NON-NLS-2$
 										+ "): " + group + " Projects (" + (j + 1) + "/" + projectsArray.size() + "): " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-										+ projectObject.get("id").getAsString() + " Labels/Milestone: "); //$NON-NLS-1$ //$NON-NLS-2$
+										+ projectId + " Labels/Milestone: "); //$NON-NLS-1$
 					}
 					config.addProject(projectObject, labels, milestones);
 				}
@@ -1532,7 +1535,12 @@ public class GitlabRestClient {
 		return jsonArray;
 	}
 
-	public JsonArray getProjectMilestones(String projectid, IOperationMonitor monitor) throws GitlabException {
+	public JsonArray getProjectMilestones(JsonObject project, IOperationMonitor monitor) throws GitlabException {
+		String projectid = project.get(ID_KEY).getAsString();
+		boolean issuesEnabled = project.get(PROJECT_ISSUES_ENABLED_KEY).getAsBoolean();
+		if (!issuesEnabled) {
+			return new JsonArray(0);
+		}
 		getAccessTokenIfNotPresent(monitor);
 		JsonArray jsonArray = new GitlabJSonArrayOperation(client,
 				"/projects/" + projectid + "/milestones?include_parent_milestones=true") { //$NON-NLS-1$ //$NON-NLS-2$
