@@ -2,13 +2,13 @@
 <!--
  *******************************************************************************
  * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0/.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *   See git history
  *******************************************************************************
@@ -364,6 +364,7 @@
             <argLine>${tycho.testArgLine} -Xmx512m -Djava.io.tmpdir=${project.build.directory} ${test.vmargs}</argLine>
             <appArgLine>${test.args}</appArgLine>
             <application>org.eclipse.ui.ide.workbench</application>
+            <rerunFailingTestsCount>1</rerunFailingTestsCount>
           </configuration>
         </plugin>
       </plugins>

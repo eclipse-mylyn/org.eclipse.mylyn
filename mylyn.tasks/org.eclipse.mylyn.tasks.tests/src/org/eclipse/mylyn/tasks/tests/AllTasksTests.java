@@ -9,12 +9,11 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
 
-import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
-import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.tasks.tests.bugs.SupportHandlerManagerTest;
 import org.eclipse.mylyn.tasks.tests.core.AbstractRepositoryConnectorTest;
 import org.eclipse.mylyn.tasks.tests.core.FileTaskAttachmentSourceTest;
@@ -53,8 +52,10 @@ import org.eclipse.mylyn.tasks.tests.ui.editor.TaskEditorExtensionsTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.TaskEditorPartDescriptorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.TaskMigratorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.TaskUrlHyperlinkDetectorTest;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
-import junit.framework.Test;
 import junit.framework.TestSuite;
 
 /**
@@ -64,115 +65,58 @@ import junit.framework.TestSuite;
  * @author Benjamin Muskalla
  * @author Miles Parker
  */
+
+@RunWith(Suite.class)
+@SuiteClasses({ ScheduledTaskContainerTest.class, TasksUiUtilTest.class, TaskListUiTest.class,
+		TaskRepositoryCredentialsTest.class, LinkProviderTest.class, TaskActivationActionTest.class,
+		TaskListPresentationTest.class, TaskRepositorySorterTest.class, CopyDetailsActionTest.class,
+		NewTaskFromSelectionActionTest.class, TaskListTest.class, ProjectRepositoryAssociationTest.class,
+		TaskListExternalizationTest.class, TaskDataManagerTest.class, TaskRepositoryManagerTest.class,
+		TaskRepositoriesExternalizerTest.class, TaskListContentProviderTest.class, TaskListBackupManagerTest.class,
+		TaskListSorterTest.class, TaskKeyComparatorTest.class, TaskTest.class, TaskListDropAdapterTest.class,
+		TaskDataExportTest.class, TaskDataImportTest.class, ScheduledPresentationTest.class, TaskAttachmentTest.class,
+		RepositorySettingsPageTest.class, CommentQuoterTest.class, TaskDataStoreTest.class, TaskExportImportTest.class,
+		PersonProposalProviderTest.class, OptionsProposalProviderTest.class, TaskRepositoryLocationTest.class,
+		TaskRepositoryTest.class, AttachmentSizeFormatterTest.class, TaskMapperTest.class,
+		TaskListUnmatchedContainerTest.class, TaskWorkingSetTest.class, TaskActivationHistoryTest.class,
+		TaskActivityManagerTest.class, TaskRepositoryFilterTests.class, TaskDiffUtilTest.class,
+		RefactorRepositoryUrlOperationTest.class, StackTraceDuplicateDetectorTest.class,
+		RepositoryCompletionProcessorTest.class,
+
+		RepositoryTemplateManagerTest.class, TaskHyperlinkDetectorTest.class, TaskRelationHyperlinkDetectorTest.class,
+		TaskUrlHyperlinkDetectorTest.class, TaskEditorPartDescriptorTest.class, TaskAttachmentPropertyTesterTest.class,
+		CommentGroupStrategyTest.class, ITasksCoreConstantsTest.class, EditorUtilTest.class,
+		FileTaskAttachmentSourceTest.class, TaskListSynchronizationSchedulerTest.class, PlanningPartTest.class,
+		RepositoryCompletionProcessorTest.class, TaskDiffUtilTest.class,
+
+		TaskMigratorTest.class, TaskListViewTest.class, AttachmentTableLabelProviderTest.class,
+		TaskDataExternalizerTest.class, Xml11InputStreamTest.class, MultipleTaskHyperlinkDetectorTest.class,
+		RegionComparatorTest.class, PriorityLevelTest.class, TaskAttributeTest.class, TaskAttributeMapperTest.class,
+		SupportHandlerManagerTest.class, TaskAttributeMetaDataTest.class, AttributeEditorTest.class,
+		RepositoryClientManagerTest.class, AbstractRepositoryConnectorUiTest.class, SynchronizeTasksJobTest.class,
+		TaskAttributeTest.class, RepositoryConnectorContributorTest.class, TaskInitializationDataTest.class,
+		TaskDataDiffTest.class, SynchronizationMangerTest.class, TaskEditorExtensionsTest.class,
+		AbstractRepositoryConnectorTest.class, TaskJobFactoryTest.class
+})
 public class AllTasksTests {
-
-	public static Test suite() {
-		TestSuite suite = new ManagedTestSuite(AllTasksTests.class.getName());
-		addTests(suite);
-		return suite;
-	}
-
-	public static TestSuite suite(TestConfiguration configuration) {
-		TestSuite suite = new TestSuite(AllTasksTests.class.getName());
-		addTests(suite);
-		return suite;
-	}
-
 	public static void addTests(TestSuite suite) {
-		suite.addTestSuite(ScheduledTaskContainerTest.class);
-		suite.addTestSuite(TasksUiUtilTest.class);
-		suite.addTestSuite(TaskListUiTest.class);
-		suite.addTestSuite(TaskRepositoryCredentialsTest.class);
-		suite.addTestSuite(LinkProviderTest.class);
-		suite.addTestSuite(TaskActivationActionTest.class);
-		suite.addTestSuite(TaskListPresentationTest.class);
-		suite.addTestSuite(TaskRepositorySorterTest.class);
-		suite.addTestSuite(CopyDetailsActionTest.class);
-		suite.addTestSuite(NewTaskFromSelectionActionTest.class);
-		suite.addTestSuite(TaskListTest.class);
-		suite.addTestSuite(ProjectRepositoryAssociationTest.class);
+
 		// FIXME re-enable test
-		//suite.addTestSuite(TaskPlanningEditorTest.class);
-		suite.addTestSuite(TaskListExternalizationTest.class);
-		suite.addTestSuite(TaskDataManagerTest.class);
-		suite.addTestSuite(TaskRepositoryManagerTest.class);
-		suite.addTestSuite(TaskRepositoriesExternalizerTest.class);
-		suite.addTestSuite(TaskListContentProviderTest.class);
-		suite.addTestSuite(TaskListBackupManagerTest.class);
-		suite.addTestSuite(TaskListSorterTest.class);
-		suite.addTestSuite(TaskKeyComparatorTest.class);
-		suite.addTestSuite(TaskTest.class);
-		suite.addTestSuite(TaskListDropAdapterTest.class);
-		suite.addTestSuite(TaskDataExportTest.class);
-		suite.addTestSuite(TaskDataImportTest.class);
-		suite.addTestSuite(ScheduledPresentationTest.class);
-		suite.addTestSuite(TaskAttachmentTest.class);
-		suite.addTestSuite(RepositorySettingsPageTest.class);
-		suite.addTestSuite(CommentQuoterTest.class);
-		suite.addTestSuite(TaskDataStoreTest.class);
-		suite.addTestSuite(TaskExportImportTest.class);
-		suite.addTestSuite(PersonProposalProviderTest.class);
-		suite.addTestSuite(OptionsProposalProviderTest.class);
-		suite.addTestSuite(TaskRepositoryLocationTest.class);
-		suite.addTestSuite(TaskRepositoryTest.class);
-		suite.addTestSuite(AttachmentSizeFormatterTest.class);
-		suite.addTestSuite(TaskMapperTest.class);
-		suite.addTestSuite(TaskListUnmatchedContainerTest.class);
-		suite.addTestSuite(TaskWorkingSetTest.class);
-		suite.addTestSuite(TaskActivationHistoryTest.class);
-		suite.addTestSuite(TaskActivityManagerTest.class);
-		suite.addTestSuite(TaskRepositoryFilterTests.class);
-		suite.addTestSuite(TaskDiffUtilTest.class);
-		suite.addTestSuite(RefactorRepositoryUrlOperationTest.class);
-		suite.addTestSuite(StackTraceDuplicateDetectorTest.class);
-		suite.addTestSuite(RepositoryCompletionProcessorTest.class);
+		//TaskPlanningEditorTest.class,
+
 		// XXX fix and reenable
-		//suite.addTestSuite(MarkTaskHandlerTest.class);
-		suite.addTestSuite(RepositoryTemplateManagerTest.class);
-		suite.addTestSuite(TaskHyperlinkDetectorTest.class);
-		suite.addTestSuite(TaskRelationHyperlinkDetectorTest.class);
-		suite.addTestSuite(TaskUrlHyperlinkDetectorTest.class);
-		suite.addTestSuite(TaskEditorPartDescriptorTest.class);
-		suite.addTestSuite(TaskAttachmentPropertyTesterTest.class);
-		suite.addTestSuite(CommentGroupStrategyTest.class);
-		suite.addTestSuite(ITasksCoreConstantsTest.class);
+		//MarkTaskHandlerTest.class,
+
 		// FIXME re-enable: bug 380390
-		//suite.addTestSuite(RetrieveTitleFromUrlTest.class);
-		suite.addTestSuite(EditorUtilTest.class);
-		suite.addTestSuite(FileTaskAttachmentSourceTest.class);
-		suite.addTestSuite(TaskListSynchronizationSchedulerTest.class);
-		suite.addTestSuite(PlanningPartTest.class);
-		suite.addTestSuite(RepositoryCompletionProcessorTest.class);
-		suite.addTestSuite(TaskDiffUtilTest.class);
+		//RetrieveTitleFromUrlTest.class,
+
 		// XXX re-enable
-		//suite.addTestSuite(ServiceMessageManagerTest.class);
-		suite.addTestSuite(TaskMigratorTest.class);
-		suite.addTestSuite(TaskListViewTest.class);
-		suite.addTestSuite(AttachmentTableLabelProviderTest.class);
-		suite.addTestSuite(TaskDataExternalizerTest.class);
-		suite.addTestSuite(Xml11InputStreamTest.class);
+		//ServiceMessageManagerTest.class,
+
 		// XXX long running tests, put back?
-		//suite.addTestSuite(QueryExportImportTest.class);
-		//suite.addTestSuite(BackgroundSaveTest.class);
-		suite.addTestSuite(MultipleTaskHyperlinkDetectorTest.class);
-		suite.addTestSuite(RegionComparatorTest.class);
-		suite.addTestSuite(PriorityLevelTest.class);
-		suite.addTestSuite(TaskAttributeTest.class);
-		suite.addTestSuite(TaskAttributeMapperTest.class);
-		suite.addTestSuite(SupportHandlerManagerTest.class);
-		suite.addTestSuite(TaskAttributeMetaDataTest.class);
-		suite.addTestSuite(AttributeEditorTest.class);
-		suite.addTestSuite(RepositoryClientManagerTest.class);
-		suite.addTestSuite(AbstractRepositoryConnectorUiTest.class);
-		suite.addTestSuite(SynchronizeTasksJobTest.class);
-		suite.addTestSuite(TaskAttributeTest.class);
-		suite.addTestSuite(RepositoryConnectorContributorTest.class);
-		suite.addTestSuite(TaskInitializationDataTest.class);
-		suite.addTestSuite(TaskDataDiffTest.class);
-		suite.addTestSuite(SynchronizationMangerTest.class);
-		suite.addTestSuite(TaskEditorExtensionsTest.class);
-		suite.addTestSuite(AbstractRepositoryConnectorTest.class);
-		suite.addTestSuite(TaskJobFactoryTest.class);
+		//QueryExportImportTest.class,
+		//BackgroundSaveTest.class,
+
 	}
 
 }
