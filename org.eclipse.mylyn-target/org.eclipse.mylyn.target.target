@@ -67,6 +67,7 @@
 			<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20230531010532/repository/"/>
 			<unit id="com.sun.xml.bind" version="2.3.3.v20221203-1659"/>
 			<unit id="jakarta.xml.bind" version="2.3.3.v20221203-1659"/>
+			<unit id="javax.activation" version="1.2.2.v20221203-1659"/>
 			<unit id="javax.activation" version="2.0.0.v20221203-1659"/>
 			<unit id="org.glassfish.hk2.osgi-resource-locator" version="2.5.0.v20161103-1916"/>
 			<unit id="org.apache.commons.collections4" version="4.4.0.v20221112-0806"/>
