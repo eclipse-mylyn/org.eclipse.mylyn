@@ -76,6 +76,6 @@ Import-Package: com.ibm.icu.text,
  org.apache.commons.lang3;version="3.13.0",
  org.apache.commons.lang3.reflect;version="3.13.0",
  org.apache.commons.logging;version="[1.0.4,2.0.0)",
- org.apache.tika.mime;version="[1.24.0,2.0.0)",
+ org.apache.tika.mime;version="[2.9.0,3.0.0)",
  org.osgi.service.event;version="[1.4.0,2.0.0)"
 Service-Component: OSGI-INF/org.eclipse.mylyn.internal.tasks.ui.TaskUiStartup.xml
