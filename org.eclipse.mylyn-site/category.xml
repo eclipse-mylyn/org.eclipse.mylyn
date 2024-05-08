@@ -203,6 +203,7 @@
    <bundle id="org.apache.lucene.queries"/>
    <bundle id="org.apache.lucene.queryparser"/>
    <bundle id="org.apache.lucene.sandbox"/>
+   <bundle id="org.apache.tika.core"/>
    <bundle id="org.apache.xerces"/>
    <bundle id="org.apache.xml.resolver"/>
    <bundle id="org.apache.xmlrpc.client"/>
