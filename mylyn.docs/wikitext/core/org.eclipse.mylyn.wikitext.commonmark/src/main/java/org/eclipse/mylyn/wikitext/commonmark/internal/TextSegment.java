@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Alexander Fedorov (ArSysOp) - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
@@ -19,8 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
-
-import com.google.common.collect.ImmutableList;
+import java.util.stream.StreamSupport;
 
 public class TextSegment {
 
@@ -29,7 +29,7 @@ public class TextSegment {
 	private final String text;
 
 	public TextSegment(Iterable<Line> lines) {
-		this.lines = ImmutableList.copyOf(lines);
+		this.lines = List.copyOf(StreamSupport.stream(lines.spliterator(), false).toList());
 		text = computeText(this.lines);
 	}
 

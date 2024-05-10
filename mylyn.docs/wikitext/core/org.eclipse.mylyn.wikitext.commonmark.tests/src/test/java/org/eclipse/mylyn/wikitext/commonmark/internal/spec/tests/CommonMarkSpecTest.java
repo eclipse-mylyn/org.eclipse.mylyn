@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.spec.tests;
@@ -43,7 +44,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharStreams;
 import com.google.common.io.Resources;
 
@@ -123,11 +123,11 @@ public class CommonMarkSpecTest {
 
 	@Parameters //(name = "{0} test {index}")
 	public static List<Object[]> parameters() {
-		ImmutableList.Builder<Object[]> parameters = ImmutableList.builder();
+		List<Object[]> parameters = new ArrayList<>();
 
 		loadSpec(parameters);
 
-		return parameters.build();
+		return List.copyOf(parameters);
 	}
 
 	public CommonMarkSpecTest(String title, String heading, int lineNumber, Expectation expectation) {
@@ -136,7 +136,7 @@ public class CommonMarkSpecTest {
 		this.expectation = expectation;
 	}
 
-	private static void loadSpec(ImmutableList.Builder<Object[]> parameters) {
+	private static void loadSpec(List<Object[]> parameters) {
 		Pattern headingPattern = Pattern.compile("#+\\s*(.+)");
 		try {
 			String spec = loadCommonMarkSpec();

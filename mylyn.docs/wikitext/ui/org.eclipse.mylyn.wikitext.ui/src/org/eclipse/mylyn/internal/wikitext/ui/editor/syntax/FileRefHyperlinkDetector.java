@@ -9,10 +9,12 @@
  *
  * Contributors:
  *     Simon Scholz - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -30,9 +32,6 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 
 public class FileRefHyperlinkDetector implements IHyperlinkDetector {
 
@@ -54,9 +53,9 @@ public class FileRefHyperlinkDetector implements IHyperlinkDetector {
 	}
 
 	private List<Pattern> createHyperlinkPattern(Collection<String> hyperlinkPattern) {
-		Builder<Pattern> hyperlinkPatternBuilder = ImmutableList.builder();
+		List<Pattern> hyperlinkPatternBuilder = new ArrayList<>();
 		hyperlinkPattern.forEach(pattern -> hyperlinkPatternBuilder.add(Pattern.compile(pattern)));
-		return hyperlinkPatternBuilder.build();
+		return List.copyOf(hyperlinkPatternBuilder);
 	}
 
 	@Override
@@ -81,7 +80,7 @@ public class FileRefHyperlinkDetector implements IHyperlinkDetector {
 	}
 
 	private Collection<IHyperlink> createHyperlinks(IRegion lineInfo, Optional<Matcher> fileRefPatternAtOffset) {
-		Builder<IHyperlink> hyperlinks = ImmutableList.builder();
+		List<IHyperlink> hyperlinks = new ArrayList<>();
 
 		fileRefPatternAtOffset.ifPresent(matcher -> {
 			IRegion regionToMatch = new Region(lineInfo.getOffset() + matcher.start(1),
@@ -94,7 +93,7 @@ public class FileRefHyperlinkDetector implements IHyperlinkDetector {
 			}
 		});
 
-		return hyperlinks.build();
+		return List.copyOf(hyperlinks);
 	}
 
 	private Optional<Matcher> getFileRefMatchAtOffset(String lineString, int offset) {

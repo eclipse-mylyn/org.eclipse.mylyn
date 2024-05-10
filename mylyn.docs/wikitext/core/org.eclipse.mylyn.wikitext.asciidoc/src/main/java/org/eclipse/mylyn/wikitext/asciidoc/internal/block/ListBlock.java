@@ -10,6 +10,7 @@
  * Contributors:
  *     Patrik Suzzi - Bug 481670 - [asciidoc] support for lists
  *     Alexander Fedorov (ArSysOp) - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.asciidoc.internal.block;
@@ -29,8 +30,6 @@ import org.eclipse.mylyn.wikitext.parser.ListAttributes;
 import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
-import com.google.common.collect.ImmutableList;
-
 /**
  * List block, matches blocks that start with <code>*</code> or, <code>#</code>
  *
@@ -44,12 +43,12 @@ public class ListBlock extends Block {
 
 	private static final String ANY_CHAR = "\\s+(.*+)"; //$NON-NLS-1$
 
-	private static final List<String> TYPE_ORDER = ImmutableList.of("arabic", "loweralpha", "lowerroman", "upperalpha", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	private static final List<String> TYPE_ORDER = List.of("arabic", "loweralpha", "lowerroman", "upperalpha", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			"upperroman"); //$NON-NLS-1$
 
-	private static final List<String> TYPE_LISTSPEC = ImmutableList.of("1.", "a.", "i)", "A.", "I)"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+	private static final List<String> TYPE_LISTSPEC = List.of("1.", "a.", "i)", "A.", "I)"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
-	private static final List<String> TYPE_CSS_STYLE = ImmutableList.of("decimal", "lower-alpha", "lower-roman", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private static final List<String> TYPE_CSS_STYLE = List.of("decimal", "lower-alpha", "lower-roman", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			"upper-alpha", "upper-roman"); //$NON-NLS-1$//$NON-NLS-2$
 
 	/** List item start */

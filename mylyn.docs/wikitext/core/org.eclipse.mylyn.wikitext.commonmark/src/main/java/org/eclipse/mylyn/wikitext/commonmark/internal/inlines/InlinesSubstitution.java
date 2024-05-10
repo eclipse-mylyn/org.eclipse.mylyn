@@ -9,15 +9,15 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.ImmutableList;
 
 class InlinesSubstitution {
 
@@ -34,7 +34,7 @@ class InlinesSubstitution {
 	}
 
 	public List<Inline> apply(List<Inline> inlines) {
-		ImmutableList.Builder<Inline> builder = ImmutableList.builder();
+		List<Inline> builder = new ArrayList<>();
 
 		boolean inReplacementSegment = false;
 		for (Inline inline : inlines) {
@@ -49,6 +49,6 @@ class InlinesSubstitution {
 				inReplacementSegment = false;
 			}
 		}
-		return builder.build();
+		return List.copyOf(builder);
 	}
 }

@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.util;
 
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.ServiceLoader;
@@ -34,13 +36,11 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageProvider;
-
-import com.google.common.base.Strings;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Multimap;
 
 /**
  * A service locator for use both inside and outside of an Eclipse environment. Provides access to markup languages by name.
@@ -117,7 +117,7 @@ public class ServiceLocator {
 	 *             if the provided language name is null or if no implementation is available for the given language
 	 */
 	public MarkupLanguage getMarkupLanguage(final String languageName) throws IllegalArgumentException {
-		checkArgument(!Strings.isNullOrEmpty(languageName), "Must provide a languageName"); //$NON-NLS-1$
+		checkArgument(StringUtils.isNotEmpty(languageName), "Must provide a languageName"); //$NON-NLS-1$
 		Pattern classNamePattern = Pattern.compile("\\s*([^\\s#]+)?#?.*"); //$NON-NLS-1$
 		// first try Java services (jar-based)
 		final List<String> names = new ArrayList<>();
@@ -177,7 +177,7 @@ public class ServiceLocator {
 		}
 		throw new IllegalArgumentException(MessageFormat.format(Messages.getString("ServiceLocator.4"), //$NON-NLS-1$
 				languageName, buf.length() == 0
-						? Messages.getString("ServiceLocator.5") //$NON-NLS-1$
+				? Messages.getString("ServiceLocator.5") //$NON-NLS-1$
 						: Messages.getString("ServiceLocator.6") + buf)); //$NON-NLS-1$
 	}
 
@@ -194,14 +194,14 @@ public class ServiceLocator {
 	}
 
 	private Set<MarkupLanguage> filterDuplicates(Set<MarkupLanguage> markupLanguages) {
-		Multimap<String, Class<?>> markupLanguageClassesByName = HashMultimap.create();
-		ImmutableSet.Builder<MarkupLanguage> builder = ImmutableSet.builder();
+		MultiValuedMap<String, Class<?>> markupLanguageClassesByName = new ArrayListValuedHashMap<>();
+		Set<MarkupLanguage> builder = new LinkedHashSet<>();
 		for (MarkupLanguage language : markupLanguages) {
 			if (markupLanguageClassesByName.put(language.getName(), language.getClass())) {
 				builder.add(language);
 			}
 		}
-		return builder.build();
+		return Set.copyOf(builder);
 	}
 
 	public static void setImplementation(Class<? extends ServiceLocator> implementationClass) {
@@ -243,7 +243,7 @@ public class ServiceLocator {
 	void logFailure(String className, Exception e) {
 		// very unusual, but inform the user in a stand-alone way
 		Logger.getLogger(ServiceLocator.class.getName())
-				.log(Level.WARNING, MessageFormat.format(Messages.getString("ServiceLocator.0"), className), e); //$NON-NLS-1$
+		.log(Level.WARNING, MessageFormat.format(Messages.getString("ServiceLocator.0"), className), e); //$NON-NLS-1$
 	}
 
 	/**

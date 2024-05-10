@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.builder;
@@ -21,22 +22,25 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.MultiMapUtils;
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
+
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ListMultimap;
 
 class HtmlEntities {
 
 	private static HtmlEntities instance = new HtmlEntities();
 
-	private static ListMultimap<String, String> readHtmlEntities() {
-		ImmutableListMultimap.Builder<String, String> builder = ImmutableListMultimap.builder();
+	private static MultiValuedMap<String, String> readHtmlEntities() {
+		MultiValuedMap<String, String> builder = new ArrayListValuedHashMap<>();
 
 		try (BufferedReader reader = new BufferedReader(
 				new InputStreamReader(HtmlDocumentBuilder.class.getResourceAsStream("html-entity-references.txt"), //$NON-NLS-1$
@@ -54,14 +58,14 @@ class HtmlEntities {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		return builder.build();
+		return MultiMapUtils.unmodifiableMultiValuedMap(builder);
 	}
 
 	public static HtmlEntities instance() {
 		return instance;
 	}
 
-	private final ListMultimap<String, String> nameToNumericEntityReferences;
+	private final MultiValuedMap<String, String> nameToNumericEntityReferences;
 
 	private final Map<String, String> nameToStringEquivalent;
 
@@ -71,7 +75,7 @@ class HtmlEntities {
 	}
 
 	public List<String> nameToEntityReferences(String name) {
-		return nameToNumericEntityReferences.get(name);
+		return (List<String>) nameToNumericEntityReferences.get(name);
 	}
 
 	public String nameToStringEquivalent(String name) {
@@ -79,16 +83,16 @@ class HtmlEntities {
 	}
 
 	private Map<String, String> createNameToStringEquivalent(
-			ListMultimap<String, String> nameToNumericEntityReferences) {
-		ImmutableMap.Builder<String, String> mapBuilder = ImmutableMap.builder();
+			MultiValuedMap<String, String> nameToNumericEntityReferences) {
+		Map<String, String> mapBuilder = new HashMap<>();
 		for (String name : nameToNumericEntityReferences.keySet()) {
 			mapBuilder.put(name, stringEquivalent(nameToNumericEntityReferences.get(name)));
 		}
-		return mapBuilder.build();
+		return Map.copyOf(mapBuilder);
 	}
 
-	private String stringEquivalent(List<String> values) {
-		return Normalizer.normalize(values.stream().map(this::numericEntityToString).collect(Collectors.joining()),
+	private String stringEquivalent(Collection<String> collection) {
+		return Normalizer.normalize(collection.stream().map(this::numericEntityToString).collect(Collectors.joining()),
 				Normalizer.Form.NFC);
 	}
 
