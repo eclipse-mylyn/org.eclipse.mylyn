@@ -29,7 +29,6 @@ Export-Package: org.eclipse.mylyn.internal.gerrit.core;x-friends:="org.eclipse.m
  org.eclipse.mylyn.internal.gerrit.core.remote;x-friends:="org.eclipse.mylyn.gerrit.ui"
 Bundle-Vendor: Eclipse Mylyn
 Import-Package: com.github.benmanes.caffeine.cache;version="3.1.8",
- com.google.common.reflect;version="31.1.0",
  com.google.gerrit.common.auth;version="2.1.5",
  com.google.gerrit.common.auth.openid;version="2.1.5",
  com.google.gerrit.common.auth.userpass;version="2.1.5",
