@@ -10,18 +10,18 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Alexander Fedorov (ArSysOp) - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.internal.parser.html;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
-
-import com.google.common.base.Strings;
 
 /**
  * @author David Green
@@ -81,7 +81,7 @@ class RemoveEmptySpansProcessor extends DocumentProcessor {
 	}
 
 	private boolean isHyperlinkWithTarget(Element element) {
-		return element.tagName().equalsIgnoreCase("a") && !Strings.isNullOrEmpty(element.attr("href")); //$NON-NLS-1$//$NON-NLS-2$
+		return element.tagName().equalsIgnoreCase("a") && StringUtils.isNotEmpty(element.attr("href")); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 }

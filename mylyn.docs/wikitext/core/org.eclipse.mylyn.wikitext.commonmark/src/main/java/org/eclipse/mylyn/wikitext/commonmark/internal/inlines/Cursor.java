@@ -9,16 +9,16 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
-
-import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.TextSegment;
 
@@ -38,7 +38,7 @@ public class Cursor {
 
 	/**
 	 * Provides the offset of the current cursor position relative to the document.
-	 * 
+	 *
 	 * @return the current cursor position offset
 	 */
 	public int getOffset() {
@@ -47,7 +47,7 @@ public class Cursor {
 
 	/**
 	 * Provides the offset of the given cursor position relative to the document.
-	 * 
+	 *
 	 * @param cursorOffset
 	 *            the position relative to the cursor
 	 * @return the current cursor position offset
@@ -66,7 +66,7 @@ public class Cursor {
 
 	/**
 	 * Provides the character at the cursor's 0-based offset, where the given offset is not affected by the position of the cursor.
-	 * 
+	 *
 	 * @param offset
 	 *            the absolute offset of the character relative to this cursor
 	 * @return the character
@@ -81,7 +81,7 @@ public class Cursor {
 
 	/**
 	 * Provides the string at the cursor's 0-based offset, where the given offset is not affected by the position of the cursor.
-	 * 
+	 *
 	 * @param offset
 	 *            the absolute offset of the character relative to this cursor
 	 * @param endIndex
@@ -106,7 +106,7 @@ public class Cursor {
 
 	public char getPrevious(int offset) {
 		int charOffset = textOffset - offset;
-		checkArgument(charOffset >= 0);
+		Validate.isTrue(charOffset >= 0);
 		return text.charAt(charOffset);
 	}
 
@@ -115,7 +115,7 @@ public class Cursor {
 	}
 
 	public char getNext(int offset) {
-		checkArgument(offset >= 0);
+		Validate.isTrue(offset >= 0);
 		return text.charAt(textOffset + offset);
 	}
 
@@ -124,7 +124,7 @@ public class Cursor {
 	}
 
 	public String getTextAtOffset(int length) {
-		checkArgument(length > 0);
+		Validate.isTrue(length > 0);
 		return text.substring(textOffset, textOffset + length);
 	}
 
@@ -133,7 +133,7 @@ public class Cursor {
 	}
 
 	public boolean hasNext(int offset) {
-		checkArgument(offset > 0);
+		Validate.isTrue(offset > 0);
 		return textOffset + offset < text.length();
 	}
 
@@ -142,7 +142,7 @@ public class Cursor {
 	}
 
 	public Matcher matcher(int offset, Pattern pattern) {
-		checkArgument(offset >= 0 && offset + textOffset < text.length());
+		Validate.isTrue(offset >= 0 && offset + textOffset < text.length());
 		Objects.requireNonNull(pattern);
 		Matcher matcher = pattern.matcher(text);
 		matcher.region(textOffset + offset, text.length());
@@ -156,14 +156,14 @@ public class Cursor {
 	}
 
 	public void advance(int count) {
-		checkArgument(count >= 0);
+		Validate.isTrue(count >= 0);
 		for (int x = 0; x < count; ++x) {
 			advance();
 		}
 	}
 
 	public void rewind(int count) {
-		checkArgument(count >= 0);
+		Validate.isTrue(count >= 0);
 		for (int x = 0; x < count; ++x) {
 			rewind();
 		}

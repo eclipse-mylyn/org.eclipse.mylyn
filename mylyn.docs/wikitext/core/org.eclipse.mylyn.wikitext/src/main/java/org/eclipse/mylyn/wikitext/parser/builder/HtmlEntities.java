@@ -14,9 +14,6 @@
 
 package org.eclipse.mylyn.wikitext.parser.builder;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,6 +28,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.MultiMapUtils;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
+import org.apache.commons.lang3.Validate;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
@@ -50,7 +48,7 @@ class HtmlEntities {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				List<String> lineItems = splitter.splitToList(line);
-				checkState(lineItems.size() > 1);
+				Validate.isTrue(lineItems.size() > 1);
 				for (int x = 1; x < lineItems.size(); ++x) {
 					builder.put(lineItems.get(0), lineItems.get(x));
 				}
@@ -97,7 +95,7 @@ class HtmlEntities {
 	}
 
 	private String numericEntityToString(String s) {
-		checkArgument(s.charAt(0) == '#');
+		Validate.isTrue(s.charAt(0) == '#');
 		return String.valueOf((char) Integer.parseInt(s.substring(1)));
 	}
 }

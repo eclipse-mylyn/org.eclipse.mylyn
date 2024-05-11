@@ -9,11 +9,11 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.core.osgi;
 
-import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.requireNonNull;
 
 import java.net.URL;
@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -96,7 +97,7 @@ public class OsgiServiceLocator extends ServiceLocator {
 		for (Bundle bundle : bundles().toArray(Bundle[]::new)) {
 			for (String resourceName : getClasspathServiceResourceNames()) {
 				int indexOf = resourceName.indexOf(SERVICES_SLASH);
-				checkState(indexOf >= 0, resourceName);
+				Validate.isTrue(indexOf >= 0, resourceName);
 
 				String path = resourceName.substring(0, indexOf + SERVICES_SLASH.length() - 1);
 				String file = resourceName.substring(indexOf + SERVICES_SLASH.length());

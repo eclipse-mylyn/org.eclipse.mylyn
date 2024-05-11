@@ -10,16 +10,17 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Alexander Fedorov (ArSysOp) - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Preconditions.checkArgument;
-
 import java.util.Iterator;
 import java.util.function.Function;
 import java.util.function.Predicate;
+
+import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public abstract class LineSequence implements Iterable<Line> {
 
@@ -39,7 +40,7 @@ public abstract class LineSequence implements Iterable<Line> {
 	public abstract void advance();
 
 	public void advance(int count) {
-		checkArgument(count >= 0);
+		Validate.isTrue(count >= 0);
 		for (int x = 0; x < count; ++x) {
 			advance();
 		}
@@ -67,8 +68,8 @@ public abstract class LineSequence implements Iterable<Line> {
 
 	@Override
 	public String toString() {
-		return toStringHelper(LineSequence.class).add("currentLine", getCurrentLine()) //$NON-NLS-1$
-				.add("nextLine", getNextLine()) //$NON-NLS-1$
+		return new ToStringBuilder(LineSequence.class).append("currentLine", getCurrentLine()) //$NON-NLS-1$
+				.append("nextLine", getNextLine()) //$NON-NLS-1$
 				.toString();
 	}
 }

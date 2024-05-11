@@ -10,15 +10,15 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Alexander Fedorov (ArSysOp) - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
-
 import java.util.List;
 import java.util.Objects;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ToStringHelper;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
@@ -73,11 +73,11 @@ public class Link extends InlineWithNestedContents {
 
 	@Override
 	public String toString() {
-		return toStringHelper(Link.class).add("offset", getOffset()) //$NON-NLS-1$
-				.add("length", getLength()) //$NON-NLS-1$
-				.add("href", ToStringHelper.toStringValue(href)) //$NON-NLS-1$
-				.add("title", title) //$NON-NLS-1$
-				.add("contents", getContents()) //$NON-NLS-1$
+		return new ToStringBuilder(Link.class).append("offset", getOffset()) //$NON-NLS-1$
+				.append("length", getLength()) //$NON-NLS-1$
+				.append("href", ToStringHelper.toStringValue(href)) //$NON-NLS-1$
+				.append("title", title) //$NON-NLS-1$
+				.append("contents", getContents()) //$NON-NLS-1$
 				.toString();
 	}
 }

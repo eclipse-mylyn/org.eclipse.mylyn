@@ -10,15 +10,15 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Alexander Fedorov (ArSysOp) - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Preconditions.checkArgument;
-
 import java.util.Objects;
 
+import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.parser.Locator;
 
 import com.google.common.base.CharMatcher;
@@ -32,8 +32,8 @@ public class Line {
 	private final int lineNumber;
 
 	public Line(int lineNumber, int offset, String text) {
-		checkArgument(offset >= 0);
-		checkArgument(lineNumber >= 0);
+		Validate.isTrue(offset >= 0);
+		Validate.isTrue(lineNumber >= 0);
 		this.lineNumber = lineNumber;
 		this.offset = offset;
 		this.text = Objects.requireNonNull(text);
@@ -49,7 +49,7 @@ public class Line {
 
 	/**
 	 * Provides the 0-based offset of the first character of the line.
-	 * 
+	 *
 	 * @return the line offset
 	 */
 	public int getOffset() {
@@ -58,7 +58,7 @@ public class Line {
 
 	/**
 	 * Provides the 0-based line number.
-	 * 
+	 *
 	 * @return the line number
 	 */
 	public int getLineNumber() {
@@ -67,7 +67,7 @@ public class Line {
 
 	/**
 	 * Provides a segment of this line, with {@link #getText() text}.
-	 * 
+	 *
 	 * @param offset
 	 *            the 0-based offset of the {@link #getText() text} of this line
 	 * @param length
@@ -84,9 +84,9 @@ public class Line {
 
 	@Override
 	public String toString() {
-		return toStringHelper(Line.class).add("lineNumber", lineNumber) //$NON-NLS-1$
-				.add("offset", offset) //$NON-NLS-1$
-				.add("text", ToStringHelper.toStringValue(text)) //$NON-NLS-1$
+		return new ToStringBuilder(Line.class).append("lineNumber", lineNumber) //$NON-NLS-1$
+				.append("offset", offset) //$NON-NLS-1$
+				.append("text", ToStringHelper.toStringValue(text)) //$NON-NLS-1$
 				.toString();
 	}
 }

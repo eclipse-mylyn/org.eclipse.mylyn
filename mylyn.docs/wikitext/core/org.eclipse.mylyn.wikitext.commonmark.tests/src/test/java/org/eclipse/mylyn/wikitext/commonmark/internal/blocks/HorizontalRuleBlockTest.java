@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.blocks;
@@ -18,10 +19,9 @@ import static org.eclipse.mylyn.wikitext.commonmark.internal.CommonMarkAsserts.a
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
 import org.junit.Test;
-
-import com.google.common.base.Strings;
 
 @SuppressWarnings("nls")
 public class HorizontalRuleBlockTest {
@@ -34,14 +34,14 @@ public class HorizontalRuleBlockTest {
 		assertFalse(block.canStart(LineSequence.create("a")));
 		assertFalse(block.canStart(LineSequence.create("    ***")));
 		for (char c : "*_-".toCharArray()) {
-			String hrIndicator = Strings.repeat("" + c, 3);
+			String hrIndicator = StringUtils.repeat("" + c, 3);
 			assertTrue(block.canStart(LineSequence.create("   " + hrIndicator)));
 			assertTrue(block.canStart(LineSequence.create("  " + hrIndicator)));
 			assertTrue(block.canStart(LineSequence.create(" " + hrIndicator)));
 			assertFalse(block.canStart(LineSequence.create("    " + hrIndicator)));
 			assertTrue(block.canStart(LineSequence.create(hrIndicator)));
-			assertTrue(block.canStart(LineSequence.create(Strings.repeat("" + c, 4))));
-			assertTrue(block.canStart(LineSequence.create(Strings.repeat("" + c, 14))));
+			assertTrue(block.canStart(LineSequence.create(StringUtils.repeat("" + c, 4))));
+			assertTrue(block.canStart(LineSequence.create(StringUtils.repeat("" + c, 14))));
 		}
 
 		// Bug 472390:

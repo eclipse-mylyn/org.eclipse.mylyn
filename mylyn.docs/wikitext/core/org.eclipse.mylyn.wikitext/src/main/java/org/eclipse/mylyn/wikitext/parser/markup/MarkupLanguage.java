@@ -9,16 +9,16 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.parser.markup;
-
-import static com.google.common.base.Preconditions.checkArgument;
 
 import java.io.Writer;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 
+import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
@@ -125,7 +125,7 @@ public abstract class MarkupLanguage implements Cloneable {
 	 */
 	public void setFileExtensions(Set<String> fileExtensions) {
 		Objects.requireNonNull(fileExtensions, "Must specify file extensions"); //$NON-NLS-1$
-		checkArgument(!fileExtensions.isEmpty(), "File extensions must not be empty"); //$NON-NLS-1$
+		Validate.isTrue(!fileExtensions.isEmpty(), "File extensions must not be empty"); //$NON-NLS-1$
 		this.fileExtensions = Set.copyOf(fileExtensions);
 	}
 

@@ -10,17 +10,17 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Alexander Fedorov (ArSysOp) - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
-
-import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContextBuilder;
@@ -40,8 +40,8 @@ public abstract class Inline {
 		this.line = Objects.requireNonNull(line);
 		this.offset = offset;
 		this.length = length;
-		checkArgument(offset >= 0);
-		checkArgument(length > 0);
+		Validate.isTrue(offset >= 0);
+		Validate.isTrue(length > 0);
 	}
 
 	public int getOffset() {
@@ -95,6 +95,6 @@ public abstract class Inline {
 
 	@Override
 	public String toString() {
-		return toStringHelper(getClass()).add("offset", getOffset()).add("length", getLength()).toString(); //$NON-NLS-1$//$NON-NLS-2$
+		return new ToStringBuilder(getClass()).append("offset", getOffset()).append("length", getLength()).toString(); //$NON-NLS-1$//$NON-NLS-2$
 	}
 }

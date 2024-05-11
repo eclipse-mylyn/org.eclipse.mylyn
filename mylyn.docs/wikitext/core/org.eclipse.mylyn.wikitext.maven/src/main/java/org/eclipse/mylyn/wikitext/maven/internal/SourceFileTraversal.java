@@ -10,14 +10,16 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.maven.internal;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 
 import java.io.File;
+
+import org.apache.commons.lang3.Validate;
 
 public class SourceFileTraversal {
 
@@ -29,8 +31,8 @@ public class SourceFileTraversal {
 
 	public SourceFileTraversal(File root) {
 		this.root = requireNonNull(root);
-		checkArgument(root.exists(), "Root folder must exist"); //$NON-NLS-1$
-		checkArgument(root.isDirectory(), "Root folder must be a folder"); //$NON-NLS-1$
+		Validate.isTrue(root.exists(), "Root folder must exist"); //$NON-NLS-1$
+		Validate.isTrue(root.isDirectory(), "Root folder must be a folder"); //$NON-NLS-1$
 	}
 
 	public void traverse(Visitor visitor) {

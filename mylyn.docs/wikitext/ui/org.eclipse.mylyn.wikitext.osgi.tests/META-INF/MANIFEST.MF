@@ -13,4 +13,5 @@ Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="4.3.0",
  org.objenesis;bundle-version="[3.0.0,4.0.0)"
 Export-Package: org.eclipse.mylyn.wikitext.core.osgi;x-internal:=true
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.osgi.tests
+Import-Package: org.apache.commons.lang3;version="[3.14.0,4.0.0)"
 

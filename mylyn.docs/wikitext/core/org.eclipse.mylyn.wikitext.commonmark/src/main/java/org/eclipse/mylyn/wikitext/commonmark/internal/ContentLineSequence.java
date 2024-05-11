@@ -9,11 +9,10 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
-
-import static com.google.common.base.Preconditions.checkArgument;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -21,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence.ForwardLineSequence;
 import org.eclipse.mylyn.wikitext.util.LocationTrackingReader;
 
@@ -62,7 +62,7 @@ class ContentLineSequence extends ForwardLineSequence {
 
 	@Override
 	Line getNextLine(int index) {
-		checkArgument(index >= 0);
+		Validate.isTrue(index >= 0);
 		while (followingLines.size() <= index) {
 			Line line = readLine();
 			if (line == null) {

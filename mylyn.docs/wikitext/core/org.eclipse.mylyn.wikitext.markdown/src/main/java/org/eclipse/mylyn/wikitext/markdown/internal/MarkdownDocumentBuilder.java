@@ -10,6 +10,7 @@
  * Contributors:
  *     Leo Dos Santos - initial API and implementation
  *     Pierre-Yves B. <pyvesdev@gmail.com> - Bug 509033 - markdown misses support for ~~strike~~
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.markdown.internal;
@@ -25,6 +26,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.mylyn.wikitext.markdown.MarkdownLanguage;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
@@ -32,7 +34,6 @@ import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.parser.builder.AbstractMarkupDocumentBuilder;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Strings;
 
 /**
  * a document builder that emits Markdown markup
@@ -211,7 +212,7 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			if (getPreviousBlock().getBlockType() == BlockType.NUMERIC_LIST) {
 				prefix = count + ". "; //$NON-NLS-1$
 			}
-			String indent = Strings.repeat(" ", prefix.length()); //$NON-NLS-1$
+			String indent = StringUtils.repeat(" ", prefix.length()); //$NON-NLS-1$
 
 			MarkdownDocumentBuilder.this.emitContent(prefix);
 			// split out content by line
@@ -223,7 +224,7 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 				if (lines > 0 && !line.trim().isEmpty()) {
 					int indexOfFirstNonSpace = CharMatcher.isNot(' ').indexIn(line);
 					if (indexOfFirstNonSpace >= 4) {
-						line = Strings.repeat(" ", 4) + line; //$NON-NLS-1$
+						line = StringUtils.repeat(" ", 4) + line; //$NON-NLS-1$
 					} else {
 						line = indent + line;
 					}
@@ -258,7 +259,7 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 			MarkdownDocumentBuilder.this.emitContent('(');
 			MarkdownDocumentBuilder.this.emitContent(attributes.getHref());
-			if (!Strings.isNullOrEmpty(attributes.getTitle())) {
+			if (StringUtils.isNotEmpty(attributes.getTitle())) {
 				MarkdownDocumentBuilder.this.emitContent(" \""); //$NON-NLS-1$
 				MarkdownDocumentBuilder.this.emitContent(attributes.getTitle());
 				MarkdownDocumentBuilder.this.emitContent('"');
@@ -395,12 +396,12 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		String altText = ""; //$NON-NLS-1$
 		String title = ""; //$NON-NLS-1$
 		if (attributes instanceof ImageAttributes imageAttr) {
-			altText = Strings.nullToEmpty(imageAttr.getAlt());
+			altText = StringUtils.defaultString(imageAttr.getAlt());
 		}
-		if (!Strings.isNullOrEmpty(attributes.getTitle())) {
+		if (StringUtils.isNotEmpty(attributes.getTitle())) {
 			title = " \"" + attributes.getTitle() + '"'; //$NON-NLS-1$
 		}
-		return "![" + altText + "](" + Strings.nullToEmpty(url) + title + ')'; //$NON-NLS-1$ //$NON-NLS-2$
+		return "![" + altText + "](" + StringUtils.defaultString(url) + title + ')'; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override

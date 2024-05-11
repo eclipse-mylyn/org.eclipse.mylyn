@@ -13,8 +13,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.util;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,6 +37,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageProvider;
 
@@ -117,7 +116,7 @@ public class ServiceLocator {
 	 *             if the provided language name is null or if no implementation is available for the given language
 	 */
 	public MarkupLanguage getMarkupLanguage(final String languageName) throws IllegalArgumentException {
-		checkArgument(StringUtils.isNotEmpty(languageName), "Must provide a languageName"); //$NON-NLS-1$
+		Validate.isTrue(StringUtils.isNotEmpty(languageName), "Must provide a languageName"); //$NON-NLS-1$
 		Pattern classNamePattern = Pattern.compile("\\s*([^\\s#]+)?#?.*"); //$NON-NLS-1$
 		// first try Java services (jar-based)
 		final List<String> names = new ArrayList<>();

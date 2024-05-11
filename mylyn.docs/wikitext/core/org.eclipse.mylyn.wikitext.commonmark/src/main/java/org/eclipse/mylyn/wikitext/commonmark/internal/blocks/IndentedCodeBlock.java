@@ -10,16 +10,16 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Alexander Fedorov (ArSysOp) - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.blocks;
-
-import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.LinePredicates;
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
@@ -45,7 +45,7 @@ public class IndentedCodeBlock extends SourceBlock {
 			Line line = iterator.next();
 			Matcher matcher = PATTERN.matcher(line.getText());
 			if (!matcher.matches()) {
-				checkState(line.isEmpty());
+				Validate.isTrue(line.isEmpty());
 				if (iterator.hasNext()) {
 					builder.characters("\n"); //$NON-NLS-1$
 				}

@@ -10,11 +10,10 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.confluence.internal;
-
-import static com.google.common.base.Preconditions.checkState;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -25,6 +24,8 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.confluence.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.confluence.internal.util.Colors;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
@@ -35,7 +36,6 @@ import org.eclipse.mylyn.wikitext.parser.builder.AbstractMarkupDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.EntityReferences;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Strings;
 
 /**
  * a document builder that emits Confluence markup
@@ -188,7 +188,8 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			boolean contentIsEmpty = content.equals(prefix);
 
 			if (!contentIsEmpty || emitWhenEmpty) {
-				checkState(content.startsWith(prefix), "Expected content to start with prefix \"%s\"", content, prefix); //$NON-NLS-1$
+				Validate.isTrue(content.startsWith(prefix), "Expected content to start with prefix \"%s\"", content, //$NON-NLS-1$
+						prefix);
 				content = content.substring(prefix.length());
 
 				if (requireAdjacentSeparator && !isSpanSuffixAdjacentToSpanPrefix()) {
@@ -217,7 +218,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		}
 
 		private boolean isSpanSuffixAdjacentToSpanPrefix() {
-			if (!Strings.isNullOrEmpty(prefix) && isSpanMarkup(getLastChar()) && isSpanMarkup(prefix.charAt(0))) {
+			if (StringUtils.isNotEmpty(prefix) && isSpanMarkup(getLastChar()) && isSpanMarkup(prefix.charAt(0))) {
 				return true;
 			}
 			return false;
@@ -274,14 +275,14 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		protected void emitContent(String content) throws IOException {
 			//[Example|http://example.com|title]
 			// [Example|http://example.com]
-			if (!Strings.isNullOrEmpty(content)) {
+			if (StringUtils.isNotEmpty(content)) {
 				super.emitContent(content);
 				super.emitContent(" | ");//$NON-NLS-1$
 			}
 			if (attributes.getHref() != null) {
 				super.emitContent(attributes.getHref());
 			}
-			if (!Strings.isNullOrEmpty(attributes.getTitle())) {
+			if (StringUtils.isNotEmpty(attributes.getTitle())) {
 				super.emitContent(" | ");//$NON-NLS-1$
 				super.emitContent(attributes.getTitle());
 			}
@@ -296,7 +297,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		@Override
 		protected void emitContent(String content) throws IOException {
-			if (Strings.isNullOrEmpty(content) || content.trim().isEmpty()) {
+			if (StringUtils.isEmpty(content) || content.trim().isEmpty()) {
 				content = " "; //$NON-NLS-1$
 			}
 			super.emitContent(content);
@@ -615,10 +616,10 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	private void writeImageAttributes(Attributes attributes) throws IOException {
 		if (attributes instanceof ImageAttributes imageAttributes) {
 			String attributeMarkup = ""; //$NON-NLS-1$
-			if (!Strings.isNullOrEmpty(imageAttributes.getAlt())) {
+			if (StringUtils.isNotEmpty(imageAttributes.getAlt())) {
 				attributeMarkup = "alt=\"" + imageAttributes.getAlt() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 			}
-			if (!Strings.isNullOrEmpty(imageAttributes.getTitle())) {
+			if (StringUtils.isNotEmpty(imageAttributes.getTitle())) {
 				if (!attributeMarkup.isEmpty()) {
 					attributeMarkup += ","; //$NON-NLS-1$
 				}

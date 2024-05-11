@@ -10,11 +10,10 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Alexander Fedorov (ArSysOp) - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
-
-import static com.google.common.base.MoreObjects.firstNonNull;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -24,6 +23,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext.NamedUriWithTitle;
@@ -31,7 +31,6 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.EntityReferences;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Strings;
 import com.google.common.escape.Escaper;
 import com.google.common.net.UrlEscapers;
 
@@ -133,7 +132,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 					String title = linkTitle(matcher);
 
 					if (!(referenceDefinition
-							&& (Strings.isNullOrEmpty(uri) || hasContentOnSameLine(matcher, cursor)))) {
+							&& (StringUtils.isEmpty(uri) || hasContentOnSameLine(matcher, cursor)))) {
 						String referenceName = null;
 						if (referenceDefinition) {
 							referenceName = toReferenceName(referenceName(cursor, contents));
@@ -307,7 +306,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 		if (uriWithEscapes == null) {
 			uriWithEscapes = matcher.group(2);
 		}
-		uriWithEscapes = firstNonNull(uriWithEscapes, ""); //$NON-NLS-1$
+		uriWithEscapes = Objects.requireNonNullElse(uriWithEscapes, ""); //$NON-NLS-1$
 		return normalizeUri(uriWithEscapes);
 	}
 

@@ -10,15 +10,15 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Alexander Fedorov (ArSysOp) - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
-import static com.google.common.base.MoreObjects.firstNonNull;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext;
@@ -100,7 +100,8 @@ public class InlineParser {
 
 			@Override
 			public void entityReference(String entity) {
-				stringBuilder.append(firstNonNull(EntityReferences.instance().equivalentString(entity), "")); //$NON-NLS-1$
+				stringBuilder
+				.append(Objects.requireNonNullElse(EntityReferences.instance().equivalentString(entity), "")); //$NON-NLS-1$
 			}
 		};
 		for (Inline inline : contents) {

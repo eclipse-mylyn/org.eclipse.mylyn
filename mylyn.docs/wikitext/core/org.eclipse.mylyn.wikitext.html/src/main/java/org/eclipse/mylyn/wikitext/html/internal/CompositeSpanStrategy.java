@@ -9,17 +9,18 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.html.internal;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
-
-import com.google.common.collect.Lists;
 
 class CompositeSpanStrategy implements SpanStrategy {
 
@@ -38,7 +39,10 @@ class CompositeSpanStrategy implements SpanStrategy {
 
 	@Override
 	public void endSpan(DocumentBuilder builder) {
-		for (SpanStrategy strategy : Lists.reverse(delegates)) {
+		for (SpanStrategy strategy : IntStream.range(0, delegates.size())
+				.map(i -> delegates.size() - 1 - i)
+				.mapToObj(delegates::get)
+				.collect(Collectors.toList())) {
 			strategy.endSpan(builder);
 		}
 	}

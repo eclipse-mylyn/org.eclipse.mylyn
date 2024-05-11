@@ -9,12 +9,10 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.html.internal;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +23,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.css.CssParser;
@@ -51,8 +50,8 @@ public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, Sp
 
 	private static void addAlternatives(Map<SpanType, List<SpanType>> alternatives, SpanType spanType,
 			SpanType... spanTypes) {
-		checkState(!alternatives.containsKey(spanType), "Duplicate %s", spanType); //$NON-NLS-1$
-		checkArgument(spanTypes.length > 0);
+		Validate.isTrue(!alternatives.containsKey(spanType), "Duplicate %s", spanType); //$NON-NLS-1$
+		Validate.isTrue(spanTypes.length > 0);
 		alternatives.put(spanType, List.of(spanTypes));
 	}
 

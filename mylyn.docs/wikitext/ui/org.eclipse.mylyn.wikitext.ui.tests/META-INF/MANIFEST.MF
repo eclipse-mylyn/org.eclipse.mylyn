@@ -45,6 +45,8 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.ui;x-internal:=true,
  org.eclipse.mylyn.wikitext.textile.tests.resources;x-internal:=true,
  org.eclipse.mylyn.wikitext.ui.annotation;x-internal:=true
 Import-Package: com.google.common.base;version="33.0.0",
- com.google.common.io;version="33.0.0"
+ com.google.common.io;version="33.0.0",
+ org.apache.commons.io;version="[2.16.0,3.0.0)",
+ org.apache.commons.lang3.builder;version="[3.14.0,4.0.0)"
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy

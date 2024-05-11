@@ -9,15 +9,15 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.blocks;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext;
@@ -39,7 +39,7 @@ abstract class AbstractHtmlBlock extends SourceBlock {
 
 			if (firstLine.equals(line)) {
 				Matcher matcher = startPattern().matcher(lineText);
-				checkState(matcher.matches());
+				Validate.isTrue(matcher.matches());
 				int offset = matcher.end(1);
 				if (offset < lineText.length() - 1) {
 					Matcher closeMatcher = closePattern().matcher(lineText);
@@ -70,7 +70,7 @@ abstract class AbstractHtmlBlock extends SourceBlock {
 	/**
 	 * Provides a pattern that must be matched for the block to start. The pattern must provide a first group which cannot match the close
 	 * pattern.
-	 * 
+	 *
 	 * @return the pattern
 	 */
 	protected abstract Pattern startPattern();

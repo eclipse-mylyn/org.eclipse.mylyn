@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.html.tests;
@@ -25,6 +26,7 @@ import java.io.Writer;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.mylyn.wikitext.html.HtmlLanguage;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
@@ -35,8 +37,6 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.jsoup.Jsoup;
 import org.junit.Test;
-
-import com.google.common.io.Resources;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class HtmlLanguageTest {
@@ -165,7 +165,7 @@ public class HtmlLanguageTest {
 		try {
 			String fileName = HtmlLanguageTest.class.getSimpleName() + '_' + resourceName;
 			URL resource = HtmlLanguageTest.class.getResource(fileName);
-			return convertToUnixLineEndings(Resources.toString(resource, StandardCharsets.UTF_8));
+			return convertToUnixLineEndings(IOUtils.toString(resource, StandardCharsets.UTF_8));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

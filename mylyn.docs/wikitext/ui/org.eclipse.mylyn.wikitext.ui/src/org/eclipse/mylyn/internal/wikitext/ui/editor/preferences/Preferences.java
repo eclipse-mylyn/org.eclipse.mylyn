@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor.preferences;
 
@@ -19,13 +20,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.HtmlTextPresentationParser;
 import org.eclipse.mylyn.wikitext.parser.css.CssParser;
 import org.eclipse.mylyn.wikitext.parser.css.Stylesheet;
-
-import com.google.common.io.CharStreams;
 
 /**
  * @see WikiTextUiPlugin#getPreferences()
@@ -286,7 +286,7 @@ public class Preferences implements Cloneable {
 
 	private String getDefaultMarkupViewerCss() {
 		try (Reader reader = HtmlTextPresentationParser.getDefaultStylesheetContent()) {
-			return CharStreams.toString(reader);
+			return IOUtils.toString(reader);
 		} catch (IOException e) {
 			WikiTextUiPlugin.getDefault().log(e);
 			return ""; //$NON-NLS-1$

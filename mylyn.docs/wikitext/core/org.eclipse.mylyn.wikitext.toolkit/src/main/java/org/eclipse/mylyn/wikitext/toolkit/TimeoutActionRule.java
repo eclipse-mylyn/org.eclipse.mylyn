@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2017, 2024 Contributors to the Eclipse Foundation.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -13,13 +13,12 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.toolkit;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 
 import java.time.Duration;
 import java.util.Timer;
 import java.util.TimerTask;
-
+import org.apache.commons.lang3.Validate;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -38,7 +37,7 @@ public abstract class TimeoutActionRule implements TestRule {
 	 */
 	public TimeoutActionRule(Duration timeoutDuration) {
 		this.timeoutDuration = requireNonNull(timeoutDuration, "Must specify a timeout duration");
-		checkArgument(timeoutDuration.toMillis() > 100L, "Timeout must be > 100ms");
+		Validate.isTrue(timeoutDuration.toMillis() > 100L, "Timeout must be > 100ms");
 	}
 
 	/**

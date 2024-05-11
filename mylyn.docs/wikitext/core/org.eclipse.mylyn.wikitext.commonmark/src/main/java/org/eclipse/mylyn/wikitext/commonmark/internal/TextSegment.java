@@ -15,12 +15,13 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
 import java.util.stream.StreamSupport;
+
+import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class TextSegment {
 
@@ -53,7 +54,7 @@ public class TextSegment {
 	}
 
 	public int offsetOf(int textOffset) {
-		checkArgument(textOffset >= 0);
+		Validate.isTrue(textOffset >= 0);
 		int textOffsetOfLine = 0;
 		int remainder = textOffset;
 		for (Line line : lines) {
@@ -82,7 +83,7 @@ public class TextSegment {
 
 	@Override
 	public String toString() {
-		return toStringHelper(TextSegment.class).add("text", ToStringHelper.toStringValue(text)).toString(); //$NON-NLS-1$
+		return new ToStringBuilder(TextSegment.class).append("text", text).toString(); //$NON-NLS-1$
 	}
 
 	public Line getLineAtOffset(int textOffset) {

@@ -15,7 +15,6 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.spec.tests;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
 import static org.eclipse.mylyn.wikitext.commonmark.internal.CommonMarkAsserts.assertContent;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
@@ -25,7 +24,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -36,6 +34,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.CommonMarkLanguage;
 import org.eclipse.mylyn.wikitext.util.LocationTrackingReader;
 import org.junit.Before;
@@ -43,9 +43,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-
-import com.google.common.io.CharStreams;
-import com.google.common.io.Resources;
 
 @SuppressWarnings({ "nls", "restriction" })
 @RunWith(Parameterized.class)
@@ -87,7 +84,9 @@ public class CommonMarkSpecTest {
 
 		@Override
 		public String toString() {
-			return toStringHelper(Expectation.class).add("input", input).add("expected", expected).toString();
+			return new ToStringBuilder(Expectation.class).append("input", input)
+					.append("expected", expected)
+					.toString();
 		}
 	}
 
@@ -189,11 +188,11 @@ public class CommonMarkSpecTest {
 		File spec = new File(tmpFolder, String.format("spec%s.txt", SPEC_VERSION));
 		if (!spec.exists()) {
 			try (FileOutputStream out = new FileOutputStream(spec)) {
-				Resources.copy(COMMONMARK_SPEC_URI.toURL(), out);
+				IOUtils.copy(COMMONMARK_SPEC_URI.toURL(), out);
 			}
 		}
 		try (InputStream in = new FileInputStream(spec)) {
-			return CharStreams.toString(new InputStreamReader(in, StandardCharsets.UTF_8));
+			return IOUtils.toString(in, StandardCharsets.UTF_8);
 		}
 	}
 

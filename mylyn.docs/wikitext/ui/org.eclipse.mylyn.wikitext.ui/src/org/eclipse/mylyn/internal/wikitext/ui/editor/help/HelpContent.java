@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor.help;
 
@@ -19,13 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.ui.WikiText;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
-
-import com.google.common.io.Resources;
 
 /**
  * A handle to help content. HelpContent is retrieved from a resource path from a bundle. Help content is retrieved in a locale-specific
@@ -92,7 +92,7 @@ public class HelpContent {
 	public String getContent() throws IOException {
 		try {
 			URL resource = getResource();
-			String content = Resources.toString(resource, StandardCharsets.UTF_8);
+			String content = IOUtils.toString(resource, StandardCharsets.UTF_8);
 			if (resourceContentLanguage == null || "html".equalsIgnoreCase(resourceContentLanguage)) { //$NON-NLS-1$
 				return content;
 			}
