@@ -107,4 +107,10 @@ public class PullRequestRepositorySettingsPage extends HttpRepositorySettingsPag
 	public String getRepositoryUrl() {
 		return PullRequestConnector.appendPulls(super.getRepositoryUrl());
 	}
+
+	@Override
+	protected boolean isValidUrl(final String url) {
+		return super.isValidUrl(url) && GitHub.getRepository(url) != null;
+	}
+
 }

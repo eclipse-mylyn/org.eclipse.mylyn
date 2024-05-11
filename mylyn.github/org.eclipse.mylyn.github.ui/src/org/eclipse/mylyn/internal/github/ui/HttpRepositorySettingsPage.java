@@ -12,8 +12,6 @@
  *****************************************************************************/
 package org.eclipse.mylyn.internal.github.ui;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.function.Function;
 
 import org.eclipse.egit.github.core.RepositoryId;
@@ -48,19 +46,6 @@ public abstract class HttpRepositorySettingsPage extends AbstractRepositorySetti
 		setNeedsAnonymousLogin(true);
 		setNeedsTimeZone(false);
 		setNeedsHttpAuth(false);
-	}
-
-	@Override
-	protected boolean isValidUrl(final String url) {
-		if (url.startsWith("http://") || url.startsWith("https://")) { //$NON-NLS-1$ //$NON-NLS-2$
-			try {
-				new URL(url);
-				return GitHub.getRepository(url) != null;
-			} catch (IOException e) {
-				return false;
-			}
-		}
-		return false;
 	}
 
 	@Override
