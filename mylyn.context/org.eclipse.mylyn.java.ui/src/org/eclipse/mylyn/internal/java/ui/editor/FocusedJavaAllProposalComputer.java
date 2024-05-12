@@ -39,8 +39,12 @@ public class FocusedJavaAllProposalComputer extends JavaAllCompletionProposalCom
 	@Override
 	public List computeCompletionProposals(ContentAssistInvocationContext context, IProgressMonitor monitor) {
 		if (shouldReturnResults()) {
-			List proposals = super.computeCompletionProposals(context, monitor);
-			return FocusedJavaProposalProcessor.getDefault().projectInterestModel(this, proposals);
+			try {
+				List proposals = super.computeCompletionProposals(context, monitor);
+				return FocusedJavaProposalProcessor.getDefault().projectInterestModel(this, proposals);
+			} catch (Exception e) {
+				return Collections.emptyList();
+			}
 		} else {
 			return Collections.emptyList();
 		}
