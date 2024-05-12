@@ -106,4 +106,9 @@ public class IssueRepositorySettingsPage extends HttpRepositorySettingsPage {
 		super.applyTo(taskRepository);
 	}
 
+	@Override
+	protected boolean isValidUrl(final String url) {
+		return super.isValidUrl(url) && GitHub.getRepository(url) != null;
+	}
+
 }
