@@ -21,6 +21,7 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.eclipse.mylyn.wikitext.internal.util.WikiStringStyle;
 
 public abstract class LineSequence implements Iterable<Line> {
 
@@ -68,7 +69,8 @@ public abstract class LineSequence implements Iterable<Line> {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(LineSequence.class).append("currentLine", getCurrentLine()) //$NON-NLS-1$
+		return new ToStringBuilder(this, WikiStringStyle.WIKI_STRING_STYLE) //
+				.append("currentLine", getCurrentLine()) //$NON-NLS-1$
 				.append("nextLine", getNextLine()) //$NON-NLS-1$
 				.toString();
 	}

@@ -84,10 +84,10 @@ public class TextSegmentTest {
 
 	@Test
 	public void toStringTest() {
-		assertEquals("TextSegment{text=one\\ntwo\\nthree four}",
+		assertEquals("TextSegment{text=one\ntwo\nthree four}",
 				new TextSegment(createLines("one\ntwo\r\nthree four")).toString());
-		assertEquals("TextSegment{text=01234567890123456789...}",
-				new TextSegment(createLines(StringUtils.repeat("0123456789", 10))).toString());
+		assertEquals("TextSegment{text=0123456789012345678901234567890123456789}",
+				new TextSegment(createLines(StringUtils.repeat("0123456789", 4))).toString());
 	}
 
 	private Iterable<Line> createLines(String content) {

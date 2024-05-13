@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.MultiMapUtils;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.commons.lang3.Validate;
@@ -56,7 +55,9 @@ class HtmlEntities {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		return MultiMapUtils.unmodifiableMultiValuedMap(builder);
+// FIXME Breaks API (returns UnmodifiableCollection instead of List)
+//		return MultiMapUtils.unmodifiableMultiValuedMap(builder);
+		return builder;
 	}
 
 	public static HtmlEntities instance() {

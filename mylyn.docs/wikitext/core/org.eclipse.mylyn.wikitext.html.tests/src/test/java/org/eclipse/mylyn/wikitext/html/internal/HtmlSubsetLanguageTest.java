@@ -72,7 +72,7 @@ public class HtmlSubsetLanguageTest {
 
 	@Test
 	public void createWithUnsupportedSubstituted() {
-		IllegalStateException ise = assertThrows(IllegalStateException.class,
+		IllegalArgumentException ise = assertThrows(IllegalArgumentException.class,
 				() -> new HtmlSubsetLanguage("Test", null, 6, Set.of(BlockType.PARAGRAPH), Set.of(SpanType.BOLD),
 						Map.of(SpanType.ITALIC, "italic"), Collections.emptyList(), false, true));
 		assertTrue(ise.getMessage()

@@ -108,7 +108,7 @@ public class HtmlLanguageBuilderTest {
 
 	@Test
 	public void createWithoutName() {
-		IllegalStateException ise = assertThrows(IllegalStateException.class,
+		IllegalArgumentException ise = assertThrows(IllegalArgumentException.class,
 				() -> builder.add(BlockType.PARAGRAPH).create());
 		assertTrue(ise.getMessage().contains("Name must be provided to create an HtmlLanguage"));
 	}

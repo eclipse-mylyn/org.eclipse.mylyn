@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.CommonMarkLanguage;
+import org.eclipse.mylyn.wikitext.internal.util.WikiStringStyle;
 import org.eclipse.mylyn.wikitext.util.LocationTrackingReader;
 import org.junit.Before;
 import org.junit.Test;
@@ -84,7 +85,8 @@ public class CommonMarkSpecTest {
 
 		@Override
 		public String toString() {
-			return new ToStringBuilder(Expectation.class).append("input", input)
+			return new ToStringBuilder(this, WikiStringStyle.WIKI_STRING_STYLE) //
+					.append("input", input)
 					.append("expected", expected)
 					.toString();
 		}

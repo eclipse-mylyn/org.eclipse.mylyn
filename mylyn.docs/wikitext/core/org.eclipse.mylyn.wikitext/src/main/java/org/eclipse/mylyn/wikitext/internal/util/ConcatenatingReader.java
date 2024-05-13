@@ -18,8 +18,9 @@ import java.io.Reader;
 
 /**
  * a reader that concatenates character streams
- * 
+ *
  * @author David Green
+ * @since 4.3
  */
 public class ConcatenatingReader extends Reader {
 

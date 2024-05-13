@@ -22,6 +22,7 @@ import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.eclipse.mylyn.wikitext.internal.util.WikiStringStyle;
 
 public class TextSegment {
 
@@ -83,7 +84,9 @@ public class TextSegment {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(TextSegment.class).append("text", text).toString(); //$NON-NLS-1$
+		return new ToStringBuilder(this, WikiStringStyle.WIKI_STRING_STYLE) //
+				.append("text", text) //$NON-NLS-1$
+				.toString();
 	}
 
 	public Line getLineAtOffset(int textOffset) {

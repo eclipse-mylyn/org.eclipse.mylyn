@@ -2,13 +2,13 @@
 <!--
  *******************************************************************************
  * Copyright (c) 2024 Contributors to the Eclipse Foundation
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0/.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *   See git history
  *******************************************************************************
@@ -87,9 +87,9 @@
 									preformatted block)
 								</echo>
 
-								<!-- 
+								<!--
                    Don't bother with DTD validation: we only care if the files are well-formed.
-                   We therefore provide an empty DTD 
+                   We therefore provide an empty DTD
                   -->
 								<mkdir dir="__tmp" />
 								<echo file="__tmp/__empty.dtd" message="" />
@@ -114,6 +114,16 @@
 					</execution>
 				</executions>
 				<dependencies>
+					<dependency>
+					    <groupId>org.apache.commons</groupId>
+					    <artifactId>commons-collections4</artifactId>
+					    <version>4.4</version>
+					</dependency>
+					<dependency>
+					    <groupId>org.apache.commons</groupId>
+					    <artifactId>commons-lang3</artifactId>
+					    <version>3.14.0</version>
+					</dependency>
 					<dependency>
 						<groupId>com.google.guava</groupId>
 						<artifactId>guava</artifactId>

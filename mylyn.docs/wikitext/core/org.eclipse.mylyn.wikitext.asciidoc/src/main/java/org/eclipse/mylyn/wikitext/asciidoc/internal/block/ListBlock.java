@@ -174,7 +174,7 @@ public class ListBlock extends Block {
 	}
 
 	private void updateStyleAttribute(ListAttributes attributes, String listSpec, String styleProperty) {
-		int listTypeIndex = TYPE_ORDER.indexOf(styleProperty);
+		int listTypeIndex = styleProperty == null ? -1 : TYPE_ORDER.indexOf(styleProperty);
 		if (listTypeIndex < 0) {
 			listTypeIndex = TYPE_LISTSPEC.indexOf(listSpec);
 		}

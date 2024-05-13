@@ -20,6 +20,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
+import org.eclipse.mylyn.wikitext.internal.util.WikiStringStyle;
 
 public abstract class InlineWithNestedContents extends Inline {
 
@@ -53,7 +54,8 @@ public abstract class InlineWithNestedContents extends Inline {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(getClass()).append("offset", getOffset()) //$NON-NLS-1$
+		return new ToStringBuilder(this, WikiStringStyle.WIKI_STRING_STYLE) //
+				.append("offset", getOffset()) //$NON-NLS-1$
 				.append("length", getLength()) //$NON-NLS-1$
 				.append("contents", getContents()) //$NON-NLS-1$
 				.toString();

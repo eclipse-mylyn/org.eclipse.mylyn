@@ -19,6 +19,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.eclipse.mylyn.wikitext.internal.util.WikiStringStyle;
 import org.eclipse.mylyn.wikitext.parser.Locator;
 
 import com.google.common.base.CharMatcher;
@@ -84,7 +85,8 @@ public class Line {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(Line.class).append("lineNumber", lineNumber) //$NON-NLS-1$
+		return new ToStringBuilder(this, WikiStringStyle.WIKI_STRING_STYLE) //
+				.append("lineNumber", lineNumber) //$NON-NLS-1$
 				.append("offset", offset) //$NON-NLS-1$
 				.append("text", ToStringHelper.toStringValue(text)) //$NON-NLS-1$
 				.toString();

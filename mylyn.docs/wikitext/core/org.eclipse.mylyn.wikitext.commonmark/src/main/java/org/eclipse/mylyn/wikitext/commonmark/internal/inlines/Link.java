@@ -21,6 +21,7 @@ import java.util.Objects;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ToStringHelper;
+import org.eclipse.mylyn.wikitext.internal.util.WikiStringStyle;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
@@ -73,7 +74,8 @@ public class Link extends InlineWithNestedContents {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(Link.class).append("offset", getOffset()) //$NON-NLS-1$
+		return new ToStringBuilder(this, WikiStringStyle.WIKI_STRING_STYLE) //
+				.append("offset", getOffset()) //$NON-NLS-1$
 				.append("length", getLength()) //$NON-NLS-1$
 				.append("href", ToStringHelper.toStringValue(href)) //$NON-NLS-1$
 				.append("title", title) //$NON-NLS-1$
