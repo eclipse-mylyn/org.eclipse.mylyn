@@ -80,6 +80,7 @@ import com.google.gerrit.reviewdb.RefRight;
 import com.google.gerrit.reviewdb.RefRight.RefPattern;
 import com.google.gerrit.reviewdb.RevId;
 import com.google.gerrit.reviewdb.UserIdentity;
+import com.google.gson.reflect.TypeToken;
 
 public class GerritClient212 extends GerritClient29 {
 
@@ -197,31 +198,33 @@ public class GerritClient212 extends GerritClient29 {
 		patchScriptX.setChangeId(new Change.Key(rightId.getParentKey().toString()));
 		patchScriptX.setDiffPrefs(diffPrefs);
 		patchScriptX.setComments(commentDetail);
-		patchScriptX.setHeader(diffInfo.getDiff_header());
-		patchScriptX.setChangeType(diffInfo.getChange_type());
 		patchScriptX.setHistory(adaptRestPatches(rightId, monitor));
 		patchScriptX.setDisplayMethodA(DisplayMethod.DIFF); // hardcoded to diff.
 		patchScriptX.setDisplayMethodB(DisplayMethod.DIFF);
 
-		if (diffInfo.getContent() != null) {
-			patchScriptX.setEdits(adaptDiffContent(diffInfo, patchScriptX, monitor));
-		}
+		if (diffInfo != null) {
+			patchScriptX.setChangeType(diffInfo.getChange_type());
+			patchScriptX.setHeader(diffInfo.getDiff_header());
+			if (diffInfo.getContent() != null) {
+				patchScriptX.setEdits(adaptDiffContent(diffInfo, patchScriptX, monitor));
+			}
 
-		if (diffInfo.getMeta_a() != null) {
-			patchScriptX.setA(adaptSparseFileContent_A(diffInfo, monitor));
-		} else {
-			patchScriptX.setA(new SparseFileContent());
-		}
-		if (diffInfo.getMeta_b() != null) {
-			patchScriptX.setB(adaptSparseFileContent_B(diffInfo, monitor));
-		} else {
-			patchScriptX.setB(new SparseFileContent());
-		}
+			if (diffInfo.getMeta_a() != null) {
+				patchScriptX.setA(adaptSparseFileContent_A(diffInfo, monitor));
+			} else {
+				patchScriptX.setA(new SparseFileContent());
+			}
+			if (diffInfo.getMeta_b() != null) {
+				patchScriptX.setB(adaptSparseFileContent_B(diffInfo, monitor));
+			} else {
+				patchScriptX.setB(new SparseFileContent());
+			}
 
-		if (diffInfo.getDiff_header() != null) {
-			if (patchScriptX.isBinary()) {
-				fetchLeftBinaryContent(patchScriptX, key, leftId, monitor);
-				fetchRightBinaryContent(patchScriptX, key, rightId, monitor);
+			if (diffInfo.getDiff_header() != null) {
+				if (patchScriptX.isBinary()) {
+					fetchLeftBinaryContent(patchScriptX, key, leftId, monitor);
+					fetchRightBinaryContent(patchScriptX, key, rightId, monitor);
+				}
 			}
 		}
 		return patchScriptX;
@@ -297,7 +300,7 @@ public class GerritClient212 extends GerritClient29 {
 		accDiffPref.setContext(diffPrefInfo.getContext());
 		accDiffPref.setIgnoreWhitespace(diffPrefInfo.getIgnoreWhitespace() != null
 				? diffPrefInfo.getIgnoreWhitespace()
-				: Whitespace.IGNORE_NONE);
+						: Whitespace.IGNORE_NONE);
 		accDiffPref.setIntralineDifference(diffPrefInfo.isIntralineDifference());
 		accDiffPref.setLineLength(diffPrefInfo.getLineLength());
 		accDiffPref.setShowTabs(diffPrefInfo.isShowTabs());
@@ -539,8 +542,7 @@ public class GerritClient212 extends GerritClient29 {
 
 	private Map<String, FileInfo> retrieveFileInfos(PatchSet.Id id, IProgressMonitor monitor) throws GerritException {
 		String commitQuery = String.format("/changes/%s/revisions/%s/files", id.getParentKey().get(), id.get()); //$NON-NLS-1$
-		@SuppressWarnings("serial")
-		Type mapTypeToken = new com.google.common.reflect.TypeToken<Map<String, FileInfo>>() {
+		Type mapTypeToken = new TypeToken<Map<String, FileInfo>>() {
 		}.getType();
 		return getRestClient().executeGetRestRequest(commitQuery, mapTypeToken, monitor);
 	}
@@ -567,8 +569,7 @@ public class GerritClient212 extends GerritClient29 {
 	private Map<String, List<CommentInfo>> retrieveRevisionComments(PatchSet.Id id, IProgressMonitor monitor)
 			throws GerritException {
 		String query = String.format("/changes/%s/revisions/%s/comments/", id.getParentKey().get(), id.get()); //$NON-NLS-1$
-		@SuppressWarnings("serial")
-		Type mapTypeToken = new com.google.common.reflect.TypeToken<Map<String, List<CommentInfo>>>() {
+		Type mapTypeToken = new TypeToken<Map<String, List<CommentInfo>>>() {
 		}.getType();
 		return getRestClient().executeGetRestRequest(query, mapTypeToken, monitor);
 	}
@@ -580,8 +581,7 @@ public class GerritClient212 extends GerritClient29 {
 
 	private Map<String, ProjectInfo> listProjects(IProgressMonitor monitor) throws GerritException {
 		String query = String.format("/projects/?n=25"); //$NON-NLS-1$
-		@SuppressWarnings("serial")
-		Type mapTypeToken = new com.google.common.reflect.TypeToken<Map<String, ProjectInfo>>() {
+		Type mapTypeToken = new TypeToken<Map<String, ProjectInfo>>() {
 		}.getType();
 		return getRestClient().executeGetRestRequest(query, mapTypeToken, monitor);
 	}
