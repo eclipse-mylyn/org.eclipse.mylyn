@@ -22,7 +22,7 @@ import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.eclipse.mylyn.wikitext.internal.util.WikiStringStyle;
+import org.eclipse.mylyn.wikitext.internal.util.WikiToStringStyle;
 
 public class TextSegment {
 
@@ -84,7 +84,7 @@ public class TextSegment {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, WikiStringStyle.WIKI_STRING_STYLE) //
+		return new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE) //
 				.append("text", text) //$NON-NLS-1$
 				.toString();
 	}

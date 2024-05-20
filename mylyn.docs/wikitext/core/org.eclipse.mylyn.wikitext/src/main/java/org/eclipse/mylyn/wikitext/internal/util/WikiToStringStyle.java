@@ -16,12 +16,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * @since 4.3
  */
-public class WikiStringStyle extends ToStringStyle {
+public class WikiToStringStyle extends ToStringStyle {
 	private static final long serialVersionUID = 1L;
 
-	public static final WikiStringStyle WIKI_STRING_STYLE = new WikiStringStyle();
+	public static final WikiToStringStyle WIKI_TO_STRING_STYLE = new WikiToStringStyle();
 
-	private WikiStringStyle() {
+	private WikiToStringStyle() {
 		setUseShortClassName(true);
 		setUseIdentityHashCode(false);
 		setFieldSeparator(", "); //$NON-NLS-1$

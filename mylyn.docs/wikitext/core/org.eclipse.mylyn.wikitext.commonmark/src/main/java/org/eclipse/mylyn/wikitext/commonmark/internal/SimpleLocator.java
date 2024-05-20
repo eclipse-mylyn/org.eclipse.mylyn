@@ -18,7 +18,7 @@ package org.eclipse.mylyn.wikitext.commonmark.internal;
 import static java.util.Objects.requireNonNull;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.eclipse.mylyn.wikitext.internal.util.WikiStringStyle;
+import org.eclipse.mylyn.wikitext.internal.util.WikiToStringStyle;
 import org.eclipse.mylyn.wikitext.parser.Locator;
 
 public class SimpleLocator implements Locator {
@@ -78,7 +78,7 @@ public class SimpleLocator implements Locator {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, WikiStringStyle.WIKI_STRING_STYLE) //
+		return new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE) //
 				.append("lineNumber", lineNumber) //$NON-NLS-1$
 				.append("lineDocumentOffset", lineDocumentOffset) //$NON-NLS-1$
 				.append("lineLength", lineLength) //$NON-NLS-1$

@@ -25,7 +25,7 @@ import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContextBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.internal.SimpleLocator;
-import org.eclipse.mylyn.wikitext.internal.util.WikiStringStyle;
+import org.eclipse.mylyn.wikitext.internal.util.WikiToStringStyle;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.Locator;
 
@@ -96,7 +96,7 @@ public abstract class Inline {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, WikiStringStyle.WIKI_STRING_STYLE) //
+		return new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE) //
 				.append("offset", getOffset()) //$NON-NLS-1$
 				.append("length", getLength()) //$NON-NLS-1$
 				.toString();

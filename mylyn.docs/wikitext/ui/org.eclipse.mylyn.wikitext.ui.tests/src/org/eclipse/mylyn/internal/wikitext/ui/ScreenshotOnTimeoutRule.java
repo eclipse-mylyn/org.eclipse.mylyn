@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.eclipse.mylyn.wikitext.internal.util.WikiStringStyle;
+import org.eclipse.mylyn.wikitext.internal.util.WikiToStringStyle;
 import org.eclipse.mylyn.wikitext.toolkit.TimeoutActionRule;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -121,7 +121,7 @@ public class ScreenshotOnTimeoutRule extends TimeoutActionRule {
 	}
 
 	private String description(Control control) {
-		ToStringBuilder builder = new ToStringBuilder(this, WikiStringStyle.WIKI_STRING_STYLE);
+		ToStringBuilder builder = new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE);
 		if (control instanceof StyledText styled) {
 			builder.append("text", styled.getText());
 		}
