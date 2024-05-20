@@ -17,7 +17,7 @@ ua = User.new(username: 'mylynAdmin',
     confirmed_at: DateTime.now,
     password: random_password,
     admin: true)
-ua.assign_personal_namespace                                       
+ua.assign_personal_namespace(Organizations::Organization.default_organization)                                       
 ua.skip_confirmation!
 ua.save!
 
@@ -44,7 +44,7 @@ ut = User.new(username: 'mylynTest',
     confirmed_at: DateTime.now,
     password: random_password,
     admin: true)
-ut.assign_personal_namespace                                       
+ut.assign_personal_namespace(Organizations::Organization.default_organization)                                      
 ut.skip_confirmation!
 ut.save!
 
