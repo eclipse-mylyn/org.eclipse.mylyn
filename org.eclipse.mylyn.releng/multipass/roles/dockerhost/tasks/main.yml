@@ -18,6 +18,8 @@
           - lsb-release
           - jq
           - maven
+          - python3-jsondiff
+          - python3-docker
         state: latest
         update_cache: true
     
@@ -36,21 +38,17 @@
         name: docker-ce
         state: latest
         update_cache: true
-    
-    - name: Install Docker Module for Python
-      ansible.builtin.pip:
-        name: docker
-    
+
     - name: Add remote "ubuntu" user to "docker" group
       ansible.builtin.user:
         name: "ubuntu"
         groups: "docker"
         append: true
         
-    # install docker-compose 1.24.0 version, but you can specify the version you need & apply executable permissions to the binary
+    # install docker-compose 1.27.0 version, but you can specify the version you need & apply executable permissions to the binary
     - name: install docker-compose
       ansible.builtin.get_url:
-        url: https://github.com/docker/compose/releases/download/v2.10.1/docker-compose-{{ ansible_system | lower }}-{{ ansible_architecture }}
+        url: https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-{{ ansible_system | lower }}-{{ ansible_architecture }}
         dest: /usr/local/bin/docker-compose
         mode: 'u+x,g+x'
     
@@ -67,9 +65,6 @@
       loop:
         - /mylyn-config-dir
         - /mylyn-runtime-dir
-    - name: pip jsondiff
-      ansible.builtin.pip:
-        name: jsondiff
 
 #    - name: Creates directory
 #      become: true
