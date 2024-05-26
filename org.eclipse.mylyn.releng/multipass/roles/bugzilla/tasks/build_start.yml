@@ -63,7 +63,7 @@
     label_data:  |
        { traefik.enable: "true" ,
          traefik.docker.network: mylyn_net ,
-         traefik.http.routers.{{ act_item.servmame }}_https.rule: "Host(`{{ common_domain_name }}`,`{{ remote_domain_name }}`) && PathPrefix(`/{{ act_item.servmame }}`)" ,
+         traefik.http.routers.{{ act_item.servmame }}_https.rule: "(Host(`{{ common_domain_name }}`) || Host(`{{ remote_domain_name }}`)) && PathPrefix(`/{{ act_item.servmame }}`)" ,
          traefik.http.routers.{{ act_item.servmame }}_https.entrypoints: websecure ,
          traefik.http.routers.{{ act_item.servmame }}_https.tls: "true" ,
          traefik.http.routers.{{ act_item.servmame }}_https.middlewares: stripprefix_{{ act_item.servmame }} ,
