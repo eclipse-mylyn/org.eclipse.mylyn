@@ -121,11 +121,11 @@
   block:
     - name: set gitlabImageName
       ansible.builtin.set_fact:
-        gitlabImageName: "gitlab/gitlab-ee:{{gitlabImageVersion}}-ce.0"
+        gitlabImageName: "gitlab/gitlab-ce:{{gitlabImageVersion}}-ce.0"
    
     - name: Pull image
       community.docker.docker_image:
-        name: "gitlab/gitlab-ee:{{gitlabImageVersion}}-ce.0"
+        name: "{{ gitlabImageName }}"
         source: pull
   when: (ansible_facts['distribution'] +'/' + ansible_facts['architecture'] != 'Ubuntu/aarch64')    
    
