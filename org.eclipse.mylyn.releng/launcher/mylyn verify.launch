@@ -11,6 +11,7 @@
         <listEntry value="maven.test.failure.ignore=true"/>
         <listEntry value="maven.test.error.ignore=true"/>
         <listEntry value="dash.fail=false"/>
+        <listEntry value="user.home=${system_property:user.home}"/>
     </listAttribute>
     <stringAttribute key="M2_RUNTIME" value="EMBEDDED"/>
     <booleanAttribute key="M2_SKIP_TESTS" value="false"/>
