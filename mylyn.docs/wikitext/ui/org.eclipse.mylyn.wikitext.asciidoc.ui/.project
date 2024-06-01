@@ -21,11 +21,6 @@
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-			<name>org.eclipse.m2e.core.maven2Builder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
 			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
 			<triggers>full,incremental,</triggers>
 			<arguments>
@@ -40,6 +35,11 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.m2e.core.maven2Builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.pde.PluginNature</nature>
@@ -47,6 +47,13 @@
 		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 		<nature>org.eclipse.pde.api.tools.apiAnalysisNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>target_classes</name>
+			<type>2</type>
+			<locationURI>PARENT-1-WORKSPACE_LOC/git/org.eclipse.mylyn/mylyn.docs/wikitext/ui/org.eclipse.mylyn.wikitext.asciidoc.ui/target/classes</locationURI>
+		</link>
+	</linkedResources>
 	<filteredResources>
 		<filter>
 			<id>0</id>
