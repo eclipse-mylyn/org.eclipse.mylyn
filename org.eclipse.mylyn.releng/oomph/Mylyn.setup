@@ -39,11 +39,31 @@
         source="http://www.eclipse.org/oomph/setup/UserPreferences"/>
     <setupTask
         xsi:type="setup:CompoundTask"
+        name="org.eclipse.debug.ui">
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.debug.ui/Console.console_tab_width"
+          value="4"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.debug.ui/Console.limitConsoleOutput"
+          value="false"/>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:CompoundTask"
         name="org.eclipse.mylyn.team.ui">
       <setupTask
           xsi:type="setup:PreferenceTask"
           key="/instance/org.eclipse.mylyn.team.ui/org.eclipse.mylyn.team.commit.template"
           value="$${task.description} #$${task.key}&#xA;&#xA;Task-Url: $${task.url}"/>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:CompoundTask"
+        name="org.eclipse.oomph.setup.ui">
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.oomph.setup.ui/showToolBarContributions"
+          value="true"/>
     </setupTask>
     <setupTask
         xsi:type="setup:CompoundTask"
@@ -88,6 +108,14 @@
         defaultValue="eclipse-mylyn"
         label="GitHub Orga for Repositories">
       <description>Enter the Github Orga for the Repositories</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        name="eclipse.target.platform"
+        value="None"
+        storageURI="scope://Workspace"
+        label="Target Platform">
+      <description>Choose the compatibility level of the target platform</description>
     </setupTask>
   </setupTask>
   <setupTask
@@ -155,12 +183,19 @@
           name="core">
         <properties
             key="autocrlf"
-            value="false"/>
+            value="input"/>
+      </configSections>
+      <configSections
+          name="branch">
+        <properties
+            key="autoSetupRebase"
+            value="always"/>
       </configSections>
       <description>Mylyn without Docs</description>
     </setupTask>
     <setupTask
         xsi:type="setup:ResourceCreationTask"
+        id="mylyn.wikitest.help.devguide.create"
         excludedTriggers="BOOTSTRAP"
         predecessor="git.clone.mylyn"
         targetURL="${git.clone.mylyn.location|uri}/mylyn.docs/wikitext/ui/org.eclipse.mylyn.wikitext.help.ui/help/devguide/WikiText-Developer-Guide-toc.xml">
@@ -172,6 +207,7 @@
     </setupTask>
     <setupTask
         xsi:type="setup:ResourceCreationTask"
+        id="mylyn.wikitest.help.userguide.create"
         excludedTriggers="BOOTSTRAP"
         predecessor="git.clone.mylyn"
         targetURL="${git.clone.mylyn.location|uri}/mylyn.docs/wikitext/ui/org.eclipse.mylyn.wikitext.help.ui/help/Mylyn-WikiText-User-Guide-toc.xml">
@@ -184,7 +220,7 @@
     <setupTask
         xsi:type="projects:ProjectsImportTask"
         id="mylyn.project.import"
-        predecessor="git.clone.mylyn //@projects[name='mylyn']/@setupTasks.2">
+        predecessor="git.clone.mylyn mylyn.wikitest.help.devguide.create mylyn.wikitest.help.userguide.create">
       <sourceLocator
           rootFolder="${git.clone.mylyn.location}"
           locateNestedProjects="true">
@@ -436,7 +472,13 @@
           name="core">
         <properties
             key="autocrlf"
-            value="false"/>
+            value="input"/>
+      </configSections>
+      <configSections
+          name="branch">
+        <properties
+            key="autoSetupRebase"
+            value="always"/>
       </configSections>
       <description>Mylyn without Docs</description>
     </setupTask>
@@ -507,7 +549,13 @@
           name="core">
         <properties
             key="autocrlf"
-            value="false"/>
+            value="input"/>
+      </configSections>
+      <configSections
+          name="branch">
+        <properties
+            key="autoSetupRebase"
+            value="always"/>
       </configSections>
       <description>Mylyn without Docs</description>
     </setupTask>
