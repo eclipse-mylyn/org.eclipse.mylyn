@@ -4,13 +4,16 @@
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
+    xmlns:launching="http://www.eclipse.org/oomph/setup/launching/1.0"
+    xmlns:maven="http://www.eclipse.org/oomph/setup/maven/1.0"
     xmlns:pde="http://www.eclipse.org/oomph/setup/pde/1.0"
     xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
     xmlns:projects="http://www.eclipse.org/oomph/setup/projects/1.0"
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
+    xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0"
     xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/pde/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/launching/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Launching.ecore http://www.eclipse.org/oomph/setup/maven/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Maven.ecore http://www.eclipse.org/oomph/setup/pde/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
     name="mylyn"
     label="Mylyn">
   <annotation
@@ -121,6 +124,15 @@
   <project name="mylyn"
       label="Mylyn">
     <setupTask
+        xsi:type="setup.p2:P2Task">
+      <requirement
+          name="org.eclipse.oomph.setup.maven.feature.group"/>
+      <requirement
+          name="org.eclipse.oomph.launches.feature.group"/>
+      <repository
+          url="http://download.eclipse.org/oomph/updates/release"/>
+    </setupTask>
+    <setupTask
         xsi:type="git:GitCloneTask"
         id="git.clone.mylyn"
         remoteURI="${mylyn-github-orga}/org.eclipse.mylyn">
@@ -172,7 +184,7 @@
     <setupTask
         xsi:type="projects:ProjectsImportTask"
         id="mylyn.project.import"
-        predecessor="git.clone.mylyn //@projects[name='mylyn']/@setupTasks.1">
+        predecessor="git.clone.mylyn //@projects[name='mylyn']/@setupTasks.2">
       <sourceLocator
           rootFolder="${git.clone.mylyn.location}"
           locateNestedProjects="true">
@@ -363,6 +375,15 @@
         clean="true">
       <description>Build All</description>
     </setupTask>
+    <setupTask
+        xsi:type="maven:MavenUpdateTask"
+        id="maven.update"
+        predecessor="launch.install"/>
+    <setupTask
+        xsi:type="launching:LaunchTask"
+        id="launch.install"
+        predecessor="build.all"
+        launcher="mylyn install"/>
     <stream
         name="main"
         label="main">
