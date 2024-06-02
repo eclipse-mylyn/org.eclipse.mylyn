@@ -402,21 +402,14 @@
       </workingSet>
     </setupTask>
     <setupTask
-        xsi:type="projects:ProjectsBuildTask"
-        id="build.all"
-        refresh="true"
-        clean="true">
-      <description>Build All</description>
-    </setupTask>
+        xsi:type="launching:LaunchTask"
+        id="launch.install"
+        predecessor="mylyn.workingsets"
+        launcher="mylyn install"/>
     <setupTask
         xsi:type="maven:MavenUpdateTask"
         id="maven.update"
         predecessor="launch.install"/>
-    <setupTask
-        xsi:type="launching:LaunchTask"
-        id="launch.install"
-        predecessor="build.all"
-        launcher="mylyn install"/>
     <stream
         name="main"
         label="main">
@@ -436,6 +429,92 @@
           vm="true"/>
     </stream>
     <description>The new Setup for Mylyn hosted on GitHub</description>
+  </project>
+  <project name="github.admin"
+      label="Mylyn GitHub Organisation Administration">
+    <annotation
+        source="http://www.eclipse.org/oomph/setup/BrandingInfo">
+      <detail
+          key="imageURI">
+        <value>https://github.githubassets.com/favicons/favicon.png</value>
+      </detail>
+    </annotation>
+    <setupTask
+        xsi:type="git:GitCloneTask"
+        id="git.clone.mylyn.github.admin"
+        locationQualifier="mylyn"
+        remoteURI="${mylyn-github-orga}/.github">
+      <annotation
+          source="http://www.eclipse.org/oomph/setup/InducedChoices">
+        <detail
+            key="inherit">
+          <value>github.remoteURIs</value>
+        </detail>
+        <detail
+            key="label">
+          <value>Mylyn GitHub Administration Repository</value>
+        </detail>
+        <detail
+            key="target">
+          <value>remoteURI</value>
+        </detail>
+      </annotation>
+      <configSections
+          name="core">
+        <properties
+            key="autocrlf"
+            value="input"/>
+      </configSections>
+      <configSections
+          name="branch">
+        <properties
+            key="autoSetupRebase"
+            value="always"/>
+      </configSections>
+      <description>Mylyn without Docs</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:ResourceCreationTask"
+        id="mylyn.github.admin.create.projectfile"
+        excludedTriggers="BOOTSTRAP"
+        predecessor="git.clone.mylyn.github.admin"
+        targetURL="${git.clone.mylyn.github.admin.location|uri}/.project"
+        encoding="UTF-8">
+      <content>
+        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
+        &lt;projectDescription>
+        	&lt;name>org.eclipse.mylyn.github&lt;/name>
+        	&lt;comment>Mylyn Github&lt;/comment>
+        	&lt;projects>
+        	&lt;/projects>
+        	&lt;buildSpec>
+        	&lt;/buildSpec>
+        	&lt;natures>
+        	&lt;/natures>
+        &lt;/projectDescription>
+      </content>
+    </setupTask>
+    <setupTask
+        xsi:type="projects:ProjectsImportTask"
+        predecessor="mylyn.github.admin.create.projectfile">
+      <sourceLocator
+          rootFolder="${git.clone.mylyn.github.admin.location}"/>
+      <description>Import Releng Project</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.workingsets:WorkingSetTask"
+        id="github.admin.workingsets">
+      <workingSet
+          name="Administration">
+        <predicate
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn.github"/>
+      </workingSet>
+    </setupTask>
+    <stream
+        name="main"
+        label="main"/>
+    <description>The Setup for Mylyn GitHub Organisation Definitions</description>
   </project>
   <project name="mylyn.website"
       label="Mylyn Website">
