@@ -157,8 +157,6 @@
           name="org.eclipse.oomph.setup.maven.feature.group"/>
       <requirement
           name="org.eclipse.oomph.launches.feature.group"/>
-      <repository
-          url="http://download.eclipse.org/oomph/updates/release"/>
     </setupTask>
     <setupTask
         xsi:type="git:GitCloneTask"
@@ -492,6 +490,17 @@
         	&lt;natures>
         	&lt;/natures>
         &lt;/projectDescription>
+      </content>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:ResourceCreationTask"
+        excludedTriggers="BOOTSTRAP"
+        targetURL="${git.clone.mylyn.github.admin.location|uri}/.gitignore"
+        encoding="UTF-8">
+      <content>
+        .project
+        .gitignore
+        /.settings/
       </content>
     </setupTask>
     <setupTask
