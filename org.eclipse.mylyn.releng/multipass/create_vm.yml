@@ -99,7 +99,7 @@
   gather_facts: false
   tasks:
     - name: Fetch stuff from the remote and save to local
-      synchronize:  src={{ item }} dest=../../../../certs/ mode=pull
+      synchronize:  src={{ item }} dest=certs/ mode=pull
       with_items:
         - "/cacerts/root_ca"
 - name: copy files to destination
@@ -108,7 +108,7 @@
   tasks:
     - name: copy src.txt as dest.txt in the same dir 
       copy:
-        src: ../../../../certs/cacerts
-        dest: ../../../../certs/mylyncacerts
+        src: certs/cacerts
+        dest: certs/mylyncacerts
     - name: add mylynadm01.crt
-      command: keytool -alias mylyn -storepass changeit -noprompt -import -file ../../../../certs/root_ca/mylynadm01.crt -keystore ../../../../certs/mylyncacerts
+      command: keytool -alias mylyn -storepass changeit -noprompt -import -file certs/root_ca/mylynadm01.crt -keystore certs/mylyncacerts

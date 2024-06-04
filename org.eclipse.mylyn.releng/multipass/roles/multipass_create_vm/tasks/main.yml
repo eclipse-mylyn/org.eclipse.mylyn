@@ -28,7 +28,7 @@
               - {{ user_data }}
 
 - name: create if needed
-  shell: multipass launch -n {{ item.name }} --disk {{ item.disk }} --mem {{ item.memory }} --cpus {{ item.cpus }} --cloud-init first_setup/cloud-init.yaml
+  shell: multipass launch -n {{ item.name }} --disk {{ item.disk }} --memory {{ item.memory }} --cpus {{ item.cpus }} --cloud-init first_setup/cloud-init.yaml
   when: item.name not in inst_list | map(attribute='inst_name') 
   with_items: "{{ setup_lst }}"
 - name: new list
