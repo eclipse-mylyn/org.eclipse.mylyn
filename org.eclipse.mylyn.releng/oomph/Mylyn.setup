@@ -402,6 +402,7 @@
     <setupTask
         xsi:type="launching:LaunchTask"
         id="launch.install"
+        disabled="true"
         predecessor="mylyn.workingsets"
         launcher="mylyn install"/>
     <setupTask
