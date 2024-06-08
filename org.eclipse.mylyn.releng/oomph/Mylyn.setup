@@ -4,7 +4,6 @@
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
-    xmlns:launching="http://www.eclipse.org/oomph/setup/launching/1.0"
     xmlns:maven="http://www.eclipse.org/oomph/setup/maven/1.0"
     xmlns:pde="http://www.eclipse.org/oomph/setup/pde/1.0"
     xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
@@ -13,7 +12,7 @@
     xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0"
     xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/launching/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Launching.ecore http://www.eclipse.org/oomph/setup/maven/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Maven.ecore http://www.eclipse.org/oomph/setup/pde/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/maven/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Maven.ecore http://www.eclipse.org/oomph/setup/pde/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
     name="mylyn"
     label="Mylyn">
   <annotation
@@ -104,13 +103,6 @@
     </setupTask>
     <setupTask
         xsi:type="setup:VariableTask"
-        name="mylyn-github-orga"
-        defaultValue="eclipse-mylyn"
-        label="GitHub Orga for Repositories">
-      <description>Enter the Github Orga for the Repositories</description>
-    </setupTask>
-    <setupTask
-        xsi:type="setup:VariableTask"
         name="eclipse.target.platform"
         value="None"
         storageURI="scope://Workspace"
@@ -152,6 +144,25 @@
   <project name="mylyn"
       label="Mylyn">
     <setupTask
+        xsi:type="setup:VariableTask"
+        name="mylyn.github.fork.name"
+        defaultValue="org.eclipse.mylyn"
+        label="Mylyn Fork Name">
+      <description>The Name of the Froked Repository in your Organisation</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        name="mylyn.github.fork"
+        label="Mylyn Fork">
+      <choice
+          value="git@github.com:${github.user.id}/${mylyn.github.fork.name}.git"
+          label="SSH"/>
+      <choice
+          value="https://github.com/${github.user.id}/${mylyn.github.fork.name}.git"
+          label="HTTPS"/>
+      <description>The remote URL to be used for pull requests via your fork of org.eclipse.mylyn</description>
+    </setupTask>
+    <setupTask
         xsi:type="setup.p2:P2Task">
       <requirement
           name="org.eclipse.oomph.setup.maven.feature.group"/>
@@ -161,7 +172,7 @@
     <setupTask
         xsi:type="git:GitCloneTask"
         id="git.clone.mylyn"
-        remoteURI="${mylyn-github-orga}/org.eclipse.mylyn">
+        remoteURI="eclipse-mylyn/org.eclipse.mylyn">
       <annotation
           source="http://www.eclipse.org/oomph/setup/InducedChoices">
         <detail
@@ -189,7 +200,16 @@
             key="autoSetupRebase"
             value="always"/>
       </configSections>
-      <description>Mylyn without Docs</description>
+      <configSections
+          name="remote">
+        <subsections
+            name="${github.user.id}">
+          <properties
+              key="url"
+              value="${mylyn.github.fork}"/>
+        </subsections>
+      </configSections>
+      <description>Mylyn</description>
     </setupTask>
     <setupTask
         xsi:type="setup:ResourceCreationTask"
@@ -400,15 +420,8 @@
       </workingSet>
     </setupTask>
     <setupTask
-        xsi:type="launching:LaunchTask"
-        id="launch.install"
-        disabled="true"
-        predecessor="mylyn.workingsets"
-        launcher="mylyn install"/>
-    <setupTask
         xsi:type="maven:MavenUpdateTask"
-        id="maven.update"
-        predecessor="launch.install"/>
+        id="maven.update"/>
     <stream
         name="main"
         label="main">
@@ -439,10 +452,29 @@
       </detail>
     </annotation>
     <setupTask
+        xsi:type="setup:VariableTask"
+        name="mylyn.github.administration.fork.name"
+        defaultValue="mylyn-github"
+        label="Mylyn Administration Fork Name">
+      <description>The Name of the Froked Mylyn Administration Repository in your Organisation</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        name="mylyn.github.administration.fork"
+        label="Mylyn Administration Fork">
+      <choice
+          value="git@github.com:${github.user.id}/${mylyn.github.administration.fork.name}.git"
+          label="SSH"/>
+      <choice
+          value="https://github.com/${github.user.id}/${mylyn.github.administration.fork.name}.git"
+          label="HTTPS"/>
+      <description>The remote URL to be used for pull requests via your fork of .github</description>
+    </setupTask>
+    <setupTask
         xsi:type="git:GitCloneTask"
         id="git.clone.mylyn.github.admin"
         locationQualifier="mylyn"
-        remoteURI="${mylyn-github-orga}/.github">
+        remoteURI="eclipse-mylyn/.github">
       <annotation
           source="http://www.eclipse.org/oomph/setup/InducedChoices">
         <detail
@@ -470,7 +502,16 @@
             key="autoSetupRebase"
             value="always"/>
       </configSections>
-      <description>Mylyn without Docs</description>
+      <configSections
+          name="remote">
+        <subsections
+            name="${github.user.id}">
+          <properties
+              key="url"
+              value="${mylyn.github.administration.fork}"/>
+        </subsections>
+      </configSections>
+      <description>Mylyn Administration</description>
     </setupTask>
     <setupTask
         xsi:type="setup:ResourceCreationTask"
@@ -529,9 +570,28 @@
   <project name="mylyn.website"
       label="Mylyn Website">
     <setupTask
+        xsi:type="setup:VariableTask"
+        name="mylyn.github.website.fork.name"
+        defaultValue="mylyn-website"
+        label="Mylyn Website Fork Name">
+      <description>The Name of the Froked Mylyn Website Repository in your Organisation</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        name="mylyn.github.website.fork"
+        label="Mylyn Website Fork">
+      <choice
+          value="git@github.com:${github.user.id}/${mylyn.github.website.fork.name}.git"
+          label="SSH"/>
+      <choice
+          value="https://github.com/${github.user.id}/${mylyn.github.website.fork.name}.git"
+          label="HTTPS"/>
+      <description>The remote URL to be used for pull requests via your fork of Mylyn Website</description>
+    </setupTask>
+    <setupTask
         xsi:type="git:GitCloneTask"
         id="git.clone.mylyn.github.website"
-        remoteURI="${mylyn-github-orga}/mylyn-website">
+        remoteURI="eclipse-mylyn/mylyn-website">
       <annotation
           source="http://www.eclipse.org/oomph/setup/InducedChoices">
         <detail
@@ -540,7 +600,7 @@
         </detail>
         <detail
             key="label">
-          <value>Mylyn GitHub Administration Repository</value>
+          <value>Mylyn GitHub Website Repository</value>
         </detail>
         <detail
             key="target">
@@ -559,7 +619,16 @@
             key="autoSetupRebase"
             value="always"/>
       </configSections>
-      <description>Mylyn without Docs</description>
+      <configSections
+          name="remote">
+        <subsections
+            name="${github.user.id}">
+          <properties
+              key="url"
+              value="${mylyn.github.website.fork}"/>
+        </subsections>
+      </configSections>
+      <description>Mylyn Website</description>
     </setupTask>
     <setupTask
         xsi:type="projects:ProjectsImportTask">
