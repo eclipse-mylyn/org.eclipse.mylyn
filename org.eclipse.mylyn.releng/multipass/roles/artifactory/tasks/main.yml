@@ -34,7 +34,7 @@
          traefik.http.routers.artifactoryApi.tls: "true" ,
          traefik.http.routers.artifactoryApi.service: "artifactoryApi" ,
          traefik.http.services.artifactoryApi.loadbalancer.server.port: "8081" ,
-         traefik.http.routers.artifactoryDocker.rule: 'Host(`docker.artifactory.{{common_domain_name}}` , `docker1.artifactory.{{common_domain_name}}`)' ,
+         traefik.http.routers.artifactoryDocker.rule: '(Host(`docker.artifactory.{{common_domain_name}}`) || Host(`docker1.artifactory.{{common_domain_name}}`))' ,
          traefik.http.routers.artifactoryDocker.entrypoints: websecure ,
          traefik.http.routers.artifactoryDocker.tls: "true" ,
          traefik.http.routers.artifactoryDocker.service: "artifactoryApi" ,
