@@ -34,7 +34,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.mylyn.jdt.feature" version="4.3.0" match="equivalent"/>
+      <import feature="org.eclipse.mylyn.jdt.feature" version="4.4.0" match="equivalent"/>
       <import feature="org.eclipse.pde" version="3.6.0" match="compatible"/>
    </requires>
 

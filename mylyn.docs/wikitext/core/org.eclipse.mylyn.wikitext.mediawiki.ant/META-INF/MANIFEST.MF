@@ -22,5 +22,5 @@ Import-Package: javax.xml.parsers,
  org.eclipse.mylyn.wikitext.util;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.validation;version="[4.2,5)",
  org.xml.sax
-Export-Package: org.eclipse.mylyn.wikitext.mediawiki.ant;version="4.3.0";x-internal:=true,
- org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks;version="4.3.0";x-internal:=true
+Export-Package: org.eclipse.mylyn.wikitext.mediawiki.ant;version="4.4.0";x-internal:=true,
+ org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks;version="4.4.0";x-internal:=true

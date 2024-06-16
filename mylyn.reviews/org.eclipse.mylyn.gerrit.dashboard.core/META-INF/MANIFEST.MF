@@ -10,9 +10,9 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
  org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.egit.core;bundle-version="0.0.0",
  org.eclipse.jgit;bundle-version="0.0.0",
- org.eclipse.mylyn.gerrit.core;bundle-version="4.3.0",
- org.eclipse.mylyn.reviews.core;bundle-version="4.3.0",
- org.eclipse.mylyn.tasks.core;bundle-version="4.3.0"
+ org.eclipse.mylyn.gerrit.core;bundle-version="4.4.0",
+ org.eclipse.mylyn.reviews.core;bundle-version="4.4.0",
+ org.eclipse.mylyn.tasks.core;bundle-version="4.4.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: %providerName

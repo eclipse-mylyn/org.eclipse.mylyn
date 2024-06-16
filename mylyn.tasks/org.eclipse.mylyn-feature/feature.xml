@@ -36,11 +36,11 @@
    </url>
 
    <requires>
-      <import feature="org.eclipse.mylyn.commons.feature" version="4.3.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.commons.identity.feature" version="4.3.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.commons.notifications.feature" version="4.3.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.commons.repositories.feature" version="4.3.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.monitor.feature" version="4.3.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.commons.feature" version="4.4.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.commons.identity.feature" version="4.4.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.commons.notifications.feature" version="4.4.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.commons.repositories.feature" version="4.4.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.monitor.feature" version="4.4.0" match="compatible"/>
    </requires>
 
    <plugin

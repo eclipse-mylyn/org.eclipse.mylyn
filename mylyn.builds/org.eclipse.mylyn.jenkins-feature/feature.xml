@@ -34,8 +34,8 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.mylyn.builds.feature" version="4.3.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.commons.repositories.feature" version="4.3.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.builds.feature" version="4.4.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.commons.repositories.feature" version="4.4.0" match="compatible"/>
    </requires>
 
    <plugin

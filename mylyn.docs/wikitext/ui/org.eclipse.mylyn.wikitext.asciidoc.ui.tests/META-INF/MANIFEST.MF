@@ -10,9 +10,9 @@ Import-Package: org.eclipse.jface.text.templates.persistence,
  org.eclipse.mylyn.internal.wikitext.ui,
  org.eclipse.mylyn.internal.wikitext.ui.editor.assist
 Require-Bundle: org.junit;bundle-version="3.8.2",
- org.eclipse.mylyn.wikitext;bundle-version="4.3.0",
- org.eclipse.mylyn.wikitext.asciidoc;bundle-version="4.3.0",
- org.eclipse.mylyn.wikitext.asciidoc.ui;bundle-version="4.3.0",
+ org.eclipse.mylyn.wikitext;bundle-version="4.4.0",
+ org.eclipse.mylyn.wikitext.asciidoc;bundle-version="4.4.0",
+ org.eclipse.mylyn.wikitext.asciidoc.ui;bundle-version="4.4.0",
  org.eclipse.jface.text
 Export-Package: 
  org.eclipse.mylyn.internal.wikitext.asciidoc.tests;x-internal:=true
