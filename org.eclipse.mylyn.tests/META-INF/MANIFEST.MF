@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Tests
 Bundle-SymbolicName: org.eclipse.mylyn.tests;singleton:=true
-Bundle-Version: 4.3.0.qualifier
+Bundle-Version: 4.4.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Export-Package: org.eclipse.mylyn.tests;x-internal:=true,
  org.eclipse.mylyn.tests.integration;x-internal:=true,

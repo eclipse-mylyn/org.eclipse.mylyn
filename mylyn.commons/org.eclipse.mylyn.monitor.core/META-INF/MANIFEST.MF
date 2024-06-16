@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.monitor.core
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.monitor.core;singleton:=true
-Bundle-Version: 4.3.0.qualifier
+Bundle-Version: 4.4.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.mylyn.internal.monitor.core;x-friends:="org.eclipse.mylyn.monitor.ui",

@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.tasks.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Tasks Tests
 Bundle-SymbolicName: org.eclipse.mylyn.tasks.tests;singleton:=true
-Bundle-Version: 4.3.0.qualifier
+Bundle-Version: 4.4.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.tasks.tests.TasksTestsPlugin
 Bundle-Vendor: Eclipse Mylyn
 Require-Bundle: org.eclipse.core.expressions;bundle-version="0.0.0",

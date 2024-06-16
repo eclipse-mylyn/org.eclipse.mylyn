@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.gerrit.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Gerrit Connector
 Bundle-SymbolicName: org.eclipse.mylyn.gerrit.tests;singleton:=true
-Bundle-Version: 4.3.0.qualifier
+Bundle-Version: 4.4.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: net.bytebuddy.byte-buddy;bundle-version="1.12.18",

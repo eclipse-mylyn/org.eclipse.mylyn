@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.reviews.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Reviews UI
 Bundle-SymbolicName: org.eclipse.mylyn.reviews.ui;singleton:=true
-Bundle-Version: 4.3.0.qualifier
+Bundle-Version: 4.4.0.qualifier
 Require-Bundle: org.eclipse.compare;bundle-version="0.0.0",
  org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.core.resources;bundle-version="0.0.0",
