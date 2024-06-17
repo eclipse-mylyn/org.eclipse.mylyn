@@ -45,7 +45,7 @@
         - base_software
 
 #
-# create Certificates for amm non Admin Nodes
+# create Certificates for all non Admin Nodes
 #
 - hosts: "{{ hostvars['localhost'].setup_noadmin_vm_list }}"
   gather_facts: true

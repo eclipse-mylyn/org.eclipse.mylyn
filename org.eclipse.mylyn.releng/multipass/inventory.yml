@@ -15,7 +15,8 @@ all:
         multipass_disk: 30G
         multipass_memory: 10G
         multipass_cpus: 4
-#       additional_launch_parms: --network en0 # acces from external
+#       additional_launch_parms: --network en0 # (MacOS) access from external
+#       additional_launch_parms: --network eth0 # (Ubuntu) access from external
     mylyn_swarm_worker:
       hosts:
         mylynwrk01:

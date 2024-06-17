@@ -16,7 +16,7 @@ This setup is only tested on am MacBook Pro M1.
    Steps from my Mac Environment use $JAVA_HOME on other Environments.
    $JAVA_HOME was not set on my environment so I have to use th Path '/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home' instead
 
-   1. cp /Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home/lib/security/cacerts to the root folder of your installation ../certs/cacerts
+   1. cp $JAVA_HOME/lib/security/cacerts certs/cacerts
 3. Create the Multipass VM's (3 VM's)
   - switch to this folder
      ```
@@ -57,9 +57,7 @@ This setup is only tested on am MacBook Pro M1.
 6. delete VM's and recreate VM's 
    1. delete the running VM's
    ```
-   multipass delete mylynadm01 
-   multipass delete mylynmstr01
-   multipass delete mylynwrk01
+   multipass delete --all
    multipass purge
    ```
    2. on macOS we need to delete the on no longer needed IP Address 
@@ -81,3 +79,7 @@ This setup is only tested on am MacBook Pro M1.
    ansible-playbook create_vm.yml --ask-become-pass --extra-vars="docker_run_mode=single"
    ansible-playbook mylyn_setup.yml --extra-vars="docker_run_mode=single"
    ```
+   
+   
+   ansible-playbook create_vm.yml --ask-become-pass --extra-vars="docker_run_mode=all"
+   ansible-playbook mylyn_setup.yml --extra-vars="docker_run_mode=container" --extra-vars="remote_domain=${FQDN}" --skip-tags artifactory,bugzilla,jenkins,gitlab
