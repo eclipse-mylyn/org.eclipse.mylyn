@@ -18,7 +18,7 @@
     <parent>
       <groupId>org.eclipse.mylyn</groupId>
       <artifactId>org.eclipse.mylyn.parent</artifactId>
-      <version>4.3.0-SNAPSHOT</version>
+      <version>4.4.0-SNAPSHOT</version>
       <relativePath>../mylyn.releng/org.eclipse.mylyn.parent</relativePath>
     </parent>
     <groupId>org.eclipse.mylyn.docs</groupId>
@@ -32,7 +32,7 @@
     </description>
     <url>https://projects.eclipse.org/projects/mylyn.docs</url>
     <properties>
-        <releaseVersion>4.3.0</releaseVersion>
+        <releaseVersion>4.4.0</releaseVersion>
         <qualifier>-SNAPSHOT</qualifier>
         <tycho-version>4.0.8</tycho-version>
         <tycho.scmUrl>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.docs</tycho.scmUrl>
