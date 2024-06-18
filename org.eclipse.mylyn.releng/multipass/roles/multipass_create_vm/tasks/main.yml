@@ -53,15 +53,7 @@
     replace: "\\1\"{{item.mip}}\""
   with_items: "{{ ip_2_change }}"
   when: ip_2_change is defined  
-- name: change etc hosts
-  become: true
-  become_user: root
-  ansible.builtin.replace:
-    path: /etc/hosts
-    regexp: "{{item.aip | regex_escape()}}(\\s+.*)?$"
-    replace: "{{item.mip}}\\1"
-  with_items: "{{ ip_2_change }}"
-  when: ip_2_change is defined and (not item.aip  is search("192.168.64.x"))
+
 - name: append etc hosts
   become: true
   become_user: root
@@ -71,3 +63,14 @@
     insertafter: EOF
   with_items: "{{ ip_2_change }}"
   when: ip_2_change is defined and (item.aip  is search("192.168.64.x")) 
+
+- name: change etc hosts
+  become: true
+  become_user: root
+  ansible.builtin.replace:
+    path: /etc/hosts
+    regexp: "{{item.aip | regex_escape()}}(\\s+.*)?$"
+    replace: "{{item.mip}}\\1"
+  with_items: "{{ ip_2_change }}"
+  when: ip_2_change is defined and (not item.aip  is search("192.168.64.x"))
+
