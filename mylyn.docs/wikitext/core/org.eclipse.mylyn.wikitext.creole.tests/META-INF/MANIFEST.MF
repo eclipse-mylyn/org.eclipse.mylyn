@@ -2,19 +2,19 @@ Manifest-Version: 1.0
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.creole.tests
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.creole.tests
-Bundle-Version: 4.3.0.qualifier
+Bundle-Version: 4.4.0.qualifier
 Bundle-Name: Mylyn WikiText Creole Tests
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.wikitext.creole
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=17))"
 Import-Package: com.google.common.base;version="[33.0,34.0)",
- org.eclipse.mylyn.wikitext.html;version="4.3.0",
+ org.eclipse.mylyn.wikitext.html;version="4.4.0",
  org.eclipse.mylyn.wikitext.parser;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.parser.builder;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.parser.markup;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.parser.markup.phrase;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.parser.markup.token;version="[4.2,5)",
- org.eclipse.mylyn.wikitext.util;version="4.3.0",
+ org.eclipse.mylyn.wikitext.util;version="4.4.0",
  org.eclipse.mylyn.wikitext.validation;version="[4.2,5)",
  org.junit;version="4.13.2"

@@ -36,7 +36,7 @@
 
    <requires>
       <import feature="org.eclipse.egit" version="6.2.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.mylyn.tasks.feature" version="4.3.0" match="equivalent"/>
+      <import feature="org.eclipse.mylyn.tasks.feature" version="4.4.0" match="equivalent"/>
    </requires>
 
    <plugin

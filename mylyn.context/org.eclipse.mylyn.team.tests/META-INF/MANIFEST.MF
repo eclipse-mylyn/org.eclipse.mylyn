@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.team.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Team Tests
 Bundle-SymbolicName: org.eclipse.mylyn.team.tests;singleton:=true
-Bundle-Version: 4.3.0.qualifier
+Bundle-Version: 4.4.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
  org.eclipse.core.runtime;bundle-version="0.0.0",
@@ -12,18 +12,18 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
  org.eclipse.team.ui;bundle-version="0.0.0",
  org.eclipse.ui;bundle-version="0.0.0",
  org.eclipse.ui.ide;bundle-version="0.0.0",
- org.eclipse.mylyn.commons.sdk.util;bundle-version="4.3.0",
- org.eclipse.mylyn.context.core;bundle-version="4.3.0",
- org.eclipse.mylyn.context.sdk.util;bundle-version="4.3.0",
- org.eclipse.mylyn.context.tasks.ui;bundle-version="4.3.0",
- org.eclipse.mylyn.ide.ui;bundle-version="4.3.0",
- org.eclipse.mylyn.monitor.core;bundle-version="4.3.0",
- org.eclipse.mylyn.monitor.ui;bundle-version="4.3.0",
- org.eclipse.mylyn.resources.ui;bundle-version="4.3.0",
- org.eclipse.mylyn.tasks.core;bundle-version="4.3.0",
- org.eclipse.mylyn.tasks.tests;bundle-version="4.3.0",
- org.eclipse.mylyn.tasks.ui;bundle-version="4.3.0",
- org.eclipse.mylyn.team.ui;bundle-version="4.3.0",
+ org.eclipse.mylyn.commons.sdk.util;bundle-version="4.4.0",
+ org.eclipse.mylyn.context.core;bundle-version="4.4.0",
+ org.eclipse.mylyn.context.sdk.util;bundle-version="4.4.0",
+ org.eclipse.mylyn.context.tasks.ui;bundle-version="4.4.0",
+ org.eclipse.mylyn.ide.ui;bundle-version="4.4.0",
+ org.eclipse.mylyn.monitor.core;bundle-version="4.4.0",
+ org.eclipse.mylyn.monitor.ui;bundle-version="4.4.0",
+ org.eclipse.mylyn.resources.ui;bundle-version="4.4.0",
+ org.eclipse.mylyn.tasks.core;bundle-version="4.4.0",
+ org.eclipse.mylyn.tasks.tests;bundle-version="4.4.0",
+ org.eclipse.mylyn.tasks.ui;bundle-version="4.4.0",
+ org.eclipse.mylyn.team.ui;bundle-version="4.4.0",
  org.junit;bundle-version="4.8.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.mylyn.team.tests;x-internal:=true
