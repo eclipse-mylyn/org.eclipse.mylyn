@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.parser.markup;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static org.eclipse.mylyn.wikitext.internal.util.Preconditions.checkArgument;
 
 import java.io.Writer;
 import java.util.Collections;
@@ -180,4 +180,25 @@ public abstract class MarkupLanguage implements Cloneable {
 	public DocumentBuilder createDocumentBuilder(Writer out, boolean formatting) {
 		throw new UnsupportedOperationException();
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		MarkupLanguage other = (MarkupLanguage) obj;
+		return Objects.equals(name, other.name);
+	}
+
 }

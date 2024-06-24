@@ -35,4 +35,9 @@ public class MockMarkupLanguage extends MarkupLanguage {
 		throw new UnsupportedOperationException();
 	}
 
+	public static class MockMarkupLanguage2 extends MockMarkupLanguage {
+		public MockMarkupLanguage2(String name) {
+			super(name);
+		}
+	}
 }

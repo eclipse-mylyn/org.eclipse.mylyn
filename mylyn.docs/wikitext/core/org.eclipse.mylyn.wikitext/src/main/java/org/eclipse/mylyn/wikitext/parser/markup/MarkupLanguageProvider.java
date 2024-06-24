@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.parser.markup;
 
-import static com.google.common.base.Preconditions.checkState;
+import static org.eclipse.mylyn.wikitext.internal.util.Preconditions.checkState;
 
 import java.util.HashSet;
 import java.util.Objects;

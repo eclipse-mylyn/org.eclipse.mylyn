@@ -16,12 +16,11 @@ package org.eclipse.mylyn.wikitext.internal.parser.html;
 
 import java.util.List;
 
+import org.eclipse.mylyn.wikitext.internal.util.Strings;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
-
-import com.google.common.base.Strings;
 
 /**
  * @author David Green

@@ -63,7 +63,7 @@ public class MarkupLanguageProviderTest {
 
 			@Override
 			protected Set<MarkupLanguage> loadMarkupLanguages() {
-				return Set.of(new MockMarkupLanguage("Test"), new MockMarkupLanguage("Test"));
+				return Set.of(new MockMarkupLanguage("Test"), new MockMarkupLanguage.MockMarkupLanguage2("Test"));
 			}
 		};
 		IllegalStateException ise = assertThrows(IllegalStateException.class, () -> provider.getMarkupLanguages());

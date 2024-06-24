@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.parser.util;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static org.eclipse.mylyn.wikitext.internal.util.Preconditions.checkArgument;
 
 import java.io.StringWriter;
 import java.io.Writer;
