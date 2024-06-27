@@ -9,7 +9,7 @@
  *      See git history
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.internal.util;
+package org.eclipse.mylyn.wikitext.util;
 
 import org.apache.commons.lang3.builder.ToStringStyle;
 

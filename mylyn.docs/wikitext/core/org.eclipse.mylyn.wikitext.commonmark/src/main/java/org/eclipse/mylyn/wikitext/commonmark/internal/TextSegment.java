@@ -22,7 +22,7 @@ import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.eclipse.mylyn.wikitext.internal.util.WikiToStringStyle;
+import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 
 public class TextSegment {
 

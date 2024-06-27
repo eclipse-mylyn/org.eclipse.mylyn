@@ -26,8 +26,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.eclipse.mylyn.wikitext.internal.util.WikiToStringStyle;
 import org.eclipse.mylyn.wikitext.toolkit.TimeoutActionRule;
+import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.GC;

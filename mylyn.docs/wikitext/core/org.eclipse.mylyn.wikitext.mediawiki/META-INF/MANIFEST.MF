@@ -7,8 +7,7 @@ Bundle-Name: Mylyn WikiText MediaWiki
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=17))"
-Import-Package: com.google.common.io;version="[33.0,34.0)",
- org.apache.commons.io;version="[2.16.0,3.0.0)",
+Import-Package: org.apache.commons.io;version="[2.16.0,3.0.0)",
  org.eclipse.mylyn.wikitext.parser;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.parser.markup;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.parser.markup.block;version="[4.2,5)",

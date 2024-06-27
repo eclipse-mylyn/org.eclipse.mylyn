@@ -18,8 +18,8 @@ package org.eclipse.mylyn.wikitext.commonmark.internal;
 import static java.util.Objects.requireNonNull;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.eclipse.mylyn.wikitext.internal.util.WikiToStringStyle;
 import org.eclipse.mylyn.wikitext.parser.Locator;
+import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 
 public class SimpleLocator implements Locator {
 

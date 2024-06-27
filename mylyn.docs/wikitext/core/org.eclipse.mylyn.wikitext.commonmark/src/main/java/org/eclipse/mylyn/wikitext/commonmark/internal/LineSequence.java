@@ -21,7 +21,7 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.eclipse.mylyn.wikitext.internal.util.WikiToStringStyle;
+import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 
 public abstract class LineSequence implements Iterable<Line> {
 

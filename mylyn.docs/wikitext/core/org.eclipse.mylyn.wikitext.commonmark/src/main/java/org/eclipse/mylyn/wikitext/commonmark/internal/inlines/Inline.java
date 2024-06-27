@@ -25,9 +25,9 @@ import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContextBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.internal.SimpleLocator;
-import org.eclipse.mylyn.wikitext.internal.util.WikiToStringStyle;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.Locator;
+import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 
 public abstract class Inline {
 

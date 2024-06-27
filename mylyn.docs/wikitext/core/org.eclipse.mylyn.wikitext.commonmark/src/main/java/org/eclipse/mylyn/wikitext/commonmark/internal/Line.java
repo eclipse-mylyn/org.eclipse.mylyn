@@ -19,8 +19,8 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.eclipse.mylyn.wikitext.internal.util.WikiToStringStyle;
 import org.eclipse.mylyn.wikitext.parser.Locator;
+import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 
 import com.google.common.base.CharMatcher;
 

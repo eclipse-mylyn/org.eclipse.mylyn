@@ -8,8 +8,8 @@
     <stringAttribute key="M2_PROFILES" value=""/>
     <listAttribute key="M2_PROPERTIES">
         <listEntry value="maven.repo.local=${workspace_loc}/../git/org.eclipse.mylyn/.m2/repository"/>
-        <listEntry value="maven.test.failure.ignore=true"/>
-        <listEntry value="maven.test.error.ignore=true"/>
+        <listEntry value="maven.test.failure.ignore=fail"/>
+        <listEntry value="maven.test.error.ignore=fail"/>
         <listEntry value="dash.fail=false"/>
         <listEntry value="user.home=${system_property:user.home}"/>
     </listAttribute>

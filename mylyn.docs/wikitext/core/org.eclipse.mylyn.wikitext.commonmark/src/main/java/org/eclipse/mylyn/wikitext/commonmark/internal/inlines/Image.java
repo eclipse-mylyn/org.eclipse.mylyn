@@ -21,9 +21,9 @@ import java.util.Objects;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ToStringHelper;
-import org.eclipse.mylyn.wikitext.internal.util.WikiToStringStyle;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
+import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 
 public class Image extends InlineWithNestedContents {
 
