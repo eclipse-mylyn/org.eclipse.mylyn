@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.eclipse.mylyn.docs</groupId>
 		<artifactId>wikitext.core</artifactId>
-		<version>4.3.0-SNAPSHOT</version>
+		<version>4.4.0-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 
@@ -32,12 +32,12 @@
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
 			<scope>provided</scope>
-			<version>3.9.6</version>
+			<version>3.9.8</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven.plugin-tools</groupId>
 			<artifactId>maven-plugin-annotations</artifactId>
-			<version>3.13.0</version>
+			<version>3.13.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.mylyn.docs</groupId>
@@ -70,13 +70,18 @@
 			<artifactId>guava</artifactId>
 			<version>${guava.version}</version>
 		</dependency>
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>3.14.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-plugin-plugin</artifactId>
-				<version>3.13.0</version>
+				<version>3.13.1</version>
 				<configuration>
 					<goalPrefix>wikitext</goalPrefix>
 				</configuration>

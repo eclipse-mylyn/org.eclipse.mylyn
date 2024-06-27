@@ -7,10 +7,10 @@
     <booleanAttribute key="M2_OFFLINE" value="false"/>
     <stringAttribute key="M2_PROFILES" value=""/>
     <listAttribute key="M2_PROPERTIES">
-        <listEntry value="maven.repo.local=${workspace_loc}/../git/org.eclipse.mylyn/.m2/repository"/>
         <listEntry value="maven.test.failure.ignore=true"/>
         <listEntry value="maven.test.error.ignore=true"/>
         <listEntry value="dash.fail=false"/>
+        <listEntry value="user.home=${system_property:user.home}"/>
     </listAttribute>
     <stringAttribute key="M2_RUNTIME" value="EMBEDDED"/>
     <booleanAttribute key="M2_SKIP_TESTS" value="false"/>

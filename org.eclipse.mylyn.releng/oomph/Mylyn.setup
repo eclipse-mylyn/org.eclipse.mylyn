@@ -4,13 +4,16 @@
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
+    xmlns:launching="http://www.eclipse.org/oomph/setup/launching/1.0"
+    xmlns:maven="http://www.eclipse.org/oomph/setup/maven/1.0"
     xmlns:pde="http://www.eclipse.org/oomph/setup/pde/1.0"
     xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
     xmlns:projects="http://www.eclipse.org/oomph/setup/projects/1.0"
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
+    xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0"
     xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/pde/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/launching/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Launching.ecore http://www.eclipse.org/oomph/setup/maven/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Maven.ecore http://www.eclipse.org/oomph/setup/pde/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
     name="mylyn"
     label="Mylyn">
   <annotation
@@ -36,11 +39,31 @@
         source="http://www.eclipse.org/oomph/setup/UserPreferences"/>
     <setupTask
         xsi:type="setup:CompoundTask"
+        name="org.eclipse.debug.ui">
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.debug.ui/Console.console_tab_width"
+          value="4"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.debug.ui/Console.limitConsoleOutput"
+          value="false"/>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:CompoundTask"
         name="org.eclipse.mylyn.team.ui">
       <setupTask
           xsi:type="setup:PreferenceTask"
           key="/instance/org.eclipse.mylyn.team.ui/org.eclipse.mylyn.team.commit.template"
           value="$${task.description} #$${task.key}&#xA;&#xA;Task-Url: $${task.url}"/>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:CompoundTask"
+        name="org.eclipse.oomph.setup.ui">
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.oomph.setup.ui/showToolBarContributions"
+          value="true"/>
     </setupTask>
     <setupTask
         xsi:type="setup:CompoundTask"
@@ -86,6 +109,14 @@
         label="GitHub Orga for Repositories">
       <description>Enter the Github Orga for the Repositories</description>
     </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        name="eclipse.target.platform"
+        value="None"
+        storageURI="scope://Workspace"
+        label="Target Platform">
+      <description>Choose the compatibility level of the target platform</description>
+    </setupTask>
   </setupTask>
   <setupTask
       xsi:type="setup:ResourceCreationTask"
@@ -121,6 +152,13 @@
   <project name="mylyn"
       label="Mylyn">
     <setupTask
+        xsi:type="setup.p2:P2Task">
+      <requirement
+          name="org.eclipse.oomph.setup.maven.feature.group"/>
+      <requirement
+          name="org.eclipse.oomph.launches.feature.group"/>
+    </setupTask>
+    <setupTask
         xsi:type="git:GitCloneTask"
         id="git.clone.mylyn"
         remoteURI="${mylyn-github-orga}/org.eclipse.mylyn">
@@ -143,12 +181,19 @@
           name="core">
         <properties
             key="autocrlf"
-            value="false"/>
+            value="input"/>
+      </configSections>
+      <configSections
+          name="branch">
+        <properties
+            key="autoSetupRebase"
+            value="always"/>
       </configSections>
       <description>Mylyn without Docs</description>
     </setupTask>
     <setupTask
         xsi:type="setup:ResourceCreationTask"
+        id="mylyn.wikitest.help.devguide.create"
         excludedTriggers="BOOTSTRAP"
         predecessor="git.clone.mylyn"
         targetURL="${git.clone.mylyn.location|uri}/mylyn.docs/wikitext/ui/org.eclipse.mylyn.wikitext.help.ui/help/devguide/WikiText-Developer-Guide-toc.xml">
@@ -160,6 +205,7 @@
     </setupTask>
     <setupTask
         xsi:type="setup:ResourceCreationTask"
+        id="mylyn.wikitest.help.userguide.create"
         excludedTriggers="BOOTSTRAP"
         predecessor="git.clone.mylyn"
         targetURL="${git.clone.mylyn.location|uri}/mylyn.docs/wikitext/ui/org.eclipse.mylyn.wikitext.help.ui/help/Mylyn-WikiText-User-Guide-toc.xml">
@@ -172,7 +218,7 @@
     <setupTask
         xsi:type="projects:ProjectsImportTask"
         id="mylyn.project.import"
-        predecessor="git.clone.mylyn //@projects[name='mylyn']/@setupTasks.1">
+        predecessor="git.clone.mylyn mylyn.wikitest.help.devguide.create mylyn.wikitest.help.userguide.create">
       <sourceLocator
           rootFolder="${git.clone.mylyn.location}"
           locateNestedProjects="true">
@@ -229,9 +275,7 @@
         <repositoryList
             name="latest">
           <repository
-              url="https://download.eclipse.org/mylyn/updates/release/4.1.0"/>
-          <repository
-              url="https://download.eclipse.org/mylyn/docs/releases/3.0.39"/>
+              url="https://download.eclipse.org/mylyn/updates/release/4.3.0"/>
           <repository
               url="https://download.eclipse.org/releases/2023-12/202312061001"/>
         </repositoryList>
@@ -350,19 +394,19 @@
               xsi:type="predicates:RepositoryPredicate"
               project="org.eclipse.mylyn-aggregator"
               relativePathPattern="mylyn.docs.*"/>
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern="org.eclipse.mylyn.wikitext.*"/>
         </predicate>
       </workingSet>
     </setupTask>
     <setupTask
-        xsi:type="projects:ProjectsBuildTask"
-        id="build.all"
-        refresh="true"
-        clean="true">
-      <description>Build All</description>
-    </setupTask>
+        xsi:type="launching:LaunchTask"
+        id="launch.install"
+        disabled="true"
+        predecessor="mylyn.workingsets"
+        launcher="mylyn install"/>
+    <setupTask
+        xsi:type="maven:MavenUpdateTask"
+        id="maven.update"
+        predecessor="launch.install"/>
     <stream
         name="main"
         label="main">
@@ -395,6 +439,7 @@
     <setupTask
         xsi:type="git:GitCloneTask"
         id="git.clone.mylyn.github.admin"
+        locationQualifier="mylyn"
         remoteURI="${mylyn-github-orga}/.github">
       <annotation
           source="http://www.eclipse.org/oomph/setup/InducedChoices">
@@ -415,21 +460,28 @@
           name="core">
         <properties
             key="autocrlf"
-            value="false"/>
+            value="input"/>
+      </configSections>
+      <configSections
+          name="branch">
+        <properties
+            key="autoSetupRebase"
+            value="always"/>
       </configSections>
       <description>Mylyn without Docs</description>
     </setupTask>
     <setupTask
         xsi:type="setup:ResourceCreationTask"
         id="mylyn.github.admin.create.projectfile"
+        excludedTriggers="BOOTSTRAP"
         predecessor="git.clone.mylyn.github.admin"
         targetURL="${git.clone.mylyn.github.admin.location|uri}/.project"
         encoding="UTF-8">
       <content>
         &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
         &lt;projectDescription>
-        	&lt;name>.github&lt;/name>
-        	&lt;comment>&lt;/comment>
+        	&lt;name>org.eclipse.mylyn.github&lt;/name>
+        	&lt;comment>Mylyn Github&lt;/comment>
         	&lt;projects>
         	&lt;/projects>
         	&lt;buildSpec>
@@ -437,6 +489,17 @@
         	&lt;natures>
         	&lt;/natures>
         &lt;/projectDescription>
+      </content>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:ResourceCreationTask"
+        excludedTriggers="BOOTSTRAP"
+        targetURL="${git.clone.mylyn.github.admin.location|uri}/.gitignore"
+        encoding="UTF-8">
+      <content>
+        .project
+        .gitignore
+        /.settings/
       </content>
     </setupTask>
     <setupTask
@@ -453,7 +516,7 @@
           name="Administration">
         <predicate
             xsi:type="predicates:RepositoryPredicate"
-            project=".github"/>
+            project="org.eclipse.mylyn.github"/>
       </workingSet>
     </setupTask>
     <stream
@@ -486,7 +549,13 @@
           name="core">
         <properties
             key="autocrlf"
-            value="false"/>
+            value="input"/>
+      </configSections>
+      <configSections
+          name="branch">
+        <properties
+            key="autoSetupRebase"
+            value="always"/>
       </configSections>
       <description>Mylyn without Docs</description>
     </setupTask>

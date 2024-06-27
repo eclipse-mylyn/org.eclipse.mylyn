@@ -6,7 +6,10 @@ echo "$BASEDIR"
 until [ "`docker inspect -f {{.State.Health.Status}} gitlab`" == "healthy" ]; do
     sleep 10;
 done;
+echo "gitlab is healthy"
 docker exec gitlab gitlab-rails runner /etc/gitlab/initialSetup.rb >>$BASEDIR/initialSetup.out 2>&1
+echo "gitlab $BASEDIR/initialSetup.out"
+cat $BASEDIR/initialSetup.out
 
 export GITLAB_SERVER=https://gitlab.mylyn.local
 export GITLAB_TOKEN=glpat-Adm1nPwdTok123
@@ -18,8 +21,9 @@ export GITLAB_PROJECT=ci-mylyn-test-project
 #
 #creating root group
 #
+echo "gitlab creating root group"
 rootGroupId=$(curl -k --header "PRIVATE-TOKEN: $GITLAB_TOKEN" "$GITLAB_SERVER/api/v4/groups?search=$GITLAB_ROOTGROUP" | jq '.[0]["id"]' )
-if [ $rootGroupId == "null" ] 
+if [ "$rootGroupId" == "null" ] 
 then
   rootGroupId=$(curl -k -d "name=$GITLAB_ROOTGROUP&path=$GITLAB_ROOTGROUP&visibility=private&lfs_enabled=true&description=Root group" -X POST "$GITLAB_SERVER/api/v4/groups" -H "PRIVATE-TOKEN: $GITLAB_TOKEN" | jq '.["id"]')
   echo "Root group created with Id: $rootGroupId"
@@ -28,8 +32,9 @@ fi
 #
 #creating sub group
 #
+echo "gitlab creating sub group"
 rootSubGroupId=$(curl -k --header "PRIVATE-TOKEN: $GITLAB_TOKEN" "$GITLAB_SERVER/api/v4/groups/$rootGroupId/subgroups?search=$GITLAB_SUBGROUP" | jq '.[0]["id"]' )
-if [ $rootSubGroupId == "null" ] 
+if [ "$rootSubGroupId" == "null" ] 
 then
   rootSubGroupId=$(curl -k -d "name=$GITLAB_SUBGROUP&path=$GITLAB_SUBGROUP&visibility=private&lfs_enabled=true&description=$GITLAB_SUBGROUP programme&parent_id=$rootGroupId" -X POST "$GITLAB_SERVER/api/v4/groups" -H "PRIVATE-TOKEN: $GITLAB_TOKEN" | jq '.["id"]')
   echo "Sub group created with Id: $rootSubGroupId"
@@ -39,7 +44,7 @@ fi
 #project creation
 #
 projectId=$(curl -k "$GITLAB_SERVER/api/v4/groups/$rootSubGroupId/projects?search=$GITLAB_PROJECT" -H "PRIVATE-TOKEN: $GITLAB_TOKEN" | jq '.[0]["id"]' )
-if [ $projectId == "null" ] 
+if [ "$projectId" == "null" ] 
 then
   projectId=$(curl -k -d "path=$GITLAB_PROJECT&namespace_id=$rootSubGroupId" -X POST "$GITLAB_SERVER/api/v4/projects" -H "PRIVATE-TOKEN: $GITLAB_TOKEN" | jq '.["id"]')
   echo "Project created with Id: $projectId"

@@ -18,7 +18,7 @@
     <parent>
       <groupId>org.eclipse.mylyn</groupId>
       <artifactId>org.eclipse.mylyn.parent</artifactId>
-      <version>4.3.0-SNAPSHOT</version>
+      <version>4.4.0-SNAPSHOT</version>
       <relativePath>../mylyn.releng/org.eclipse.mylyn.parent</relativePath>
     </parent>
     <groupId>org.eclipse.mylyn.docs</groupId>
@@ -32,9 +32,9 @@
     </description>
     <url>https://projects.eclipse.org/projects/mylyn.docs</url>
     <properties>
-        <releaseVersion>4.3.0</releaseVersion>
+        <releaseVersion>4.4.0</releaseVersion>
         <qualifier>-SNAPSHOT</qualifier>
-        <tycho-version>4.0.7</tycho-version>
+        <tycho-version>4.0.8</tycho-version>
         <tycho.scmUrl>scm:git:https://github.com/eclipse-mylyn/org.eclipse.mylyn.docs</tycho.scmUrl>
         <nexus.autoReleaseAfterClose>false</nexus.autoReleaseAfterClose>
     </properties>
@@ -44,7 +44,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -122,7 +122,7 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.13</version>
+                <version>1.7.0</version>
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>ossrh</serverId>
