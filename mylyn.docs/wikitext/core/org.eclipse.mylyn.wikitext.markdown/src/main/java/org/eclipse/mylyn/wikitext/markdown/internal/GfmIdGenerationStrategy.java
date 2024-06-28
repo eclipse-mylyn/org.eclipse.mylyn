@@ -13,20 +13,49 @@
 
 package org.eclipse.mylyn.wikitext.markdown.internal;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;
 
-import com.google.common.base.CharMatcher;
-
 public class GfmIdGenerationStrategy extends IdGenerationStrategy {
 
+	enum ScanState {
+		HEAD, WORD, HYPHEN
+	}
 	@Override
 	public String generateId(String headingText) {
 		String id = headingText.toLowerCase(Locale.getDefault());
 		id = id.replaceAll("[^a-z0-9_-]", "-"); //$NON-NLS-1$//$NON-NLS-2$
-		CharMatcher hyphenMatcher = CharMatcher.is('-');
-		id = hyphenMatcher.trimFrom(hyphenMatcher.collapseFrom(id, '-'));
+		ScanState state = ScanState.HEAD;
+		char[] collected = new char[id.length()];
+		int j = 0;
+		for (int i = 0; i < id.length(); i++) {
+			char c = id.charAt(i);
+			switch (state) {
+				case HEAD: // skip as many hyphens as we can find
+					if (c == '-') {
+						continue;
+					}
+					state = ScanState.WORD;
+					break;
+				case WORD: // commit chars until the next hyphen
+					if (c == '-') {
+						state = ScanState.HYPHEN;
+						continue; // don't yet commit the hyphen in case it is trailing
+					}
+					break;
+				case HYPHEN:
+					if (c != '-') {
+						collected[j++] = '-'; // deferred commit of the hyphen
+						state = ScanState.WORD;
+					} else {
+						continue; // skip additional hyphen
+					}
+			}
+			collected[j++] = c;
+		}
+		id = String.valueOf(Arrays.copyOfRange(collected, 0, j));
 		return id;
 	}
 

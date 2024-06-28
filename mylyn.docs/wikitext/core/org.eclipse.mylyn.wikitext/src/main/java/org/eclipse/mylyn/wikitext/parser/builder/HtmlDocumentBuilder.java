@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.parser.builder;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Map.entry;
+import static org.eclipse.mylyn.wikitext.internal.util.Preconditions.checkArgument;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -47,10 +47,6 @@ import org.eclipse.mylyn.wikitext.parser.TableRowAttributes;
 import org.eclipse.mylyn.wikitext.util.DefaultXmlStreamWriter;
 import org.eclipse.mylyn.wikitext.util.FormattingXMLStreamWriter;
 import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.collect.ImmutableMap;
 
 /**
  * A builder that produces XHTML output. The nature of the output is affected by various settings on the builder.
@@ -224,7 +220,9 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 */
 	public void addLinkUriProcessor(UriProcessor processor) {
 		Objects.requireNonNull(processor, "Must provide processor"); //$NON-NLS-1$
-		linkUriProcessors = ImmutableList.<UriProcessor> builder().addAll(linkUriProcessors).add(processor).build();
+		List<UriProcessor> processors = new ArrayList<>(linkUriProcessors);
+		processors.add(processor);
+		linkUriProcessors = List.copyOf(processors);
 	}
 
 	protected static XmlStreamWriter createFormattingXmlStreamWriter(Writer out) {
@@ -249,15 +247,15 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		Objects.requireNonNull(spanType, "Must provide spanType"); //$NON-NLS-1$
 		Objects.requireNonNull(elementName, "Must provide elementName"); //$NON-NLS-1$
 
-		ImmutableMap.Builder<SpanType, String> builder = ImmutableMap.builder();
+		Map<SpanType, String> builder = new HashMap<>();
 		for (Entry<SpanType, String> entry : spanTypeToElementName.entrySet()) {
 			if (!entry.getKey().equals(spanType)) {
-				builder.put(entry);
+				builder.put(entry.getKey(), entry.getValue());
 			}
 		}
 		builder.put(spanType, elementName);
 
-		spanTypeToElementName = builder.build();
+		spanTypeToElementName = Map.copyOf(builder);
 	}
 
 	/**
@@ -1433,12 +1431,11 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	private void copyLinkProcessors(HtmlDocumentBuilder other) {
-		List<UriProcessor> defaultProcessors = other.defaultLinkUriProcessors();
-		Builder<UriProcessor> newProcessors = ImmutableList.<UriProcessor> builder().addAll(defaultProcessors);
+		List<UriProcessor> defaultProcessors = new ArrayList<>(other.defaultLinkUriProcessors());
 		if (defaultProcessors.size() < linkUriProcessors.size()) {
-			newProcessors.addAll(linkUriProcessors.subList(defaultProcessors.size(), linkUriProcessors.size()));
+			defaultProcessors.addAll(linkUriProcessors.subList(defaultProcessors.size(), linkUriProcessors.size()));
 		}
-		other.linkUriProcessors = newProcessors.build();
+		other.linkUriProcessors = List.copyOf(defaultProcessors);
 	}
 
 	private List<UriProcessor> defaultLinkUriProcessors() {

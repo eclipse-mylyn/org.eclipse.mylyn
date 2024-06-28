@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.util;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static org.eclipse.mylyn.wikitext.internal.util.Preconditions.checkArgument;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,13 +34,9 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.wikitext.internal.util.Strings;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageProvider;
-
-import com.google.common.base.Strings;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Multimap;
 
 /**
  * A service locator for use both inside and outside of an Eclipse environment. Provides access to markup languages by name.
@@ -190,18 +186,7 @@ public class ServiceLocator {
 			markupLanguages.add(language);
 			return true;
 		});
-		return filterDuplicates(markupLanguages);
-	}
-
-	private Set<MarkupLanguage> filterDuplicates(Set<MarkupLanguage> markupLanguages) {
-		Multimap<String, Class<?>> markupLanguageClassesByName = HashMultimap.create();
-		ImmutableSet.Builder<MarkupLanguage> builder = ImmutableSet.builder();
-		for (MarkupLanguage language : markupLanguages) {
-			if (markupLanguageClassesByName.put(language.getName(), language.getClass())) {
-				builder.add(language);
-			}
-		}
-		return builder.build();
+		return markupLanguages;
 	}
 
 	public static void setImplementation(Class<? extends ServiceLocator> implementationClass) {

@@ -12,6 +12,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.util;
 
+import static org.eclipse.mylyn.wikitext.internal.util.XmlUtil.getEscapedAttribute;
+import static org.eclipse.mylyn.wikitext.internal.util.XmlUtil.getEscapedContent;
+
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -21,9 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-import com.google.common.escape.Escaper;
-import com.google.common.xml.XmlEscapers;
-
 /**
  * A default implementation of {@link XmlStreamWriter} that creates XML character output.
  *
@@ -31,10 +31,6 @@ import com.google.common.xml.XmlEscapers;
  * @since 3.0
  */
 public class DefaultXmlStreamWriter extends XmlStreamWriter {
-
-	private final Escaper attributeEscaper = XmlEscapers.xmlAttributeEscaper();
-
-	private final Escaper contentEscaper = XmlEscapers.xmlContentEscaper();
 
 	private PrintWriter out;
 
@@ -373,8 +369,8 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 	}
 
 	private void printEscaped(PrintWriter writer, CharSequence s, boolean attribute) {
-		Escaper escaper = attribute ? attributeEscaper : contentEscaper;
-		writer.write(escaper.escape(s.toString()));
+		String escaped = attribute ? getEscapedAttribute(s.toString()) : getEscapedContent(s.toString());
+		writer.write(escaped);
 	}
 
 	/**

@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.splitter;
 
-import static com.google.common.base.Preconditions.checkState;
+import static org.eclipse.mylyn.wikitext.internal.util.Preconditions.checkState;
 
 import java.io.File;
 import java.io.FileOutputStream;
