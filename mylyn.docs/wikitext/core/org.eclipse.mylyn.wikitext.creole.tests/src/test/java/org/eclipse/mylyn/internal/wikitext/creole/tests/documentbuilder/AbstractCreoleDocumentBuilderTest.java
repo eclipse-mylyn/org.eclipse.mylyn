@@ -10,6 +10,7 @@
  * Contributors:
  *     Kevin de Vlaming - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.creole.tests.documentbuilder;
@@ -25,7 +26,6 @@ import org.junit.Before;
 /**
  * @author Kevin de Vlaming
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractCreoleDocumentBuilderTest {
 
 	protected DocumentBuilder builder;

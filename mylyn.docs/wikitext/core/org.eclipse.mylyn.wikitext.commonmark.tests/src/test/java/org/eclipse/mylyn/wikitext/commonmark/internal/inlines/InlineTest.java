@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
@@ -25,7 +26,7 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.Locator;
 import org.junit.Test;
 
-@SuppressWarnings({ "nls", "restriction" })
+@SuppressWarnings("nls")
 public class InlineTest {
 
 	@Test

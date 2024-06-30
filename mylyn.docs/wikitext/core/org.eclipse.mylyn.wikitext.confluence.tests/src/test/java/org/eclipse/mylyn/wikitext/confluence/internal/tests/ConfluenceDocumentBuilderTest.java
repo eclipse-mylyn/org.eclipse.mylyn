@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.confluence.internal.tests;
@@ -31,7 +32,7 @@ import org.junit.Test;
  * @author David Green
  * @see ConfluenceDocumentBuilder
  */
-@SuppressWarnings({ "nls", "restriction" })
+@SuppressWarnings("nls")
 public class ConfluenceDocumentBuilderTest {
 
 	private final StringWriter out = new StringWriter();

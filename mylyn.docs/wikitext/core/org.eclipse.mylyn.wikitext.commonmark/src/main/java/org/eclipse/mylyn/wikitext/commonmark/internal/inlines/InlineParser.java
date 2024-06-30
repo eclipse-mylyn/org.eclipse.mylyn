@@ -101,7 +101,7 @@ public class InlineParser {
 			@Override
 			public void entityReference(String entity) {
 				stringBuilder
-				.append(Objects.requireNonNullElse(EntityReferences.instance().equivalentString(entity), ""));
+						.append(Objects.requireNonNullElse(EntityReferences.instance().equivalentString(entity), "")); //$NON-NLS-1$
 			}
 		};
 		for (Inline inline : contents) {
