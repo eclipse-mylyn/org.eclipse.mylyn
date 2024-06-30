@@ -10,6 +10,7 @@
  * Contributors:
  *     Kevin de Vlaming - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.creole.internal;
@@ -19,14 +20,13 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.mylyn.wikitext.creole.CreoleLanguage;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.parser.builder.AbstractMarkupDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.EntityReferences;
-
-import com.google.common.base.Strings;
 
 /**
  * a document builder that emits Creole markup
@@ -148,14 +148,14 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		protected void emitContent(String content) throws IOException {
 			// [[http://url.com|label]]
 			CreoleDocumentBuilder.this.emitContent("[["); //$NON-NLS-1$
-			if (!Strings.isNullOrEmpty(attributes.getHref())) {
+			if (StringUtils.isNotEmpty(attributes.getHref())) {
 				CreoleDocumentBuilder.this.emitContent(attributes.getHref());
 
 			}
-			if (!Strings.isNullOrEmpty(attributes.getHref()) && !Strings.isNullOrEmpty(content)) {
+			if (StringUtils.isNotEmpty(attributes.getHref()) && StringUtils.isNotEmpty(content)) {
 				CreoleDocumentBuilder.this.emitContent('|');
 			}
-			if (!Strings.isNullOrEmpty(content)) {
+			if (StringUtils.isNotEmpty(content)) {
 				CreoleDocumentBuilder.this.emitContent(content);
 			}
 			CreoleDocumentBuilder.this.emitContent("]]"); //$NON-NLS-1$
@@ -171,7 +171,7 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		@Override
 		protected void emitContent(String content) throws IOException {
-			if (Strings.isNullOrEmpty(content) || content.trim().isEmpty()) {
+			if (StringUtils.isEmpty(content) || content.trim().isEmpty()) {
 				content = " "; //$NON-NLS-1$
 			}
 			super.emitContent(content);
@@ -289,10 +289,10 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	private void writeImageAttributes(Block imageBlock, Attributes attributes) throws IOException {
 		if (attributes instanceof ImageAttributes) {
-			if (!Strings.isNullOrEmpty(((ImageAttributes) attributes).getAlt())) {
+			if (StringUtils.isNotEmpty(((ImageAttributes) attributes).getAlt())) {
 				imageBlock.write('|');
 				imageBlock.write(((ImageAttributes) attributes).getAlt());
-			} else if (!Strings.isNullOrEmpty(((ImageAttributes) attributes).getTitle())) {
+			} else if (StringUtils.isNotEmpty(((ImageAttributes) attributes).getTitle())) {
 				imageBlock.write('|');
 				imageBlock.write(((ImageAttributes) attributes).getTitle());
 			}
@@ -313,10 +313,10 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	public void imageLink(Attributes linkAttributes, Attributes imageAttributes, String href, String imageUrl) {
 		String altText = ""; //$NON-NLS-1$
 		if (imageAttributes instanceof ImageAttributes
-				&& !Strings.isNullOrEmpty(((ImageAttributes) imageAttributes).getAlt())) {
+				&& StringUtils.isNotEmpty(((ImageAttributes) imageAttributes).getAlt())) {
 			altText = ((ImageAttributes) imageAttributes).getAlt();
 		}
-		link(linkAttributes, href, "{{" + Strings.nullToEmpty(imageUrl) + "}}" + altText); //$NON-NLS-1$ //$NON-NLS-2$
+		link(linkAttributes, href, "{{" + StringUtils.defaultString(imageUrl) + "}}" + altText); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override

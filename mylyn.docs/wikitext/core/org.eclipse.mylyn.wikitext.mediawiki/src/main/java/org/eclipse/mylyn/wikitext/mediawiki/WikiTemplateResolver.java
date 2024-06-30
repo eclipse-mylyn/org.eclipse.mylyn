@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.mediawiki;
@@ -21,7 +22,7 @@ import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.common.io.Resources;
+import org.apache.commons.io.IOUtils;
 
 /**
  * compute the contents of a template based on
@@ -57,7 +58,7 @@ public class WikiTemplateResolver extends TemplateResolver {
 					Template template = new Template();
 					String basicName = templateName.toLowerCase().startsWith("template:") //$NON-NLS-1$
 							? templateName.substring(templateName.lastIndexOf(':') + 1)
-							: templateName;
+									: templateName;
 					template.setName(basicName);
 					template.setTemplateMarkup(content);
 					return template;
@@ -71,7 +72,7 @@ public class WikiTemplateResolver extends TemplateResolver {
 	}
 
 	protected String readContent(URL url) throws IOException {
-		return Resources.toString(url, StandardCharsets.UTF_8);
+		return IOUtils.toString(url, StandardCharsets.UTF_8);
 	}
 
 	private URL computeRawUrl(String path) {
@@ -84,8 +85,8 @@ public class WikiTemplateResolver extends TemplateResolver {
 			return new URL(qualifiedUrl);
 		} catch (IOException e) {
 			Logger.getLogger(WikiTemplateResolver.class.getName())
-					.log(Level.WARNING,
-							MessageFormat.format("Cannot compute raw URL for {0}: {1}", path, e.getMessage()), e); //$NON-NLS-1$
+			.log(Level.WARNING,
+					MessageFormat.format("Cannot compute raw URL for {0}: {1}", path, e.getMessage()), e); //$NON-NLS-1$
 			return null;
 		}
 	}

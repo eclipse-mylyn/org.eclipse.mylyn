@@ -12,10 +12,10 @@
  *     Torkild U. Resheim - Handle links when transforming, bug 325006
  *     Jeremie Bresson - Bug 492302
  *     Alexander Fedorov (ArSysOp) - ongoing support
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.parser.builder;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Map.entry;
 
 import java.io.BufferedReader;
@@ -34,7 +34,10 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Stack;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes.Align;
@@ -47,10 +50,6 @@ import org.eclipse.mylyn.wikitext.parser.TableRowAttributes;
 import org.eclipse.mylyn.wikitext.util.DefaultXmlStreamWriter;
 import org.eclipse.mylyn.wikitext.util.FormattingXMLStreamWriter;
 import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.collect.ImmutableMap;
 
 /**
  * A builder that produces XHTML output. The nature of the output is affected by various settings on the builder.
@@ -224,7 +223,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 */
 	public void addLinkUriProcessor(UriProcessor processor) {
 		Objects.requireNonNull(processor, "Must provide processor"); //$NON-NLS-1$
-		linkUriProcessors = ImmutableList.<UriProcessor> builder().addAll(linkUriProcessors).add(processor).build();
+		linkUriProcessors = Stream.concat(linkUriProcessors.stream(), Stream.of(processor))
+				.collect(Collectors.toUnmodifiableList());
 	}
 
 	protected static XmlStreamWriter createFormattingXmlStreamWriter(Writer out) {
@@ -249,15 +249,15 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		Objects.requireNonNull(spanType, "Must provide spanType"); //$NON-NLS-1$
 		Objects.requireNonNull(elementName, "Must provide elementName"); //$NON-NLS-1$
 
-		ImmutableMap.Builder<SpanType, String> builder = ImmutableMap.builder();
+		Map<SpanType, String> builder = new HashMap<>();
 		for (Entry<SpanType, String> entry : spanTypeToElementName.entrySet()) {
 			if (!entry.getKey().equals(spanType)) {
-				builder.put(entry);
+				builder.put(entry.getKey(), entry.getValue());
 			}
 		}
 		builder.put(spanType, elementName);
 
-		spanTypeToElementName = builder.build();
+		spanTypeToElementName = Map.copyOf(builder);
 	}
 
 	/**
@@ -1181,7 +1181,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * @see #getHtmlFilenameFormat()
 	 */
 	public void setHtmlFilenameFormat(String htmlFilenameFormat) {
-		checkArgument(htmlFilenameFormat == null || htmlFilenameFormat.contains("$1"), //$NON-NLS-1$
+		Validate.isTrue(htmlFilenameFormat == null || htmlFilenameFormat.contains("$1"), //$NON-NLS-1$
 				"The HTML filename format must contain \"$1\""); //$NON-NLS-1$
 		this.htmlFilenameFormat = htmlFilenameFormat;
 	}
@@ -1434,11 +1434,11 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private void copyLinkProcessors(HtmlDocumentBuilder other) {
 		List<UriProcessor> defaultProcessors = other.defaultLinkUriProcessors();
-		Builder<UriProcessor> newProcessors = ImmutableList.<UriProcessor> builder().addAll(defaultProcessors);
+		List<UriProcessor> newProcs = new ArrayList<>(defaultProcessors);
 		if (defaultProcessors.size() < linkUriProcessors.size()) {
-			newProcessors.addAll(linkUriProcessors.subList(defaultProcessors.size(), linkUriProcessors.size()));
+			newProcs.addAll(linkUriProcessors.subList(defaultProcessors.size(), linkUriProcessors.size()));
 		}
-		other.linkUriProcessors = newProcessors.build();
+		other.linkUriProcessors = List.copyOf(newProcs);
 	}
 
 	private List<UriProcessor> defaultLinkUriProcessors() {

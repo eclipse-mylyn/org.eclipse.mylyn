@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.markup.tests;
@@ -66,7 +67,8 @@ public class MarkupLanguageProviderTest {
 				return Set.of(new MockMarkupLanguage("Test"), new MockMarkupLanguage("Test"));
 			}
 		};
-		IllegalStateException ise = assertThrows(IllegalStateException.class, () -> provider.getMarkupLanguages());
+		IllegalArgumentException ise = assertThrows(IllegalArgumentException.class,
+				() -> provider.getMarkupLanguages());
 		assertTrue(ise.getMessage().contains("Language name 'Test' must not be provided more than once"));
 	}
 

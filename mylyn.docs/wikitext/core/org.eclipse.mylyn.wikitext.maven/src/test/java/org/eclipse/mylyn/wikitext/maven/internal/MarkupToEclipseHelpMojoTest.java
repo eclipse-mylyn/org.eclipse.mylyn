@@ -10,11 +10,11 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.maven.internal;
 
-import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.requireNonNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -37,6 +37,7 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.UUID;
 
+import org.apache.commons.lang3.Validate;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
@@ -68,11 +69,12 @@ public class MarkupToEclipseHelpMojoTest {
 	private File calculateSourceFolder() {
 		URL resource = MarkupToEclipseHelpMojoTest.class.getResource("/test.textile");
 		requireNonNull(resource);
-		checkState(resource.getProtocol().equals("file"), "Expecting resource to have the file protocol: %s", resource);
+		Validate.isTrue(resource.getProtocol().equals("file"), "Expecting resource to have the file protocol: %s",
+				resource);
 		String path = resource.getPath();
 		File file = new File(path);
-		checkState(file.exists(), "Expecting file to exist: %s", file);
-		checkState(file.isFile(), "Expecting file to be a file: %s", file);
+		Validate.isTrue(file.exists(), "Expecting file to exist: %s", file);
+		Validate.isTrue(file.isFile(), "Expecting file to be a file: %s", file);
 		return file.getParentFile();
 	}
 

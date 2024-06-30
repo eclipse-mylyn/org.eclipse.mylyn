@@ -9,11 +9,11 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.html.internal;
 
-import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.requireNonNull;
 
 import java.io.Writer;
@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
@@ -57,12 +58,12 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 	}
 
 	void setSupportedBlockTypes(Set<BlockType> blockTypes) {
-		checkState(blockStrategyState.isEmpty());
+		Validate.isTrue(blockStrategyState.isEmpty());
 		blockStrategies = new BlockStrategies(blockTypes);
 	}
 
 	void setSupportedSpanTypes(Set<SpanType> spanTypes, List<SpanHtmlElementStrategy> spanElementStrategies) {
-		checkState(spanStrategyState.isEmpty());
+		Validate.isTrue(spanStrategyState.isEmpty());
 		spanStrategies = new SpanStrategies(spanTypes, spanElementStrategies);
 	}
 

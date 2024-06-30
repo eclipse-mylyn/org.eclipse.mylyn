@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.textile.tests;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.mylyn.internal.wikitext.ui.util.Util;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
@@ -26,8 +28,6 @@ import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.io.Resources;
 
 /**
  * tests for Textile that involve the tasks plug-in and dependencies on the Eclipse runtime.
@@ -63,7 +63,7 @@ public class TextileLanguageTasksTest {
 		StringWriter out = new StringWriter();
 		parser.setBuilder(new HtmlDocumentBuilder(out));
 
-		String content = Resources.toString(
+		String content = IOUtils.toString(
 				TextileLanguageTasksTest.class.getResource("resources/subversive-bug-report.txt"),
 				StandardCharsets.UTF_8);
 		parser.parse(content);

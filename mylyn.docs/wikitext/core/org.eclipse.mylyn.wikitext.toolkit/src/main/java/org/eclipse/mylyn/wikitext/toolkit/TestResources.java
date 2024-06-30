@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.toolkit;
 
@@ -19,7 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-import com.google.common.io.Resources;
+import org.apache.commons.io.IOUtils;
 
 /**
  * @since 3.0
@@ -31,7 +32,7 @@ public class TestResources {
 		try {
 			URL url = relativeToClass.getResource(path);
 			requireNonNull(url, String.format("Resource %s not found relative to %s", path, relativeToClass.getName()));
-			return convertToUnixLineEndings(Resources.toString(url, StandardCharsets.UTF_8));
+			return convertToUnixLineEndings(IOUtils.toString(url, StandardCharsets.UTF_8));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

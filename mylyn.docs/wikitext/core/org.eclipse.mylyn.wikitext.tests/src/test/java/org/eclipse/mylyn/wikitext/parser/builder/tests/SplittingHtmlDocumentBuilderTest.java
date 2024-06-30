@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.builder.tests;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.splitter.DefaultSplittingStrategy;
@@ -36,8 +38,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import com.google.common.io.Resources;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class SplittingHtmlDocumentBuilderTest {
@@ -103,9 +103,9 @@ public class SplittingHtmlDocumentBuilderTest {
 
 	private void assertFileContents(String resource, File outputFile) throws IOException {
 		String resourcePath = "resources/SplittingHtmlDocumentBuilderTest_" + resource;
-		String resourceContents = convertToUnixLineEndings(Resources
+		String resourceContents = convertToUnixLineEndings(IOUtils
 				.toString(SplittingHtmlDocumentBuilderTest.class.getResource(resourcePath), StandardCharsets.UTF_8));
-		String actualContents = Resources.toString(outputFile.toURI().toURL(), StandardCharsets.UTF_8);
+		String actualContents = IOUtils.toString(outputFile.toURI().toURL(), StandardCharsets.UTF_8);
 		assertEquals(format("Resource {0} differs", resourcePath), resourceContents, actualContents);
 	}
 

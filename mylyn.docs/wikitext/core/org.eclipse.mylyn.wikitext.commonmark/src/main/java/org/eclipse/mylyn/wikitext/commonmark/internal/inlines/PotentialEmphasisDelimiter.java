@@ -9,17 +9,17 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
-
-import com.google.common.collect.ImmutableList;
 
 class PotentialEmphasisDelimiter extends InlineWithText {
 
@@ -58,7 +58,7 @@ class PotentialEmphasisDelimiter extends InlineWithText {
 			Inline emphasis = createEmphasis(openingDelimiter.getLine(), spanOffset, spanLength, delimiterSize,
 					contents);
 
-			ImmutableList.Builder<Inline> substitutionInlines = ImmutableList.builder();
+			List<Inline> substitutionInlines = new ArrayList<>();
 			if (delimiterSize < openingDelimiter.getLength()) {
 				substitutionInlines.add(createPotentialOpeningDelimiter(openingDelimiter, delimiterSize));
 			}
@@ -67,7 +67,7 @@ class PotentialEmphasisDelimiter extends InlineWithText {
 				substitutionInlines.add(createPotentialClosingDelimiter(delimiterSize));
 			}
 
-			return Optional.of(new InlinesSubstitution(openingDelimiter, this, substitutionInlines.build()));
+			return Optional.of(new InlinesSubstitution(openingDelimiter, this, List.copyOf(substitutionInlines)));
 		}
 		return Optional.empty();
 	}

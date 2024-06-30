@@ -9,9 +9,11 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -43,10 +45,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.collect.ImmutableMap;
 
 /**
  * @author David Green
@@ -332,8 +330,7 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 
 	public Map<String, List<String>> getHyperlinkDectectorFileRefRegexes() {
 		if (fileRefRegexes == null) {
-			com.google.common.collect.ImmutableMap.Builder<String, List<String>> markupLanguageToFileRefRegexes = ImmutableMap
-					.builder();
+			Map<String, List<String>> markupLanguageToFileRefRegexes = new HashMap<>();
 
 			IExtensionPoint extensionPoint = Platform.getExtensionRegistry()
 					.getExtensionPoint(getPluginId(), EXTENSION_POINT_RELATIVE_FILE_PATH_HYPERLINK_DECTOR);
@@ -366,13 +363,13 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 				}
 			}
 
-			fileRefRegexes = markupLanguageToFileRefRegexes.build();
+			fileRefRegexes = Map.copyOf(markupLanguageToFileRefRegexes);
 		}
 		return fileRefRegexes;
 	}
 
 	private List<String> createFielRefRegexes(IConfigurationElement element, String declaringPluginId) {
-		Builder<String> regexes = new ImmutableList.Builder<>();
+		List<String> regexes = new ArrayList<>();
 
 		for (IConfigurationElement fileRefRegexesChild : element.getChildren()) {
 			if (EXTENSION_POINT_FILE_REF_REGEX.equals(fileRefRegexesChild.getName())) {
@@ -391,7 +388,7 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 						null);
 			}
 		}
-		return regexes.build();
+		return List.copyOf(regexes);
 	}
 
 	private String validateAndGetMarkupLanguage(IConfigurationElement element) throws Exception {

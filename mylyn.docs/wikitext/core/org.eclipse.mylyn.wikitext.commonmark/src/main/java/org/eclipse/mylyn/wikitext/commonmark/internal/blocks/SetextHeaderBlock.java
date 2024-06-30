@@ -10,16 +10,16 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Alexander Fedorov (ArSysOp) - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.blocks;
-
-import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext;
@@ -40,7 +40,7 @@ public class SetextHeaderBlock extends SourceBlock {
 		Line currentLine = lineSequence.getCurrentLine();
 		Line nextLine = lineSequence.getNextLine();
 		Matcher matcher = setextUnderlinePattern.matcher(nextLine.getText());
-		checkState(matcher.matches());
+		Validate.isTrue(matcher.matches());
 
 		lineSequence.advance();
 

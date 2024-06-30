@@ -10,6 +10,7 @@
  * Contributors:
  *     Jeremie Bresson - copied from MarkdownDocumentBuilder and adapted to AsciiDoc
  *     Alexander Fedorov (ArSysOp) - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.asciidoc.internal;
@@ -24,13 +25,12 @@ import java.util.Objects;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.mylyn.wikitext.asciidoc.AsciiDocLanguage;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.parser.builder.AbstractMarkupDocumentBuilder;
-
-import com.google.common.base.Strings;
 
 /**
  * a document builder that emits AsciiDoc markup
@@ -355,13 +355,13 @@ public class AsciiDocDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		if (attributes instanceof ImageAttributes imageAttr) {
 			altText = imageAttr.getAlt();
 		}
-		if (!Strings.isNullOrEmpty(attributes.getTitle())) {
+		if (StringUtils.isNotEmpty(attributes.getTitle())) {
 			title = "title=\"" + attributes.getTitle() + '"'; //$NON-NLS-1$
 		}
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("image:"); //$NON-NLS-1$
-		sb.append(Strings.nullToEmpty(url));
+		sb.append(StringUtils.defaultString(url));
 		sb.append("["); //$NON-NLS-1$
 		sb.append(Arrays.asList(altText, title).stream().filter(Objects::nonNull).collect(Collectors.joining(", "))); //$NON-NLS-1$
 		sb.append("]"); //$NON-NLS-1$
@@ -375,7 +375,7 @@ public class AsciiDocDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		linkAttr.setTitle(attributes.getTitle());
 		linkAttr.setHref(hrefOrHashName);
 		beginSpan(SpanType.LINK, linkAttr);
-		if (Strings.isNullOrEmpty(text)) {
+		if (StringUtils.isEmpty(text)) {
 			characters(hrefOrHashName);
 		} else {
 			characters(text);

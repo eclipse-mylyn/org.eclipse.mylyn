@@ -10,14 +10,16 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Alexander Fedorov (ArSysOp) - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
 import static java.util.Objects.requireNonNull;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.parser.Locator;
+import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 
 public class SimpleLocator implements Locator {
 
@@ -76,11 +78,12 @@ public class SimpleLocator implements Locator {
 
 	@Override
 	public String toString() {
-		return toStringHelper(Locator.class).add("lineNumber", lineNumber) //$NON-NLS-1$
-				.add("lineDocumentOffset", lineDocumentOffset) //$NON-NLS-1$
-				.add("lineLength", lineLength) //$NON-NLS-1$
-				.add("lineCharacterOffset", lineCharacterOffset) //$NON-NLS-1$
-				.add("lineSegmentEndOffset", lineSegmentEndOffset) //$NON-NLS-1$
+		return new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE) //
+				.append("lineNumber", lineNumber) //$NON-NLS-1$
+				.append("lineDocumentOffset", lineDocumentOffset) //$NON-NLS-1$
+				.append("lineLength", lineLength) //$NON-NLS-1$
+				.append("lineCharacterOffset", lineCharacterOffset) //$NON-NLS-1$
+				.append("lineSegmentEndOffset", lineSegmentEndOffset) //$NON-NLS-1$
 				.toString();
 	}
 }

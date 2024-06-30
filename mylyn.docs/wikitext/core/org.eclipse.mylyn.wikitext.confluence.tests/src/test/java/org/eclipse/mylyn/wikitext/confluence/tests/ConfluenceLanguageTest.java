@@ -11,6 +11,7 @@
  *     David Green - initial API and implementation
  *     Patrick Boisclair - tests for bug 354077
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.confluence.tests;
 
@@ -27,6 +28,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.mylyn.wikitext.confluence.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.parser.builder.DocBookDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
@@ -35,8 +37,6 @@ import org.eclipse.mylyn.wikitext.toolkit.AbstractMarkupGenerationTest;
 import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.junit.Test;
-
-import com.google.common.io.Resources;
 
 /**
  * @author David Green
@@ -1306,7 +1306,7 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	 */
 	@Test
 	public void testHangOnBug318695() throws IOException {
-		String content = Resources.toString(ConfluenceLanguageTest.class.getResource("resources/bug318695.confluence"),
+		String content = IOUtils.toString(ConfluenceLanguageTest.class.getResource("resources/bug318695.confluence"),
 				StandardCharsets.UTF_8);
 		parser.setBuilder(new HtmlDocumentBuilder(new StringWriter()));
 		parser.parse(new StringReader(content));
@@ -1318,7 +1318,7 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	 */
 	@Test
 	public void stackOverflowWithLargeContentOnBug424387() throws IOException {
-		String content = Resources.toString(ConfluenceLanguageTest.class.getResource("resources/bug424387.confluence"),
+		String content = IOUtils.toString(ConfluenceLanguageTest.class.getResource("resources/bug424387.confluence"),
 				StandardCharsets.UTF_8);
 		parser.setBuilder(new HtmlDocumentBuilder(new StringWriter()));
 		parser.parse(new StringReader(content));
@@ -1330,7 +1330,7 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	 */
 	@Test
 	public void stackOverflowWithLargeContentInTable() throws IOException {
-		String content = Resources.toString(ConfluenceLanguageTest.class.getResource("resources/bug533397.confluence"),
+		String content = IOUtils.toString(ConfluenceLanguageTest.class.getResource("resources/bug533397.confluence"),
 				StandardCharsets.UTF_8);
 		parser.setBuilder(new HtmlDocumentBuilder(new StringWriter()));
 		parser.parse(new StringReader(content));

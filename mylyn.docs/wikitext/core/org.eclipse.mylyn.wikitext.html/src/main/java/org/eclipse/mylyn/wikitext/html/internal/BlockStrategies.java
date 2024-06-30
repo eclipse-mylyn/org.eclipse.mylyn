@@ -9,12 +9,10 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.html.internal;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 
 class BlockStrategies extends ElementStrategies<BlockType, BlockStrategy, HtmlElementStrategy<BlockType>> {
@@ -54,8 +53,8 @@ class BlockStrategies extends ElementStrategies<BlockType, BlockStrategy, HtmlEl
 
 	private static void addAlternatives(Map<BlockType, List<BlockType>> alternatives, BlockType blockType,
 			BlockType... blockTypes) {
-		checkState(!alternatives.containsKey(blockType), "Duplicate %s", blockType); //$NON-NLS-1$
-		checkArgument(blockTypes.length > 0);
+		Validate.isTrue(!alternatives.containsKey(blockType), "Duplicate %s", blockType); //$NON-NLS-1$
+		Validate.isTrue(blockTypes.length > 0);
 		alternatives.put(blockType, List.of(blockTypes));
 	}
 

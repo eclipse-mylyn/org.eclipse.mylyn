@@ -9,12 +9,11 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.html.internal;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.requireNonNull;
 
 import java.io.Writer;
@@ -23,6 +22,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.html.HtmlLanguage;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
@@ -51,7 +51,7 @@ public class HtmlSubsetLanguage extends HtmlLanguage {
 			List<SpanHtmlElementStrategy> spanElementStrategies, boolean xhtmlStrict, boolean supportsImages) {
 		setName(requireNonNull(name));
 		this.documentHandler = documentHandler;
-		checkArgument(headingLevel >= 0 && headingLevel <= 6, "headingLevel must be between 0 and 6"); //$NON-NLS-1$
+		Validate.isTrue(headingLevel >= 0 && headingLevel <= 6, "headingLevel must be between 0 and 6"); //$NON-NLS-1$
 		this.headingLevel = headingLevel;
 		supportedBlockTypes = Set.copyOf(requireNonNull(blockTypes));
 		supportedSpanTypes = Set.copyOf(requireNonNull(spanTypes));
@@ -112,7 +112,7 @@ public class HtmlSubsetLanguage extends HtmlLanguage {
 
 	private void assertSubstitutedAreSupported() {
 		for (SpanType spanType : tagNameSubstitutions.keySet()) {
-			checkState(supportedSpanTypes.contains(spanType),
+			Validate.isTrue(supportedSpanTypes.contains(spanType),
 					"SpanType [%s] is unsupported. Cannot add substitution to unsupported span types.", spanType); //$NON-NLS-1$
 		}
 	}

@@ -10,15 +10,16 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Alexander Fedorov (ArSysOp) - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
-
 import java.util.Objects;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
+import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 
 abstract class InlineWithText extends Inline {
 
@@ -52,9 +53,10 @@ abstract class InlineWithText extends Inline {
 
 	@Override
 	public String toString() {
-		return toStringHelper(getClass()).add("offset", getOffset()) //$NON-NLS-1$
-				.add("length", getLength()) //$NON-NLS-1$
-				.add("text", getText()) //$NON-NLS-1$
+		return new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE) //
+				.append("offset", getOffset()) //$NON-NLS-1$
+				.append("length", getLength()) //$NON-NLS-1$
+				.append("text", getText()) //$NON-NLS-1$
 				.toString();
 	}
 }

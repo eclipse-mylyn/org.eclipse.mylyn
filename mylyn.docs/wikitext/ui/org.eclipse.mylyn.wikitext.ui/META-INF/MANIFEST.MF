@@ -44,9 +44,7 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.ui;x-friends:="org.eclipse.m
  org.eclipse.mylyn.wikitext.ui.commands;x-internal:=true,
  org.eclipse.mylyn.wikitext.ui.editor;x-friends:="org.eclipse.mylyn.wikitext.tasks.ui",
  org.eclipse.mylyn.wikitext.ui.viewer;x-friends:="org.eclipse.mylyn.wikitext.tasks.ui"
-Import-Package: com.google.common.base;version="[33.0.0,34.0.0)",
- com.google.common.collect;version="[33.0.0,34.0.0)",
- com.google.common.io;version="[33.0.0,34.0.0)"
+Import-Package: org.apache.commons.io;version="[2.16.0,3.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-17

@@ -83,6 +83,10 @@
 							${project.artifactId}.internal*;x-internal:=true,${project.artifactId}*</Export-Package>
 						<Import-Package>!java.*, com.google.common*;
 							version="[${guava.osgi},${guava.osgi.upper})", *</Import-Package>
+						<Import-Package>!java.*, org.apache.commons.collections4*;
+							version="[4.4.0,5.0.0)", *</Import-Package>
+						<Import-Package>!java.*, org.apache.commons.lang3*;
+							version="[3.14.0,4.0.0)", *</Import-Package>
 					</instructions>
 				</configuration>
 			</plugin>

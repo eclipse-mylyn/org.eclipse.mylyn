@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.html.internal;
@@ -72,7 +73,7 @@ public class HtmlSubsetLanguageTest {
 
 	@Test
 	public void createWithUnsupportedSubstituted() {
-		IllegalStateException ise = assertThrows(IllegalStateException.class,
+		IllegalArgumentException ise = assertThrows(IllegalArgumentException.class,
 				() -> new HtmlSubsetLanguage("Test", null, 6, Set.of(BlockType.PARAGRAPH), Set.of(SpanType.BOLD),
 						Map.of(SpanType.ITALIC, "italic"), Collections.emptyList(), false, true));
 		assertTrue(ise.getMessage()

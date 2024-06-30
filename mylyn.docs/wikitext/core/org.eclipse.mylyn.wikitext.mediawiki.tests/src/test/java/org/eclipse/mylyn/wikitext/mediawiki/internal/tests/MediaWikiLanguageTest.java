@@ -11,6 +11,7 @@
  *     David Green - initial API and implementation
  *     Jeremie Bresson - Bug 381506, 381912, 391850, 304495, 396545
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.mediawiki.internal.tests;
 
@@ -30,6 +31,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.mylyn.wikitext.mediawiki.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.mediawiki.Template;
 import org.eclipse.mylyn.wikitext.parser.builder.DocBookDocumentBuilder;
@@ -42,8 +44,6 @@ import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.io.Resources;
 
 /**
  * @author David Green
@@ -1491,7 +1491,7 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 	}
 
 	private String readFully(String resource) throws IOException {
-		return Resources.toString(MediaWikiLanguageTest.class.getResource(resource), StandardCharsets.UTF_8);
+		return IOUtils.toString(MediaWikiLanguageTest.class.getResource(resource), StandardCharsets.UTF_8);
 	}
 
 	private void assertContainsPattern(String html, Pattern pattern) {

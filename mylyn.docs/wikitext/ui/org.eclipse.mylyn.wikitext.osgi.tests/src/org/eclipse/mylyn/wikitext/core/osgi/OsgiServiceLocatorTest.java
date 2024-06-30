@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.osgi;
 
@@ -32,8 +33,6 @@ import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.junit.Test;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-
-import com.google.common.base.Throwables;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class OsgiServiceLocatorTest {
@@ -110,7 +109,9 @@ public class OsgiServiceLocatorTest {
 			doReturn(1234L).when(bundle).getBundleId();
 			doReturn(markupLanguage).when(bundle).loadClass(eq(markupLanguage.getName()));
 		} catch (Exception e) {
-			Throwables.throwIfUnchecked(e);
+			if (e instanceof RuntimeException) {
+				throw (RuntimeException) e;
+			}
 			throw new RuntimeException(e);
 		}
 		return bundle;

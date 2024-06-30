@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.ui.util;
@@ -18,10 +19,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-
-import com.google.common.io.CharStreams;
 
 public class IOUtil {
 	/**
@@ -29,7 +29,7 @@ public class IOUtil {
 	 */
 	public static String readFully(IFile file) throws CoreException, IOException {
 		try (Reader r = new InputStreamReader(new BufferedInputStream(file.getContents()), file.getCharset())) {
-			return CharStreams.toString(r);
+			return IOUtils.toString(r);
 		}
 	}
 }
