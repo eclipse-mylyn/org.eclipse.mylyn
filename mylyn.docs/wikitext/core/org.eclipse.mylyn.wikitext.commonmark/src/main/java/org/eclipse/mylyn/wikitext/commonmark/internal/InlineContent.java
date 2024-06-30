@@ -9,9 +9,13 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.mylyn.wikitext.commonmark.internal.inlines.AllCharactersSpan;
 import org.eclipse.mylyn.wikitext.commonmark.internal.inlines.AutoLinkSpan;
@@ -27,26 +31,24 @@ import org.eclipse.mylyn.wikitext.commonmark.internal.inlines.PotentialEmphasisS
 import org.eclipse.mylyn.wikitext.commonmark.internal.inlines.SourceSpan;
 import org.eclipse.mylyn.wikitext.commonmark.internal.inlines.StringCharactersSpan;
 
-import com.google.common.collect.ImmutableList;
-
 public class InlineContent {
 
 	public static InlineParser commonMarkStrict() {
-		ImmutableList.Builder<SourceSpan> spansBuilder = ImmutableList.builder();
+		List<SourceSpan> spansBuilder = new ArrayList<>();
 		addStandardSpans(spansBuilder);
 		addTerminatorSpans(spansBuilder);
-		return new InlineParser(spansBuilder.build());
+		return new InlineParser(List.copyOf(spansBuilder));
 	}
 
 	public static InlineParser markdown() {
-		ImmutableList.Builder<SourceSpan> spansBuilder = ImmutableList.builder();
+		List<SourceSpan> spansBuilder = new ArrayList<>();
 		addStandardSpans(spansBuilder);
 		spansBuilder.add(new AutoLinkWithoutDemarcationSpan());
 		addTerminatorSpans(spansBuilder);
-		return new InlineParser(spansBuilder.build());
+		return new InlineParser(List.copyOf(spansBuilder));
 	}
 
-	private static void addStandardSpans(ImmutableList.Builder<SourceSpan> spansBuilder) {
+	private static void addStandardSpans(List<SourceSpan> spansBuilder) {
 		spansBuilder.add(new LineBreakSpan());
 		spansBuilder.add(new BackslashEscapeSpan());
 		spansBuilder.add(new CodeSpan());
@@ -57,7 +59,7 @@ public class InlineContent {
 		spansBuilder.add(new PotentialBracketSpan());
 	}
 
-	private static void addTerminatorSpans(ImmutableList.Builder<SourceSpan> spansBuilder) {
+	private static void addTerminatorSpans(List<SourceSpan> spansBuilder) {
 		spansBuilder.add(new StringCharactersSpan());
 		spansBuilder.add(new AllCharactersSpan());
 	}

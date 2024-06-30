@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.ui;
@@ -24,7 +25,9 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.toolkit.TimeoutActionRule;
+import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.GC;
@@ -38,9 +41,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class ScreenshotOnTimeoutRule extends TimeoutActionRule {
@@ -121,19 +121,19 @@ public class ScreenshotOnTimeoutRule extends TimeoutActionRule {
 	}
 
 	private String description(Control control) {
-		ToStringHelper builder = MoreObjects.toStringHelper(control.getClass());
+		ToStringBuilder builder = new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE);
 		if (control instanceof StyledText styled) {
-			builder.add("text", styled.getText());
+			builder.append("text", styled.getText());
 		}
 		if (control instanceof Text text) {
-			builder.add("text", text.getText());
+			builder.append("text", text.getText());
 		}
 		if (control instanceof Button b) {
-			builder.add("text", b.getText());
+			builder.append("text", b.getText());
 		}
 		if (control instanceof Label l) {
-			builder.add("text", l.getText());
+			builder.append("text", l.getText());
 		}
-		return builder.add("tooltip", control.getToolTipText()).toString();
+		return builder.append("tooltip", control.getToolTipText()).toString();
 	}
 }

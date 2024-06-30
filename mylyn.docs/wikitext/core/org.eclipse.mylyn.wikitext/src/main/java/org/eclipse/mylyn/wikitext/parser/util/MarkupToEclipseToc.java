@@ -9,15 +9,15 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.parser.util;
-
-import static com.google.common.base.Preconditions.checkArgument;
 
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
 
+import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineParser;
@@ -186,7 +186,7 @@ public class MarkupToEclipseToc {
 	 *            a number >= 0 and <= 6
 	 */
 	public void setAnchorLevel(int anchorLevel) {
-		checkArgument(anchorLevel >= 0 && anchorLevel <= 6, "The anchor level must be >= 0 and <= 6"); //$NON-NLS-1$
+		Validate.isTrue(anchorLevel >= 0 && anchorLevel <= 6, "The anchor level must be >= 0 and <= 6"); //$NON-NLS-1$
 		this.anchorLevel = anchorLevel;
 	}
 

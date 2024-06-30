@@ -11,6 +11,7 @@
  *     David Green - initial API and implementation
  *     Torkild U. Resheim - bugs 336592 and 336813
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.builder.tests;
@@ -25,6 +26,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.mylyn.wikitext.mediawiki.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.XslfoDocumentBuilder;
@@ -34,8 +36,6 @@ import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 import org.eclipse.mylyn.wikitext.util.DefaultXmlStreamWriter;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.io.Resources;
 
 /**
  * @author David Green
@@ -309,7 +309,7 @@ public class XslfoDocumentBuilderIntegrationTest {
 		URL resource = XslfoDocumentBuilderIntegrationTest.class.getResource(
 				"resources/" + XslfoDocumentBuilderIntegrationTest.class.getSimpleName() + "_" + resourceName);
 		try {
-			return Resources.toString(resource, StandardCharsets.UTF_8);
+			return IOUtils.toString(resource, StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

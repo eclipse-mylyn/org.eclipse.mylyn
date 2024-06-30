@@ -10,17 +10,18 @@
  * Contributors:
  *     Jeremie Bresson - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.mediawiki.tests;
 
-import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 
+import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.mediawiki.WikiTemplateResolver;
 
 /**
@@ -47,7 +48,7 @@ class TestWikiTemplateResolver extends WikiTemplateResolver {
 	protected String readContent(URL pathUrl) throws IOException {
 		requireNonNull(serverContent, "Please specify some server content for the tests.");
 		String key = pathUrl.toString();
-		checkState(serverContent.containsKey(key), "Server content not found for key: %s", key);
+		Validate.isTrue(serverContent.containsKey(key), "Server content not found for key: %s", key);
 		return serverContent.get(key);
 	}
 

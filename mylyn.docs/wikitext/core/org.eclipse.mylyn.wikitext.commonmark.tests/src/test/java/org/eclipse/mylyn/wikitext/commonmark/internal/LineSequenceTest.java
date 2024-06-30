@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
@@ -61,10 +62,10 @@ public class LineSequenceTest {
 
 	@Test
 	public void toStringTest() {
-		assertEquals("LineSequence{currentLine=Line{lineNumber=0, offset=0, text=a}, nextLine=null}",
+		assertEquals("ContentLineSequence{currentLine=Line{lineNumber=0, offset=0, text=a}, nextLine=null}",
 				LineSequence.create("a\n").toString());
 		assertEquals(
-				"LineSequence{currentLine=Line{lineNumber=0, offset=0, text=a}, nextLine=Line{lineNumber=1, offset=2, text=b}}",
+				"ContentLineSequence{currentLine=Line{lineNumber=0, offset=0, text=a}, nextLine=Line{lineNumber=1, offset=2, text=b}}",
 				LineSequence.create("a\nb").toString());
 	}
 
@@ -127,7 +128,7 @@ public class LineSequenceTest {
 	private void assertLookAheadFailsFast(LineSequence lineSequence) {
 		LineSequence lookAhead = lineSequence.lookAhead();
 		lineSequence.advance();
-		assertThrows(IllegalStateException.class, () -> lookAhead.advance());
+		assertThrows(IllegalArgumentException.class, () -> lookAhead.advance());
 	}
 
 	private void assertAdvance(LineSequence lineSequence) {

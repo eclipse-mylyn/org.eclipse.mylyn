@@ -9,11 +9,12 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
-import static com.google.common.base.Preconditions.checkState;
+import org.apache.commons.lang3.Validate;
 
 class LookAheadLineSequence extends LineSequence {
 
@@ -58,7 +59,7 @@ class LookAheadLineSequence extends LineSequence {
 	}
 
 	private void checkConcurrentModification() {
-		checkState(referenceLine == lineSequence.getCurrentLine());
+		Validate.isTrue(referenceLine == lineSequence.getCurrentLine());
 	}
 
 	@Override

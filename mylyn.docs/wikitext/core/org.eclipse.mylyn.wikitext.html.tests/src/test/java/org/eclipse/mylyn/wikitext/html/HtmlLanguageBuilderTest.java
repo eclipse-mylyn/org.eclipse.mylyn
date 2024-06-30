@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.html;
@@ -108,7 +109,7 @@ public class HtmlLanguageBuilderTest {
 
 	@Test
 	public void createWithoutName() {
-		IllegalStateException ise = assertThrows(IllegalStateException.class,
+		IllegalArgumentException ise = assertThrows(IllegalArgumentException.class,
 				() -> builder.add(BlockType.PARAGRAPH).create());
 		assertTrue(ise.getMessage().contains("Name must be provided to create an HtmlLanguage"));
 	}

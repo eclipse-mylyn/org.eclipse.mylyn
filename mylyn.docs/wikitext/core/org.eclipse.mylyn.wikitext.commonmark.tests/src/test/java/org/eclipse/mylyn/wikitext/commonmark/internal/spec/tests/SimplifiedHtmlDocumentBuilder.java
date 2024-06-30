@@ -10,13 +10,13 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.spec.tests;
 
-import static com.google.common.base.MoreObjects.firstNonNull;
-
 import java.io.Writer;
+import java.util.Objects;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
@@ -35,7 +35,7 @@ public class SimplifiedHtmlDocumentBuilder extends HtmlDocumentBuilder {
 		writer.writeEmptyElement(getHtmlNsUri(), "img"); //$NON-NLS-1$
 		writer.writeAttribute("src", makeUrlAbsolute(url)); //$NON-NLS-1$
 		if (attributes instanceof ImageAttributes imageAttributes) {
-			writer.writeAttribute(getHtmlNsUri(), "alt", firstNonNull(imageAttributes.getAlt(), ""));
+			writer.writeAttribute(getHtmlNsUri(), "alt", Objects.requireNonNullElse(imageAttributes.getAlt(), ""));
 			if (imageAttributes.getTitle() != null) {
 				writer.writeAttribute(getHtmlNsUri(), "title", imageAttributes.getTitle());
 			}

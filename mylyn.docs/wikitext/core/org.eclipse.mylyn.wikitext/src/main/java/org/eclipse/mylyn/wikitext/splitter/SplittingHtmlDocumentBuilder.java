@@ -9,10 +9,9 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.splitter;
-
-import static com.google.common.base.Preconditions.checkState;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,6 +21,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
@@ -484,7 +484,7 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 				pageItem = item;
 			}
 		}
-		checkState(pageItem != null);
+		Validate.notNull(pageItem);
 		emitToc(outline, 0);
 	}
 

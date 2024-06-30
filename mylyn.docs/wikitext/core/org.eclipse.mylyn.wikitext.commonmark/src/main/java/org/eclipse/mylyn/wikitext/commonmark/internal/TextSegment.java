@@ -10,17 +10,19 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Alexander Fedorov (ArSysOp) - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
+import java.util.stream.StreamSupport;
 
-import com.google.common.collect.ImmutableList;
+import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 
 public class TextSegment {
 
@@ -29,7 +31,7 @@ public class TextSegment {
 	private final String text;
 
 	public TextSegment(Iterable<Line> lines) {
-		this.lines = ImmutableList.copyOf(lines);
+		this.lines = List.copyOf(StreamSupport.stream(lines.spliterator(), false).toList());
 		text = computeText(this.lines);
 	}
 
@@ -53,7 +55,7 @@ public class TextSegment {
 	}
 
 	public int offsetOf(int textOffset) {
-		checkArgument(textOffset >= 0);
+		Validate.isTrue(textOffset >= 0);
 		int textOffsetOfLine = 0;
 		int remainder = textOffset;
 		for (Line line : lines) {
@@ -82,7 +84,9 @@ public class TextSegment {
 
 	@Override
 	public String toString() {
-		return toStringHelper(TextSegment.class).add("text", ToStringHelper.toStringValue(text)).toString(); //$NON-NLS-1$
+		return new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE) //
+				.append("text", text) //$NON-NLS-1$
+				.toString();
 	}
 
 	public Line getLineAtOffset(int textOffset) {

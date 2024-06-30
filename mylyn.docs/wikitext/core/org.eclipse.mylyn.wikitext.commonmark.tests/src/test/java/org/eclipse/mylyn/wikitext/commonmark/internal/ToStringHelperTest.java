@@ -10,15 +10,15 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
 import static org.junit.Assert.assertEquals;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
-
-import com.google.common.base.Strings;
 
 @SuppressWarnings("nls")
 public class ToStringHelperTest {
@@ -27,7 +27,7 @@ public class ToStringHelperTest {
 		assertEquals(null, ToStringHelper.toStringValue(null));
 		assertEquals("", ToStringHelper.toStringValue(""));
 		assertEquals("abc", ToStringHelper.toStringValue("abc"));
-		assertEquals("01234567890123456789...", ToStringHelper.toStringValue(Strings.repeat("0123456789", 10)));
+		assertEquals("01234567890123456789...", ToStringHelper.toStringValue(StringUtils.repeat("0123456789", 10)));
 		assertEquals("a\\r\\n\\tb", ToStringHelper.toStringValue("a\r\n\tb"));
 	}
 }

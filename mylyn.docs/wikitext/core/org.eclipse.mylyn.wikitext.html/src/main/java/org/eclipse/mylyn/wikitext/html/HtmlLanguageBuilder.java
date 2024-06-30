@@ -9,12 +9,11 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.html;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
@@ -24,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.html.internal.FontElementStrategy;
 import org.eclipse.mylyn.wikitext.html.internal.HtmlSubsetLanguage;
 import org.eclipse.mylyn.wikitext.html.internal.LiteralHtmlDocumentHandler;
@@ -35,8 +36,6 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentHandler;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
-
-import com.google.common.base.Strings;
 
 /**
  * Provides a way to build HTML languages that support a specific set of HTML tags.
@@ -77,10 +76,10 @@ public class HtmlLanguageBuilder {
 	 */
 	public HtmlLanguageBuilder name(String name) {
 		requireNonNull(name, "Must provide a name"); //$NON-NLS-1$
-		checkArgument(!Strings.isNullOrEmpty(name), "Name must not be empty"); //$NON-NLS-1$
-		checkArgument(!name.equalsIgnoreCase(HtmlLanguage.NAME_HTML), "Name must not be equal to %s", //$NON-NLS-1$
+		Validate.isTrue(StringUtils.isNotEmpty(name), "Name must not be empty"); //$NON-NLS-1$
+		Validate.isTrue(!name.equalsIgnoreCase(HtmlLanguage.NAME_HTML), "Name must not be equal to %s", //$NON-NLS-1$
 				HtmlLanguage.NAME_HTML);
-		checkArgument(name.equals(name.trim()), "Name must not have leading or trailing whitespace"); //$NON-NLS-1$
+		Validate.isTrue(name.equals(name.trim()), "Name must not have leading or trailing whitespace"); //$NON-NLS-1$
 		this.name = name;
 		return this;
 	}
@@ -140,7 +139,7 @@ public class HtmlLanguageBuilder {
 	 * @return this builder
 	 */
 	public HtmlLanguageBuilder addHeadings(int level) {
-		checkArgument(level > 0 && level <= 6, "Heading level must be between 1 and 6"); //$NON-NLS-1$
+		Validate.isTrue(level > 0 && level <= 6, "Heading level must be between 1 and 6"); //$NON-NLS-1$
 		headingLevel = level;
 		return this;
 	}
@@ -201,7 +200,7 @@ public class HtmlLanguageBuilder {
 	}
 
 	public HtmlLanguage create() {
-		checkState(name != null, "Name must be provided to create an HtmlLanguage"); //$NON-NLS-1$
+		Validate.isTrue(name != null, "Name must be provided to create an HtmlLanguage"); //$NON-NLS-1$
 
 		return new HtmlSubsetLanguage(name, documentHandler, headingLevel, blockTypes, spanTypes,
 				spanTypeToElementNameSubstitution, spanElementStrategies, xhtmlStrict, supportsImages);

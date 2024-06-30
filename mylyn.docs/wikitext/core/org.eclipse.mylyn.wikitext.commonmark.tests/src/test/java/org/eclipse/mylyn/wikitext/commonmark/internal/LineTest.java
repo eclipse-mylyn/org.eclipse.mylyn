@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
@@ -19,10 +20,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.mylyn.wikitext.parser.Locator;
 import org.junit.Test;
-
-import com.google.common.base.Strings;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class LineTest {
@@ -74,7 +74,7 @@ public class LineTest {
 		assertEquals("Line{lineNumber=1, offset=15, text=1}", new Line(1, 15, "1").toString());
 		assertEquals("Line{lineNumber=2, offset=0, text=\\t\\r\\nabc}", new Line(2, 0, "\t\r\nabc").toString());
 		assertEquals("Line{lineNumber=0, offset=0, text=aaaaaaaaaaaaaaaaaaaa...}",
-				new Line(0, 0, Strings.repeat("a", 100)).toString());
+				new Line(0, 0, StringUtils.repeat("a", 100)).toString());
 	}
 
 	@Test

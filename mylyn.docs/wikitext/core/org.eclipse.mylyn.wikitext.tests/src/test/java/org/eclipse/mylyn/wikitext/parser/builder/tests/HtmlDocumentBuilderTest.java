@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.builder.tests;
@@ -25,6 +26,7 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
@@ -37,8 +39,6 @@ import org.eclipse.mylyn.wikitext.parser.builder.UriProcessor;
 import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.io.Resources;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class HtmlDocumentBuilderTest {
@@ -410,7 +410,7 @@ public class HtmlDocumentBuilderTest {
 		try {
 			String fileName = HtmlDocumentBuilderTest.class.getSimpleName() + '_' + resourceName + ".xml";
 			URL resource = HtmlDocumentBuilderTest.class.getResource(fileName);
-			return convertToUnixLineEndings(Resources.toString(resource, StandardCharsets.UTF_8));
+			return convertToUnixLineEndings(IOUtils.toString(resource, StandardCharsets.UTF_8));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

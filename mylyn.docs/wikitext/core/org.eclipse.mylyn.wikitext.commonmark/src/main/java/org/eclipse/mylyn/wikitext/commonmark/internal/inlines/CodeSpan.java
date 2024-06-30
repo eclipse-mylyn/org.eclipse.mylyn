@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Alexander Fedorov (ArSysOp) - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
@@ -18,7 +19,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.common.base.Strings;
+import org.apache.commons.lang3.StringUtils;
 
 public class CodeSpan extends SourceSpan {
 
@@ -32,7 +33,8 @@ public class CodeSpan extends SourceSpan {
 			if (matcher.matches()) {
 				String openingBackticks = matcher.group(1);
 				int backtickCount = openingBackticks.length();
-				Pattern closingPattern = Pattern.compile("(?<!`)(" + Strings.repeat("`", backtickCount) + ")([^`]|$)", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				Pattern closingPattern = Pattern.compile(
+						"(?<!`)(" + StringUtils.repeat("`", backtickCount) + ")([^`]|$)", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						Pattern.DOTALL | Pattern.MULTILINE);
 				cursor.advance(backtickCount);
 				String textAtOffset = cursor.getTextAtOffset();
