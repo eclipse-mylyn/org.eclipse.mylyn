@@ -10,6 +10,7 @@
  * Contributors:
  *     Kevin de Vlaming - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.creole.tests.documentbuilder;
@@ -26,7 +27,7 @@ import org.junit.Test;
  * @see http://www.wikicreole.org/wiki/Elements
  * @author Kevin de Vlaming
  */
-@SuppressWarnings({ "nls", "restriction" })
+@SuppressWarnings("nls")
 public class CreoleDocumentBuilderTableTest extends AbstractCreoleDocumentBuilderTest {
 	@Test
 	public void testTableWithEmptyCells() {

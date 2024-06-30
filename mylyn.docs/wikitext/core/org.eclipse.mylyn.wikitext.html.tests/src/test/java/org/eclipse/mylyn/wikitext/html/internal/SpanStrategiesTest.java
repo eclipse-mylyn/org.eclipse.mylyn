@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.html.internal;
@@ -26,7 +27,7 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.junit.Test;
 
-@SuppressWarnings({ "nls", "restriction" })
+@SuppressWarnings("nls")
 public class SpanStrategiesTest {
 
 	@Test(expected = NullPointerException.class)

@@ -10,6 +10,7 @@
  * Contributors:
  *     Jeremie Bresson - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
@@ -28,7 +29,7 @@ import org.junit.Test;
 /**
  * Unit Tests for {@link LanguageSupport}
  */
-@SuppressWarnings({ "nls", "restriction" })
+@SuppressWarnings("nls")
 public class AsciiDocLanguageSupportTest extends AsciiDocLanguageTestBase {
 
 	@Test

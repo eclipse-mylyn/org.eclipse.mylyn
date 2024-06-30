@@ -10,6 +10,7 @@
  * Contributors:
  *     Jeremie Bresson - copied from MarkdownDocumentBuilderTest and adapted to AsciiDoc
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
@@ -28,7 +29,7 @@ import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 import org.junit.Before;
 import org.junit.Test;
 
-@SuppressWarnings({ "nls", "restriction" })
+@SuppressWarnings("nls")
 public class AsciiDocDocumentBuilderTest {
 
 	private DocumentBuilder builder;

@@ -24,7 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.mylyn.wikitext.parser.Locator;
 import org.junit.Test;
 
-@SuppressWarnings({ "nls", "restriction" })
+@SuppressWarnings("nls")
 public class LineTest {
 
 	@Test(expected = NullPointerException.class)

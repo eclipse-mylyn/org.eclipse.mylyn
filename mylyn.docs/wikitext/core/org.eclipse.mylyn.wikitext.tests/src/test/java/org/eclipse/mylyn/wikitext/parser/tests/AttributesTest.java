@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.tests;
@@ -20,7 +21,7 @@ import static org.junit.Assert.assertNotNull;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.junit.Test;
 
-@SuppressWarnings({ "nls", "restriction" })
+@SuppressWarnings("nls")
 public class AttributesTest {
 
 	@Test

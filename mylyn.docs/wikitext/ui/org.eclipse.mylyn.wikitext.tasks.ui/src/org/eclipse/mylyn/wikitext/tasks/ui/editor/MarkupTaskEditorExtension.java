@@ -11,6 +11,7 @@
  *     David Green - initial API and implementation
  *     Frank Becker - improvements for bug 304910
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.tasks.ui.editor;
 
@@ -74,7 +75,7 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
  * @since 1.0
  */
 public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage> extends AbstractTaskEditorExtension
-		implements IAdaptable {
+implements IAdaptable {
 
 	private static final String MARKUP_SOURCE_CONTEXT_ID = "org.eclipse.mylyn.wikitext.tasks.ui.markupSourceContext"; //$NON-NLS-1$
 
@@ -147,8 +148,8 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 
 		if (JFaceResources.getFontRegistry().hasValueFor(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT)) {
 			markupViewer.getTextWidget()
-					.setFont(
-							JFaceResources.getFontRegistry().get(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT));
+			.setFont(
+					JFaceResources.getFontRegistry().get(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT));
 		}
 		if (JFaceResources.getFontRegistry().hasValueFor(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_MONOSPACE_FONT)) {
 			markupViewer.setDefaultMonospaceFont(
@@ -218,7 +219,6 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		return createEditor(taskRepository, parent, style, null);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public SourceViewer createEditor(TaskRepository taskRepository, Composite parent, int style, IAdaptable context) {
 		final MarkupLanguageType markupLanguageCopy = createRepositoryMarkupLanguage(taskRepository);
@@ -348,7 +348,6 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 			};
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		protected Map<String, IAdaptable> getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
 			Map<String, IAdaptable> hyperlinkDetectorTargets = super.getHyperlinkDetectorTargets(sourceViewer);
@@ -400,7 +399,6 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 			markupHyperlinksFirst = false;
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		protected Map<String, IAdaptable> getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
 			Map<String, IAdaptable> hyperlinkDetectorTargets = super.getHyperlinkDetectorTargets(sourceViewer);

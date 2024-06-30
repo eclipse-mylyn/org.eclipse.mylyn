@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.textile.internal.tests;
 
@@ -27,7 +28,7 @@ import org.junit.Test;
 /**
  * @author David Green
  */
-@SuppressWarnings({ "nls", "restriction" })
+@SuppressWarnings("nls")
 public class TextileTest {
 	@Test
 	public void testExplicitHeaderStartsNewBlock() {
