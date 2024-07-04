@@ -18,12 +18,10 @@ package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 import java.util.List;
 import java.util.Objects;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ToStringHelper;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
-import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 
 public class Image extends InlineWithNestedContents {
 
@@ -71,14 +69,22 @@ public class Image extends InlineWithNestedContents {
 		return src.equals(other.src) && getContents().equals(other.getContents()) && Objects.equals(title, other.title);
 	}
 
+	@SuppressWarnings("nls")
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE) //
-				.append("offset", getOffset()) //$NON-NLS-1$
-				.append("length", getLength()) //$NON-NLS-1$
-				.append("src", ToStringHelper.toStringValue(src)) //$NON-NLS-1$
-				.append("title", title) //$NON-NLS-1$
-				.append("contents", getContents()) //$NON-NLS-1$
-				.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append("Image{offset=")
+		.append(getOffset())
+		.append(", length=")
+		.append(getLength())
+		.append(", src=")
+		.append(ToStringHelper.toStringValue(src))
+		.append(", title=")
+		.append(title)
+		.append(", contents=")
+		.append(getContents())
+		.append("}");
+		return builder.toString();
 	}
+
 }

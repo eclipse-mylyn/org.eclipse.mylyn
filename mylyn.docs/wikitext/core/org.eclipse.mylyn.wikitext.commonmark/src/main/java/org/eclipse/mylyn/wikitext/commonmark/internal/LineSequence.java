@@ -15,13 +15,11 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
+import static org.eclipse.mylyn.wikitext.util.Preconditions.checkArgument;
+
 import java.util.Iterator;
 import java.util.function.Function;
 import java.util.function.Predicate;
-
-import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 
 public abstract class LineSequence implements Iterable<Line> {
 
@@ -41,7 +39,7 @@ public abstract class LineSequence implements Iterable<Line> {
 	public abstract void advance();
 
 	public void advance(int count) {
-		Validate.isTrue(count >= 0);
+		checkArgument(count >= 0);
 		for (int x = 0; x < count; ++x) {
 			advance();
 		}
@@ -67,11 +65,17 @@ public abstract class LineSequence implements Iterable<Line> {
 
 	public abstract LineSequence lookAhead();
 
+	@SuppressWarnings("nls")
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE) //
-				.append("currentLine", getCurrentLine()) //$NON-NLS-1$
-				.append("nextLine", getNextLine()) //$NON-NLS-1$
-				.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append(getClass().getSimpleName())
+		.append("{currentLine=")
+		.append(getCurrentLine())
+		.append(", nextLine=")
+		.append(getNextLine())
+		.append("}");
+		return builder.toString();
 	}
+
 }

@@ -17,18 +17,14 @@ package org.eclipse.mylyn.wikitext.commonmark.internal;
 import java.util.Locale;
 
 import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;
-
-import com.google.common.base.CharMatcher;
+import org.eclipse.mylyn.wikitext.util.IDStrategies;
 
 public class CommonMarkIdGenerationStrategy extends IdGenerationStrategy {
 
-	private final CharMatcher hyphenMatcher = CharMatcher.is('-');
-
 	@Override
 	public String generateId(String headingText) {
-		String id = headingText.toLowerCase(Locale.ENGLISH).replaceAll("[^a-z0-9_]", "-"); //$NON-NLS-1$//$NON-NLS-2$
-		id = hyphenMatcher.trimAndCollapseFrom(id, '-');
-		return id;
+		String id = headingText.toLowerCase(Locale.ENGLISH);
+		return IDStrategies.computeID(id);
 	}
 
 }

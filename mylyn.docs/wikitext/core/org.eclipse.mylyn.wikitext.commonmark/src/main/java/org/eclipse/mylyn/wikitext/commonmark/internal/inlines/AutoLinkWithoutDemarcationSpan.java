@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.common.net.UrlEscapers;
+import org.eclipse.mylyn.wikitext.util.UrlUtil;
 
 public class AutoLinkWithoutDemarcationSpan extends SourceSpan {
 
@@ -46,6 +46,6 @@ public class AutoLinkWithoutDemarcationSpan extends SourceSpan {
 	}
 
 	private String escapeUri(String link) {
-		return UrlEscapers.urlFragmentEscaper().escape(link).replace("%23", "#").replace("%25", "%"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		return UrlUtil.escapeUrlFragment(link).replace("%23", "#").replace("%25", "%"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 }

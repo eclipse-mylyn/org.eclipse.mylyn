@@ -23,16 +23,13 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext.NamedUriWithTitle;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.EntityReferences;
-
-import com.google.common.base.CharMatcher;
-import com.google.common.escape.Escaper;
-import com.google.common.net.UrlEscapers;
+import org.eclipse.mylyn.wikitext.util.Strings;
+import org.eclipse.mylyn.wikitext.util.UrlUtil;
 
 public class PotentialBracketEndDelimiter extends InlineWithText {
 
@@ -132,7 +129,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 					String title = linkTitle(matcher);
 
 					if (!(referenceDefinition
-							&& (StringUtils.isEmpty(uri) || hasContentOnSameLine(matcher, cursor)))) {
+							&& (Strings.isNullOrEmpty(uri) || hasContentOnSameLine(matcher, cursor)))) {
 						String referenceName = null;
 						if (referenceDefinition) {
 							referenceName = toReferenceName(referenceName(cursor, contents));
@@ -218,7 +215,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 			Inline last = inlines.get(inlines.size() - 1);
 			if (last instanceof Characters characters) {
 				if (characters.getText().length() <= length
-						&& CharMatcher.whitespace().matchesAllOf(characters.getText())) {
+						&& Strings.isBlank(characters.getText())) {
 					inlines.remove(inlines.size() - 1);
 				}
 			}
@@ -287,7 +284,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 			}
 		}
 		String titleWithoutBackslashEscapes = unescapeBackslashEscapes(title);
-		return replaceHtmlEntities(titleWithoutBackslashEscapes, null);
+		return replaceHtmlEntities(titleWithoutBackslashEscapes, false);
 	}
 
 	private int titleEndIndex(Matcher matcher) {
@@ -313,25 +310,23 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 	private String normalizeUri(String uriWithEscapes) {
 		String uriWithoutBackslashEscapes = unescapeBackslashEscapes(uriWithEscapes);
 		try {
-			String uriWithoutHtmlEntities = replaceHtmlEntities(uriWithoutBackslashEscapes,
-					UrlEscapers.urlFormParameterEscaper());
+			String uriWithoutHtmlEntities = replaceHtmlEntities(uriWithoutBackslashEscapes, true);
 			String decoded = URLDecoder.decode(uriWithoutHtmlEntities, StandardCharsets.UTF_8);
-			Escaper escaper = UrlEscapers.urlFragmentEscaper();
 			int indexOfHash = decoded.indexOf('#');
 			if (indexOfHash != -1) {
-				String uri = escaper.escape(decoded.substring(0, indexOfHash)) + '#';
+				String uri = UrlUtil.escapeUrlFragment(decoded.substring(0, indexOfHash)) + '#';
 				if (indexOfHash + 1 < decoded.length()) {
-					uri += escaper.escape(decoded.substring(indexOfHash + 1));
+					uri += UrlUtil.escapeUrlFragment(decoded.substring(indexOfHash + 1));
 				}
 				return uri;
 			}
-			return escaper.escape(decoded);
+			return UrlUtil.escapeUrlFragment(decoded);
 		} catch (Exception e) {
 			return uriWithoutBackslashEscapes;
 		}
 	}
 
-	String replaceHtmlEntities(String text, Escaper escaper) {
+	String replaceHtmlEntities(String text, boolean escapeUrlFormParameters) {
 		String replaced = ""; //$NON-NLS-1$
 		int lastEnd = 0;
 		Matcher matcher = HTML_ENTITY_PATTERN.matcher(text);
@@ -343,7 +338,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 			String entityTextEquivalent = EntityReferences.instance().equivalentString(entity);
 			replaced += entityTextEquivalent == null
 					? matcher.group(1)
-							: escaper == null ? entityTextEquivalent : escaper.escape(entityTextEquivalent);
+							: escapeUrlFormParameters ? UrlUtil.escapeUrlFormParameters(entityTextEquivalent) : entityTextEquivalent;
 			lastEnd = matcher.end(1);
 		}
 		if (lastEnd < text.length()) {
@@ -354,7 +349,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 
 	String toReferenceName(String stringWithBackslashEscapes) {
 		String referenceName = stringWithBackslashEscapes.replaceAll("(?s)\\\\(\\[|\\])", "$1").replaceAll("\\s+", " "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-		if (CharMatcher.whitespace().matchesAllOf(referenceName)) {
+		if (Strings.isBlank(referenceName)) {
 			return null;
 		}
 		return referenceName;

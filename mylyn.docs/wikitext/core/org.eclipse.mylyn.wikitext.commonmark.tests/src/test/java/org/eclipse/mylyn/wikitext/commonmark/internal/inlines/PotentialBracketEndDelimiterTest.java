@@ -24,9 +24,6 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.junit.Test;
 
-import com.google.common.escape.Escaper;
-import com.google.common.net.UrlEscapers;
-
 @SuppressWarnings("nls")
 public class PotentialBracketEndDelimiterTest {
 
@@ -168,19 +165,18 @@ public class PotentialBracketEndDelimiterTest {
 	@Test
 	public void replaceHtmlEntities() {
 		PotentialBracketEndDelimiter delimiter = new PotentialBracketEndDelimiter(line, 0);
-		Escaper escaper = UrlEscapers.urlFormParameterEscaper();
-		assertEquals("asf", delimiter.replaceHtmlEntities("asf", escaper));
-		assertEquals("&amp", delimiter.replaceHtmlEntities("&amp", escaper));
-		assertEquals("&amp ;", delimiter.replaceHtmlEntities("&amp ;", escaper));
-		assertEquals("%26", delimiter.replaceHtmlEntities("&amp;", escaper));
-		assertEquals("a%26", delimiter.replaceHtmlEntities("a&amp;", escaper));
-		assertEquals("a%26b", delimiter.replaceHtmlEntities("a&amp;b", escaper));
-		assertEquals("%C3%A4", delimiter.replaceHtmlEntities("&auml;", escaper));
-		assertEquals("&", delimiter.replaceHtmlEntities("&amp;", null));
-		assertEquals("\"", delimiter.replaceHtmlEntities("&quot;", null));
-		assertEquals("\u00e4", delimiter.replaceHtmlEntities("&auml;", null));
-		assertEquals("&xdfsldk;", delimiter.replaceHtmlEntities("&xdfsldk;", null));
-		assertEquals("&0;", delimiter.replaceHtmlEntities("&0;", null));
+		assertEquals("asf", delimiter.replaceHtmlEntities("asf", true));
+		assertEquals("&amp", delimiter.replaceHtmlEntities("&amp", true));
+		assertEquals("&amp ;", delimiter.replaceHtmlEntities("&amp ;", true));
+		assertEquals("%26", delimiter.replaceHtmlEntities("&amp;", true));
+		assertEquals("a%26", delimiter.replaceHtmlEntities("a&amp;", true));
+		assertEquals("a%26b", delimiter.replaceHtmlEntities("a&amp;b", true));
+		assertEquals("%C3%A4", delimiter.replaceHtmlEntities("&auml;", true));
+		assertEquals("&", delimiter.replaceHtmlEntities("&amp;", false));
+		assertEquals("\"", delimiter.replaceHtmlEntities("&quot;", false));
+		assertEquals("\u00e4", delimiter.replaceHtmlEntities("&auml;", false));
+		assertEquals("&xdfsldk;", delimiter.replaceHtmlEntities("&xdfsldk;", false));
+		assertEquals("&0;", delimiter.replaceHtmlEntities("&0;", false));
 	}
 
 	@Test

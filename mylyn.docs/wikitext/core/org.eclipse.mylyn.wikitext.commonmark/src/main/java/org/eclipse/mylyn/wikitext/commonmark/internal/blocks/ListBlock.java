@@ -15,12 +15,13 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.blocks;
 
+import static org.eclipse.mylyn.wikitext.util.Preconditions.checkState;
+
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.commonmark.internal.CommonMark;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
@@ -34,8 +35,7 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.ListAttributes;
 import org.eclipse.mylyn.wikitext.parser.builder.NoOpDocumentBuilder;
-
-import com.google.common.base.CharMatcher;
+import org.eclipse.mylyn.wikitext.util.Strings;
 
 public class ListBlock extends BlockWithNestedBlocks {
 
@@ -224,13 +224,13 @@ public class ListBlock extends BlockWithNestedBlocks {
 	}
 
 	private boolean isIndented(Line line, int indentSize) {
-		int firstNonWhitespace = CharMatcher.whitespace().negate().indexIn(line.getText());
+		int firstNonWhitespace = Strings.firstNonSpace(line.getText(), true);
 		return firstNonWhitespace >= indentSize;
 	}
 
 	private int calculateLineItemIndent(Line line) {
 		Matcher matcher = bulletPattern.matcher(line.getText());
-		Validate.isTrue(matcher.matches());
+		checkState(matcher.matches());
 		int start = matcher.start(6);
 		if (start == -1) {
 			start = line.getText().length() + 1;
@@ -251,14 +251,14 @@ public class ListBlock extends BlockWithNestedBlocks {
 
 	private char bulletType(Line line) {
 		Matcher matcher = bulletPattern.matcher(line.getText());
-		Validate.isTrue(matcher.matches());
+		checkState(matcher.matches());
 		String text = matcher.group(1);
 		return text.charAt(text.length() - 1);
 	}
 
 	private String listStart(Line line) {
 		Matcher matcher = bulletPattern.matcher(line.getText());
-		Validate.isTrue(matcher.matches());
+		checkState(matcher.matches());
 		String marker = matcher.group(4);
 		if ("1".equals(marker)) { //$NON-NLS-1$
 			marker = null;

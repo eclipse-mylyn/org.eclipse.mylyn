@@ -15,19 +15,18 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
+import static org.eclipse.mylyn.wikitext.util.Preconditions.checkArgument;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContextBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.internal.SimpleLocator;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.Locator;
-import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 
 public abstract class Inline {
 
@@ -41,8 +40,8 @@ public abstract class Inline {
 		this.line = Objects.requireNonNull(line);
 		this.offset = offset;
 		this.length = length;
-		Validate.isTrue(offset >= 0);
-		Validate.isTrue(length > 0);
+		checkArgument(offset >= 0);
+		checkArgument(length > 0);
 	}
 
 	public int getOffset() {
@@ -94,11 +93,11 @@ public abstract class Inline {
 		return other.offset == offset && other.length == length;
 	}
 
+	@SuppressWarnings("nls")
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE) //
-				.append("offset", getOffset()) //$NON-NLS-1$
-				.append("length", getLength()) //$NON-NLS-1$
-				.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append("Inline{offset=").append(offset).append(", length=").append(length).append("}");
+		return builder.toString();
 	}
 }

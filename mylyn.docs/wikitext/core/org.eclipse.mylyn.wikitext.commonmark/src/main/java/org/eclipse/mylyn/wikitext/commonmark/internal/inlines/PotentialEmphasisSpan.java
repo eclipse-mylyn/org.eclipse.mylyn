@@ -16,8 +16,6 @@ package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
 import java.util.Optional;
 
-import com.google.common.base.CharMatcher;
-
 public class PotentialEmphasisSpan extends SourceSpan {
 
 	@Override
@@ -65,7 +63,9 @@ public class PotentialEmphasisSpan extends SourceSpan {
 	}
 
 	private boolean isWhitespace(char c) {
-		return CharMatcher.whitespace().matches(c);
+		// Java whitespace or
+		// unicode nobreakable whitespace chars that are explicitly excluded in Character.isWhitespace()
+		return Character.isWhitespace(c) || "\u00A0\u2007\u202F".indexOf(c) > -1; //$NON-NLS-1$
 	}
 
 	private boolean isPunctuation(char c) {

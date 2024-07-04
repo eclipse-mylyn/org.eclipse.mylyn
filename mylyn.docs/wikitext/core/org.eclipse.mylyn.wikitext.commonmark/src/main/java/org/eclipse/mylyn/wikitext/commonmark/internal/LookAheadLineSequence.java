@@ -14,7 +14,7 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
-import org.apache.commons.lang3.Validate;
+import static org.eclipse.mylyn.wikitext.util.Preconditions.checkState;
 
 class LookAheadLineSequence extends LineSequence {
 
@@ -59,7 +59,7 @@ class LookAheadLineSequence extends LineSequence {
 	}
 
 	private void checkConcurrentModification() {
-		Validate.isTrue(referenceLine == lineSequence.getCurrentLine());
+		checkState(referenceLine == lineSequence.getCurrentLine());
 	}
 
 	@Override

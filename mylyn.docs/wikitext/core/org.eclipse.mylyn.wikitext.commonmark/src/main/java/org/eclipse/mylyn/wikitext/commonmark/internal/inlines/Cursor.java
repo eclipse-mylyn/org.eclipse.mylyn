@@ -14,11 +14,13 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
+import static org.eclipse.mylyn.wikitext.util.Preconditions.checkArgument;
+import static org.eclipse.mylyn.wikitext.util.Preconditions.checkState;
+
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.TextSegment;
 
@@ -106,7 +108,7 @@ public class Cursor {
 
 	public char getPrevious(int offset) {
 		int charOffset = textOffset - offset;
-		Validate.isTrue(charOffset >= 0);
+		checkState(charOffset >= 0);
 		return text.charAt(charOffset);
 	}
 
@@ -115,7 +117,7 @@ public class Cursor {
 	}
 
 	public char getNext(int offset) {
-		Validate.isTrue(offset >= 0);
+		checkArgument(offset >= 0);
 		return text.charAt(textOffset + offset);
 	}
 
@@ -124,7 +126,7 @@ public class Cursor {
 	}
 
 	public String getTextAtOffset(int length) {
-		Validate.isTrue(length > 0);
+		checkArgument(length > 0);
 		return text.substring(textOffset, textOffset + length);
 	}
 
@@ -133,7 +135,7 @@ public class Cursor {
 	}
 
 	public boolean hasNext(int offset) {
-		Validate.isTrue(offset > 0);
+		checkArgument(offset > 0);
 		return textOffset + offset < text.length();
 	}
 
@@ -142,7 +144,7 @@ public class Cursor {
 	}
 
 	public Matcher matcher(int offset, Pattern pattern) {
-		Validate.isTrue(offset >= 0 && offset + textOffset < text.length());
+		checkArgument(offset >= 0 && offset + textOffset < text.length());
 		Objects.requireNonNull(pattern);
 		Matcher matcher = pattern.matcher(text);
 		matcher.region(textOffset + offset, text.length());
@@ -156,14 +158,14 @@ public class Cursor {
 	}
 
 	public void advance(int count) {
-		Validate.isTrue(count >= 0);
+		checkArgument(count >= 0);
 		for (int x = 0; x < count; ++x) {
 			advance();
 		}
 	}
 
 	public void rewind(int count) {
-		Validate.isTrue(count >= 0);
+		checkArgument(count >= 0);
 		for (int x = 0; x < count; ++x) {
 			rewind();
 		}

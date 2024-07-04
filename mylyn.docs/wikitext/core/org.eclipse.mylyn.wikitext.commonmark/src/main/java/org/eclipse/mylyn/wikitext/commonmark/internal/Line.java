@@ -15,14 +15,12 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
+import static org.eclipse.mylyn.wikitext.util.Preconditions.checkArgument;
+
 import java.util.Objects;
 
-import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.parser.Locator;
-import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
-
-import com.google.common.base.CharMatcher;
+import org.eclipse.mylyn.wikitext.util.Strings;
 
 public class Line {
 
@@ -33,15 +31,15 @@ public class Line {
 	private final int lineNumber;
 
 	public Line(int lineNumber, int offset, String text) {
-		Validate.isTrue(offset >= 0);
-		Validate.isTrue(lineNumber >= 0);
+		checkArgument(offset >= 0);
+		checkArgument(lineNumber >= 0);
 		this.lineNumber = lineNumber;
 		this.offset = offset;
 		this.text = Objects.requireNonNull(text);
 	}
 
 	public boolean isEmpty() {
-		return !CharMatcher.whitespace().negate().matchesAnyOf(text);
+		return Strings.isBlank(text);
 	}
 
 	public String getText() {
@@ -83,12 +81,17 @@ public class Line {
 		return new SimpleLocator(this);
 	}
 
+	@SuppressWarnings("nls")
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE) //
-				.append("lineNumber", lineNumber) //$NON-NLS-1$
-				.append("offset", offset) //$NON-NLS-1$
-				.append("text", ToStringHelper.toStringValue(text)) //$NON-NLS-1$
-				.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append("Line{lineNumber=")
+		.append(lineNumber)
+		.append(", offset=")
+		.append(offset)
+		.append(", text=")
+		.append(ToStringHelper.toStringValue(text))
+		.append("}");
+		return builder.toString();
 	}
 }

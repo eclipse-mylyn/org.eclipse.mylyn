@@ -15,11 +15,12 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.blocks;
 
+import static org.eclipse.mylyn.wikitext.util.Preconditions.checkState;
+
 import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.LinePredicates;
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
@@ -38,7 +39,7 @@ public class FencedCodeBlock extends SourceBlock {
 	@Override
 	public void process(ProcessingContext context, DocumentBuilder builder, LineSequence lineSequence) {
 		Matcher matcher = openingFencePattern.matcher(lineSequence.getCurrentLine().getText());
-		Validate.isTrue(matcher.matches());
+		checkState(matcher.matches());
 		String indent = matcher.group(1);
 		boolean indentedCodeBlock = indent != null && indent.length() == 4;
 		Pattern closingFencePattern = closingFencePattern(matcher);
@@ -106,7 +107,7 @@ public class FencedCodeBlock extends SourceBlock {
 
 	boolean canEnd(Line line, Line startLine) {
 		Matcher matcher = openingFencePattern.matcher(startLine.getText());
-		Validate.isTrue(matcher.matches());
+		checkState(matcher.matches());
 		Pattern closingFencePattern = closingFencePattern(matcher);
 		return closingFencePattern.matcher(line.getText()).matches();
 	}

@@ -17,7 +17,6 @@ package org.eclipse.mylyn.wikitext.commonmark.internal;
 
 import static org.junit.Assert.assertEquals;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
@@ -27,7 +26,7 @@ public class ToStringHelperTest {
 		assertEquals(null, ToStringHelper.toStringValue(null));
 		assertEquals("", ToStringHelper.toStringValue(""));
 		assertEquals("abc", ToStringHelper.toStringValue("abc"));
-		assertEquals("01234567890123456789...", ToStringHelper.toStringValue(StringUtils.repeat("0123456789", 10)));
+		assertEquals("01234567890123456789...", ToStringHelper.toStringValue("0123456789".repeat(10)));
 		assertEquals("a\\r\\n\\tb", ToStringHelper.toStringValue("a\r\n\tb"));
 	}
 }

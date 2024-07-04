@@ -13,12 +13,13 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.parser.markup;
 
+import static org.eclipse.mylyn.wikitext.util.Preconditions.checkArgument;
+
 import java.io.Writer;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 
-import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
@@ -125,7 +126,7 @@ public abstract class MarkupLanguage implements Cloneable {
 	 */
 	public void setFileExtensions(Set<String> fileExtensions) {
 		Objects.requireNonNull(fileExtensions, "Must specify file extensions"); //$NON-NLS-1$
-		Validate.isTrue(!fileExtensions.isEmpty(), "File extensions must not be empty"); //$NON-NLS-1$
+		checkArgument(!fileExtensions.isEmpty(), "File extensions must not be empty"); //$NON-NLS-1$
 		this.fileExtensions = Set.copyOf(fileExtensions);
 	}
 
@@ -180,4 +181,25 @@ public abstract class MarkupLanguage implements Cloneable {
 	public DocumentBuilder createDocumentBuilder(Writer out, boolean formatting) {
 		throw new UnsupportedOperationException();
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		MarkupLanguage other = (MarkupLanguage) obj;
+		return Objects.equals(name, other.name);
+	}
+
 }

@@ -19,7 +19,6 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Objects;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContextBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ToStringHelper;
@@ -71,13 +70,19 @@ public class ReferenceDefinition extends Inline {
 		return href.equals(other.href) && name.equals(other.name) && Objects.equals(title, other.title);
 	}
 
+	@SuppressWarnings("nls")
 	@Override
 	public String toString() {
-		return new ToStringBuilder(ReferenceDefinition.class).append("offset", getOffset()) //$NON-NLS-1$
-				.append("length", getLength()) //$NON-NLS-1$
-				.append("name", name) //$NON-NLS-1$
-				.append("href", ToStringHelper.toStringValue(href)) //$NON-NLS-1$
-				.append("title", title) //$NON-NLS-1$
-				.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append("ReferenceDefinition{length=")
+		.append(getLength())
+		.append(", name=")
+		.append(name)
+		.append(", href=")
+		.append(ToStringHelper.toStringValue(href))
+		.append(", title=")
+		.append(title)
+		.append("}");
+		return builder.toString();
 	}
 }

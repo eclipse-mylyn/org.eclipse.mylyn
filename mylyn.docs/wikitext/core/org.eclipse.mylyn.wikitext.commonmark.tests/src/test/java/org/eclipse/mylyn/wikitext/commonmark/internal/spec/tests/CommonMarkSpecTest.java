@@ -36,10 +36,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.CommonMarkLanguage;
 import org.eclipse.mylyn.wikitext.util.LocationTrackingReader;
-import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,6 +69,7 @@ public class CommonMarkSpecTest {
 			4425, // Lists
 			4664, // Lists
 			4681 // Lists
+			, 6700 // TODO
 			);
 
 	public static class Expectation {
@@ -86,10 +85,9 @@ public class CommonMarkSpecTest {
 
 		@Override
 		public String toString() {
-			return new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE) //
-					.append("input", input)
-					.append("expected", expected)
-					.toString();
+			StringBuilder builder = new StringBuilder();
+			builder.append("Expectation [input=").append(input).append(", expected=").append(expected).append("]");
+			return builder.toString();
 		}
 	}
 

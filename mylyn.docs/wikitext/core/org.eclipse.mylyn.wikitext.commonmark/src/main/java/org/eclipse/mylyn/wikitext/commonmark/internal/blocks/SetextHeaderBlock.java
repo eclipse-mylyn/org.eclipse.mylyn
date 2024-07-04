@@ -15,11 +15,12 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.blocks;
 
+import static org.eclipse.mylyn.wikitext.util.Preconditions.checkState;
+
 import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext;
@@ -40,7 +41,7 @@ public class SetextHeaderBlock extends SourceBlock {
 		Line currentLine = lineSequence.getCurrentLine();
 		Line nextLine = lineSequence.getNextLine();
 		Matcher matcher = setextUnderlinePattern.matcher(nextLine.getText());
-		Validate.isTrue(matcher.matches());
+		checkState(matcher.matches());
 
 		lineSequence.advance();
 

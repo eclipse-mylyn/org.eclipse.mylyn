@@ -16,13 +16,10 @@
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
 import static java.util.Objects.requireNonNull;
+import static org.eclipse.mylyn.wikitext.util.Preconditions.checkArgument;
 
 import java.util.List;
 import java.util.stream.StreamSupport;
-
-import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 
 public class TextSegment {
 
@@ -55,7 +52,7 @@ public class TextSegment {
 	}
 
 	public int offsetOf(int textOffset) {
-		Validate.isTrue(textOffset >= 0);
+		checkArgument(textOffset >= 0);
 		int textOffsetOfLine = 0;
 		int remainder = textOffset;
 		for (Line line : lines) {
@@ -82,11 +79,12 @@ public class TextSegment {
 		throw new IllegalArgumentException();
 	}
 
+	@SuppressWarnings("nls")
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE) //
-				.append("text", text) //$NON-NLS-1$
-				.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append("TextSegment{text=").append(text).append("}");
+		return builder.toString();
 	}
 
 	public Line getLineAtOffset(int textOffset) {

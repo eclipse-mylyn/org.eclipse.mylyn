@@ -17,7 +17,7 @@ package org.eclipse.mylyn.wikitext.internal.parser.html;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
+import org.eclipse.mylyn.wikitext.util.Strings;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
@@ -81,7 +81,7 @@ class RemoveEmptySpansProcessor extends DocumentProcessor {
 	}
 
 	private boolean isHyperlinkWithTarget(Element element) {
-		return element.tagName().equalsIgnoreCase("a") && StringUtils.isNotEmpty(element.attr("href")); //$NON-NLS-1$//$NON-NLS-2$
+		return element.tagName().equalsIgnoreCase("a") && !Strings.isNullOrEmpty(element.attr("href")); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 }
