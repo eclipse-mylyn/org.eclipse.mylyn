@@ -21,12 +21,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContextBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.internal.SimpleLocator;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.Locator;
+import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 
 public abstract class Inline {
 
@@ -93,11 +95,11 @@ public abstract class Inline {
 		return other.offset == offset && other.length == length;
 	}
 
-	@SuppressWarnings("nls")
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Inline{offset=").append(offset).append(", length=").append(length).append("}");
-		return builder.toString();
+		return new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE) //
+				.append("offset", getOffset()) //$NON-NLS-1$
+				.append("length", getLength()) //$NON-NLS-1$
+				.toString();
 	}
 }

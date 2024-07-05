@@ -20,6 +20,8 @@ import static org.eclipse.mylyn.wikitext.util.Preconditions.checkArgument;
 import java.util.Iterator;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 
 public abstract class LineSequence implements Iterable<Line> {
 
@@ -65,17 +67,11 @@ public abstract class LineSequence implements Iterable<Line> {
 
 	public abstract LineSequence lookAhead();
 
-	@SuppressWarnings("nls")
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(getClass().getSimpleName())
-		.append("{currentLine=")
-		.append(getCurrentLine())
-		.append(", nextLine=")
-		.append(getNextLine())
-		.append("}");
-		return builder.toString();
+		return new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE) //
+				.append("currentLine", getCurrentLine()) //$NON-NLS-1$
+				.append("nextLine", getNextLine()) //$NON-NLS-1$
+				.toString();
 	}
-
 }

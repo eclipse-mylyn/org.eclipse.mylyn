@@ -18,11 +18,13 @@ package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 import java.util.List;
 import java.util.Objects;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ToStringHelper;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
+import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 
 public class Link extends InlineWithNestedContents {
 
@@ -70,21 +72,14 @@ public class Link extends InlineWithNestedContents {
 				&& Objects.equals(title, other.title);
 	}
 
-	@SuppressWarnings("nls")
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Link{offset=")
-		.append(getOffset())
-		.append(", length=")
-		.append(getLength())
-		.append(", href=")
-		.append(ToStringHelper.toStringValue(href))
-		.append(", title=")
-		.append(title)
-		.append(", contents=")
-		.append(getContents())
-		.append("}");
-		return builder.toString();
+		return new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE) //
+				.append("offset", getOffset()) //$NON-NLS-1$
+				.append("length", getLength()) //$NON-NLS-1$
+				.append("href", ToStringHelper.toStringValue(href)) //$NON-NLS-1$
+				.append("title", title) //$NON-NLS-1$
+				.append("contents", getContents()) //$NON-NLS-1$
+				.toString();
 	}
 }

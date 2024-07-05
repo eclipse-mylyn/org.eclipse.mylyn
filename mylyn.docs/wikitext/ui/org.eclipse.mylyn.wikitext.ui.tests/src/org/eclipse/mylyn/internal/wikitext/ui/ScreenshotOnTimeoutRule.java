@@ -25,7 +25,9 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.toolkit.TimeoutActionRule;
+import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.GC;
@@ -119,20 +121,19 @@ public class ScreenshotOnTimeoutRule extends TimeoutActionRule {
 	}
 
 	private String description(Control control) {
-		StringBuilder builder = new StringBuilder(getClass().getSimpleName()).append("{");
+		ToStringBuilder builder = new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE);
 		if (control instanceof StyledText styled) {
-			builder.append("text").append(styled.getText());
+			builder.append("text", styled.getText());
 		}
 		if (control instanceof Text text) {
-			builder.append("text").append(text.getText());
+			builder.append("text", text.getText());
 		}
 		if (control instanceof Button b) {
-			builder.append("text").append(b.getText());
+			builder.append("text", b.getText());
 		}
 		if (control instanceof Label l) {
-			builder.append("text").append(l.getText());
+			builder.append("text", l.getText());
 		}
-		builder.append("tooltip").append(control.getToolTipText());
-		return builder.append("}").toString();
+		return builder.append("tooltip", control.getToolTipText()).toString();
 	}
 }

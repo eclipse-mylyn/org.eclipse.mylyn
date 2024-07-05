@@ -18,7 +18,9 @@ package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 import java.util.List;
 import java.util.Objects;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
+import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 
 public abstract class InlineWithNestedContents extends Inline {
 
@@ -50,17 +52,12 @@ public abstract class InlineWithNestedContents extends Inline {
 		return getContents().equals(other.getContents());
 	}
 
-	@SuppressWarnings("nls")
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("InlineWithNestedContents{offset=")
-		.append(getOffset())
-		.append(", getLength()=")
-		.append(getLength())
-		.append(", contents=")
-		.append(contents)
-		.append("}");
-		return builder.toString();
+		return new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE) //
+				.append("offset", getOffset()) //$NON-NLS-1$
+				.append("length", getLength()) //$NON-NLS-1$
+				.append("contents", getContents()) //$NON-NLS-1$
+				.toString();
 	}
 }

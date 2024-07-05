@@ -19,8 +19,10 @@ import static org.eclipse.mylyn.wikitext.util.Preconditions.checkArgument;
 
 import java.util.Objects;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.parser.Locator;
 import org.eclipse.mylyn.wikitext.util.Strings;
+import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 
 public class Line {
 
@@ -81,17 +83,12 @@ public class Line {
 		return new SimpleLocator(this);
 	}
 
-	@SuppressWarnings("nls")
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Line{lineNumber=")
-		.append(lineNumber)
-		.append(", offset=")
-		.append(offset)
-		.append(", text=")
-		.append(ToStringHelper.toStringValue(text))
-		.append("}");
-		return builder.toString();
+		return new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE) //
+				.append("lineNumber", lineNumber) //$NON-NLS-1$
+				.append("offset", offset) //$NON-NLS-1$
+				.append("text", ToStringHelper.toStringValue(text)) //$NON-NLS-1$
+				.toString();
 	}
 }
