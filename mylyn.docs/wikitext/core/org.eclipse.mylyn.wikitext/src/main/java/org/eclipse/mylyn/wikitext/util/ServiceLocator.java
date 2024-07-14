@@ -13,6 +13,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.util;
 
+import static org.eclipse.mylyn.wikitext.util.Preconditions.checkArgument;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.ServiceLoader;
@@ -34,10 +35,6 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.collections4.MultiValuedMap;
-import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageProvider;
 
@@ -116,7 +113,7 @@ public class ServiceLocator {
 	 *             if the provided language name is null or if no implementation is available for the given language
 	 */
 	public MarkupLanguage getMarkupLanguage(final String languageName) throws IllegalArgumentException {
-		Validate.isTrue(StringUtils.isNotEmpty(languageName), "Must provide a languageName"); //$NON-NLS-1$
+		checkArgument(!Strings.isNullOrEmpty(languageName), "Must provide a languageName"); //$NON-NLS-1$
 		Pattern classNamePattern = Pattern.compile("\\s*([^\\s#]+)?#?.*"); //$NON-NLS-1$
 		// first try Java services (jar-based)
 		final List<String> names = new ArrayList<>();
@@ -176,7 +173,7 @@ public class ServiceLocator {
 		}
 		throw new IllegalArgumentException(MessageFormat.format(Messages.getString("ServiceLocator.4"), //$NON-NLS-1$
 				languageName, buf.length() == 0
-				? Messages.getString("ServiceLocator.5") //$NON-NLS-1$
+						? Messages.getString("ServiceLocator.5") //$NON-NLS-1$
 						: Messages.getString("ServiceLocator.6") + buf)); //$NON-NLS-1$
 	}
 
@@ -189,18 +186,7 @@ public class ServiceLocator {
 			markupLanguages.add(language);
 			return true;
 		});
-		return filterDuplicates(markupLanguages);
-	}
-
-	private Set<MarkupLanguage> filterDuplicates(Set<MarkupLanguage> markupLanguages) {
-		MultiValuedMap<String, Class<?>> markupLanguageClassesByName = new ArrayListValuedHashMap<>();
-		Set<MarkupLanguage> builder = new LinkedHashSet<>();
-		for (MarkupLanguage language : markupLanguages) {
-			if (markupLanguageClassesByName.put(language.getName(), language.getClass())) {
-				builder.add(language);
-			}
-		}
-		return Set.copyOf(builder);
+		return markupLanguages;
 	}
 
 	public static void setImplementation(Class<? extends ServiceLocator> implementationClass) {

@@ -14,13 +14,16 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
+import java.util.Arrays;
 import java.util.Optional;
-
-import com.google.common.base.CharMatcher;
 
 public class BackslashEscapeSpan extends SourceSpan {
 
-	private static CharMatcher ESCAPABLE = CharMatcher.anyOf("!\"\\#$%&'()*+,-./:;<=>?@[]^_`{|}~"); //$NON-NLS-1$
+	private static char[] ESCAPABLE;
+	static {
+		ESCAPABLE = "!\"\\#$%&'()*+,-./:;<=>?@[]^_`{|}~".toCharArray(); //$NON-NLS-1$
+		Arrays.sort(ESCAPABLE);
+	}
 
 	@Override
 	public Optional<? extends Inline> createInline(Cursor cursor) {
@@ -28,7 +31,7 @@ public class BackslashEscapeSpan extends SourceSpan {
 		if (c == '\\' && cursor.hasNext()) {
 			if (cursor.getNext() == '\n') {
 				return Optional.of(new HardLineBreak(cursor.getLineAtOffset(), cursor.getOffset(), 2));
-			} else if (ESCAPABLE.matches(cursor.getNext())) {
+			} else if (isEscapable(cursor.getNext())) {
 				return Optional
 						.of(new EscapedCharacter(cursor.getLineAtOffset(), cursor.getOffset(), cursor.getNext()));
 			}
@@ -36,4 +39,7 @@ public class BackslashEscapeSpan extends SourceSpan {
 		return Optional.empty();
 	}
 
+	private boolean isEscapable(char c) {
+		return Arrays.binarySearch(ESCAPABLE, c) >= 0;
+	}
 }

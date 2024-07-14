@@ -16,11 +16,10 @@
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
 import static java.util.Objects.requireNonNull;
+import static org.eclipse.mylyn.wikitext.util.Preconditions.checkArgument;
 
 import java.util.List;
 import java.util.stream.StreamSupport;
-
-import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
 
@@ -55,7 +54,7 @@ public class TextSegment {
 	}
 
 	public int offsetOf(int textOffset) {
-		Validate.isTrue(textOffset >= 0);
+		checkArgument(textOffset >= 0);
 		int textOffsetOfLine = 0;
 		int remainder = textOffset;
 		for (Line line : lines) {

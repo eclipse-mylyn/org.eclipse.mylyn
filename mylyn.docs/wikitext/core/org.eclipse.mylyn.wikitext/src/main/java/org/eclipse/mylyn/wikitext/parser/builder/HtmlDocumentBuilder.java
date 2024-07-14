@@ -17,6 +17,7 @@
 package org.eclipse.mylyn.wikitext.parser.builder;
 
 import static java.util.Map.entry;
+import static org.eclipse.mylyn.wikitext.util.Preconditions.checkArgument;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,7 +38,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes.Align;
@@ -1181,7 +1181,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * @see #getHtmlFilenameFormat()
 	 */
 	public void setHtmlFilenameFormat(String htmlFilenameFormat) {
-		Validate.isTrue(htmlFilenameFormat == null || htmlFilenameFormat.contains("$1"), //$NON-NLS-1$
+		checkArgument(htmlFilenameFormat == null || htmlFilenameFormat.contains("$1"), //$NON-NLS-1$
 				"The HTML filename format must contain \"$1\""); //$NON-NLS-1$
 		this.htmlFilenameFormat = htmlFilenameFormat;
 	}

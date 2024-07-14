@@ -19,7 +19,6 @@ import static org.eclipse.mylyn.wikitext.commonmark.internal.CommonMarkAsserts.a
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
 import org.junit.Test;
 
@@ -34,14 +33,14 @@ public class HorizontalRuleBlockTest {
 		assertFalse(block.canStart(LineSequence.create("a")));
 		assertFalse(block.canStart(LineSequence.create("    ***")));
 		for (char c : "*_-".toCharArray()) {
-			String hrIndicator = StringUtils.repeat("" + c, 3);
+			String hrIndicator = String.valueOf(c).repeat(3);
 			assertTrue(block.canStart(LineSequence.create("   " + hrIndicator)));
 			assertTrue(block.canStart(LineSequence.create("  " + hrIndicator)));
 			assertTrue(block.canStart(LineSequence.create(" " + hrIndicator)));
 			assertFalse(block.canStart(LineSequence.create("    " + hrIndicator)));
 			assertTrue(block.canStart(LineSequence.create(hrIndicator)));
-			assertTrue(block.canStart(LineSequence.create(StringUtils.repeat("" + c, 4))));
-			assertTrue(block.canStart(LineSequence.create(StringUtils.repeat("" + c, 14))));
+			assertTrue(block.canStart(LineSequence.create(String.valueOf(c).repeat(4))));
+			assertTrue(block.canStart(LineSequence.create(String.valueOf(c).repeat(14))));
 		}
 
 		// Bug 472390:

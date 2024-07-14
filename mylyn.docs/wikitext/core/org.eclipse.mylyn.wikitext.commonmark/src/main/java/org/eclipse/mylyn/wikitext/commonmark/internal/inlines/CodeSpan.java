@@ -19,8 +19,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
-
 public class CodeSpan extends SourceSpan {
 
 	Pattern pattern = Pattern.compile("(`+).*", Pattern.DOTALL | Pattern.MULTILINE); //$NON-NLS-1$
@@ -34,7 +32,7 @@ public class CodeSpan extends SourceSpan {
 				String openingBackticks = matcher.group(1);
 				int backtickCount = openingBackticks.length();
 				Pattern closingPattern = Pattern.compile(
-						"(?<!`)(" + StringUtils.repeat("`", backtickCount) + ")([^`]|$)", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						"(?<!`)(" + "`".repeat(backtickCount) + ")([^`]|$)", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						Pattern.DOTALL | Pattern.MULTILINE);
 				cursor.advance(backtickCount);
 				String textAtOffset = cursor.getTextAtOffset();

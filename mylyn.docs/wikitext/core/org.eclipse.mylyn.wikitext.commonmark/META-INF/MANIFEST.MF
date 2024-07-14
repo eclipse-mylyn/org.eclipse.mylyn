@@ -11,11 +11,7 @@ Bundle-Name: Mylyn WikiText CommonMark
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=17))"
-Import-Package: com.google.common.base;version="[33.0,34.0)",
- com.google.common.escape;version="[33.0,34.0)",
- com.google.common.net;version="[33.2.0,34.0.0)",
- org.apache.commons.io;version="[2.16.0,3.0.0)",
- org.apache.commons.lang3;version="[3.14.0,4.0.0)",
+Import-Package: org.apache.commons.io;version="[2.16.0,3.0.0)",
  org.apache.commons.lang3.builder;version="[3.14.0,4.0.0)",
  org.eclipse.mylyn.wikitext.parser;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.parser.builder;version="[4.2,5)",

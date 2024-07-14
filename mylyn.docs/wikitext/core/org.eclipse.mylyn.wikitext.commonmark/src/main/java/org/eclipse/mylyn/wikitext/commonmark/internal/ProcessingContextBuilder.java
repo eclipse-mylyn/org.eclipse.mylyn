@@ -18,11 +18,11 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext.NamedUriWithTitle;
 import org.eclipse.mylyn.wikitext.commonmark.internal.inlines.InlineParser;
 import org.eclipse.mylyn.wikitext.parser.IdGenerator;
 import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;
+import org.eclipse.mylyn.wikitext.util.Strings;
 
 public class ProcessingContextBuilder {
 
@@ -33,7 +33,7 @@ public class ProcessingContextBuilder {
 	private InlineParser inlineParser;
 
 	public ProcessingContextBuilder referenceDefinition(String name, String href, String title) {
-		if (StringUtils.isNotEmpty(name)) {
+		if (!Strings.isNullOrEmpty(name)) {
 			String key = name.toLowerCase(Locale.ROOT);
 			if (!linkByName.containsKey(key)) {
 				linkByName.put(key, new NamedUriWithTitle(name, href, title));

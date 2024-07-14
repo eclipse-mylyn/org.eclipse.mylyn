@@ -64,11 +64,10 @@ public class MarkupLanguageProviderTest {
 
 			@Override
 			protected Set<MarkupLanguage> loadMarkupLanguages() {
-				return Set.of(new MockMarkupLanguage("Test"), new MockMarkupLanguage("Test"));
+				return Set.of(new MockMarkupLanguage("Test"), new MockMarkupLanguage.MockMarkupLanguage2("Test"));
 			}
 		};
-		IllegalArgumentException ise = assertThrows(IllegalArgumentException.class,
-				() -> provider.getMarkupLanguages());
+		IllegalStateException ise = assertThrows(IllegalStateException.class, () -> provider.getMarkupLanguages());
 		assertTrue(ise.getMessage().contains("Language name 'Test' must not be provided more than once"));
 	}
 

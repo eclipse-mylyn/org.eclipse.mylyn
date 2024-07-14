@@ -7,16 +7,10 @@ Bundle-Name: Mylyn WikiText
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=17))"
-Import-Package: com.google.common.base;version="[33.0,34.0)",
- com.google.common.escape;version="[33.0,34.0)",
- com.google.common.xml;version="[33.0,34.0)",
- javax.lang.model,
+Import-Package: javax.lang.model,
  javax.xml.namespace,
  javax.xml.parsers,
  javax.xml.stream,
- org.apache.commons.collections4;version="[4.4.0,5.0.0)",
- org.apache.commons.collections4.multimap;version="[4.4.0,5.0.0)",
- org.apache.commons.lang3;version="[3.14.0,4.0.0)",
  org.apache.commons.lang3.builder;version="[3.14.0,4.0.0)",
  org.jsoup;version="[1.17,2)",
  org.jsoup.internal;version="[1.17,2)",

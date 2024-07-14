@@ -14,11 +14,12 @@
 
 package org.eclipse.mylyn.wikitext.parser.markup;
 
+import static org.eclipse.mylyn.wikitext.util.Preconditions.checkState;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 
 /**
@@ -45,7 +46,7 @@ public abstract class MarkupLanguageProvider {
 		Set<String> names = new HashSet<>();
 		for (MarkupLanguage language : languages) {
 			Objects.requireNonNull(language.getName(), "Provided languages must have a name"); //$NON-NLS-1$
-			Validate.isTrue(names.add(language.getName()), "Language name '%s' must not be provided more than once", //$NON-NLS-1$
+			checkState(names.add(language.getName()), "Language name '%s' must not be provided more than once", //$NON-NLS-1$
 					language.getName());
 		}
 	}

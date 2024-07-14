@@ -128,7 +128,7 @@ public class LineSequenceTest {
 	private void assertLookAheadFailsFast(LineSequence lineSequence) {
 		LineSequence lookAhead = lineSequence.lookAhead();
 		lineSequence.advance();
-		assertThrows(IllegalArgumentException.class, () -> lookAhead.advance());
+		assertThrows(IllegalStateException.class, () -> lookAhead.advance());
 	}
 
 	private void assertAdvance(LineSequence lineSequence) {

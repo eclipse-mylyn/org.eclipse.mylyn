@@ -13,6 +13,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.splitter;
 
+import static org.eclipse.mylyn.wikitext.util.Preconditions.checkState;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,7 +23,6 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import org.apache.commons.lang3.Validate;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
@@ -484,7 +485,7 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 				pageItem = item;
 			}
 		}
-		Validate.notNull(pageItem);
+		checkState(pageItem != null);
 		emitToc(outline, 0);
 	}
 
