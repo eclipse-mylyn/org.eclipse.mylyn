@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -20,11 +20,11 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Locale;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 /**
  * Parses HTML into tokens.
- * 
+ *
  * @author Shawn Minto
  * @since 2.0
  * @deprecated use org.eclipse.mylyn.commons.core.HtmlStreamTokenizer instead.
@@ -65,7 +65,7 @@ public class HtmlStreamTokenizer {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param in
 	 *            reader for the HTML document to tokenize
 	 * @param base
@@ -283,7 +283,7 @@ public class HtmlStreamTokenizer {
 					return; // shouldn't happen if input returned by nextToken
 				}
 				if (escapeValues) {
-					attributeValue = unescape(s.substring(start, i));
+					attributeValue = StringEscapeUtils.unescapeHtml4(s.substring(start, i));
 				} else {
 					attributeValue = s.substring(start, i);
 				}
@@ -296,7 +296,7 @@ public class HtmlStreamTokenizer {
 				if (i == s.length()) {
 					return; // shouldn't happen if input returned by nextToken
 				}
-				attributeValue = unescape(s.substring(start, i));
+				attributeValue = StringEscapeUtils.unescapeHtml4(s.substring(start, i));
 				i++;
 			} else {
 				start = i;
@@ -309,73 +309,6 @@ public class HtmlStreamTokenizer {
 		}
 	}
 
-	/**
-	 * Returns a string with HTML escapes changed into their corresponding characters.
-	 * 
-	 * @deprecated use {@link StringEscapeUtils#unescapeHtml(String)} instead
-	 */
-	@Deprecated
-	public static String unescape(String s) {
-		if (s.indexOf('&') == -1) {
-			return s;
-		} else {
-			StringBuffer sb = new StringBuffer(s);
-			unescape(sb);
-			return sb.toString();
-		}
-	}
-
-	/**
-	 * Replaces (in-place) HTML escapes in a StringBuffer with their corresponding characters.
-	 * 
-	 * @deprecated use {@link StringEscapeUtils#unescapeHtml(String)} instead
-	 */
-	@Deprecated
-	public static StringBuffer unescape(StringBuffer sb) {
-		int i = 0; // index into the unprocessed section of the buffer
-		int j = 0; // index into the processed section of the buffer
-
-		while (i < sb.length()) {
-			char ch = sb.charAt(i);
-			if (ch == '&') {
-				int start = i;
-				String escape = null;
-				for (i = i + 1; i < sb.length(); i++) {
-					ch = sb.charAt(i);
-					if (!Character.isLetterOrDigit(ch) && !(ch == '#' && i == start + 1)) {
-						escape = sb.substring(start + 1, i);
-						break;
-					}
-				}
-				if (i == sb.length() && i != start + 1) {
-					escape = sb.substring(start + 1);
-				}
-				if (escape != null) {
-					Character character = parseReference(escape);
-					if (character != null && !(0x0A == character || 0x0D == character || 0x09 == ch
-							|| character >= 0x20 && character <= 0xD7FF || character >= 0xE000 && character <= 0xFFFD
-							|| character >= 0x10000 && character <= 0x10FFFF)) {
-						// Character is an invalid xml character
-						// http://www.w3.org/TR/REC-xml/#charsets
-						character = null;
-					}
-					if (character != null) {
-						ch = character;
-					} else {
-						// not an HTML escape; rewind
-						i = start;
-						ch = '&';
-					}
-				}
-			}
-			sb.setCharAt(j, ch);
-			i++;
-			j++;
-		}
-
-		sb.setLength(j);
-		return sb;
-	}
 
 	/**
 	 * Parses HTML character and entity references and returns the corresponding character.
@@ -552,12 +485,12 @@ public class HtmlStreamTokenizer {
 
 	/*
 	 * Based on ISO 8879.
-	 * 
+	 *
 	 * Portions (c) International Organization for Standardization 1986
 	 * Permission to copy in any form is granted for use with conforming SGML
 	 * systems and applications as defined in ISO 8879, provided this notice is
 	 * included in all copies.
-	 * 
+	 *
 	 */
 	static {
 		entities = new HashMap<>();
