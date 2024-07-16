@@ -44,6 +44,7 @@ import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
+import org.eclipse.pde.core.project.IBundleProjectDescription;
 import org.eclipse.pde.internal.core.natures.PluginProject;
 
 @SuppressWarnings("nls")
@@ -107,7 +108,7 @@ public class WorkspaceSetupHelper {
 
 		// set java nature
 		IProjectDescription description = project.getDescription();
-		description.setNatureIds(new String[] { PluginProject.NATURE, JavaCore.NATURE_ID });
+		description.setNatureIds(new String[] { IBundleProjectDescription.PLUGIN_NATURE, JavaCore.NATURE_ID });
 		project.setDescription(description, null);
 
 		// create output folder
