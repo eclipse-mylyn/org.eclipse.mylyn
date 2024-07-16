@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2000, 2015 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
@@ -44,7 +44,6 @@ import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
-import org.eclipse.pde.internal.core.natures.PDE;
 import org.eclipse.pde.internal.core.natures.PluginProject;
 
 @SuppressWarnings("nls")
@@ -108,7 +107,7 @@ public class WorkspaceSetupHelper {
 
 		// set java nature
 		IProjectDescription description = project.getDescription();
-		description.setNatureIds(new String[] { PDE.PLUGIN_NATURE, JavaCore.NATURE_ID });
+		description.setNatureIds(new String[] { PluginProject.NATURE, JavaCore.NATURE_ID });
 		project.setDescription(description, null);
 
 		// create output folder
