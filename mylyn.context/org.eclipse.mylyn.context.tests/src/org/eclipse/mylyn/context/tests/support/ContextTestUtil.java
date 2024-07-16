@@ -34,6 +34,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
+import org.eclipse.pde.core.project.IBundleProjectDescription;
 import org.eclipse.pde.internal.core.natures.PluginProject;
 
 /**
@@ -78,7 +79,7 @@ public class ContextTestUtil {
 
 		// set java nature
 		IProjectDescription description = project.getDescription();
-		description.setNatureIds(new String[] { PluginProject.NATURE, JavaCore.NATURE_ID });
+		description.setNatureIds(new String[] { IBundleProjectDescription.PLUGIN_NATURE, JavaCore.NATURE_ID });
 		project.setDescription(description, null);
 
 		// create output folder
