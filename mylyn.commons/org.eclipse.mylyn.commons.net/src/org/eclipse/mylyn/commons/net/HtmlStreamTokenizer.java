@@ -309,6 +309,25 @@ public class HtmlStreamTokenizer {
 		}
 	}
 
+	/**
+	 * Returns a string with HTML escapes changed into their corresponding characters.
+	 *
+	 * @deprecated use {@link StringEscapeUtils#unescapeHtml4(String)} instead
+	 */
+	@Deprecated(forRemoval = true, since = "4.4.0")
+	public static String unescape(String s) {
+		return StringEscapeUtils.unescapeHtml4(s);
+	}
+
+	/**
+	 * Replaces (in-place) HTML escapes in a StringBuffer with their corresponding characters.
+	 *
+	 * @deprecated use {@link StringEscapeUtils#unescapeHtml4(String)} instead
+	 */
+	@Deprecated(forRemoval = true, since = "4.4.0")
+	public static StringBuffer unescape(StringBuffer sb) {
+		return sb.replace(0, sb.length(), StringEscapeUtils.unescapeHtml4(sb.toString()));
+	}
 
 	/**
 	 * Parses HTML character and entity references and returns the corresponding character.
