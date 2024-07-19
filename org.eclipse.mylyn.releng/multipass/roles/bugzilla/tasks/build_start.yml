@@ -52,7 +52,7 @@
     var: extra_info_label
 - name: myServiceLabel {{ act_item.image_tag }}
   set_fact:
-    serviceLabel: '{"type":"{{ bugzilla_type }}","url":"/{{ act_item.servmame }}/", "version": "{{ bugzilla_version.stdout }}", "info": "{{ bugzilla_info }}", "properties":  { "host-name": "{{ remote_domain_name }}", "host-ip": "{{ansible_ssh_host}}", "ansible-name": "{{ inventory_hostname }}", "docker": "true"  {{ extra_info_label }} } }'
+    serviceLabel: '{"type":"{{ bugzilla_type }}","url":"/{{ act_item.servmame }}/", "version": "{{ bugzilla_version.stdout }}", "info": "{{ bugzilla_info }}", "properties":  { "host-name": "{{ remote_domain_name }}", "remote_ip": "{{ inst_network_ip }}", "ansible-name": "{{ inventory_hostname }}", "ansible-host-ip": "{{ansible_ssh_host}}", "docker": "true"  {{ extra_info_label }} } }'
 - name: debug1 {{ act_item.image_tag }}
   debug:
     var: serviceLabel

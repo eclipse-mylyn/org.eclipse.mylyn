@@ -5,6 +5,7 @@
         remote_domain: "{{ remote_dom | default('public.mydomain.de')}}"
         docker_swarm_recreate: "{{ swarm_recreate | default(false) }}"
         docker_mode_global: "{{ docker_run_mode | default('container') }}"
+        network_ip_matcher: "{{ local_network_ip_matcher | default('^192\\.168\\.2\\..*') }}"
       tags:
         - global
         
@@ -59,16 +60,15 @@
         - "{{ setup_lst_tmp }}"
       tags:
         - global
-
-    - ansible.builtin.debug: msg="all hosts = {{ setup_lst }}" 									# verbosity=3
+    - name: debug list
+      vars:
+         msg: |
+             rootca_server_name = {{ rootca_server_name }}
+             localhostPlatform = {{ localhostPlatform }}
+             all hosts = {{ setup_lst }}
+             all non admin vm = {{ setup_noadmin_vm_list }}
+      ansible.builtin.debug:
+        msg: "{{ msg.split('\n') }}"
+        verbosity: 0
       tags:
-        - global
-    - ansible.builtin.debug: msg="all non admin vm = {{ setup_noadmin_vm_list }}"				# verbosity=3
-      tags:
-        - global
-    - ansible.builtin.debug: msg="rootca_server_name = {{ rootca_server_name }}"				# verbosity=3
-      tags:
-        - global
-    - ansible.builtin.debug: msg="prim_install_server_name = {{ prim_install_server_name }}"	# verbosity=3
-      tags:
-        - global
+         - global

@@ -31,7 +31,7 @@
 
 - name: myServiceLabel
   set_fact:
-    serviceLabel: '{"type":"gitlab","url":"https://{{ gitlabHostURL }}","version":"{{gitlabImageVersion}}","info":"","properties":{"host-name":"{{ gitlabHostURL }}","host-ip":"{{ansible_ssh_host}}","ansible-name":"{{ inventory_hostname }}","docker":"true","default":"true"} }'
+    serviceLabel: '{"type":"gitlab","url":"https://{{ gitlabHostURL }}","version":"{{gitlabImageVersion}}","info":"","properties":{"host-name":"{{ gitlabHostURL }}","remote_ip": "{{ inst_network_ip }}","ansible-host-ip":"{{ansible_ssh_host}}","ansible-name":"{{ inventory_hostname }}","docker":"true","default":"true"} }'
 
 - name: setlabels registry
   ansible.builtin.set_fact:

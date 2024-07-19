@@ -65,6 +65,11 @@
 # 
 - hosts: "{{ hostvars['localhost'].prim_install_server_name  }}"
   gather_facts: false
+  pre_tasks:
+    - include_vars:
+        dir: mylyn_vars
+        extensions:
+        - json
   vars:
     swarm_master_name: "{{ hostvars['localhost'].prim_install_server_name  }}"
     docker_mode: "{{ hostvars['localhost'].docker_mode_global }}"

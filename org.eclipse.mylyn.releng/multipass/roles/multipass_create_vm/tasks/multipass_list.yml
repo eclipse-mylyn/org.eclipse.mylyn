@@ -6,11 +6,19 @@
 - name: json obj
   ansible.builtin.set_fact:
     inst_json_obj: "{{ multipass_instances.stdout | from_json}}"
-- name: json names
-  ansible.builtin.set_fact:
-    inst_name_list: "{{ inst_json_obj.list | map(attribute='name') | list() }}"
 - name: inst_list
   ansible.builtin.set_fact:
     inst_list: "{{ inst_json_obj.list | json_query(jmesquery) }}"
   vars:
-    jmesquery: "[*].{inst_name: name, inst_state: state, ip_adr4: ipv4[0]}"
+    jmesquery: "[*].{inst_name: name, inst_state: state, ip_adr4: ipv4[0], ip_adr4a: ipv4[1]}"
+
+- name: json ipadr
+  ansible.builtin.set_fact:
+    inst_ipadr_list: "{{ inst_json_obj.list | json_query(jmesquery) | list() }}"
+  vars:
+    jmesquery: "[?name=='mylynmstr01'].ipv4"
+- name: inst_network_ip
+  ansible.builtin.set_fact:
+    inst_network_ip: "{{ item }}"
+  when: item is regex(network_ip_matcher)
+  with_items: "{{ inst_ipadr_list}}"

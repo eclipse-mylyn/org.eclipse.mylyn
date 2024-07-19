@@ -3,6 +3,16 @@
 #
 - hosts: localhost
   gather_facts: true
+  pre_tasks:
+    - file:
+        path: mylyn_vars
+        state: directory
+  post_tasks:
+    - no_log: false
+      copy:
+        force: true
+        dest: "mylyn_vars/{{ inventory_hostname }}.json"
+        content: "{{ vars | dict2items | json_query('[?starts_with(key, `inst_`)]') | items2dict }}"
   tasks:
     - name: include global mode
       ansible.builtin.include_tasks:
@@ -13,6 +23,17 @@
 #
 - hosts: localhost
   gather_facts: false
+  pre_tasks:
+    - include_vars:
+        dir: mylyn_vars
+        extensions:
+        - json
+  post_tasks:
+    - no_log: false
+      delegate_to: localhost
+      copy:
+        dest: "mylyn_vars/{{ inventory_hostname }}.json"
+        content: "{{ vars | dict2items | json_query('[?starts_with(key, `inst_`)]') | items2dict }}"
   roles:
     - role: multipass_create_vm
       tags:
@@ -26,6 +47,17 @@
 #
 - hosts: "{{ hostvars['localhost'].rootca_server_name }}"
   gather_facts: false
+  pre_tasks:
+    - include_vars:
+        dir: mylyn_vars
+        extensions:
+        - json
+  post_tasks:
+    - no_log: false
+      delegate_to: localhost
+      copy:
+        dest: "mylyn_vars/{{ inventory_hostname }}.json"
+        content: "{{ vars | dict2items | json_query('[?starts_with(key, `inst_`)]') | items2dict }}"
   vars:
     rootca_name: "{{ hostvars['localhost'].rootca_server_name }}"
   roles:
