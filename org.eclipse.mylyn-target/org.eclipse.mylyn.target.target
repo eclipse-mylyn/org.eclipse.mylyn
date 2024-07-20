@@ -77,6 +77,7 @@
 			<unit id="org.glassfish.hk2.osgi-resource-locator" version="0.0.0"/>
 			<unit id="org.apache.commons.lang3" version="0.0.0"/>
 			<unit id="org.apache.commons.logging" version="0.0.0"/>
+			<unit id="org.apache.commons.text" version="0.0.0"/>
 			<unit id="org.apache.lucene.analysis-common" version="0.0.0"/>
 			<unit id="org.apache.lucene.core" version="0.0.0"/>
 			<unit id="org.apache.lucene.queries" version="0.0.0"/>

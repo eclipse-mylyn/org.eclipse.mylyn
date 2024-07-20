@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2024 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -55,7 +55,7 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.apache.commons.httpclient.util.IdleConnectionTimeoutThread;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.Assert;
@@ -515,7 +515,7 @@ public class WebUtil {
 
 	/**
 	 * Returns the title of a web page.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if a network occurs
 	 * @return the title; null, if the title could not be determined;
@@ -589,7 +589,7 @@ public class WebUtil {
 	 * <li>Headless: <code>Mylyn MyProduct HttpClient/3.1 Java/1.5.0_13 (Sun) Linux/2.6.22-14-generic (i386)</code>
 	 * <li>Eclipse:
 	 * <code>Mylyn/2.2.0 Eclipse/3.4.0 (org.eclipse.sdk.ide) HttpClient/3.1 Java/1.5.0_13 (Sun) Linux/2.6.22-14-generic (i386; en_CA)</code>
-	 * 
+	 *
 	 * @param product
 	 *            an identifier that is inserted into the returned user agent string
 	 * @return a user agent string
@@ -641,7 +641,7 @@ public class WebUtil {
 
 	/**
 	 * For standalone applications that want to provide a global proxy service.
-	 * 
+	 *
 	 * @param proxyService
 	 *            the proxy service
 	 * @since 3.0
@@ -736,7 +736,7 @@ public class WebUtil {
 
 	/**
 	 * Returns the platform default proxy for <code>url</code> or <code>null</code> if none.
-	 * 
+	 *
 	 * @since 3.5
 	 */
 	public static Proxy getProxyForUrl(String url) {
@@ -793,7 +793,7 @@ public class WebUtil {
 	/**
 	 * Releases the connection used by <code>method</code>. If <code>monitor</code> is cancelled the connection is aborted to avoid
 	 * blocking.
-	 * 
+	 *
 	 * @since 3.4
 	 */
 	public static void releaseConnection(HttpMethodBase method, IProgressMonitor monitor) {
