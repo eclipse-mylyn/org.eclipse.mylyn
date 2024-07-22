@@ -305,7 +305,7 @@
                     <plugin>
                         <groupId>org.eclipse.cbi.maven.plugins</groupId>
                         <artifactId>eclipse-jarsigner-plugin</artifactId>
-                        <version>1.4.3</version>
+                        <version>1.5.0</version>
                         <configuration>
                             <resigningStrategy>DO_NOT_RESIGN</resigningStrategy>
                         </configuration>
