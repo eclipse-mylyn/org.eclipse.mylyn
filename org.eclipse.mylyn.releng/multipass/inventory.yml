@@ -15,7 +15,8 @@ all:
         multipass_disk: 30G
         multipass_memory: 10G
         multipass_cpus: 4
-#       only needed when you want to share your instance to other devices in Network or Internet		
+#       only needed when you want to share your instance to other devices in Network or Internet
+#       en0 is valid for for mac os with apple silicon		
         additional_launch_parms: '--network=en0'
     mylyn_swarm_worker:
       hosts:
@@ -38,7 +39,7 @@ all:
       ansible_user: ubuntu
       ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o ControlMaster=no -o ControlPath=none"
       ansible_ssh_private_key_file: first_setup/ubuntu_key
-      default_etc_hosts: "mylynmstr01 mylyn.local traefik.mylyn.local jenkins.mylyn.local hello.mylyn.local artifactory.mylyn.local gitlab.mylyn.local"
+      default_etc_hosts: "mylynmstr01 mylyn.local traefik.mylyn.local jenkins.mylyn.local artifactory.mylyn.local gitlab.mylyn.local"
     mylynwrk01:
       ansible_connection: ssh
       ansible_host: "192.168.64.4"

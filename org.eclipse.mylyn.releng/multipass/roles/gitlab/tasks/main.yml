@@ -29,9 +29,13 @@
         - /mylyn-config-dir/{{ role_name }}
         - /mylyn-runtime-dir/{{ role_name }}
 
+- name: tmp_label
+  set_fact:
+    label_service_ip: "{{mylyn_network_ip if mylyn_network_ip is defined else ansible_ssh_host }}"
+
 - name: myServiceLabel
   set_fact:
-    serviceLabel: '{"type":"gitlab","url":"https://{{ gitlabHostURL }}","version":"{{gitlabImageVersion}}","info":"","properties":{"host-name":"{{ gitlabHostURL }}","remote_ip": "{{ inst_network_ip }}","ansible-host-ip":"{{ansible_ssh_host}}","ansible-name":"{{ inventory_hostname }}","docker":"true","default":"true"} }'
+    serviceLabel: '{"type":"gitlab","url":"https://{{ gitlabHostURL }}","version":"{{gitlabImageVersion}}","info":"","properties":{"host-name":"{{ gitlabHostURL }}","remote_ip": "{{ label_service_ip }}","ansible-host-ip":"{{ansible_ssh_host}}","ansible-name":"{{ inventory_hostname }}","docker":"true","default":"true"} }'
 
 - name: setlabels registry
   ansible.builtin.set_fact:

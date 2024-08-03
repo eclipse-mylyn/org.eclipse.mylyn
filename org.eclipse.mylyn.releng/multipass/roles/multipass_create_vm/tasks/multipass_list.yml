@@ -16,9 +16,9 @@
   ansible.builtin.set_fact:
     inst_ipadr_list: "{{ inst_json_obj.list | json_query(jmesquery) | list() }}"
   vars:
-    jmesquery: "[?name=='mylynmstr01'].ipv4"
-- name: inst_network_ip
+    jmesquery: "[?name== '{{mylyn_service_vm_name}}'].ipv4"
+- name: mylyn_network_ip
   ansible.builtin.set_fact:
-    inst_network_ip: "{{ item }}"
+    mylyn_network_ip: "{{ item }}"
   when: item is regex(network_ip_matcher)
   with_items: "{{ inst_ipadr_list}}"

@@ -32,6 +32,7 @@
 - name: myServiceInfo {{ act_item.image_tag }}
   set_fact:
     extra_info_entries: "{{  ('{' + act_item.extra_info + '}') | from_yaml }} "
+    label_service_ip: "{{mylyn_network_ip if mylyn_network_ip is defined else ansible_ssh_host }}"
 - set_fact:
     jenkins_type: "{{ 'localTest' if ('local_test_service' in extra_info_entries and extra_info_entries['local_test_service'] | bool == true) else 'jenkins' }}"
 - name: extra_info_label
@@ -39,14 +40,14 @@
     extra_info_label: "{{ (',' + act_item.extra_info) if (act_item.extra_info | length > 0 ) else ''}}"
 - name: myServiceLabel
   set_fact:
-    serviceLabel: '{"type":"{{ jenkins_type }}","url":"/{{act_item.servmame}}/", "version": "{{version.stdout}}", "info": "", "properties":  { "host-name": "{{ remote_domain_name }}", "remote_ip": "{{ inst_network_ip }}", "ansible-host-ip": "{{ansible_ssh_host}}", "ansible-name": "{{ inventory_hostname }}", "docker": "true" {{ extra_info_label }} } }'
+    serviceLabel: '{"type":"{{ jenkins_type }}","url":"/{{act_item.servmame}}/", "version": "{{version.stdout}}", "info": "", "properties":  { "host-name": "{{ common_domain_name }}", "remote_ip": "{{ label_service_ip }}", "ansible-host-ip": "{{ansible_ssh_host}}", "ansible-name": "{{ inventory_hostname }}", "docker": "true" {{ extra_info_label }} } }'
 
 - name: setlabels {{ act_item.image_tag }}
   ansible.builtin.set_fact:
     label_data:  |
        { traefik.enable: "true" ,
          traefik.docker.network: mylyn_net ,
-         traefik.http.routers.{{ act_item.servmame }}_https.rule: "(Host(`{{ common_domain_name }}`) || Host(`{{ remote_domain_name }}`)) && PathPrefix(`/{{ act_item.servmame }}`)" ,
+         traefik.http.routers.{{ act_item.servmame }}_https.rule: "Host(`{{ common_domain_name }}`) && PathPrefix(`/{{ act_item.servmame }}`)" ,
          traefik.http.routers.{{ act_item.servmame }}_https.entrypoints: websecure ,
          traefik.http.routers.{{ act_item.servmame }}_https.tls: "true" ,
          traefik.http.routers.{{ act_item.servmame }}_https.service: {{ act_item.servmame }} ,

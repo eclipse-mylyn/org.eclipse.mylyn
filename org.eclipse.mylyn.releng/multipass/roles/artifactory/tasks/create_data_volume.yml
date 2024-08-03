@@ -2,3 +2,30 @@
   community.docker.docker_volume:
     name: "{{ role_name }}-data-volume"
     state: present
+- name: mkdir
+  ansible.builtin.shell: |
+    docker run -d -v "{{ role_name }}-data-volume:/var/opt/jfrog/artifactory" --name artifactory_tmp  busybox:latest sh -c 'mkdir -p /var/opt/jfrog/artifactory/etc/ && chown -R 1030:1030 /var/opt/jfrog/artifactory && ls -al /var/opt/jfrog/artifactory/etc && tail -f /dev/null'
+  register: version
+- name: print version
+  debug:
+    msg: "{{ version.stdout }}"
+- name: Copy file into existing container 
+  ansible.builtin.shell: docker cp /mylyn-config-dir/{{ role_name }}/system.yaml artifactory_tmp:/var/opt/jfrog/artifactory/etc/system.yaml 
+- name: verify
+  ansible.builtin.shell: |
+    docker exec artifactory_tmp ls -al /var/opt/jfrog/artifactory/etc/
+    docker exec artifactory_tmp cat /var/opt/jfrog/artifactory/etc/system.yaml
+  register: verify
+- name: print verify
+  debug:
+    msg: "{{ verify.stdout }}"
+- name: chmod
+  ansible.builtin.shell: |
+    docker exec artifactory_tmp   sh -c 'chown -R 1030:1030 /var/opt/jfrog/artifactory && ls -al /var/opt/jfrog/artifactory/etc'
+
+- name: stop tmp container
+  ansible.builtin.shell: |
+    docker stop  artifactory_tmp
+- name: rm tmp container
+  ansible.builtin.shell: |
+    docker rm  artifactory_tmp

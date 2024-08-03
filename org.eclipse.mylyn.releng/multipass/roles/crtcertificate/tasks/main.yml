@@ -8,13 +8,6 @@
     src: ./first_setup/ubuntu_key.pub
     dest: .ssh/id_rsa.pub
 
-# - name: add to known_hosts
-#   become: true
-#   become_user: root
-#   ansible.builtin.shell: "ssh-keyscan -H {{ item.name }} >> /home/ubuntu/.ssh/known_hosts"
-#   loop: "{{ hostvars['localhost'].setup_lst }}"
-#   run_once: true
-# 
 - name: delete ca_path exists
   become: true
   ansible.builtin.file:

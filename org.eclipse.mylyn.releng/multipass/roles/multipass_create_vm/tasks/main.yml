@@ -3,7 +3,7 @@
   ansible.builtin.include_tasks:
     file: multipass_list.yml
 - debug: var=inst_list verbosity=3
-- debug: var=setup_lst verbosity=3
+- debug: var=mylyn_vm_hosts verbosity=3
 
 - name: ensure first_setup exists
   ansible.builtin.file:
@@ -28,9 +28,9 @@
               - {{ user_data }}
 
 - name: create if needed
-  shell: multipass launch -n {{ item.name }} --disk {{ item.disk }} --mem {{ item.memory }} --cpus {{ item.cpus }} {{ item.launch_extra }} --cloud-init first_setup/cloud-init.yaml
+  shell: multipass launch -n {{ item.name }} --disk {{ item.disk }} --memory {{ item.memory }} --cpus {{ item.cpus }} {{ item.launch_extra }} --cloud-init first_setup/cloud-init.yaml
   when: item.name not in inst_list | map(attribute='inst_name') 
-  with_items: "{{ setup_lst }}"
+  with_items: "{{ mylyn_vm_hosts }}"
 - name: new list
   ansible.builtin.include_tasks:
     file: multipass_list.yml
@@ -43,7 +43,7 @@
   when: >
     item.name in inst_list | map(attribute='inst_name') and
     (inst_list | selectattr("inst_name", "equalto", item.name))| map(attribute='ip_adr4') != [item.ip4 ]
-  with_items: "{{ setup_lst }}"
+  with_items: "{{ mylyn_vm_hosts }}"
 - name: debug ip_2_change
   debug: var=ip_2_change verbosity=3
   when: ip_2_change is defined
@@ -61,17 +61,27 @@
   become_user: root
   ansible.builtin.lineinfile:
     path: /etc/hosts
-    regexp: "{{'^.*'+ item.aname +'.*' }}"
+    regexp: "{{'^.*'+ item.name +'.*' }}"
     state: absent
-  with_items: "{{ ip_2_change }}"
-  when: ip_2_change is defined
+  with_items: "{{ mylyn_vm_hosts }}"
 
-- name: add mylyn vm to etc hosts}
+
+- name: add mylyn non service vm to etc hosts
   become: true
   become_user: root
   ansible.builtin.lineinfile:
     path: /etc/hosts
-    line: "{{ item.mip  + ' ' + hostvars[item.aname].default_etc_hosts }}"
+    line: "{{ item.ip4  + ' ' + hostvars[item.name].default_etc_hosts }}"
     state: present
-  with_items: "{{ ip_2_change }}"
-  when: ip_2_change is defined
+  with_items: "{{ mylyn_vm_hosts }}"
+  when: item.name != mylyn_service_vm_name
+
+- name: add mylyn service vm to etc hosts
+  become: true
+  become_user: root
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: "{{ mylyn_network_ip  + ' ' + hostvars[item.name].default_etc_hosts }}"
+    state: present
+  with_items: "{{ mylyn_vm_hosts }}"
+  when: item.name == mylyn_service_vm_name

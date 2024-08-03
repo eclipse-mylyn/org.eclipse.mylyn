@@ -1,5 +1,5 @@
 ---
-- name: remove etc hosts if not included {{ act_name.name }}
+- name: remove mylyn from etc hosts {{ act_name.name }}
   become: true
   become_user: root
   ansible.builtin.lineinfile:
@@ -8,21 +8,12 @@
     state: absent
   delegate_to: "{{ act_name.name }}"
 
-- name: add etc hosts if not included {{ act_name.name }}
-  become: true
-  become_user: root
-  ansible.builtin.lineinfile:
-    path: /etc/hosts
-    line: "{{inst_network_ip + ' ' + hostvars['mylynmstr01'].default_etc_hosts }}"
-    state: present
-  delegate_to: "{{ act_name.name }}"
-- name: add etc hosts if not included {{ act_name.name }}
+- name: add mylyn to etc hosts if not included {{ act_name.name }}
   become: true
   become_user: root
   ansible.builtin.lineinfile:
     path: /etc/hosts
     line: "{{  item.ip4 + ' ' +  hostvars[item.name].default_etc_hosts }}"
     insertafter: EOF
-  when: item.name != 'mylynmstr01'
-  loop: "{{ setup_lst }}"
+  loop: "{{ mylyn_vm_hosts }}"
   delegate_to: "{{ act_name.name }}"

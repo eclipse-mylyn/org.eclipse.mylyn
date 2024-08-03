@@ -10,13 +10,38 @@
 - name: print buildout3
   debug:
     msg: "{{ docker_data_info_volumes.volumes | length }}"
+- name: Recursively remove directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  become: true 
+  loop:
+    - /mylyn-config-dir/{{ role_name }}
+    - /mylyn-runtime-dir/{{ role_name }}
 
-- name: include jobs-volume
+- name: Creates directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+  loop:
+    - /mylyn-config-dir/{{ role_name }}
+    - /mylyn-runtime-dir/{{ role_name }}
+
+- name: "Copy latest file(s)"
+  synchronize:
+    delete: yes
+    src: files/
+    dest: /mylyn-config-dir/{{ role_name }}/
+    recursive: yes
+
+
+- name: include data-volume
   ansible.builtin.include_tasks:
     file: create_data_volume.yml
   when: (docker_data_info_volumes.volumes is defined) and (docker_data_info_volumes.volumes | length==0)
-
-
 
 - name: setlabels
   ansible.builtin.set_fact:
