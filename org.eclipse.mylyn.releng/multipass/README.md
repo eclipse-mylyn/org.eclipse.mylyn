@@ -88,10 +88,10 @@ You will get certification warnings and must trust the self signed certificate.
 If you want to access the URLs from an other computer in your local environment you must add a line to your /etc/hosts file.
 Look into /etc/hosts of your installation host computer and you see the following line
 ```
-192.168.64.3 mylynmstr01 mylyn.local traefik.mylyn.local jenkins.mylyn.local hello.mylyn.local artifactory.mylyn.local gitlab.mylyn.local
+192.168.64.3 mylynmstr01 mylyn.local traefik.mylyn.local jenkins.mylyn.local artifactory.mylyn.local gitlab.mylyn.local
 ```
 copy this line and replace the IP adress with the local network IP address assinged to the mylynmstr01 vm
 ```
-192.168.2.120 mylynmstr01 mylyn.local traefik.mylyn.local jenkins.mylyn.local hello.mylyn.local artifactory.mylyn.local gitlab.mylyn.local
+192.168.2.120 mylynmstr01 mylyn.local traefik.mylyn.local jenkins.mylyn.local artifactory.mylyn.local gitlab.mylyn.local
 ```
 Now you shold be able to assess the URLs from the other computer

@@ -30,7 +30,7 @@
     label_data: 
        { traefik.enable: "true",
          traefik.docker.network: "mylyn_net",
-         traefik.http.routers.mylyn_idx_https.rule: "(Host(`{{ common_domain_name }}`) || Host(`{{ remote_domain_name }}`)) && PathPrefix(`/mylyn_idx`)",
+         traefik.http.routers.mylyn_idx_https.rule: "Host(`{{ common_domain_name }}`)  && PathPrefix(`/mylyn_idx`)",
          traefik.http.routers.mylyn_idx_https.entrypoints: "websecure", 
          traefik.http.routers.mylyn_idx_https.tls: "true",
          traefik.http.routers.mylyn_idx_https.service: "mylyn_idx",

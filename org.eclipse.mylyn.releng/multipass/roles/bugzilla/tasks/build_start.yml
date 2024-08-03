@@ -44,15 +44,19 @@
 - set_fact:
     bugzilla_info: "{{bugzilla_info_array | join(', ') | to_yaml }}"
     extra_info_label: "{{ (',' + act_item.extra_info) if (act_item.extra_info | length > 0 ) else ''}}"
+    label_service_ip: "{{mylyn_network_ip if mylyn_network_ip is defined else ansible_ssh_host }}"
 - name: bugzilla_info  {{ act_item.image_tag }}
   debug:
     var: bugzilla_info
 - name: extra_info_label  {{ act_item.image_tag }}
   debug:
     var: extra_info_label
+- name: label_service_ip  {{ act_item.image_tag }}
+  debug:
+    var: label_service_ip
 - name: myServiceLabel {{ act_item.image_tag }}
   set_fact:
-    serviceLabel: '{"type":"{{ bugzilla_type }}","url":"/{{ act_item.servmame }}/", "version": "{{ bugzilla_version.stdout }}", "info": "{{ bugzilla_info }}", "properties":  { "host-name": "{{ remote_domain_name }}", "remote_ip": "{{ inst_network_ip }}", "ansible-name": "{{ inventory_hostname }}", "ansible-host-ip": "{{ansible_ssh_host}}", "docker": "true"  {{ extra_info_label }} } }'
+    serviceLabel: '{"type":"{{ bugzilla_type }}","url":"/{{ act_item.servmame }}/", "version": "{{ bugzilla_version.stdout }}", "info": "{{ bugzilla_info }}", "properties":  { "host-name": "{{ common_domain_name }}", "remote_ip": "{{ label_service_ip }}", "ansible-name": "{{ inventory_hostname }}", "ansible-host-ip": "{{ansible_ssh_host}}", "docker": "true"  {{ extra_info_label }} } }'
 - name: debug1 {{ act_item.image_tag }}
   debug:
     var: serviceLabel
@@ -63,7 +67,7 @@
     label_data:  |
        { traefik.enable: "true" ,
          traefik.docker.network: mylyn_net ,
-         traefik.http.routers.{{ act_item.servmame }}_https.rule: "(Host(`{{ common_domain_name }}`) || Host(`{{ remote_domain_name }}`)) && PathPrefix(`/{{ act_item.servmame }}`)" ,
+         traefik.http.routers.{{ act_item.servmame }}_https.rule: "Host(`{{ common_domain_name }}`) && PathPrefix(`/{{ act_item.servmame }}`)" ,
          traefik.http.routers.{{ act_item.servmame }}_https.entrypoints: websecure ,
          traefik.http.routers.{{ act_item.servmame }}_https.tls: "true" ,
          traefik.http.routers.{{ act_item.servmame }}_https.middlewares: stripprefix_{{ act_item.servmame }} ,
@@ -92,9 +96,9 @@
 #      - published_port: "{{ act_item.port1 }}"
 #        target_port: "{{ act_item.port1 }}"
     env:
-      BASE_URL: "{{ remote_domain_name }}"
+      BASE_URL: "{{ common_domain_name }}"
       BUG_SERVICE_NAME: "{{ act_item.servmame}}"
-      CERT_FILE_NAME: "mylynmstr01"
+      CERT_FILE_NAME: "{{ mylyn_service_vm_name }}"
     mounts:
       - source: "/mylyn-config-dir/certs"
         target: "/certificates"
@@ -126,9 +130,9 @@
     restart: true
     restart_policy: "unless-stopped"
     env:
-      BASE_URL: "{{ remote_domain_name }}"
+      BASE_URL: "{{ common_domain_name }}"
       BUG_SERVICE_NAME: "{{ act_item.servmame}}"
-      CERT_FILE_NAME: "mylynmstr01"
+      CERT_FILE_NAME: "{{ mylyn_service_vm_name }}"
     volumes:
       - "/mylyn-config-dir/certs:/certificates"
     labels: "{{ label_data | from_yaml }}"

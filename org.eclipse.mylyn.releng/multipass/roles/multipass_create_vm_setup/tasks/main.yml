@@ -2,6 +2,6 @@
 - name: inital list
   ansible.builtin.include_tasks:
     file: test_and_update_remote_host_etc.yml
-  with_items: "{{ setup_lst }}"
+  with_items: "{{ mylyn_vm_hosts }}"
   loop_control:
     loop_var: act_name

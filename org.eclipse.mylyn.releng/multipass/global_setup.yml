@@ -1,11 +1,10 @@
     - name: set global var
       ansible.builtin.set_fact:
         grp_prefix: "{{ prefix | default('mylyn')}}"
-        local_domain: "{{ local_dom | default('mylyn.local')}}"
-        remote_domain: "{{ remote_dom | default('public.mydomain.de')}}"
+        mylyn_service_domain: "{{ local_domain | default('mylyn.local')}}"
         docker_swarm_recreate: "{{ swarm_recreate | default(false) }}"
         docker_mode_global: "{{ docker_run_mode | default('container') }}"
-        network_ip_matcher: "{{ local_network_ip_matcher | default('^192\\.168\\.2\\..*') }}"
+        network_ip_matcher: "{{ local_network_ip_matcher | default('^192\\.168\\.64\\..*') }}"
       tags:
         - global
         
@@ -13,7 +12,7 @@
       ansible.builtin.set_fact:
         setup_lst_tmp: 
          "{{ groups[grp_prefix + \"_admin\"]  + groups[grp_prefix + \"_swarm_master\"] }}" 
-        setup_noadmin_vm_list: 
+        mylyn_noadmin_vm_hosts: 
          "{{ groups[grp_prefix + \"_swarm_master\"] }}" 
       tags:
         - global
@@ -22,32 +21,32 @@
       ansible.builtin.set_fact:
         setup_lst_tmp:  
          "{{ setup_lst_tmp  +  groups[grp_prefix + \"_swarm_worker\" ] }}"
-        setup_noadmin_vm_list: 
-         "{{ setup_noadmin_vm_list  +  groups[grp_prefix + \"_swarm_worker\" ] }}"
+        mylyn_noadmin_vm_hosts: 
+         "{{ mylyn_noadmin_vm_hosts  +  groups[grp_prefix + \"_swarm_worker\" ] }}"
       tags:
         - global
       when: (docker_mode_global == 'swarm' or docker_mode_global == 'all')
     - name: set list admin server
       ansible.builtin.set_fact:
         rootca_server_name: "{{ groups[hostvars['localhost'].grp_prefix + \"_admin\"][0] }}"
-        prim_install_server_name: "{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}"
+        mylyn_service_vm_name: "{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}"
       tags:
         - global
     - name: build single
       ansible.builtin.set_fact:
         setup_lst_tmp:  
          "{{ groups[grp_prefix + \"_swarm_master\" ] }}"
-        setup_noadmin_vm_list: 
+        mylyn_noadmin_vm_hosts: 
          "{{ groups[grp_prefix + \"_swarm_master\" ] }}"
         rootca_server_name:
-         "{{ prim_install_server_name }}"
+         "{{ mylyn_service_vm_name }}"
       tags:
         - global
       when: (docker_mode_global == 'single')
  
-    - name: build setup_lst
+    - name: build mylyn_vm_hosts
       ansible.builtin.set_fact:
-        setup_lst: "{{ setup_lst | default([]) + [ { 'name': item, 'ip4': hostvars[item].ansible_host, 'disk':  hostvars[item].multipass_disk, 'memory':  hostvars[item].multipass_memory, 'cpus':  hostvars[item].multipass_cpus, 'launch_extra': hostvars[item].additional_launch_parms } ] }}"
+        mylyn_vm_hosts: "{{ mylyn_vm_hosts | default([]) + [ { 'name': item, 'ip4': hostvars[item].ansible_host, 'disk':  hostvars[item].multipass_disk, 'memory':  hostvars[item].multipass_memory, 'cpus':  hostvars[item].multipass_cpus, 'launch_extra': hostvars[item].additional_launch_parms } ] }}"
       with_items:
         - "{{ setup_lst_tmp }}"
       tags:
@@ -64,9 +63,11 @@
       vars:
          msg: |
              rootca_server_name = {{ rootca_server_name }}
-             localhostPlatform = {{ localhostPlatform }}
-             all hosts = {{ setup_lst }}
-             all non admin vm = {{ setup_noadmin_vm_list }}
+             localhostPlatform  = {{ localhostPlatform }}
+             all hosts          = {{ mylyn_vm_hosts }}
+             all non admin vm   = {{ mylyn_noadmin_vm_hosts }}
+             service vm         = {{ mylyn_service_vm_name }}
+             service domain     = {{ mylyn_service_domain }}
       ansible.builtin.debug:
         msg: "{{ msg.split('\n') }}"
         verbosity: 0
