@@ -363,6 +363,14 @@ public class CommonTestUtil {
 	}
 
 	/**
+	 * Returns whether to run a limited suite of tests. Returns true, unless a system property has been set to force running of all network
+	 * tests (using CI Server).
+	 */
+	public static boolean runNonCIServerTestsOnly() {
+		return !Boolean.getBoolean("org.eclipse.mylyn.ci.server.tests");
+	}
+
+	/**
 	 * Unzips the given zip file to the given destination directory extracting only those entries the pass through the given filter.
 	 *
 	 * @param zipFile
