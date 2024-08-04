@@ -13,6 +13,7 @@ ADD src /opt/
 
 # Run build script
 RUN echo GIT_BRANCH_TAG=$GIT_BRANCH_TAG EXTRAINFO=$EXTRAINFO
+RUN mv /opt/answersV$GIT_BRANCH_TAG /opt/answers
 RUN /opt/build.sh GIT_BRANCH_TAG=$GIT_BRANCH_TAG EXTRAINFO="$EXTRAINFO"
 
 # Run start script
