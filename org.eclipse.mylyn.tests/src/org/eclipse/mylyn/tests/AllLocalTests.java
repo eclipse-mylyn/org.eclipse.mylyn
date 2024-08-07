@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git histpry
  *******************************************************************************/
 
 package org.eclipse.mylyn.tests;
@@ -28,7 +29,6 @@ public class AllLocalTests {
 		TestConfiguration configuration = ManagedSuite.getTestConfiguration();
 		if (configuration == null) {
 			configuration = new TestConfiguration();
-			configuration.setLocalOnly(true);
 			ManagedSuite.setTestConfiguration(configuration);
 		}
 
