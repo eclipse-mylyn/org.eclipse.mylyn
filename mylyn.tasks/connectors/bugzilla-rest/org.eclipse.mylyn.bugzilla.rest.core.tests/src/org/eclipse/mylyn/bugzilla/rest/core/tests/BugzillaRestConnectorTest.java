@@ -29,10 +29,14 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.commons.sdk.util.AbstractTestFixture;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
+import org.eclipse.mylyn.commons.sdk.util.ConditionalIgnoreRule;
+import org.eclipse.mylyn.commons.sdk.util.IFixtureJUnitClass;
 import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner;
 import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner.FixtureDefinition;
+import org.eclipse.mylyn.commons.sdk.util.MustRunOnCIServerRule;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.Duration;
@@ -43,7 +47,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -52,9 +56,11 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 @RunWith(Junit4TestFixtureRunner.class)
 @FixtureDefinition(fixtureClass = BugzillaRestTestFixture.class, fixtureType = "bugzillaREST")
 @SuppressWarnings({ "nls", "restriction" })
-@Ignore("No CI Server")
-public class BugzillaRestConnectorTest {
+public class BugzillaRestConnectorTest implements IFixtureJUnitClass {
 	private final BugzillaRestTestFixture actualFixture;
+	@Rule
+	public ConditionalIgnoreRule rule = new ConditionalIgnoreRule(this);
+
 
 	private BugzillaRestConnector connector;
 
@@ -70,6 +76,7 @@ public class BugzillaRestConnectorTest {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testReloadCache() throws Exception {
 		connector = new BugzillaRestConnectorLocal(new Duration(5, TimeUnit.SECONDS));
 		assertNotNull(connector);
@@ -96,6 +103,7 @@ public class BugzillaRestConnectorTest {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testLoadCache() throws Exception {
 		BugzillaRestConfiguration configuration = connector.getRepositoryConfiguration(actualFixture.repository());
 		assertNotNull(configuration);
@@ -106,6 +114,7 @@ public class BugzillaRestConnectorTest {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testRepositoryCacheNotChanged() throws Exception {
 		TaskRepository repository = new TaskRepository(actualFixture.repository().getConnectorKind(),
 				actualFixture.repository().getRepositoryUrl());
@@ -159,6 +168,7 @@ public class BugzillaRestConnectorTest {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testRepositoryCacheChanged() throws Exception {
 		TaskRepository repository = new TaskRepository(actualFixture.repository().getConnectorKind(),
 				actualFixture.repository().getRepositoryUrl());
@@ -192,6 +202,7 @@ public class BugzillaRestConnectorTest {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testLoadCacheWrongRepository() throws Exception {
 		TaskRepository taskRepository = new TaskRepository(connector.getConnectorKind(),
 				"http://mylyn.org/bugzilla-rest-trunk-wrong/");
@@ -229,12 +240,18 @@ public class BugzillaRestConnectorTest {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testUpdateTaskFromTaskData() throws Exception {
 		TaskData taskData = new TaskData(new TaskAttributeMapper(actualFixture.repository()),
 				connector.getConnectorKind(), actualFixture.repository().getRepositoryUrl(), "123");
 		ITask task = new TaskTask(connector.getConnectorKind(), actualFixture.repository().getRepositoryUrl(), "");
 		connector.updateTaskFromTaskData(actualFixture.repository(), task, taskData);
 		assertThat(task.getUrl(), equalTo(actualFixture.repository().getRepositoryUrl() + "/rest.cgi/bug/123"));
+	}
+
+	@Override
+	public AbstractTestFixture getActualFixture() {
+		return actualFixture;
 	}
 
 }

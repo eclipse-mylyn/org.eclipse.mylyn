@@ -1,6 +1,6 @@
 all:
   vars:
-    multipass_disk: 5G
+    multipass_disk: 10G
     multipass_memory: 1G
     multipass_cpus: 1
     additional_launch_parms: ''
