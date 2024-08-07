@@ -23,16 +23,20 @@ import java.nio.charset.Charset;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.bugzilla.rest.test.support.BugzillaRestTestFixture;
+import org.eclipse.mylyn.commons.sdk.util.AbstractTestFixture;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.ConditionalIgnoreRule;
+import org.eclipse.mylyn.commons.sdk.util.IFixtureJUnitClass;
 import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner;
 import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner.FixtureDefinition;
+import org.eclipse.mylyn.commons.sdk.util.MustRunOnCIServerRule;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -42,9 +46,11 @@ import com.google.gson.Gson;
 @RunWith(Junit4TestFixtureRunner.class)
 @FixtureDefinition(fixtureClass = BugzillaRestTestFixture.class, fixtureType = "bugzillaREST")
 //@RunOnlyWhenProperty(property = "default", value = "1")
-@Ignore("No CI Server")
-public class BugzillaRestConfigurationTest {
+public class BugzillaRestConfigurationTest implements IFixtureJUnitClass {
 	private final BugzillaRestTestFixture actualFixture;
+
+	@Rule
+	public ConditionalIgnoreRule rule = new ConditionalIgnoreRule(this);
 
 	private static TaskRepositoryManager manager;
 
@@ -71,6 +77,7 @@ public class BugzillaRestConfigurationTest {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testConfigurationFromConnector() throws CoreException, IOException {
 		BugzillaRestConfiguration configuration = connector.getRepositoryConfiguration(actualFixture.repository());
 		assertNotNull(configuration);
@@ -79,10 +86,15 @@ public class BugzillaRestConfigurationTest {
 						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/configuration.json"),
 						Charset.defaultCharset()),
 				new Gson().toJson(configuration)
-				.replaceAll(actualFixture.getRepositoryUrl(), "http://dummy.url")
+				.replaceAll(actualFixture.getRepositoryUrl(), "http://dummy.url/")
 				.replaceAll(actualFixture.getRepositoryUrl().replaceFirst("https://", "http://"),
-						"http://dummy.url"));
+						"http://dummy.url/"));
 
+	}
+
+	@Override
+	public AbstractTestFixture getActualFixture() {
+		return actualFixture;
 	}
 
 }

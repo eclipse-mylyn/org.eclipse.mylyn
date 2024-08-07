@@ -24,6 +24,8 @@ import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.ConditionalIgnoreRule;
+import org.eclipse.mylyn.commons.sdk.util.MustRunOnCIServerRule;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestFlagMapper;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.IBugzillaRestConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -31,7 +33,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.gson.Gson;
@@ -116,7 +117,7 @@ public class BugzillaRestFlagMapperTest {
 	}
 
 	@Test
-	@Ignore("No CI Server")
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testApplyToTaskAttribute() throws IOException {
 		String jsonElement = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.json"),
 				Charset.defaultCharset());
@@ -126,8 +127,7 @@ public class BugzillaRestFlagMapperTest {
 				.createAttribute(IBugzillaRestConstants.KIND_FLAG_TYPE + "11");
 		flagMapper.applyTo(taskAttribute);
 		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.txt"), Charset.defaultCharset()),
-				taskAttribute.toString(),
-				Charset.defaultCharset());
+				taskAttribute.toString());
 	}
 
 	@Test
@@ -144,7 +144,7 @@ public class BugzillaRestFlagMapperTest {
 	}
 
 	@Test
-	@Ignore("No CI Server")
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testCreateFromTaskAttribute() throws IOException {
 		String jsonElement = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.json"),
 				Charset.defaultCharset());
@@ -154,8 +154,7 @@ public class BugzillaRestFlagMapperTest {
 				.createAttribute(IBugzillaRestConstants.KIND_FLAG_TYPE + "11");
 		flagMapper.applyTo(taskAttribute);
 		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.txt"),
-				Charset.defaultCharset()), taskAttribute.toString(),
-				Charset.defaultCharset());
+				Charset.defaultCharset()), taskAttribute.toString());
 
 		flagMapper = BugzillaRestFlagMapper.createFrom(taskAttribute);
 		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.json"), Charset.defaultCharset()),
