@@ -1,4 +1,5 @@
-- name: Build the image
+---
+- name: Build the image {{act_item.servmame}}
   community.docker.docker_image:
     name: "127.0.0.1:5000/{{act_item.servmame}}"
     tag: 1
@@ -12,37 +13,37 @@
     source: build
     timeout: 180
 
-- name: delete data-volume
+- name: delete data-volume {{act_item.servmame}}
   community.docker.docker_volume:
     name: "{{ role_name }}-{{act_item.servmame}}-data-volume"
     state: absent
 
-- name: create data-volume
+- name: create data-volume {{act_item.servmame}}
   community.docker.docker_volume:
     name: "{{ role_name }}-{{act_item.servmame}}-data-volume"
     state: present
 
-- name: docker list
+- name: docker list {{act_item.servmame}}
   ansible.builtin.shell: "docker run --rm --entrypoint /usr/bin/env 127.0.0.1:5000/{{act_item.servmame}}:1 sh -c 'echo $JENKINS_VERSION'"
   register: version
 - name: print version
   debug:
     msg: "{{ version.stdout }}"
 
-- name: myServiceInfo {{ act_item.image_tag }}
+- name: myServiceInfo {{act_item.servmame}}
   set_fact:
     extra_info_entries: "{{  ('{' + act_item.extra_info + '}') | from_yaml }} "
     label_service_ip: "{{mylyn_network_ip if mylyn_network_ip is defined else ansible_ssh_host }}"
 - set_fact:
     jenkins_type: "{{ 'localTest' if ('local_test_service' in extra_info_entries and extra_info_entries['local_test_service'] | bool == true) else 'jenkins' }}"
-- name: extra_info_label
+- name: extra_info_label {{act_item.servmame}}
   set_fact:
     extra_info_label: "{{ (',' + act_item.extra_info) if (act_item.extra_info | length > 0 ) else ''}}"
-- name: myServiceLabel
+- name: myServiceLabel {{act_item.servmame}}
   set_fact:
     serviceLabel: '{"type":"{{ jenkins_type }}","url":"/{{act_item.servmame}}/", "version": "{{version.stdout}}", "info": "", "properties":  { "host-name": "{{ common_domain_name }}", "remote_ip": "{{ label_service_ip }}", "ansible-host-ip": "{{ansible_ssh_host}}", "ansible-name": "{{ inventory_hostname }}", "docker": "true" {{ extra_info_label }} } }'
 
-- name: setlabels {{ act_item.image_tag }}
+- name: setlabels {{act_item.servmame}}
   ansible.builtin.set_fact:
     label_data:  |
        { traefik.enable: "true" ,
@@ -55,7 +56,7 @@
          org.eclipse.mylyn.service: '{{ serviceLabel  | to_json }}'
        }
     
-- name: Deploy swarm service
+- name: Deploy swarm service {{act_item.servmame}}
   community.docker.docker_swarm_service:
     name: "{{act_item.servmame}}"
     image: "127.0.0.1:5000/{{act_item.servmame}}:1"
@@ -95,7 +96,7 @@
         - node.role == worker
   when: ((docker_mode is defined) and (docker_mode == 'swarm'))
 
-- name: Deploy Container
+- name: Deploy Container {{act_item.servmame}}
   community.docker.docker_container:
     name: "{{act_item.servmame}}"
     image: "127.0.0.1:5000/{{act_item.servmame}}:1"
@@ -112,3 +113,4 @@
       - "{{ role_name }}-{{act_item.servmame}}-data-volume:/var/jenkins_home"
     labels: "{{ label_data | from_yaml }}"
   when: ((docker_mode is defined) and (docker_mode == 'container' or docker_mode == 'single' or docker_mode == 'gitlab'))
+...
