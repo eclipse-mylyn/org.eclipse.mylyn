@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests
+Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.rest.core.junit5.tests
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.junit,
+ junit-jupiter-api,
+ junit-jupiter-params;bundle-version="5.10.3",
+ org.eclipse.mylyn.commons.sdk.util,
+ org.eclipse.mylyn.bugzilla.rest.core.tests
+Automatic-Module-Name: org.eclipse.mylyn.bugzilla.rest.core.junit5.tests
+Bundle-RequiredExecutionEnvironment: JavaSE-21
