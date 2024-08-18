@@ -1,12 +1,15 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Tests
+Bundle-Name: JUnit 5 Bugzilla Rest Connector Tests
 Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.rest.core.junit5.tests
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.junit,
- junit-jupiter-api,
- junit-jupiter-params;bundle-version="5.10.3",
- org.eclipse.mylyn.commons.sdk.util,
+Require-Bundle: org.eclipse.mylyn.commons.sdk.util,
  org.eclipse.mylyn.bugzilla.rest.core.tests
 Automatic-Module-Name: org.eclipse.mylyn.bugzilla.rest.core.junit5.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-21
+Import-Package: org.junit.jupiter.api;version="[5.10.0,6.0.0)",
+ org.junit.jupiter.api.condition;version="[5.10.0,6.0.0)",
+ org.junit.jupiter.api.extension;version="[5.10.0,6.0.0)",
+ org.junit.jupiter.params;version="[5.10.0,6.0.0)",
+ org.junit.jupiter.params.provider;version="[5.10.0,6.0.0)",
+ org.junit.platform.engine.support.descriptor;version="[1.10.0,2.0.0)"
