@@ -1,8 +1,6 @@
 package org.eclipse.mylyn.bugzilla.rest.core.junit5.tests;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -23,7 +21,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 @SuppressWarnings("restriction")
-@EnabledIfSystemProperty(named = "CI_SERVER_TESTS", matches = "true")
 class Junit5Test {
 
 	@BeforeAll
@@ -48,6 +45,7 @@ class Junit5Test {
 
 	@Test
 	@ExtendWith(DefaultFixtureParameterResolver.class)
+	@EnabledIfSystemProperty(named = "CI_SERVER_TESTS", matches = "true")
 	@DisplayName("TEST 1")
 	@Tag("my-tag")
 	void testMyFunc(BugzillaRestTestFixture actFixture, TestInfo testInfo) {
@@ -60,6 +58,7 @@ class Junit5Test {
 
 	@ParameterizedTest
 	@MethodSource("fixtureProvider")
+	@EnabledIfSystemProperty(named = "CI_SERVER_TESTS", matches = "true")
 	@DisplayName("Connection Test")
 	@Tag("CI_SERVER_TEST")
 	void myTes(BugzillaRestTestFixture actFixture, TestInfo testInfo) {
@@ -73,5 +72,10 @@ class Junit5Test {
 		List<BugzillaRestTestFixture> parametersList = (List<BugzillaRestTestFixture>) defFixture
 				.discover(BugzillaRestTestFixture.class, "bugzillaREST");
 		return parametersList.stream();
+	}
+	
+	@Test
+	void DummyTest() throws Exception {
+		assertEquals(42, 2*21);
 	}
 }
