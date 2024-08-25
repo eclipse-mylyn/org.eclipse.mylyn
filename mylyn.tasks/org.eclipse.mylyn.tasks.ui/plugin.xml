@@ -684,6 +684,17 @@
          </description>
      </colorDefinition>
 
+	 <colorDefinition
+           categoryId="org.eclipse.mylyn.tasks.ui.presentation"
+           id="org.eclipse.mylyn.tasks.ui.color.text.quoted"
+           isEditable="true"
+           label="%colors.foreground.text.quoted.label"
+           value="38,86,145">
+         <description>
+            %colors.foreground.text.quoted.description
+         </description>
+     </colorDefinition>
+
      <colorDefinition
            categoryId="org.eclipse.mylyn.tasks.ui.presentation"
            id="org.eclipse.mylyn.tasks.ui.colors.foreground.thisweek.scheduled"

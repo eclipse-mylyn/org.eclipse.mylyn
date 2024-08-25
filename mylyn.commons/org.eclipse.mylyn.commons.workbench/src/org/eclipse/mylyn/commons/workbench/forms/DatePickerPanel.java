@@ -26,7 +26,6 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
 import org.eclipse.mylyn.internal.commons.workbench.Messages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -126,7 +125,6 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 		Hyperlink todayLink = new Hyperlink(this, SWT.NONE);
 		todayLink.setText(Messages.DatePickerPanel_Today);
 		todayLink.setUnderlined(true);
-		todayLink.setForeground(CommonColors.HYPERLINK_WIDGET);
 		GridDataFactory.fillDefaults().span(2, 1).grab(true, false).align(SWT.CENTER, SWT.TOP).applyTo(todayLink);
 		todayLink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override

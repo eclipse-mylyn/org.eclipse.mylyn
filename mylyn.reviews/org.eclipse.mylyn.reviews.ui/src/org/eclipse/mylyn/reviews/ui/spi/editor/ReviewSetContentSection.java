@@ -31,7 +31,6 @@ import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.ToolTip;
-import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
 import org.eclipse.mylyn.commons.workbench.forms.ScalingHyperlink;
 import org.eclipse.mylyn.internal.reviews.ui.providers.ReviewsLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
@@ -270,7 +269,6 @@ public class ReviewSetContentSection {
 
 		ScalingHyperlink commitLink = new ScalingHyperlink(composite, SWT.READ_ONLY);
 		commitLink.setText(set.getRevision());
-		commitLink.setForeground(CommonColors.HYPERLINK_WIDGET);
 		commitLink.registerMouseTrackListener();
 		commitLink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
@@ -321,7 +319,6 @@ public class ReviewSetContentSection {
 
 	private void addParentCommitHyperlink(ScalingHyperlink commit, final String commitId) {
 		commit.setText(commitId);
-		commit.setForeground(CommonColors.HYPERLINK_WIDGET);
 		commit.registerMouseTrackListener();
 		commit.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override

@@ -14,7 +14,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
 import org.eclipse.mylyn.commons.workbench.forms.ScalingHyperlink;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.swt.SWT;
@@ -31,7 +30,6 @@ public class TaskScalingHyperlink extends ScalingHyperlink {
 
 	public TaskScalingHyperlink(Composite parent, int style) {
 		super(parent, style);
-		setForeground(CommonColors.HYPERLINK_WIDGET);
 		addMouseTrackListener(MOUSE_TRACK_LISTENER);
 	}
 
