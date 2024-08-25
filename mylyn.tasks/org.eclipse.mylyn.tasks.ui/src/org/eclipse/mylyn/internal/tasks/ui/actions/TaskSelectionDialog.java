@@ -49,7 +49,6 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivationHistory;
@@ -542,7 +541,6 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		if (SearchUtil.supportsTaskSearch()) {
 			ImageHyperlink openHyperlink = new ImageHyperlink(composite, SWT.NONE);
 			openHyperlink.setText(TaskListFilteredTree.LABEL_SEARCH);
-			openHyperlink.setForeground(CommonColors.HYPERLINK_WIDGET);
 			openHyperlink.setUnderlined(true);
 			openHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 

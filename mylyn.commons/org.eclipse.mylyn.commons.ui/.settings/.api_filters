@@ -7,4 +7,12 @@
             </message_arguments>
         </filter>
     </resource>
+    <resource path="src/org/eclipse/mylyn/commons/ui/compatibility/CommonThemes.java" type="org.eclipse.mylyn.commons.ui.compatibility.CommonThemes">
+        <filter id="336658481">
+            <message_arguments>
+                <message_argument value="org.eclipse.mylyn.commons.ui.compatibility.CommonThemes"/>
+                <message_argument value="COLOR_TEXT_QUOTED"/>
+            </message_arguments>
+        </filter>
+    </resource>
 </component>

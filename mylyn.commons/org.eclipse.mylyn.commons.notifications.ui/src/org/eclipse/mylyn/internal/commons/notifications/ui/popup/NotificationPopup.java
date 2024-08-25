@@ -19,7 +19,6 @@ import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.commons.notifications.core.AbstractNotification;
 import org.eclipse.mylyn.commons.notifications.ui.AbstractUiNotification;
-import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
 import org.eclipse.mylyn.commons.workbench.AbstractWorkbenchNotificationPopup;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.commons.workbench.forms.ScalingHyperlink;
@@ -89,7 +88,6 @@ public class NotificationPopup extends AbstractWorkbenchNotificationPopup {
 				final ScalingHyperlink itemLink = new ScalingHyperlink(notificationComposite,
 						SWT.BEGINNING | SWT.NO_FOCUS);
 				GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.TOP).applyTo(itemLink);
-				itemLink.setForeground(CommonColors.HYPERLINK_WIDGET);
 				itemLink.registerMouseTrackListener();
 				itemLink.setText(LegacyActionTools.escapeMnemonics(notification.getLabel()));
 				if (notification instanceof AbstractUiNotification) {
@@ -134,7 +132,6 @@ public class NotificationPopup extends AbstractWorkbenchNotificationPopup {
 			} else {
 				int numNotificationsRemain = notifications.size() - count;
 				ScalingHyperlink remainingLink = new ScalingHyperlink(notificationComposite, SWT.NO_FOCUS);
-				remainingLink.setForeground(CommonColors.HYPERLINK_WIDGET);
 				remainingLink.registerMouseTrackListener();
 				remainingLink.setBackground(parent.getBackground());
 

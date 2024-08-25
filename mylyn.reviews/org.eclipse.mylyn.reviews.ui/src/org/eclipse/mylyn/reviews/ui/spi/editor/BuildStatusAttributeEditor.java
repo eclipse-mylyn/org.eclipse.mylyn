@@ -19,7 +19,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.mylyn.commons.ui.CommonImages;
-import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
 import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.mylyn.commons.workbench.forms.ScalingHyperlink;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsImages;
@@ -82,7 +81,6 @@ public class BuildStatusAttributeEditor extends AbstractAttributeEditor {
 
 			ScalingHyperlink buildLink = new ScalingHyperlink(layoutComposite, SWT.READ_ONLY);
 			buildLink.setText(urlValue);
-			buildLink.setForeground(CommonColors.HYPERLINK_WIDGET);
 
 			buildLink.registerMouseTrackListener();
 			buildLink.addHyperlinkListener(new HyperlinkAdapter() {

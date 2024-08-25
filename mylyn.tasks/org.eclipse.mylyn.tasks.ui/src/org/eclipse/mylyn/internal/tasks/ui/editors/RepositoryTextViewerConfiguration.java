@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
@@ -37,12 +38,13 @@ import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
+import org.eclipse.mylyn.commons.ui.compatibility.CommonThemes;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlinkPresenter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
@@ -200,7 +202,8 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 	private static class RepositoryTextScanner extends RuleBasedScanner {
 
 		public RepositoryTextScanner(Mode mode) {
-			IToken quoteToken = new Token(new TextAttribute(CommonColors.TEXT_QUOTED));
+			ColorRegistry colors = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry();
+			IToken quoteToken = new Token(new TextAttribute(colors.get(CommonThemes.COLOR_TEXT_QUOTED)));
 			IRule[] rules = new IRule[1];
 			SingleLineRule quoteRule = new SingleLineRule(">", null, quoteToken, (char) 0, true); //$NON-NLS-1$
 			quoteRule.setColumnConstraint(0);

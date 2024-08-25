@@ -18,7 +18,6 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.mylyn.commons.ui.GradientCanvas;
 import org.eclipse.mylyn.commons.ui.GradientColors;
-import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
 import org.eclipse.mylyn.commons.workbench.search.SearchHistoryPopupDialog;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchUtil;
 import org.eclipse.swt.SWT;
@@ -76,7 +75,6 @@ public class TaskListSearchHistoryPopupDialog extends SearchHistoryPopupDialog {
 
 		ImageHyperlink advancedSearchButton = new ImageHyperlink(editContainer, SWT.NONE);
 		advancedSearchButton.setUnderlined(true);
-		advancedSearchButton.setForeground(CommonColors.HYPERLINK_WIDGET);
 		advancedSearchButton.setText(TaskListFilteredTree.LABEL_SEARCH);
 		advancedSearchButton.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
