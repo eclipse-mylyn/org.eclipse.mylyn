@@ -249,35 +249,65 @@
           name="Mylyn"
           includeSources="false">
         <requirement
-            name="org.eclipse.mylyn.tasks.feature.feature.group"/>
+            name="org.eclipse.mylyn.bugzilla.feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.builds.feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.cdt.feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.commons.activity.feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.commons.feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.commons.identity.feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.commons.notifications.feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.commons.repositories.feature.feature.group"/>
         <requirement
             name="org.eclipse.mylyn.context.feature.feature.group"/>
         <requirement
-            name="org.eclipse.mylyn.cdt.feature.feature.group"/>
+            name="org.eclipse.mylyn.egit.feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.gerrit.dashboard.feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.gerrit.feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.git.feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.github.feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.gitlab.feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.htmltext.feature.feature.group"/>
         <requirement
             name="org.eclipse.mylyn.ide.feature.feature.group"/>
         <requirement
             name="org.eclipse.mylyn.jdt.feature.feature.group"/>
         <requirement
+            name="org.eclipse.mylyn.jenkins.feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.monitor.feature.feature.group"/>
+        <requirement
             name="org.eclipse.mylyn.pde.feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.reviews.feature.feature.group"/>
+        <requirement
+            name="org.eclipse.mylyn.tasks.feature.feature.group"/>
         <requirement
             name="org.eclipse.mylyn.team.feature.feature.group"/>
         <requirement
-            name="org.eclipse.mylyn.egit.feature.feature.group"/>
+            name="org.eclipse.mylyn.versions.feature.feature.group"/>
         <requirement
-            name="org.eclipse.mylyn.bugzilla.feature.feature.group"/>
+            name="org.eclipse.mylyn.wikitext.extras.feature.feature.group"/>
         <requirement
-            name="org.eclipse.mylyn.github.feature.feature.group"/>
-        <requirement
-            name="org.eclipse.mylyn.wikitext_feature.feature.group"/>
-        <requirement
-            name="org.eclipse.mylyn.wikitext.editors_feature.feature.group"/>
+            name="org.eclipse.mylyn.wikitext.feature.feature.group"/>
         <repositoryList
             name="latest">
           <repository
-              url="https://download.eclipse.org/mylyn/updates/release/4.3.0"/>
+              url="https://download.eclipse.org/mylyn/updates/release/latest"/>
           <repository
-              url="https://download.eclipse.org/releases/2023-12/202312061001"/>
+              url="https://download.eclipse.org/releases/latest"/>
         </repositoryList>
       </targlet>
     </setupTask>

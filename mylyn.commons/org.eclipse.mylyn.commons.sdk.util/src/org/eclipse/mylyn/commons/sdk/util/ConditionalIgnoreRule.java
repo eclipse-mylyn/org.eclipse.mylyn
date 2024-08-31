@@ -91,7 +91,7 @@ public class ConditionalIgnoreRule implements TestRule {
 		private IgnoreCondition createCondition() throws Exception {
 			IgnoreCondition result;
 			if (isConditionTypeStandalone()) {
-				result = conditionType.newInstance();
+				result = conditionType.getDeclaredConstructor().newInstance();
 			} else {
 				result = conditionType.getDeclaredConstructor(testClass).newInstance(testClass);
 			}

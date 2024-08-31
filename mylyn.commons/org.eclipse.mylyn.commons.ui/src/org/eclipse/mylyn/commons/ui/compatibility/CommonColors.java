@@ -23,7 +23,9 @@ import org.eclipse.swt.widgets.Display;
  * 
  * @author Mik Kersten
  * @since 3.7
+ * @deprecated
  */
+@Deprecated
 public class CommonColors {
 
 	public static final Color HYPERLINK_WIDGET = new Color(Display.getDefault(), 12, 81, 172);

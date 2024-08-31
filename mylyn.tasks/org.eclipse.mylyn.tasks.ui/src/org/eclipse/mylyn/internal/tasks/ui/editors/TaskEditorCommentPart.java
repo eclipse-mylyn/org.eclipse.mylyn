@@ -30,7 +30,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.ui.FillWidthLayout;
 import org.eclipse.mylyn.commons.ui.SelectionProviderAdapter;
-import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.commons.workbench.forms.ScalingHyperlink;
 import org.eclipse.mylyn.internal.tasks.core.TaskComment;
@@ -258,7 +257,6 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		public void createSectionHyperlink(String message, HyperlinkAdapter listener) {
 			if (groupSection != null) {
 				ScalingHyperlink resultLink = new ScalingHyperlink(groupSection, SWT.READ_ONLY);
-				resultLink.setForeground(CommonColors.HYPERLINK_WIDGET);
 				resultLink.setUnderlined(true);
 				resultLink.setText(message);
 				groupSection.setTextClient(resultLink);
@@ -321,7 +319,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			Composite commentViewerComposite = toolkit.createComposite(commentComposite);
 			commentComposite.setClient(commentViewerComposite);
 			commentViewerComposite
-					.setLayout(new FillWidthLayout(EditorUtil.getLayoutAdvisor(getTaskEditorPage()), 15, 0, 0, 3));
+			.setLayout(new FillWidthLayout(EditorUtil.getLayoutAdvisor(getTaskEditorPage()), 15, 0, 0, 3));
 
 			commentComposite.addExpansionListener(new ExpansionAdapter() {
 				@Override

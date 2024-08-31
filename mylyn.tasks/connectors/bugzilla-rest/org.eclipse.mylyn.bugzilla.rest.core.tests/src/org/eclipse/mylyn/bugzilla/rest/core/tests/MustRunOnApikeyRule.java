@@ -15,6 +15,7 @@ package org.eclipse.mylyn.bugzilla.rest.core.tests;
 
 import org.eclipse.mylyn.bugzilla.rest.test.support.BugzillaRestTestFixture;
 import org.eclipse.mylyn.commons.sdk.util.AbstractTestFixture;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.ConditionalIgnoreRule;
 
 @SuppressWarnings("restriction")
@@ -23,7 +24,7 @@ public class MustRunOnApikeyRule implements ConditionalIgnoreRule.IgnoreConditio
 	@Override
 	public boolean isSatisfied(AbstractTestFixture fixture) {
 		if (fixture instanceof BugzillaRestTestFixture) {
-			return !((BugzillaRestTestFixture) fixture).isApiKeyEnabled();
+			return !(CommonTestUtil.runOnCIServerTestsOnly() && ((BugzillaRestTestFixture) fixture).isApiKeyEnabled());
 		} else {
 			return false;
 		}

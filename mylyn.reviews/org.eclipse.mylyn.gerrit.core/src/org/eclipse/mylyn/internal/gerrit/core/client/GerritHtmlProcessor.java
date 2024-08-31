@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 import javax.swing.text.html.HTML.Tag;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.HtmlStreamTokenizer;
@@ -131,7 +131,7 @@ public class GerritHtmlProcessor {
 
 	/**
 	 * Remove everything after second to last '}'
-	 * 
+	 *
 	 * @param token
 	 *            a non-parsable Json string of the form '{ ... }}' or '{ ... } ...}' where '...' is any valid JSON
 	 */

@@ -369,6 +369,9 @@ public class CommonTestUtil {
 	public static boolean runNonCIServerTestsOnly() {
 		return !Boolean.getBoolean("org.eclipse.mylyn.ci.server.tests");
 	}
+	public static boolean runOnCIServerTestsOnly() {
+		return Boolean.getBoolean("org.eclipse.mylyn.ci.server.tests");
+	}
 
 	/**
 	 * Unzips the given zip file to the given destination directory extracting only those entries the pass through the given filter.

@@ -53,6 +53,7 @@ import org.eclipse.mylyn.commons.sdk.util.ConditionalIgnoreRule;
 import org.eclipse.mylyn.commons.sdk.util.IFixtureJUnitClass;
 import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner;
 import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner.FixtureDefinition;
+import org.eclipse.mylyn.commons.sdk.util.MustRunOnCIServerRule;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestAttachmentMapper;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestClient;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConfiguration;
@@ -83,7 +84,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -98,7 +98,7 @@ import com.google.gson.Gson;
 // the value in the fixture.
 // Note: When there is no fixture with this property no tests get executed
 //@RunOnlyWhenProperty(property = "default", value = "1")
-@Ignore("No CI Server")
+
 public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	private final BugzillaRestTestFixture actualFixture;
 
@@ -128,12 +128,14 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testConnectorClientCache() throws Exception {
 		BugzillaRestClient client1 = connector.getClient(actualFixture.repository());
 		assertNotNull(client1);
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testGetVersion() throws Exception {
 		BugzillaRestClient client = new BugzillaRestClient(actualFixture.location(), connector);
 		assertNotNull(client.getClient());
@@ -143,6 +145,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testValidate() throws Exception {
 		BugzillaRestClient client = new BugzillaRestClient(actualFixture.location(), connector);
 		assertNotNull(client.getClient());
@@ -150,6 +153,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testInvalidUserValidate() throws BugzillaRestException {
 		RepositoryLocation location = new RepositoryLocation();
 		location.setUrl(actualFixture.getRepositoryUrl());
@@ -165,6 +169,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testNoUserValidate() throws BugzillaRestException {
 		RepositoryLocation location = new RepositoryLocation();
 		location.setUrl(actualFixture.getRepositoryUrl());
@@ -179,6 +184,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testInvalidPasswordValidate() throws BugzillaRestException {
 		RepositoryLocation location = new RepositoryLocation();
 		location.setUrl(actualFixture.getRepositoryUrl());
@@ -228,6 +234,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testGetConfiguration() throws Exception {
 		TaskRepository repository = actualFixture.repository();
 		BugzillaRestClient client = connector.getClient(repository);
@@ -251,17 +258,17 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/parameters.json"),
 						Charset.defaultCharset()),
 				new Gson().toJson(parameter)
-				.replaceAll(repository.getRepositoryUrl(), "http://dummy.url")
+				.replaceAll(repository.getRepositoryUrl(), "http://dummy.url/")
 				.replaceAll(repository.getRepositoryUrl().replaceFirst("https://", "http://"),
-						"http://dummy.url"));
+						"http://dummy.url/"));
 		assertEquals(
 				IOUtils.toString(
 						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/configuration.json"),
 						Charset.defaultCharset()),
 				new Gson().toJson(configuration)
-				.replaceAll(repository.getRepositoryUrl(), "http://dummy.url")
+				.replaceAll(repository.getRepositoryUrl(), "http://dummy.url/")
 				.replaceAll(repository.getRepositoryUrl().replaceFirst("https://", "http://"),
-						"http://dummy.url"));
+						"http://dummy.url/"));
 	}
 
 	private void assertConfigurationFieldNames(Collection<Field> fields) throws IOException {
@@ -278,6 +285,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testinitializeTaskData() throws Exception {
 		final TaskMapping taskMappingInit = new TaskMapping() {
 			@Override
@@ -323,6 +331,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testPostTaskDataWithoutProduct() throws Exception {
 		final TaskMapping taskMappingInit = new TaskMapping() {
 			@Override
@@ -347,12 +356,16 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 			fail("never reach this!");
 		} catch (BugzillaRestException e) {
 			String url = actualFixture.getRepositoryUrl();
+			if (url.endsWith("/")) {
+				url= url.substring(0, url.length()-1);
+			}
 			assertEquals("You must select/enter a product.  (status: Bad Request from "
-					+ url.substring(url.lastIndexOf('/')) + "/rest.cgi/bug)", e.getMessage());
+					+ url.substring(url.lastIndexOf('/')) + "//rest.cgi/bug)", e.getMessage());
 		}
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testPostTaskDataWithoutMilestone() throws Exception {
 		final TaskMapping taskMappingInit = new TaskMapping() {
 			@Override
@@ -391,12 +404,16 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 			fail("never reach this!");
 		} catch (BugzillaRestException e) {
 			String url = actualFixture.getRepositoryUrl();
+			if (url.endsWith("/")) {
+				url = url.substring(0, url.length() - 1);
+			}
 			assertEquals("You must select/enter a milestone.  (status: Bad Request from "
-					+ url.substring(url.lastIndexOf('/')) + "/rest.cgi/bug)", e.getMessage());
+					+ url.substring(url.lastIndexOf('/')) + "//rest.cgi/bug)", e.getMessage());
 		}
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testPostTaskData() throws Exception {
 		final TaskMapping taskMappingInit = new TaskMapping() {
 			@Override
@@ -439,6 +456,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testPostTaskDataFromTaskdata() throws Exception {
 		final TaskMapping taskMappingInit = new TaskMapping() {
 			@Override
@@ -488,6 +506,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testGetTaskData() throws Exception {
 		final TaskMapping taskMappingInit = new TaskMapping() {
 			@Override
@@ -589,6 +608,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testUpdateTaskData() throws Exception {
 		String taskId = harness.getNewTaksId4TestProduct();
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
@@ -647,6 +667,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testAddComment() throws Exception {
 		String taskId = harness.getNewTaksId4TestProduct();
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
@@ -681,6 +702,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testGifAttachment() throws Exception {
 		TaskAttribute attachmentAttribute = null;
 		TaskRepository repository = actualFixture.repository();
@@ -750,6 +772,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testTextAttachment() throws Exception {
 		TaskAttribute attachmentAttribute = null;
 		TaskRepository repository = actualFixture.repository();
@@ -838,6 +861,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testCreateCCAttribute() throws Exception {
 		final TaskMapping taskMappingInit = new TaskMapping() {
 			@Override
@@ -891,6 +915,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testCreateBlocksAttribute() throws Exception {
 		final TaskMapping taskMappingInit = new TaskMapping() {
 			@Override
@@ -945,6 +970,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testCreateDependsOnAttribute() throws Exception {
 		final TaskMapping taskMappingInit = new TaskMapping() {
 			@Override
@@ -999,6 +1025,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testCCAttribute() throws Exception {
 		String taskId = harness.getNewTaksId4TestProduct();
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
@@ -1046,6 +1073,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testBlocksAttributeV1() throws Exception {
 		String taskId = harness.getNewTaksId4TestProduct();
 		String[] taskIdRel = harness.getRelationTasks();
@@ -1093,6 +1121,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testBlocksAttributeV2() throws Exception {
 		String taskId = harness.getNewTaksId4TestProduct();
 		String[] taskIdRel = harness.getRelationTasks();
@@ -1143,6 +1172,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testDependsOnAttributeV1() throws Exception {
 		String taskId = harness.getNewTaksId4TestProduct();
 		String[] taskIdRel = harness.getRelationTasks();
@@ -1191,6 +1221,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testDependsOnAttributeV2() throws Exception {
 		String taskId = harness.getNewTaksId4TestProduct();
 		String[] taskIdRel = harness.getRelationTasks();
@@ -1242,6 +1273,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testFlagsSet() throws Exception {
 		String taskId = harness.getNewTaksId4TestProduct();
 
@@ -1358,6 +1390,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testFlagsReset() throws Exception {
 		String taskId = harness.getNewTaksId4TestProduct();
 
@@ -1546,6 +1579,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testFlagsChange() throws Exception {
 		String taskId = harness.getNewTaksId4TestProduct();
 
@@ -1745,6 +1779,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	}
 
 	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testTextAttachmentWithFlags() throws Exception {
 		TaskAttribute attachmentAttribute = null;
 		TaskRepository repository = actualFixture.repository();

@@ -29,7 +29,6 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylyn.commons.core.CommonMessages;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.ui.CommonImages;
-import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
 import org.eclipse.mylyn.internal.monitor.ui.ActivityContextManager;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
@@ -177,7 +176,6 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private void createLinks(Composite container) {
 		Hyperlink link = new Hyperlink(container, SWT.NULL);
-		link.setForeground(CommonColors.HYPERLINK_WIDGET);
 		link.setUnderlined(true);
 		link.setText(Messages.TasksUiPreferencePage_Use_the_Restore_dialog_to_recover_missing_tasks);
 		link.addHyperlinkListener(new IHyperlinkListener() {
@@ -256,15 +254,15 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR, getScheduleNewTasksValue());
 
 		MonitorUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED, timeoutEnabledButton.getSelection());
+		.getPreferenceStore()
+		.setValue(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED, timeoutEnabledButton.getSelection());
 		MonitorUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ActivityContextManager.ACTIVITY_TIMEOUT, timeoutMinutes.getSelection() * 60 * 1000);
+		.getPreferenceStore()
+		.setValue(ActivityContextManager.ACTIVITY_TIMEOUT, timeoutMinutes.getSelection() * 60 * 1000);
 
 		MonitorUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED, activityTrackingEnabledButton.getSelection());
+		.getPreferenceStore()
+		.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED, activityTrackingEnabledButton.getSelection());
 
 		String taskDirectory = taskDirectoryText.getText();
 		taskDirectory = taskDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
@@ -316,7 +314,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	public boolean performCancel() {
 		taskDirectoryText.setText(TasksUiPlugin.getDefault().getDefaultDataDirectory());
 		notificationEnabledButton
-				.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
+		.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
 
 		useRichEditor.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH));
 		editorHighlightsCurrentLine.setSelection(
@@ -337,9 +335,9 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		relevantTasksSyncScheduleTime.setText(relevantSyncMinutes);
 
 		taskListTooltipEnabledButton
-				.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED));
+		.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED));
 		taskListServiceMessageEnabledButton
-				.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
+		.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
 		showTaskTrimButton.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SHOW_TRIM));
 
 		weekStartCombo.select(getPreferenceStore().getInt(ITasksUiPreferenceConstants.WEEK_START_DAY) - 1);
@@ -369,7 +367,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				getPreferenceStore().getDefaultBoolean(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
 
 		useRichEditor
-				.setSelection(getPreferenceStore().getDefaultBoolean(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH));
+		.setSelection(getPreferenceStore().getDefaultBoolean(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH));
 		editorHighlightsCurrentLine.setSelection(
 				getPreferenceStore().getDefaultBoolean(ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT));
 
@@ -468,9 +466,9 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		//notification
 		notificationEnabledButton = new Button(group, SWT.CHECK);
 		notificationEnabledButton
-				.setText(Messages.TasksUiPreferencePage_Display_notifications_for_overdue_tasks_and_incoming_changes);
+		.setText(Messages.TasksUiPreferencePage_Display_notifications_for_overdue_tasks_and_incoming_changes);
 		notificationEnabledButton
-				.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
+		.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
 		GridDataFactory.defaultsFor(notificationEnabledButton).span(4, 1).applyTo(notificationEnabledButton);
 
 	}
@@ -603,13 +601,13 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		taskListTooltipEnabledButton = new Button(group, SWT.CHECK);
 		taskListTooltipEnabledButton.setText(Messages.TasksUiPreferencePage_Show_tooltip_on_hover_Label);
 		taskListTooltipEnabledButton
-				.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED));
+		.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED));
 
 		taskListServiceMessageEnabledButton = new Button(group, SWT.CHECK);
 		taskListServiceMessageEnabledButton
-				.setText(Messages.TasksUiPreferencePage_Notification_for_new_connectors_available_Label);
+		.setText(Messages.TasksUiPreferencePage_Notification_for_new_connectors_available_Label);
 		taskListServiceMessageEnabledButton
-				.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
+		.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
 	}
 
 	private Group createTaskActivityGroup(Composite container) {

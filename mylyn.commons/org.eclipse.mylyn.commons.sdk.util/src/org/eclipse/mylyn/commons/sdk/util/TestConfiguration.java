@@ -130,7 +130,7 @@ public class TestConfiguration {
 					defaultOnly, exception);
 		}
 
-		if (fixtures.isEmpty()) {
+		if (fixtures.isEmpty() && CommonTestUtil.runOnCIServerTestsOnly()) {
 			throw new RuntimeException(
 					NLS.bind("Failed to discover any fixtures for kind {0} with defaultOnly={1} ({2} and {3})",
 							new Object[] { fixtureType, Boolean.toString(defaultOnly), URL_SERVICES_LOCALHOST,

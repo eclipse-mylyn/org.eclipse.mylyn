@@ -30,7 +30,7 @@
 	<properties>
 		<guava.osgi>33.0</guava.osgi>
 		<guava.osgi.upper>34.0</guava.osgi.upper>
-		<guava.version>33.2.1-jre</guava.version>
+		<guava.version>33.3.0-jre</guava.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.javadoc.skip>true</maven.javadoc.skip>
 	</properties>
@@ -142,7 +142,7 @@
 			<dependency>
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-core</artifactId>
-				<version>5.12.0</version>
+				<version>5.13.0</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
