@@ -366,6 +366,9 @@ public class CommonTestUtil {
 	 * Returns whether to run a limited suite of tests. Returns true, unless a system property has been set to force running of all network
 	 * tests (using CI Server).
 	 */
+	public static boolean runNonCIServerTestsOnly() {
+		return !Boolean.getBoolean("org.eclipse.mylyn.ci.server.tests");
+	}
 	public static boolean runOnCIServerTestsOnly() {
 		return Boolean.getBoolean("org.eclipse.mylyn.ci.server.tests");
 	}
