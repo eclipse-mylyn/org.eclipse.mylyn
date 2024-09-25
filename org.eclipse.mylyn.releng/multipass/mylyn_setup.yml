@@ -114,7 +114,7 @@
         - gitlab
       vars:
         common_domain_name: "{{ hostvars['localhost'].mylyn_service_domain }}"
-        gitlabImageVersion: "16.11.1"
+        gitlabImageVersion: "17.4.0"
         gitlabHostURL: "gitlab.{{ hostvars['localhost'].mylyn_service_domain }}"
     - role: jenkins
       tags:
@@ -125,6 +125,7 @@
 #          - {  servmame: "jenkins-2_303_3", port1: 8081, port2: 50001, data_dir: "jenkins-2.303.3", image_tag: "jenkins/jenkins:2.303.3-lts-jdk11", extra_info: '' }
 #          - {  servmame: "jenkins-1_651_1", port1: 8084, port2: 50004, data_dir: "jenkins-2.303.3", image_tag: "jenkins:1.651.1", extra_info: '"' }
           - {  servmame: "jenkins-latest-jdk11", port1: 8083, port2: 50003, data_dir: "jenkins-2.303.3", image_tag: "jenkins/jenkins:latest-jdk11", extra_info: '"default": "true"' }
+          - {  servmame: "jenkins-latest", port1: 8084, port2: 50004, data_dir: "jenkins-2.303.3", image_tag: "jenkins/jenkins:latest", extra_info: '' }
 #          - {  servmame: "jenkinsci", port1: 8082, port2: 50002, data_dir: "jenkinsci", image_tag: "jenkins/jenkins:2.375.2-lts", extra_info: '"local_test_service":"true"' }
     - role: bugzilla
       tags:
@@ -136,6 +137,6 @@
 #          - { git_branch: "release-4.4.13", servmame: "bugzilla-4_4-custom-wf", port1: 8091, port2: 8491, image_tag: "4.4-custom_wf", extra_info: '"custom_wf":"true"' }
 #          - { git_branch: "release-4.4.13", servmame: "bugzilla-4_4-custom-wf-and-status", port1: 8092, port2: 8492, image_tag: "4.4-custom_wf_a_s", extra_info: '"custom_wf_and_status":"true"' }
 #          - { git_branch: "release-4.4.13", servmame: "bugzilla-4_4-bugaliases", port1: 8093, port2: 8493, image_tag: "4.4-bugaliases", extra_info: '"use_bug_alias":"true"' }
-#          - { git_branch: "5.2", servmame: "bugzilla-5_2", port1: 8094, port2: 8494, image_tag: "5.2", extra_info: '' }
+          - { git_branch: "5.2", servmame: "bugzilla-5_2", port1: 8094, port2: 8494, image_tag: "5.2", extra_info: '' }
           - { git_branch: "5.2", servmame: "bugzilla-5_2-rest", port1: 8095, port2: 8495, image_tag: "5.2-rest", extra_info: '"rest_enabled":"true", "default": "true", "testdataVersion": "Version1"' }
           - { git_branch: "5.2", servmame: "bugzilla-5_2-rest-api", port1: 8096, port2: 8496, image_tag: "5.2-rest-api", extra_info: '"rest_enabled": "true", "api_key_enabled": "true", "testdataVersion": "Version1"' }
