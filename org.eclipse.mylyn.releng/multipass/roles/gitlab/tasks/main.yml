@@ -7,19 +7,19 @@
         container_default_behavior: no_defaults
         state: stopped
       failed_when: false
-    
+
     - name: Remove Stoped docker container
       ansible.builtin.shell: |
          docker rm gitlab
       failed_when: false
-    
+
     - name: Remove  own image
       community.docker.docker_image:
         name: "127.0.0.1:5000/mylyn-gitlab-ce"
         state: absent
         force_absent: true
       failed_when: false
-    
+
     - name: Recursively remove directory
       ansible.builtin.file:
         path: "{{ item }}"
@@ -49,7 +49,7 @@
          traefik.http.services.{{ role_name }}.loadbalancer.server.port: "8888" ,
          org.eclipse.mylyn.service: "{{ serviceLabel | from_yaml }}"
        }
-        
+
 - name: Creates directory
   ansible.builtin.file:
     path: "{{ item }}"
@@ -88,8 +88,10 @@
           content: |
             RELEASE_PACKAGE=gitlab-ce
             RELEASE_VERSION={{gitlabImageVersion}}-ce
+            DOWNLOAD_URL_amd64=https://packages.gitlab.com/gitlab/gitlab-ce/packages/ubuntu/jammy/gitlab-ce_{{gitlabImageVersion}}-ce.0_amd64.deb/download.deb
+            DOWNLOAD_URL_arm64=https://packages.gitlab.com/gitlab/gitlab-ce/packages/ubuntu/jammy/gitlab-ce_{{gitlabImageVersion}}-ce.0_arm64.deb/download.deb
             DOWNLOAD_URL=https://packages.gitlab.com/gitlab/gitlab-ce/packages/ubuntu/jammy/gitlab-ce_{{gitlabImageVersion}}-ce.0_arm64.deb/download.deb
-    
+
     - name: create change Dockerfile
       ansible.builtin.copy:
           dest: /mylyn-config-dir/{{ role_name }}/changeDockerfile.sh
@@ -101,7 +103,7 @@
             sed -ie '/libperl5.34 \\/a \ \ \ \ \ \ libatomic1 \\' Dockerfile
             sed -ie 's@/assets RELEASE ; \\@/assets RELEASE@g' Dockerfile
             sed -ie 's@  /assets/setup@RUN /assets/setup@g' Dockerfile
-    
+
     - name: change Dockerfile
       ansible.builtin.shell:
         cmd: /mylyn-config-dir/{{ role_name }}/changeDockerfile.sh 
@@ -109,7 +111,7 @@
     - name: set gitlabImageName
       ansible.builtin.set_fact:
         gitlabImageName: "127.0.0.1:5000/mylyn-gitlab-ce"
-    
+
     - name: Build the image
       community.docker.docker_image:
         name: "127.0.0.1:5000/mylyn-gitlab-ce"
@@ -118,6 +120,8 @@
         build:
           nocache: true
           path: /mylyn-config-dir/{{ role_name }}/omnibus-gitlab/docker
+          args:
+           TARGETARCH: arm64
         source: build
   when: (ansible_facts['distribution'] +'/' + ansible_facts['architecture'] == 'Ubuntu/aarch64')    
 
@@ -126,13 +130,13 @@
     - name: set gitlabImageName
       ansible.builtin.set_fact:
         gitlabImageName: "gitlab/gitlab-ce:{{gitlabImageVersion}}-ce.0"
-   
+
     - name: Pull image
       community.docker.docker_image:
         name: "{{ gitlabImageName }}"
         source: pull
   when: (ansible_facts['distribution'] +'/' + ansible_facts['architecture'] != 'Ubuntu/aarch64')    
-   
+
 - name: Deploy Container
   community.docker.docker_container:
     name: "gitlab"
