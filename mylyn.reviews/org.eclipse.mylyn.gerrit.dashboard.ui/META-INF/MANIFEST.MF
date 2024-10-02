@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.gerrit.dashboard.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.mylyn.gerrit.dashboard.ui;singleton:=true
-Bundle-Version: 4.4.0.qualifier
+Bundle-Version: 4.5.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.gerrit.dashboard.ui.GerritUi
 Bundle-Localization: OSGI-INF/l10n/bundle
 Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",

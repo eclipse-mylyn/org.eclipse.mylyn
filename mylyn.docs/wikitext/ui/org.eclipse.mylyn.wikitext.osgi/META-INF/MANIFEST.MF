@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.wikitext.osgi
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.osgi
-Bundle-Version: 4.4.0.qualifier
+Bundle-Version: 4.5.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: META-INF/l10n/bundle
 Bundle-RequiredExecutionEnvironment: JavaSE-17

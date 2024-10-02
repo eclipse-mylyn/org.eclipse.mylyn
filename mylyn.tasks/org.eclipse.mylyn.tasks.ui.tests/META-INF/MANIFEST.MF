@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.tasks.ui.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Tasks Framework Tests
 Bundle-SymbolicName: org.eclipse.mylyn.tasks.ui.tests;singleton:=true
-Bundle-Version: 4.4.0.qualifier
+Bundle-Version: 4.5.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.tasks.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-17

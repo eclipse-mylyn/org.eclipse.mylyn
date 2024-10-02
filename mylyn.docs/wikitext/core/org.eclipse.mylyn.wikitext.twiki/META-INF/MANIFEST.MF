@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.twiki
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.twiki
-Bundle-Version: 4.4.0.qualifier
+Bundle-Version: 4.5.0.qualifier
 Bundle-Name: Mylyn WikiText Twiki
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-17
@@ -13,8 +13,8 @@ Import-Package: org.eclipse.mylyn.wikitext.parser;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.parser.markup.token;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.parser.outline;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.validation;version="[4.2,5)"
-Export-Package: org.eclipse.mylyn.wikitext.twiki;version="4.4.0";x-friends:="org.eclipse.mylyn.wikitext.tasks.ui",
- org.eclipse.mylyn.wikitext.twiki.internal.block;version="4.4.0";x-internal:=true,
- org.eclipse.mylyn.wikitext.twiki.internal.phrase;version="4.4.0";x-internal:=true,
- org.eclipse.mylyn.wikitext.twiki.internal.token;version="4.4.0";x-internal:=true,
- org.eclipse.mylyn.wikitext.twiki.internal.validation;version="4.4.0";x-internal:=true
+Export-Package: org.eclipse.mylyn.wikitext.twiki;version="4.5.0";x-friends:="org.eclipse.mylyn.wikitext.tasks.ui",
+ org.eclipse.mylyn.wikitext.twiki.internal.block;version="4.5.0";x-internal:=true,
+ org.eclipse.mylyn.wikitext.twiki.internal.phrase;version="4.5.0";x-internal:=true,
+ org.eclipse.mylyn.wikitext.twiki.internal.token;version="4.5.0";x-internal:=true,
+ org.eclipse.mylyn.wikitext.twiki.internal.validation;version="4.5.0";x-internal:=true
