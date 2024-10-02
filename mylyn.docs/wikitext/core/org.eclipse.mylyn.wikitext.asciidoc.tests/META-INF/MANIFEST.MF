@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.asciidoc.tests
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.asciidoc.tests
-Bundle-Version: 4.4.0.qualifier
+Bundle-Version: 4.5.0.qualifier
 Bundle-Name: Mylyn WikiText AsciiDoc Tests
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.wikitext.asciidoc
@@ -18,4 +18,4 @@ Import-Package: org.eclipse.mylyn.wikitext.parser;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.toolkit,
  org.eclipse.mylyn.wikitext.util;version="[4.2,5)",
  org.junit;version="4.13.2"
-Export-Package: org.eclipse.mylyn.wikitext.asciidoc.internal;version="4.4.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser,org.eclipse.mylyn.wikitext.parser.builder,org.eclipse.mylyn.wikitext.parser.markup"
+Export-Package: org.eclipse.mylyn.wikitext.asciidoc.internal;version="4.5.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser,org.eclipse.mylyn.wikitext.parser.builder,org.eclipse.mylyn.wikitext.parser.markup"

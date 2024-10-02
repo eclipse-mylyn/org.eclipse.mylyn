@@ -19,7 +19,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.eclipse.mylyn</groupId>
   <artifactId>org.eclipse.mylyn.parent</artifactId>
-  <version>4.4.0-SNAPSHOT</version>
+  <version>4.5.0-SNAPSHOT</version>
   <name>Mylyn Parent</name>
   <packaging>pom</packaging>
   <prerequisites>
@@ -229,7 +229,7 @@
 <!-- revert back to ${project.parent.groupId}.target after Mylyn.Docs integration -->
                   <artifactId>org.eclipse.mylyn.target</artifactId>
 <!-- revert back to ${project.parent.version} after Mylyn.Docs integration -->
-                  <version>4.4.0-SNAPSHOT</version>
+                  <version>4.5.0-SNAPSHOT</version>
                 </artifact>
               </target>
             </configuration>
