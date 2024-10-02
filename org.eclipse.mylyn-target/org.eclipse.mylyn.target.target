@@ -20,7 +20,7 @@
 			<unit id="org.eclipse.license.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/eclipse/updates/4.33/R-4.33-202409030240/"/>
+			<repository location="https://download.eclipse.org/eclipse/updates/4.34-I-builds/I20240903-0840/"/>
 			<unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.equinox.p2.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.sdk.feature.group" version="0.0.0"/>
@@ -30,13 +30,13 @@
 			<unit id="org.eclipse.egit.github.core" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/egit/updates-6.9/"/>
+			<repository location="https://download.eclipse.org/egit/staging/v7.1.0.202410012040-m1/"/>
 			<unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.jgit.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.jgit.lfs.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/modeling/emf/emf/builds/release/2.39.0/"/>
+			<repository location="https://download.eclipse.org/modeling/emf/emf/builds/milestone/S202410011416/"/>
 			<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -73,7 +73,7 @@
 			<unit id="org.apache.commons.io" version="2.8.0.v20210415-0900"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/2024-09/"/>
+			<repository location="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/2024-12/"/>
 			<unit id="org.glassfish.hk2.osgi-resource-locator" version="0.0.0"/>
 			<unit id="org.apache.commons.lang3" version="0.0.0"/>
 			<unit id="org.apache.commons.logging" version="0.0.0"/>
