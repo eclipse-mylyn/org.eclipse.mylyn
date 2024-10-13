@@ -1,14 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2024 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git histpry
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.sdk.util;
@@ -190,6 +191,14 @@ public abstract class AbstractTestFixture {
 
 	public void setDefaultproperties(Map<String, String> defaultproperties) {
 		this.defaultproperties = defaultproperties;
+	}
+
+	@Override
+	public String toString() {
+		return "AbstractTestFixture [connectorKind=" + connectorKind + ", description=" + description
+				+ ", repositoryName=" + repositoryName + ", repositoryUrl=" + repositoryUrl
+				+ ", useCertificateAuthentication=" + useCertificateAuthentication + ", properties=" + properties
+				+ ", defaultproperties=" + defaultproperties + "]";
 	}
 
 }
