@@ -16,7 +16,11 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.search;bundle-version="0.0.0",
  org.eclipse.ui;bundle-version="0.0.0",
  org.eclipse.ui.workbench.texteditor;bundle-version="0.0.0",
- org.junit;bundle-version="4.8.2"
+ junit-jupiter-api;bundle-version="5.10.3",
+ junit-platform-suite-api;bundle-version="1.10.3",
+ junit-platform-suite-engine;bundle-version="1.10.3",
+ junit-platform-suite-commons;bundle-version="1.10.3",
+ org.hamcrest;bundle-version="2.2.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: Eclipse Mylyn
 Export-Package: org.eclipse.mylyn.jenkins.tests;x-internal:=true,

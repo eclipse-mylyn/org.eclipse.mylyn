@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -159,19 +159,11 @@ public class JenkinsHarness {
 	}
 
 	public HudsonModelBallColor getSuccessColor() {
-		if (getFixture().isHudson() && getFixture().getVersion().compareTo("3.0.1") >= 0) {
-			return HudsonModelBallColor.GREEN;
-		} else {
-			return HudsonModelBallColor.BLUE;
-		}
+		return HudsonModelBallColor.BLUE;
 	}
 
 	public HudsonModelBallColor getSuccessAnimeColor() {
-		if (getFixture().isHudson() && getFixture().getVersion().compareTo("3.0.1") >= 0) {
-			return HudsonModelBallColor.GREEN_ANIME;
-		} else {
-			return HudsonModelBallColor.BLUE_ANIME;
-		}
+		return HudsonModelBallColor.BLUE_ANIME;
 	}
 
 	public HudsonModelBallColor getAbortedColor() {

@@ -10,14 +10,17 @@
  *     Tasktop Technologies - initial API and implementation
  *     Guy Perron - add Windows support
  *     ArSysOp - ongoing support
+ *     See git histpry
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.sdk.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.KeyManagementException;
@@ -47,10 +50,18 @@ import junit.framework.AssertionFailedError;
 @SuppressWarnings("nls")
 public class TestConfiguration {
 
+	private static final int ONLINE_CHECK_TIMEOUT = 3000;
+
 	private static final String URL_SERVICES_LOCALHOST = System.getProperty("localhost.test.server",
 			"https://mylyn.local");
 
 	private static final String URL_SERVICES_DEFAULT = System.getProperty("mylyn.test.server", "https://mylyn.org");
+
+	/* Useful for not checking for a CI server to compare behaviour */
+	private static final boolean skipLocalhost = Boolean.getBoolean("mylyn.test.skip.localhost");
+
+	/* Only check once per run */
+	private static boolean skipLocalhostCheck = false;
 
 	public static TestConfiguration defaultConfiguration;
 
@@ -66,7 +77,7 @@ public class TestConfiguration {
 		TestConfiguration.defaultConfiguration = defaultConfiguration;
 	}
 
-	private boolean localOnly;
+	private boolean localOnly = true; // Assume no CI server
 
 	private boolean defaultOnly;
 
@@ -81,6 +92,18 @@ public class TestConfiguration {
 	}
 
 	public boolean isLocalOnly() {
+		if (!skipLocalhost && !skipLocalhostCheck) {
+			try {
+				skipLocalhostCheck = true;
+				URLConnection connection = createConnection(URL_SERVICES_LOCALHOST + "/mylyn_idx/service", ONLINE_CHECK_TIMEOUT);
+				try (InputStream in = connection.getInputStream()) {
+				}
+				localOnly = false;
+
+			} catch (Throwable e) {
+				// ignore if unable to make connection
+			}
+		}
 		return localOnly;
 	}
 
@@ -178,33 +201,8 @@ public class TestConfiguration {
 
 	private static List<FixtureConfiguration> getConfigurations(String url, Exception[] result) {
 		try {
-			// Create a trust manager that does not validate certificate chains
-			TrustManager[] trustAllCerts = { new X509TrustManager() {
-				@Override
-				public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-					return null;
-				}
-
-				@Override
-				public void checkClientTrusted(X509Certificate[] certs, String authType) {
-				}
-
-				@Override
-				public void checkServerTrusted(X509Certificate[] certs, String authType) {
-				}
-			} };
-			// Install the all-trusting trust manager
-			final SSLContext sc = SSLContext.getInstance("SSL");
-			sc.init(null, trustAllCerts, new java.security.SecureRandom());
-			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-			// Create all-trusting host name verifier
-			HostnameVerifier allHostsValid = (hostname, session) -> true;
-
-			// Install the all-trusting host verifier
-			HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-			URLConnection connection = new URL(url).openConnection();
-			InputStreamReader in = new InputStreamReader(connection.getInputStream());
-			try (in) {
+			URLConnection connection = createConnection(url, -1);
+			try (InputStreamReader in = new InputStreamReader(connection.getInputStream())) {
 				TypeToken<List<FixtureConfiguration>> type = new TypeToken<>() {
 				};
 				return new Gson().fromJson(in, type.getType());
@@ -219,6 +217,50 @@ public class TestConfiguration {
 			result[0] = new KeyManagementException("KeyManagementException accessing " + url, e);
 			return null;
 		}
+	}
+
+	private static URLConnection createConnection(String url, int timeout)
+			throws NoSuchAlgorithmException, KeyManagementException, IOException, MalformedURLException {
+		// Create a trust manager that does not validate certificate chains
+		TrustManager[] trustAllCerts = { new X509TrustManager() {
+			@Override
+			public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+				return null;
+			}
+
+			@Override
+			public void checkClientTrusted(X509Certificate[] certs, String authType) {
+			}
+
+			@Override
+			public void checkServerTrusted(X509Certificate[] certs, String authType) {
+			}
+		} };
+		// Install the all-trusting trust manager
+		final SSLContext sc = SSLContext.getInstance("SSL");
+		sc.init(null, trustAllCerts, new java.security.SecureRandom());
+		HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+		// Create all-trusting host name verifier
+		HostnameVerifier allHostsValid = (hostname, session) -> true;
+
+		// Install the all-trusting host verifier
+		HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+		URLConnection connection;
+		if (timeout == -1) {
+			connection = new URL(url).openConnection();
+		} else {
+			connection = new URL(url).openConnection();
+			connection.setConnectTimeout(timeout);
+			connection.setReadTimeout(timeout);
+
+		}
+		return connection;
+	}
+
+	@Override
+	public String toString() {
+		return "TestConfiguration [localOnly=" + localOnly + ", defaultOnly=" + defaultOnly + ", headless=" + headless
+				+ "]";
 	}
 
 }
