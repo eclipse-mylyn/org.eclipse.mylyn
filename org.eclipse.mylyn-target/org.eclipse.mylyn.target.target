@@ -20,7 +20,7 @@
 			<unit id="org.eclipse.license.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/eclipse/updates/4.34-I-builds/I20241113-1800/"/>
+			<repository location="https://download.eclipse.org/eclipse/updates/4.34-I-builds/I20241120-1800/"/>
 			<unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.equinox.p2.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.sdk.feature.group" version="0.0.0"/>
@@ -30,7 +30,7 @@
 			<unit id="org.eclipse.egit.github.core" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/egit/staging/v7.1.0.202410232130-m2/"/>
+			<repository location="https://download.eclipse.org/egit/staging/v7.1.0.202411191359-rc1/"/>
 			<unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.jgit.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.jgit.lfs.feature.group" version="0.0.0"/>
