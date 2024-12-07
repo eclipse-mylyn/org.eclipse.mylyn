@@ -201,6 +201,7 @@
    <bundle id="org.apache.httpcomponents.httpcore"/>
    <bundle id="org.apache.lucene.analysis-common"/>
    <bundle id="org.apache.lucene.core"/>
+   <bundle id="org.apache.lucene.facet"/>
    <bundle id="org.apache.lucene.queries"/>
    <bundle id="org.apache.lucene.queryparser"/>
    <bundle id="org.apache.lucene.sandbox"/>
