@@ -17,7 +17,7 @@ pipeline {
 		disableConcurrentBuilds(abortPrevious: true)
 	}
 	agent {
-		label "centos-latest"
+		label "ubuntu-latest"
 	}
 	tools {
 		maven 'apache-maven-latest'
@@ -41,8 +41,6 @@ pipeline {
 	stages {
 		stage('Display Parameters') {
 				steps {
-						echo "BUILD_TYPE=${params.BUILD_TYPE}"
-						echo "PROMOTE=${params.PROMOTE}"
 						script {
 								env.BUILD_TYPE = params.BUILD_TYPE
 								if (env.BRANCH_NAME == 'main') {
@@ -54,10 +52,16 @@ pipeline {
 								} else {
 									env.MAVEN_PROFILES = ""
 								}
+								def description = """
+BUILD_TYPE=${env.BUILD_TYPE}
+MAVEN_PROFILES=${env.MAVEN_PROFILES}
+""".trim()
+								echo description
+								currentBuild.description = description.replace("\n", "<br/>")
 						}
 				}
 		}
-	    stage('Initialize PGP') {
+		stage('Initialize PGP') {
 			steps {
 				withCredentials([file(credentialsId: 'secret-subkeys.asc', variable: 'KEYRING')]) {
 					sh 'gpg --batch --import "${KEYRING}"'
