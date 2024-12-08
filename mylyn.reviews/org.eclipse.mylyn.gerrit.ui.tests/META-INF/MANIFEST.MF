@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.gerrit.ui.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Gerrit Connector
 Bundle-SymbolicName: org.eclipse.mylyn.gerrit.ui.tests;singleton:=true
-Bundle-Version: 4.5.0.qualifier
+Bundle-Version: 4.6.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.gerrit.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-17
