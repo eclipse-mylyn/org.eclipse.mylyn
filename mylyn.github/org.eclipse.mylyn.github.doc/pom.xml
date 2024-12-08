@@ -20,12 +20,12 @@ SPDX-License-Identifier: EPL-2.0
 	<parent>
 		<groupId>org.eclipse.mylyn</groupId>
 		<artifactId>org.eclipse.mylyn.parent</artifactId>
-		<version>4.5.0-SNAPSHOT</version>
+		<version>4.6.0-SNAPSHOT</version>
 		<relativePath>../../mylyn.releng/org.eclipse.mylyn.parent</relativePath>
 	</parent>
 	<artifactId>org.eclipse.mylyn.github.doc</artifactId>
 	<packaging>eclipse-plugin</packaging>
-	<version>6.5.0-SNAPSHOT</version>
+	<version>6.7.0-SNAPSHOT</version> 
 	<name>Eclipse Mylyn GitHub Documentation</name>
 	<build>
 		<plugins>
@@ -40,12 +40,12 @@ SPDX-License-Identifier: EPL-2.0
 					<dependency>
 						<groupId>org.eclipse.mylyn.docs</groupId>
 						<artifactId>org.eclipse.mylyn.wikitext.ant</artifactId>
-						<version>4.5.0-SNAPSHOT</version>
+						<version>4.6.0-SNAPSHOT</version>
 					</dependency>
 					<dependency>
 						<groupId>org.eclipse.mylyn.docs</groupId>
 						<artifactId>org.eclipse.mylyn.wikitext.mediawiki.ant</artifactId>
-						<version>4.5.0-SNAPSHOT</version>
+						<version>4.6.0-SNAPSHOT</version>
 					</dependency>
 				</dependencies>
 				<executions>

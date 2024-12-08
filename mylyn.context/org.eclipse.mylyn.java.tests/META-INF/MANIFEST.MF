@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.java.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Java Tests
 Bundle-SymbolicName: org.eclipse.mylyn.java.tests;singleton:=true
-Bundle-Version: 4.5.0.qualifier
+Bundle-Version: 4.6.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Require-Bundle: org.eclipse.core.resources,
  org.eclipse.core.runtime;bundle-version="0.0.0",

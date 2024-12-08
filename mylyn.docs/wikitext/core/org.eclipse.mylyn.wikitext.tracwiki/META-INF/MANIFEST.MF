@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.tracwiki
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.tracwiki
-Bundle-Version: 4.5.0.qualifier
+Bundle-Version: 4.6.0.qualifier
 Bundle-Name: Mylyn WikiText TracWiki
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-17
@@ -17,7 +17,7 @@ Import-Package: org.eclipse.mylyn.wikitext.parser;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.tracwiki.internal.token,
  org.eclipse.mylyn.wikitext.validation;version="[4.2,5)"
 Export-Package: org.eclipse.mylyn.wikitext.tracwiki;x-friends:="org.eclipse.mylyn.wikitext.tasks.ui",
- org.eclipse.mylyn.wikitext.tracwiki.internal.block;version="4.5.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser.markup",
- org.eclipse.mylyn.wikitext.tracwiki.internal.phrase;version="4.5.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser,org.eclipse.mylyn.wikitext.parser.markup",
- org.eclipse.mylyn.wikitext.tracwiki.internal.token;version="4.5.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser.markup",
- org.eclipse.mylyn.wikitext.tracwiki.internal.validation;version="4.5.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser.markup,org.eclipse.mylyn.wikitext.validation"
+ org.eclipse.mylyn.wikitext.tracwiki.internal.block;version="4.6.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser.markup",
+ org.eclipse.mylyn.wikitext.tracwiki.internal.phrase;version="4.6.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser,org.eclipse.mylyn.wikitext.parser.markup",
+ org.eclipse.mylyn.wikitext.tracwiki.internal.token;version="4.6.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser.markup",
+ org.eclipse.mylyn.wikitext.tracwiki.internal.validation;version="4.6.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser.markup,org.eclipse.mylyn.wikitext.validation"
