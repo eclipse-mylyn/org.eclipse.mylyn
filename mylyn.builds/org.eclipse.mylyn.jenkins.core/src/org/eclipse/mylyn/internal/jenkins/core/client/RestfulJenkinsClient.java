@@ -11,6 +11,7 @@
  *     Tasktop Technologies - improvements
  *     Eike Stepper - improvements for bug 323759
  *     Benjamin Muskalla - 323920: [build] config retrival fails for jobs with whitespaces
+ *     See git histpry
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.jenkins.core.client;
@@ -470,18 +471,11 @@ public class RestfulJenkinsClient {
 			protected JenkinsServerInfo doProcess(CommonHttpResponse response, IOperationMonitor monitor)
 					throws IOException, JenkinsException, JAXBException {
 				Header header = response.getResponse().getFirstHeader("X-Jenkins"); //$NON-NLS-1$
-				Type type;
 				if (header == null) {
-					type = Type.HUDSON;
-					header = response.getResponse().getFirstHeader("X-Hudson"); //$NON-NLS-1$
-					if (header == null) {
-						throw new JenkinsException(NLS.bind("{0} does not appear to be a Hudson or Jenkins instance", //$NON-NLS-1$
-								baseUrl()));
-					}
-				} else {
-					type = Type.JENKINS;
+					throw new JenkinsException(NLS.bind("{0} does not appear to be a Jenkins instance", //$NON-NLS-1$
+							baseUrl()));
 				}
-				JenkinsServerInfo info = new JenkinsServerInfo(type, header.getValue());
+				JenkinsServerInfo info = new JenkinsServerInfo(Type.JENKINS, header.getValue());
 				return info;
 			}
 		}.run();
