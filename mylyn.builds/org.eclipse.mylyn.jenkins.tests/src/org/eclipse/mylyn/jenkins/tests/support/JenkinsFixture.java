@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2015 Markus Knittig and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Markus Knittig - initial API and implementation
@@ -15,9 +15,6 @@
 
 package org.eclipse.mylyn.jenkins.tests.support;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.sdk.util.FixtureConfiguration;
 import org.eclipse.mylyn.commons.sdk.util.RepositoryTestFixture;
@@ -37,12 +34,6 @@ public class JenkinsFixture extends RepositoryTestFixture {
 	public static final JenkinsFixture DEFAULT = discoverDefault();
 
 	private static JenkinsFixture discoverDefault() {
-		try {
-			return TestConfiguration.getDefault().discoverDefault(JenkinsFixture.class, "hudson");
-		} catch (RuntimeException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, JenkinsCorePlugin.ID_PLUGIN,
-					"No default hudson fixture found, will look for default jenkins fixture", e));
-		}
 		return TestConfiguration.getDefault().discoverDefault(JenkinsFixture.class, "jenkins");
 	}
 
@@ -109,8 +100,9 @@ public class JenkinsFixture extends RepositoryTestFixture {
 		return true;
 	}
 
-	public boolean isHudson() {
-		return Type.HUDSON == getType();
+	@Override
+	public String toString() {
+		return "JenkinsFixture [version=" + version + ", type=" + type + ", toString()=" + super.toString() + "]";
 	}
 
 }
