@@ -78,10 +78,10 @@ public class TaskDataExternalizerTest extends TestCase {
 		assertEquals(state.getRepositoryData().getRoot().toString(), state2.getRepositoryData().getRoot().toString());
 	}
 
-	public void testReadWriteInvalidCharacters() throws Exception {
+	public void testReadWriteInvalidCharactersXML11() throws Exception {
 		TaskData data = new TaskData(new TaskAttributeMapper(repository), repository.getConnectorKind(),
 				repository.getRepositoryUrl(), "1");
-		data.getRoot().createAttribute("attribute").setValue("\u0001\u001F");
+		data.getRoot().createAttribute("attribute").setValue("\u0000");
 
 		TaskDataState state = new TaskDataState(repository.getConnectorKind(), repository.getRepositoryUrl(), "1");
 		state.setRepositoryData(data);
@@ -93,6 +93,19 @@ public class TaskDataExternalizerTest extends TestCase {
 			fail("Expected SAXParseException");
 		} catch (SAXParseException expected) {
 		}
+	}
+
+	public void testReadWriteInvalidCharactersXML10() throws Exception {
+		TaskData data = new TaskData(new TaskAttributeMapper(repository), repository.getConnectorKind(),
+				repository.getRepositoryUrl(), "1");
+		data.getRoot().createAttribute("attribute").setValue("\u0001\u001F");
+
+		TaskDataState state = new TaskDataState(repository.getConnectorKind(), repository.getRepositoryUrl(), "1");
+		state.setRepositoryData(data);
+
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		externalizer.writeState(out, state);
+		externalizer.readState(new ByteArrayInputStream(out.toByteArray()));
 
 		TaskDataState state2 = externalizer
 				.readState(new Xml11InputStream(new ByteArrayInputStream(out.toByteArray())));

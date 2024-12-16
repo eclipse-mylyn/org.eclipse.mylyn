@@ -13,6 +13,7 @@
 
 package org.eclipse.mylyn.internal.tasks.core.data;
 
+import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.FilterInputStream;
 import java.io.IOException;
@@ -193,19 +194,34 @@ public class TaskDataExternalizer {
 	}
 
 	public void writeState(OutputStream out, ITaskDataWorkingCopy state) throws IOException {
+		writeState(out, state, false);
+	}
+
+	private void writeState(OutputStream out, ITaskDataWorkingCopy state, boolean xml11) throws IOException {
 		try {
 			SAXTransformerFactory transformerFactory = (SAXTransformerFactory) TransformerFactory.newInstance();
 			TransformerHandler handler = transformerFactory.newTransformerHandler();
 			Transformer serializer = handler.getTransformer();
+			if (xml11) {
+				serializer.setOutputProperty(OutputKeys.VERSION, "1.1"); //$NON-NLS-1$
+			}
 			serializer.setOutputProperty(OutputKeys.ENCODING, "UTF-8"); //$NON-NLS-1$
 			serializer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
-			handler.setResult(new StreamResult(out));
+			ByteArrayOutputStream temp = new ByteArrayOutputStream();
+			handler.setResult(new StreamResult(temp));
 			TaskDataStateWriter writer = new TaskDataStateWriter(handler);
 			writer.write(state);
+			out.write(temp.toByteArray());
 		} catch (TransformerException e) {
 			throw new IOException("Error writing task data" + e.getMessageAndLocation()); //$NON-NLS-1$
 		} catch (SAXException e) {
-			throw new IOException("Error writing task data" + e.getMessage()); //$NON-NLS-1$
+			// This condition is just like the one in org.eclipse.mylyn.internal.tasks.core.data.TaskDataStore.readState(File)
+			if (!xml11 && e.getMessage() != null && (e.getMessage().contains("invalid XML character") //$NON-NLS-1$
+					|| e.getMessage().contains(" \"&#"))) { //$NON-NLS-1$
+				writeState(out, state, true);
+			} else {
+				throw new IOException("Error writing task data" + e.getMessage()); //$NON-NLS-1$
+			}
 		}
 	}
 
