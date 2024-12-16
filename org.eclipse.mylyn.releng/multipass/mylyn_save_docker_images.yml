@@ -1,0 +1,41 @@
+- hosts: localhost
+  gather_facts: true
+  pre_tasks:
+    - include_vars:
+        dir: mylyn_vars
+        extensions:
+        - json
+  tasks:
+    - name: mylyn_service_domain
+      debug:
+        msg: "{{ hostvars['localhost'].mylyn_service_domain }}"
+      tags:
+        - global
+
+- hosts: "{{ hostvars['localhost'].mylyn_noadmin_vm_hosts }}"
+  tasks:
+    - name: Delete existing docker image directory
+      file:
+        path: /mylyn-config-dir/docker
+        state: absent
+    - name: Creates docker image directory
+      ansible.builtin.file:
+        path: /mylyn-config-dir/docker
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
+    - name: Get details of all images
+      community.docker.docker_host_info:
+        images: true
+        verbose_output: true
+      register: image_info
+    - name: save all other Images in tar
+      community.docker.docker_image_export:
+        names: "{{ image_info.images |  rejectattr('RepoTags', 'search', '127.0.0.1:5000') | map(attribute='RepoTags') | flatten }}"
+        path: "/mylyn-config-dir/docker/{{inventory_hostname}}.tar"
+    - name: Save the tar to loacalhost
+      ansible.builtin.fetch:
+        src: "/mylyn-config-dir/docker/{{inventory_hostname}}.tar"
+        dest: docker-save/
+        flat: yes

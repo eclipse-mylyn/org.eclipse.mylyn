@@ -168,8 +168,8 @@
 
 - name: init
   ansible.builtin.shell: 
-    cmd: /mylyn-config-dir/{{ role_name }}/doInit.sh
+    cmd: /mylyn-config-dir/{{ role_name }}/doInit.sh "{{ gitlabHostURL }}"
     chdir: /mylyn-config-dir/{{ role_name }}
   register: init_info
 
-- ansible.builtin.debug: msg="{{ init_info.stdout_lines }}" 									# verbosity=3
+- ansible.builtin.debug: msg="{{ init_info.stdout_lines }}"   # verbosity=3

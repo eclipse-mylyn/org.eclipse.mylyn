@@ -20,5 +20,5 @@
 - name: mylyn_network_ip
   ansible.builtin.set_fact:
     mylyn_network_ip: "{{ item }}"
-  when: item is regex(network_ip_matcher)
+  when: item is regex(mylyn_network_ip_matcher)
   with_items: "{{ inst_ipadr_list}}"

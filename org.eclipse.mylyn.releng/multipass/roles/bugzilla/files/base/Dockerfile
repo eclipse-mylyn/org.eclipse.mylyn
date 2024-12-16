@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 MAINTAINER Frank Becker <Eclipse@Frank-Becker.de>
 
 ADD apt_package.list /opt/bugzilla_base/apt_package.list

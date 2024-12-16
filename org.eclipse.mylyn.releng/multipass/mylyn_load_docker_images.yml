@@ -1,0 +1,48 @@
+- hosts: localhost
+  gather_facts: true
+  pre_tasks:
+    - include_vars:
+        dir: mylyn_vars
+        extensions:
+        - json
+  tasks:
+    - name: mylyn_service_domain
+      debug:
+        msg: "{{ hostvars['localhost'].mylyn_service_domain }}"
+      tags:
+        - global
+
+- hosts: "{{ hostvars['localhost'].mylyn_noadmin_vm_hosts }}"
+  tasks:
+    - name: Ensure docker deamon is running
+      service:
+        name: docker
+        state: started
+      become: true
+    - name: Delete existing docker image directory
+      file:
+        path: /mylyn-config-dir/docker
+        state: absent
+    - name: Creates docker image directory
+      ansible.builtin.file:
+        path: /mylyn-config-dir/docker
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
+    - name: Synchronization docker image directory
+      ansible.posix.synchronize:
+        src: "docker-save/{{ inventory_hostname }}.tar"
+        dest: "/mylyn-config-dir/docker/{{inventory_hostname}}.tar"
+    - name: Stop and Remove Stoped docker containers and delete all images
+      ansible.builtin.shell: |
+         docker ps -aq | xargs docker rm -f;
+         docker images -aq  | xargs docker image rm 
+      failed_when: false
+    - name: load images from tar
+      community.docker.docker_image_load:
+        path: "/mylyn-config-dir/docker/{{inventory_hostname}}.tar"
+      register: result
+    - name: Print the loaded image names
+      ansible.builtin.debug:
+        msg: "Loaded the following images: {{ result.image_names | join(', ') }}"

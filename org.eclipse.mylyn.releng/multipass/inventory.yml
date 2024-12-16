@@ -12,12 +12,9 @@ all:
       hosts:
         mylynmstr01:
       vars:
-        multipass_disk: 30G
+        multipass_disk: 35G
         multipass_memory: 10G
         multipass_cpus: 4
-#       only needed when you want to share your instance to other devices in Network or Internet
-#       en0 is valid for for mac os with apple silicon		
-        additional_launch_parms: '--network=en0'
     mylyn_swarm_worker:
       hosts:
         mylynwrk01:
@@ -28,18 +25,25 @@ all:
   hosts:
     mylynadm01:
       ansible_connection: ssh
-      ansible_host: "192.168.64.2"
+      ansible_host: "192.168.64.3"
       ansible_user: ubuntu
       ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o ControlMaster=no -o ControlPath=none"
       ansible_ssh_private_key_file: first_setup/ubuntu_key
       default_etc_hosts: "mylynadm01"
     mylynmstr01:
       ansible_connection: ssh
-      ansible_host: "192.168.64.3"
+      ansible_host: "192.168.64.2"
       ansible_user: ubuntu
       ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o ControlMaster=no -o ControlPath=none"
       ansible_ssh_private_key_file: first_setup/ubuntu_key
-      default_etc_hosts: "mylynmstr01 mylyn.local traefik.mylyn.local jenkins.mylyn.local artifactory.mylyn.local gitlab.mylyn.local"
+#      internal_traefik_adress: "internaltraefik.frank-becker.de"
+      default_etc_hosts: "mylynmstr01.local mylyn.local traefik.mylyn.local gitlab.mylyn.local artifactory.mylyn.local"
+# only needed when you want to share your instance to other devices in Network or Internet
+#default_etc_hosts: "mylynmstr01.local mylyn.local traefik.mylyn.local jenkins.mylyn.local artifactory.mylyn.local gitlab.mylyn.local internaltraefik.frank-becker.de mylyntest.frank-becker.de"
+#      default_etc_hosts: "mylynmstr01.local mylyn.frank-becker.de traefik.mylyn.frank-becker.de jenkins.mylyn.frank-becker.de artifactory.mylyn.frank-becker.de gitlab.mylyn.frank-becker.de internaltraefik.mylyn.frank-becker.de"
+#      additional_launch_parms: '--network name=en0,mode=manual,mac="52:54:00:af:4B:C3"'
+#      additional_network_mac_adr: "52:54:00:AF:4B:C3"
+#      additional_network_addresses: "[192.168.2.142/24]"
     mylynwrk01:
       ansible_connection: ssh
       ansible_host: "192.168.64.4"
