@@ -44,6 +44,7 @@ libxml-perl
 libxml-twig-perl
 mariadb-server
 perlmagick
-python-sphinx
 rst2pdf
 ruby
+sphinx-doc
+sphinx-common

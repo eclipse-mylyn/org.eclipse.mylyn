@@ -67,7 +67,7 @@
     labels: "{{ label_data | from_yaml }}"
     placement:
       constraints:
-        - node.role == manager
+        - node.role == worker
   when: ((docker_mode is defined) and (docker_mode == 'swarm'))
 
 - name: Deploy Container

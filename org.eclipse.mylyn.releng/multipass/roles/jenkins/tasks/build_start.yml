@@ -13,16 +13,6 @@
     source: build
     timeout: 180
 
-- name: delete data-volume {{act_item.servmame}}
-  community.docker.docker_volume:
-    name: "{{ role_name }}-{{act_item.servmame}}-data-volume"
-    state: absent
-
-- name: create data-volume {{act_item.servmame}}
-  community.docker.docker_volume:
-    name: "{{ role_name }}-{{act_item.servmame}}-data-volume"
-    state: present
-
 - name: docker list {{act_item.servmame}}
   ansible.builtin.shell: "docker run --rm --entrypoint /usr/bin/env 127.0.0.1:5000/{{act_item.servmame}}:1 sh -c 'echo $JENKINS_VERSION'"
   register: version

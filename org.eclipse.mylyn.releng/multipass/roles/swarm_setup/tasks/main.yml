@@ -9,6 +9,7 @@
 - name: Init a new swarm with default parameters
   community.docker.docker_swarm:
     state: present
+    advertise_addr: "{{ hostvars[mylyn_service_vm_name].ansible_host }}"
   register: swarm_result
   when: swarm_info_init.docker_swarm_active|bool == false
 
@@ -56,6 +57,6 @@
     remote_addrs: "{{ hostvars['localhost'].mySwarmMaster }}"
   delegate_to: "{{ item }}"
   with_items:
-    - "{{ groups[hostvars['localhost'].grp_prefix  + \"_swarm_worker\"] }}"
+    - "{{ groups[hostvars['localhost'].mylyn_grp_prefix  + \"_swarm_worker\"] }}"
   when: swarm_info_init.docker_swarm_active|bool == false
 ...

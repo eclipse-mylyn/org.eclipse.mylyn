@@ -18,6 +18,7 @@ sed -i  "s/#certfileName#/$CERT_FILE_NAME/g" /etc/apache2/sites-available/bugzil
 echo start mysql
 service mysql start;
 cd /var/www/html
+[ -d data ] || mkdir -p data
 ./install-module.pl --all
 ./checksetup.pl ./answers
 ./checksetup.pl ./answers

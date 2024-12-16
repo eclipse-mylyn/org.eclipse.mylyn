@@ -65,13 +65,11 @@ providers:
   file:
     filename: "/etc/traefik/traefik.dynamic.yml"
     watch: true
-  docker:
+  swarm:
     endpoint: "unix:///var/run/docker.sock"
     watch: true
-    swarmMode: true
     # useBindPortIP: false
     exposedByDefault: false
     network: "proxy"
-    swarmModeRefreshSeconds: "15s"
   rest:
     insecure: true

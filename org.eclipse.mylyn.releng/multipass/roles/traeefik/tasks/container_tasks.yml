@@ -16,6 +16,61 @@
     name: mylyn_net
   when: (not network_result.exists) or (network_result_delete.changed) 
 
+- name: setlabels
+  ansible.builtin.set_fact:
+    label_data:  |
+      {
+        traefik.enable: "true",
+        traefik.docker.network: mylyn_net,
+        traefik.http.routers.http-catchall.rule: "hostregexp(`{host:.+}`)",
+        traefik.http.routers.http-catchall.entrypoints: web,
+        traefik.http.routers.http-catchall.middlewares: redirect-to-https,
+        traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: https,
+        traefik.http.routers.api_traefik.rule: "Host(`traefik.{{common_domain_name}}`)",
+        traefik.http.routers.api_traefik.service: api@internal,
+        traefik.http.routers.api_traefik.entrypoints: websecure,
+        traefik.http.routers.api_traefik.tls: "true",
+        traefik.http.routers.api_traefik1.rule: "Host(`{{common_domain_name}}`) && (PathPrefix(`/traefikdashboard`) || PathPrefix(`/api`))",
+        traefik.http.routers.api_traefik1.service: api@internal,
+        traefik.http.routers.api_traefik1.entrypoints: websecure,
+        traefik.http.routers.api_traefik1.tls: "true",
+        traefik.http.routers.api_traefik1.middlewares: stripprefix_api,
+        traefik.http.middlewares.stripprefix_api.stripprefix.prefixes: /traefikdashboard,
+        traefik.http.services.api.loadbalancer.passhostheader: "true",
+        traefik.http.services.api.loadbalancer.server.port: "8080" 
+      }
+  when: hostvars[inventory_hostname].internal_traefik_adress is undefined
+  
+- name: setlabels with internal
+  ansible.builtin.set_fact:
+    label_data:  |
+      {
+        traefik.enable: "true",
+        traefik.docker.network: mylyn_net,
+        traefik.http.routers.http-catchall.rule: "hostregexp(`{host:.+}`)",
+        traefik.http.routers.http-catchall.entrypoints: web,
+        traefik.http.routers.http-catchall.middlewares: redirect-to-https,
+        traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: https,
+        traefik.http.routers.api_traefik.rule: "Host(`traefik.{{common_domain_name}}`)",
+        traefik.http.routers.api_traefik.service: api@internal,
+        traefik.http.routers.api_traefik.entrypoints: websecure,
+        traefik.http.routers.api_traefik.tls: "true",
+        traefik.http.routers.api_traefik1.rule: "Host(`{{common_domain_name}}`) && (PathPrefix(`/traefikdashboard`) || PathPrefix(`/api`))",
+        traefik.http.routers.api_traefik1.service: api@internal,
+        traefik.http.routers.api_traefik1.entrypoints: websecure,
+        traefik.http.routers.api_traefik1.tls: "true",
+        traefik.http.routers.api_traefik1.middlewares: stripprefix_api,
+        traefik.http.middlewares.stripprefix_api.stripprefix.prefixes: /traefikdashboard,
+        traefik.http.routers.api_traefik2.rule: "Host(`{{hostvars[inventory_hostname].internal_traefik_adress}}`) && (PathPrefix(`/traefikdashboard`) || PathPrefix(`/api`))",
+        traefik.http.routers.api_traefik2.service: api@internal,
+        traefik.http.routers.api_traefik2.entrypoints: websecure,
+        traefik.http.routers.api_traefik2.tls: "true",
+        traefik.http.routers.api_traefik2.middlewares: stripprefix_api,
+        traefik.http.services.api.loadbalancer.passhostheader: "true",
+        traefik.http.services.api.loadbalancer.server.port: "8080"
+      }
+  when: hostvars[inventory_hostname].internal_traefik_adress is defined
+
 - name: Deploy Container
   community.docker.docker_container:
     name: traefik
@@ -32,25 +87,4 @@
       - "/mylyn-runtime-dir/{{ role_name }}/logs:/logs"
       - "/mylyn-config-dir/{{ role_name }}/etc-traefik:/etc/traefik"
       - "/mylyn-config-dir/certs:/certificates"
-    labels:
-      traefik.enable: "true"
-      traefik.docker.network: mylyn_net
-
-      traefik.http.routers.http-catchall.rule: hostregexp(`{host:.+}`)
-      traefik.http.routers.http-catchall.entrypoints: web
-      traefik.http.routers.http-catchall.middlewares: redirect-to-https
-      traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: https
-
-      traefik.http.routers.api_traefik.rule: Host(`traefik.{{common_domain_name}}`)
-      traefik.http.routers.api_traefik.service: api@internal
-      traefik.http.routers.api_traefik.entrypoints: websecure
-      traefik.http.routers.api_traefik.tls: "true"
-      traefik.http.routers.api_traefik1.rule: Host(`{{common_domain_name}}`) && (PathPrefix(`/traefikdashboard`) || PathPrefix(`/api`))
-      traefik.http.routers.api_traefik1.service: api@internal
-      traefik.http.routers.api_traefik1.entrypoints: websecure
-      traefik.http.routers.api_traefik1.tls: "true"
-      traefik.http.routers.api_traefik1.middlewares: stripprefix_api
-      traefik.http.middlewares.stripprefix_api.stripprefix.prefixes: /traefikdashboard
-      
-      traefik.http.services.api.loadbalancer.passhostheader: "true"
-      traefik.http.services.api.loadbalancer.server.port: "8080" 
+    labels: "{{ label_data | from_yaml }}"
