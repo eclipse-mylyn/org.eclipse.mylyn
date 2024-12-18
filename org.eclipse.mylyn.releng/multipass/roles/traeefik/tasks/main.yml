@@ -34,13 +34,13 @@
 - name: Create secret foo (from a file on the target machine)
   community.docker.docker_secret:
     name: master.crt
-    data_src: "/mylyn-config-dir/certs/{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}.crt"
+    data_src: "/mylyn-config-dir/certs/{{ groups[hostvars['localhost'].mylyn_grp_prefix + \"_swarm_master\"][0] }}.crt"
     state: present
   when: ((docker_mode is defined) and (docker_mode == 'swarm'))
 - name: Create secret foo (from a file on the target machine)
   community.docker.docker_secret:
     name: master.key
-    data_src: "/mylyn-config-dir/certs/{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}.key"
+    data_src: "/mylyn-config-dir/certs/{{ groups[hostvars['localhost'].mylyn_grp_prefix + \"_swarm_master\"][0] }}.key"
     state: present
   when: ((docker_mode is defined) and (docker_mode == 'swarm'))
 
@@ -89,8 +89,8 @@
     restart_policy: "unless-stopped"
     env:
       REGISTRY_HTTP_ADDR: 0.0.0.0:5000
-      REGISTRY_HTTP_TLS_CERTIFICATE: "/run/secrets/{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}.crt"
-      REGISTRY_HTTP_TLS_KEY: "/run/secrets/{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}.key"
+      REGISTRY_HTTP_TLS_CERTIFICATE: "/run/secrets/{{ groups[hostvars['localhost'].mylyn_grp_prefix + \"_swarm_master\"][0] }}.crt"
+      REGISTRY_HTTP_TLS_KEY: "/run/secrets/{{ groups[hostvars['localhost'].mylyn_grp_prefix + \"_swarm_master\"][0] }}.key"
     volumes:
       - "registry-data-volume:/var/lib/registry"
       - "/mylyn-config-dir/certs:/run/secrets"

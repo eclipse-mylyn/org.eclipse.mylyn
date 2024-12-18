@@ -18,15 +18,11 @@
   ansible.builtin.shell: |
     docker run --rm 127.0.0.1:5000/bugzilla:{{ act_item.image_tag }} sh -c 'cat /var/www/html/Bugzilla/Constants.pm | grep "BUGZILLA_VERSION =>"'   | cut -d'"' -f 2 
   register: bugzilla_version
-- debug:
-    var: act_item.extra_info
 
 - name: myServiceInfo {{ act_item.image_tag }}
   set_fact:
     bugzilla_info_array: []
     extra_info_entries: "{{  ('{' + act_item.extra_info + '}') | from_yaml }} "
-- debug:
-    var: extra_info_entries
 - set_fact:
     bugzilla_info_array: "{{ bugzilla_info_array + ['Custom Workflow'] if ('custom_wf' in extra_info_entries and extra_info_entries['custom_wf'] | bool == true)  else bugzilla_info_array }}"
     bugzilla_type: "{{ 'bugzillaREST' if ('rest_enabled' in extra_info_entries and extra_info_entries['rest_enabled'] | bool == true) else 'bugzilla' }}"
@@ -38,28 +34,13 @@
     bugzilla_info_array: "{{ bugzilla_info_array + ['APIKEY enabled'] if ('api_key_enabled' in extra_info_entries and extra_info_entries['api_key_enabled'] | bool == true) else bugzilla_info_array }}"
 - set_fact:
     bugzilla_info_array: "{{ bugzilla_info_array + ['_'] if (bugzilla_info_array | length == 0) else bugzilla_info_array }}"
-- name: bugzilla_info_array  {{ act_item.image_tag }}
-  debug:
-    var: bugzilla_info_array
 - set_fact:
     bugzilla_info: "{{bugzilla_info_array | join(', ') | to_yaml }}"
     extra_info_label: "{{ (',' + act_item.extra_info) if (act_item.extra_info | length > 0 ) else ''}}"
     label_service_ip: "{{mylyn_network_ip if mylyn_network_ip is defined else ansible_ssh_host }}"
-- name: bugzilla_info  {{ act_item.image_tag }}
-  debug:
-    var: bugzilla_info
-- name: extra_info_label  {{ act_item.image_tag }}
-  debug:
-    var: extra_info_label
-- name: label_service_ip  {{ act_item.image_tag }}
-  debug:
-    var: label_service_ip
 - name: myServiceLabel {{ act_item.image_tag }}
   set_fact:
     serviceLabel: '{"type":"{{ bugzilla_type }}","url":"/{{ act_item.servmame }}/", "version": "{{ bugzilla_version.stdout }}", "info": "{{ bugzilla_info }}", "properties":  { "host-name": "{{ common_domain_name }}", "remote_ip": "{{ label_service_ip }}", "ansible-name": "{{ inventory_hostname }}", "ansible-host-ip": "{{ansible_ssh_host}}", "docker": "true"  {{ extra_info_label }} } }'
-- name: debug1 {{ act_item.image_tag }}
-  debug:
-    var: serviceLabel
 
 - name: setlabels {{ act_item.image_tag }}
   ansible.builtin.set_fact:
@@ -72,7 +53,6 @@
          traefik.http.routers.{{ act_item.servmame }}_https.tls: "true" ,
          traefik.http.routers.{{ act_item.servmame }}_https.middlewares: stripprefix_{{ act_item.servmame }} ,
          traefik.http.middlewares.stripprefix_{{ act_item.servmame }}.stripprefix.prefixes: "/{{ act_item.servmame }}" ,
-         traefik.http.middlewares.stripprefix_{{ act_item.servmame }}.stripprefix.forceSlash: "true" ,
          traefik.http.routers.{{ act_item.servmame }}_https.service: {{ act_item.servmame }} ,
          traefik.http.services.{{ act_item.servmame }}.loadbalancer.server.port: "80" ,
          org.eclipse.mylyn.service: '{{ serviceLabel }}'
@@ -80,11 +60,6 @@
 #         traefik.http.routers.{{ act_item.servmame }}_https.service: {{ act_item.servmame }} ,
 #         traefik.http.services.{{ act_item.servmame }}.loadbalancer.server.port: "8090" ,
 #         traefik.http.services.{{ act_item.servmame }}.loadbalancer.passhostheader: "true" ,
-
-- debug:
-    var: label_data
-- debug:
-    var: act_item.servmame
 
 - name: Deploy swarm service {{ act_item.image_tag }}
   community.docker.docker_swarm_service:

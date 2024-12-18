@@ -44,8 +44,28 @@
     - role: multipass_create_vm_setup
       tags:
         - base_software
-# 
-#
+
+# add external ip if defined
+- hosts: "{{ hostvars['localhost'].mylyn_noadmin_vm_hosts }}"
+  tasks:
+  - name: add netplan 10-custom.yaml
+    become: true
+    become_user: root
+    ansible.builtin.shell: |
+      cat << EOF > /etc/netplan/10-custom.yaml
+      network:
+        version: 2
+        ethernets:
+          extra0:
+            dhcp4: yes
+            match:
+              macaddress: "{{ hostvars[inventory_hostname].additional_network_mac_adr }}"
+            addresses: {{ hostvars[inventory_hostname].additional_network_addresses }}
+      EOF
+      sudo chmod 600 /etc/netplan/10-custom.yaml
+      sudo netplan apply
+    when: hostvars[inventory_hostname].additional_network_mac_adr is defined
+
 # Admin Instance for Certificates
 #
 - hosts: "{{ hostvars['localhost'].rootca_server_name }}"

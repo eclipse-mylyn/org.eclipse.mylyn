@@ -79,7 +79,7 @@ cp /var/www/html/Bugzilla/CGI.pm /var/www/html/Bugzilla/CGI_org.pm
 cp /opt/CGI_5.1.pm /var/www/html/Bugzilla/CGI.pm
 USEREMAIL=true
 fi
-if  [[ $GIT_BRANCH_TAG == 5.2* ]] ; then
+if  [[ $GIT_BRANCH_TAG == release-5.2* ]] ; then
 cp /var/www/html/Bugzilla/CGI.pm /var/www/html/Bugzilla/CGI_org.pm
 cp /opt/CGI_5.2.pm /var/www/html/Bugzilla/CGI.pm
 fi

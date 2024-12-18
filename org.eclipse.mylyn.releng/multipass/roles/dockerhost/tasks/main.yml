@@ -66,18 +66,25 @@
         - /mylyn-config-dir
         - /mylyn-runtime-dir
 
+#    - name: Update apt and install docker-registry
+#      ansible.builtin.apt:
+#        name: docker-registry
+#        state: latest
+#        update_cache: true
+
+
 #    - name: Creates directory
 #      become: true
 #      ansible.builtin.file:
-#        path: "/etc/docker/certs.d/{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}.local-becker-mainz.de:5000"
+#        path: "/etc/docker/certs.d/{{ groups[hostvars['localhost'].mylyn_grp_prefix + \"_swarm_master\"][0] }}.local-becker-mainz.de:5000"
 #        state: directory  
 #    - name: copy root cert
 #      become: true
 #      ansible.posix.synchronize:
-#        src: "/cacerts/server_ca/{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}.crt"
-#        dest: "/etc/docker/certs.d/{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}.local-becker-mainz.de:5000/ca.crt"
+#        src: "/cacerts/server_ca/{{ groups[hostvars['localhost'].mylyn_grp_prefix + \"_swarm_master\"][0] }}.crt"
+#        dest: "/etc/docker/certs.d/{{ groups[hostvars['localhost'].mylyn_grp_prefix + \"_swarm_master\"][0] }}.local-becker-mainz.de:5000/ca.crt"
 #        private_key: /home/ubuntu/.ssh/id_rsa
-#      delegate_to: "{{ groups[hostvars['localhost'].grp_prefix + \"_swarm_master\"][0] }}"
+#      delegate_to: "{{ groups[hostvars['localhost'].mylyn_grp_prefix + \"_swarm_master\"][0] }}"
 #
 #    - name: create daemon.json
 #      become: true

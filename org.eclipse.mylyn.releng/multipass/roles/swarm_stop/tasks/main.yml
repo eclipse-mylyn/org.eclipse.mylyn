@@ -51,7 +51,7 @@
 #   ignore_errors: true
 #   delegate_to: "{{ item }}"
 #   with_items:
-#     - "{{ groups[hostvars['localhost'].grp_prefix  + \"_swarm_worker\"] }}"
+#     - "{{ groups[hostvars['localhost'].mylyn_grp_prefix  + \"_swarm_worker\"] }}"
 #   when: stack_info_result.results is defined
 # 
 # 

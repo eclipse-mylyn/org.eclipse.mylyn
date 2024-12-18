@@ -1,0 +1,30 @@
+- hosts: localhost
+  gather_facts: true
+  pre_tasks:
+    - include_vars:
+        dir: mylyn_vars
+        extensions:
+        - json
+  tasks:
+    - name: mylyn_service_domain
+      debug:
+        msg: "{{ hostvars['localhost'].mylyn_service_domain }}"
+      tags:
+        - global
+
+- hosts: "{{ hostvars['localhost'].mylyn_noadmin_vm_hosts }}"
+  tasks:
+    - name: Pull an image
+      community.docker.docker_image:
+        name: "{{ item }}"
+        source: pull
+      loop:
+        - busybox:latest
+        - ubuntu:20.04 
+        - ubuntu:22.04 
+        - traefik:latest
+        - docker.bintray.io/jfrog/artifactory-cpp-ce:latest
+        - registry:2
+        - python:3
+        - tecnativa/docker-socket-proxy:latest
+        - jenkins/jenkins:latest

@@ -11,13 +11,14 @@ docker exec gitlab gitlab-rails runner /etc/gitlab/initialSetup.rb >>$BASEDIR/in
 echo "gitlab $BASEDIR/initialSetup.out"
 cat $BASEDIR/initialSetup.out
 
-export GITLAB_SERVER=https://gitlab.mylyn.local
+export GITLAB_SERVER="https://$1"
 export GITLAB_TOKEN=glpat-Adm1nPwdTok123
 
 export GITLAB_ROOTGROUP=eclipse-mylyn
 export GITLAB_SUBGROUP=ci-test
 export GITLAB_PROJECT=ci-mylyn-test-project
 
+echo "GITLAB_SERVER = $GITLAB_SERVER"
 #
 #creating root group
 #
@@ -57,7 +58,7 @@ echo "Project Id: $projectId"
 # if test -f "/home/ubuntu/.ssh/known_hosts"; then
 #   ssh-keygen -f "/home/ubuntu/.ssh/known_hosts" -R "[mylyn.local]:2222"
 # fi
-curl -k -X POST -F "private_token=$GITLAB_TOKEN" -F "title=Ubuntu SSH" -F "key=$(cat ~/.ssh/id_rsa.pub)" https://gitlab.mylyn.local/api/v4/user/keys
+curl -k -X POST -F "private_token=$GITLAB_TOKEN" -F "title=Ubuntu SSH" -F "key=$(cat ~/.ssh/id_rsa.pub)" https://$1/api/v4/user/keys
 
 #
 #Clonning git project and generating basic java maven structure
@@ -70,7 +71,7 @@ git config --global http.sslverify false
 git config --global user.email "admin@mylyn.eclipse.org"
 git config --global user.name "Mylyn Admin"
 
-git remote add origin ssh://git@gitlab.mylyn.local:2222/$GITLAB_ROOTGROUP/$GITLAB_SUBGROUP/$GITLAB_PROJECT.git
+git remote add origin ssh://git@$1:2222/$GITLAB_ROOTGROUP/$GITLAB_SUBGROUP/$GITLAB_PROJECT.git
 git add .
 git commit -m "Initial commit"
 GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git push -u origin master 
