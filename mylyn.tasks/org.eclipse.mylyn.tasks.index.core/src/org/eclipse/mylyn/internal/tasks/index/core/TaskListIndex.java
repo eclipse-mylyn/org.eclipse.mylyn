@@ -599,7 +599,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 						Query query = computeQuery(patternString);
 						TopDocs results = indexSearcher.search(query, maxMatchSearchHits);
 						for (ScoreDoc scoreDoc : results.scoreDocs) {
-							Document document = indexReader.document(scoreDoc.doc);
+							Document document = indexReader.storedFields().document(scoreDoc.doc);
 							hits.add(document.get(FIELD_IDENTIFIER.getIndexKey()));
 						}
 					} catch (IOException e) {
@@ -671,7 +671,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 					Query query = computeQuery(patternString);
 					TopDocs results = indexSearcher.search(query, resultsLimit);
 					for (ScoreDoc scoreDoc : results.scoreDocs) {
-						Document document = indexReader.document(scoreDoc.doc);
+						Document document = indexReader.storedFields().document(scoreDoc.doc);
 						String taskIdentifier = document.get(FIELD_IDENTIFIER.getIndexKey());
 						AbstractTask task = taskList.getTask(taskIdentifier);
 						if (task != null) {
@@ -714,12 +714,12 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 			BooleanQuery query = (BooleanQuery) q;
 			for (BooleanClause clause : query.clauses()) {
-				if (clause.getQuery() instanceof TermQuery) {
-					TermQuery termQuery = (TermQuery) clause.getQuery();
+				if (clause.query() instanceof TermQuery) {
+					TermQuery termQuery = (TermQuery) clause.query();
 					clause = new BooleanClause(new PrefixQuery(termQuery.getTerm()),
 							computeOccur(clause, hasBooleanSpecifiers));
 				} else if (!hasBooleanSpecifiers) {
-					clause = new BooleanClause(clause.getQuery(), Occur.MUST);
+					clause = new BooleanClause(clause.query(), Occur.MUST);
 				}
 				qb.add(clause);
 			}
@@ -734,7 +734,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		if (!hasBooleanSpecifiers) {
 			return Occur.MUST;
 		}
-		return clause.getOccur();
+		return clause.occur();
 	}
 
 	private boolean containsSpecialCharacters(String patternString) {
