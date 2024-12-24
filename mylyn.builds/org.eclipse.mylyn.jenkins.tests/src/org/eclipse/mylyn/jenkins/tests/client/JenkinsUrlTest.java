@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -13,30 +13,28 @@
 
 package org.eclipse.mylyn.jenkins.tests.client;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 
 import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsUrl;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
-public class JenkinsUrlTest extends TestCase {
+public class JenkinsUrlTest {
 
+	@Test
 	public void testQuotes() throws Exception {
-		assertEquals(getExpectedUrl("%27example%27"), createHudsonUrl("example"));
-		assertEquals(getExpectedUrl("%22exampleWithSingle%27Quote%22"), createHudsonUrl("exampleWithSingle'Quote"));
-		assertEquals(getExpectedUrl("%27exampleWithDouble%22Quote%27"), createHudsonUrl("exampleWithDouble\"Quote"));
-		try {
-			createHudsonUrl("exampleWithSingle'AndDouble\"Quote");
-			fail("Expected IllegalArgumentException");
-		} catch (IllegalArgumentException e) {// expected
-		}
-
+		assertEquals(getExpectedUrl("%27example%27"), createJacksonUrl("example"));
+		assertEquals(getExpectedUrl("%22exampleWithSingle%27Quote%22"), createJacksonUrl("exampleWithSingle'Quote"));
+		assertEquals(getExpectedUrl("%27exampleWithDouble%22Quote%27"), createJacksonUrl("exampleWithDouble\"Quote"));
+		assertThrows(IllegalArgumentException.class, () -> createJacksonUrl("exampleWithSingle'AndDouble\"Quote"));
 	}
 
-	private String createHudsonUrl(String buildName) throws UnsupportedEncodingException {
-		return JenkinsUrl.create("http://hudson.com") //$NON-NLS-1$
+	private String createJacksonUrl(String buildName) throws UnsupportedEncodingException {
+		return JenkinsUrl.create("https://jackson.test.mylyn") //$NON-NLS-1$
 				.depth(1)
 				.include("/hudson/job")
 				.match("name", Collections.singletonList(buildName)) //$NON-NLS-1$
@@ -45,7 +43,7 @@ public class JenkinsUrlTest extends TestCase {
 	}
 
 	private static String getExpectedUrl(String quotedName) {
-		return "http://hudson.com/api/xml?wrapper=hudson&depth=1&xpath=/hudson/job%5Bname%3D" + quotedName
+		return "https://jackson.test.mylyn/api/xml?wrapper=hudson&depth=1&xpath=/hudson/job%5Bname%3D" + quotedName
 				+ "%5D&exclude=/hudson/job/build";
 	}
 }

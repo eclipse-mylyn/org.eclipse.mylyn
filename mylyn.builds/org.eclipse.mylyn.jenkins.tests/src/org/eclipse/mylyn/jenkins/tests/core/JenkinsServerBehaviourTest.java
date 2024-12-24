@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2016 Markus Knittig and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Markus Knittig - initial API and implementation
@@ -12,6 +12,9 @@
  *******************************************************************************/
 
 package org.eclipse.mylyn.jenkins.tests.core;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,16 +27,15 @@ import org.eclipse.mylyn.internal.hudson.model.HudsonModelHealthReport;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 import org.eclipse.mylyn.internal.jenkins.core.JenkinsServerBehaviour;
 import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsConfigurationCache;
-import org.junit.Assert;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Markus Knittig
  */
 @SuppressWarnings("nls")
-public class JenkinsServerBehaviourTest extends TestCase {
+public class JenkinsServerBehaviourTest {
 
+	@Test
 	public void testParseJobHealthNoReport() throws Exception {
 		RepositoryLocation repositoryLocation = new RepositoryLocation();
 		String baseUrl = "http://test.org/jenkins/";
@@ -47,6 +49,7 @@ public class JenkinsServerBehaviourTest extends TestCase {
 		assertEquals(-1, behaviour.parseJob(job).getHealth());
 	}
 
+	@Test
 	public void testParseJobHealth() throws Exception {
 		RepositoryLocation repositoryLocation = new RepositoryLocation();
 		String baseUrl = "http://test.org/jenkins/";
@@ -62,6 +65,7 @@ public class JenkinsServerBehaviourTest extends TestCase {
 		assertEquals(80, behaviour.parseJob(job).getHealth());
 	}
 
+	@Test
 	public void testParseJobNoColor() throws Exception {
 		RepositoryLocation repositoryLocation = new RepositoryLocation();
 		String baseUrl = "http://test.org/jenkins/";
@@ -77,6 +81,7 @@ public class JenkinsServerBehaviourTest extends TestCase {
 		assertNull(buildPlan.getStatus());
 	}
 
+	@Test
 	public void testParseJobRunningColor() throws Exception {
 		RepositoryLocation repositoryLocation = new RepositoryLocation();
 		String baseUrl = "http://test.org/jenkins/";
@@ -94,6 +99,7 @@ public class JenkinsServerBehaviourTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testParseJobStoppedColor() throws Exception {
 		RepositoryLocation repositoryLocation = new RepositoryLocation();
 		String baseUrl = "http://test.org/jenkins/";
@@ -111,6 +117,7 @@ public class JenkinsServerBehaviourTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testParseJobNestedJob() throws Exception {
 		RepositoryLocation repositoryLocation = new RepositoryLocation();
 		String baseUrl = "http://test.org/jenkins/";
@@ -123,9 +130,10 @@ public class JenkinsServerBehaviourTest extends TestCase {
 		nestedJob.setName("test-nested-one");
 		nestedJob.setUrl(nestedJobUrl);
 		IBuildPlan buildPlan = behaviour.parseJob(nestedJob);
-		Assert.assertEquals(nestedJobUrl, buildPlan.getId());
+		assertEquals(nestedJobUrl, buildPlan.getId());
 	}
 
+	@Test
 	public void testParseJobTopLevelJob() throws Exception {
 		RepositoryLocation repositoryLocation = new RepositoryLocation();
 		String baseUrl = "http://test.org/jenkins/";
@@ -138,7 +146,7 @@ public class JenkinsServerBehaviourTest extends TestCase {
 		topLevelJob.setName(jobName);
 		topLevelJob.setUrl(baseUrl + "job/test-succeeding/");
 		IBuildPlan buildPlan = behaviour.parseJob(topLevelJob);
-		Assert.assertEquals(jobName, buildPlan.getId());
+		assertEquals(jobName, buildPlan.getId());
 	}
 
 	private Set<HudsonModelBallColor> getRunningColors() {

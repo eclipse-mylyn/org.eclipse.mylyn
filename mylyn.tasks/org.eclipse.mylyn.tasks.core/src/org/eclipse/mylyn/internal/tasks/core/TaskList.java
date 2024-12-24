@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -81,7 +81,7 @@ public class TaskList implements ITaskList, ITransferList {
 			lock();
 			if (categories.containsKey(category.getHandleIdentifier())) {
 				throw new IllegalArgumentException("Handle " + category.getHandleIdentifier() //$NON-NLS-1$
-						+ " already exists in task list"); //$NON-NLS-1$
+				+ " already exists in task list"); //$NON-NLS-1$
 			}
 			categories.put(category.getHandleIdentifier(), category);
 			delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.ADDED));
@@ -119,7 +119,7 @@ public class TaskList implements ITaskList, ITransferList {
 			lock();
 			if (queries.containsKey(query.getHandleIdentifier())) {
 				throw new IllegalArgumentException("Handle " + query.getHandleIdentifier() //$NON-NLS-1$
-						+ " already exists in task list"); //$NON-NLS-1$
+				+ " already exists in task list"); //$NON-NLS-1$
 			}
 			queries.put(query.getHandleIdentifier(), query);
 			delta.add(new TaskContainerDelta(query, TaskContainerDelta.Kind.ADDED));
@@ -442,6 +442,9 @@ public class TaskList implements ITaskList, ITransferList {
 			return defaultCategory;
 		} else {
 			UnmatchedTaskContainer unmatched = unmatchedMap.get(repositoryUrl);
+			if (unmatched == null && !repositoryUrl.endsWith("/")) {
+				unmatched = unmatchedMap.get(repositoryUrl + "/");
+			}
 			if (unmatched == null) {
 				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 						"Failed to find unmatched container for repository \"" + repositoryUrl + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -479,7 +482,7 @@ public class TaskList implements ITaskList, ITransferList {
 
 		if (result == null) {
 			throw new IllegalArgumentException("Element " + taskListElement.getHandleIdentifier() //$NON-NLS-1$
-					+ " does not exist in the task list."); //$NON-NLS-1$
+			+ " does not exist in the task list."); //$NON-NLS-1$
 		} else {
 			return result;
 		}

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -12,6 +12,8 @@
  *******************************************************************************/
 
 package org.eclipse.mylyn.jenkins.tests.integration;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,34 +30,38 @@ import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.jenkins.core.JenkinsCore;
 import org.eclipse.mylyn.jenkins.tests.support.JenkinsFixture;
 import org.eclipse.mylyn.jenkins.tests.support.JenkinsHarness;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIf;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class JenkinsIntegrationTest extends TestCase {
+@EnabledIf("org.eclipse.mylyn.jenkins.tests.SuiteSetup#isUseCertificateAuthentication")
+public class JenkinsIntegrationTest {
 
 	private JenkinsHarness harness;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 		harness = JenkinsFixture.current().createHarness();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	public void tearDown() throws Exception {
 		harness.dispose();
 	}
 
+	@Test
 	public void testPlanParameters() throws Exception {
 		RepositoryLocation location = harness.getFixture().location();
 		BuildServerBehaviour behaviour = JenkinsCore.createConnector(null).getBehaviour(location);
 		BuildPlanRequest request = new BuildPlanRequest(Collections.singletonList(harness.getPlanParameterized()));
 
 		List<IBuildPlan> plans = behaviour.getPlans(request, null);
-		assertEquals("Expected one plan, got: " + plans, 1, plans.size());
+		assertEquals(1, plans.size(), "Expected one plan, got: " + plans.size());
 
 		IBuildPlan plan = plans.get(0);
 		assertEquals(harness.getPlanParameterized(), plan.getName());
