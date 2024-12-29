@@ -34,6 +34,7 @@ for i in $(find . -type d -name .settings | grep -v $reference_folder | grep -v 
 do
 	process $i "org.eclipse.jdt.core.prefs"
 	process $i "org.eclipse.jdt.ui.prefs"
+	process $i "org.eclipse.pde.api.tools.prefs"
 done
 if [ "$changed_files" != "" ]
 then
