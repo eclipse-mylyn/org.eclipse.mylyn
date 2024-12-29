@@ -6,7 +6,7 @@ Bundle-Version: 4.6.0.qualifier
 Bundle-Name: Mylyn WikiText Creole Tests
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.wikitext.creole
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=17))"
 Import-Package: org.eclipse.mylyn.wikitext.html;version="4.6.0",
  org.eclipse.mylyn.wikitext.parser;version="[4.2,5)",

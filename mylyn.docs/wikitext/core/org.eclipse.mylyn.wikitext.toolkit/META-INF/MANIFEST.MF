@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.wikitext.toolkit
 Bundle-Version: 4.6.0.qualifier
 Bundle-Name: Mylyn WikiText Toolkit
 Bundle-Vendor: Eclipse Mylyn
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=17))"
 Import-Package: org.apache.commons.io;version="[2.16.0,3.0.0)",
  org.apache.commons.lang3;version="[3.14.0,4.0.0)",

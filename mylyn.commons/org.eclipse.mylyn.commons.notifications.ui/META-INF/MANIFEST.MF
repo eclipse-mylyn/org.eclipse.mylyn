@@ -5,7 +5,7 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.commons.notifications.ui;singleton:=true
 Bundle-Version: 4.6.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: org.eclipse.mylyn.commons.notifications.ui;x-internal:=true,
  org.eclipse.mylyn.internal.commons.notifications.ui;x-internal:=true,
  org.eclipse.mylyn.internal.commons.notifications.ui.popup;x-internal:=true

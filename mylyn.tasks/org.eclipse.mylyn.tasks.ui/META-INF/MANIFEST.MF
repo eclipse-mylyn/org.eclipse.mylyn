@@ -63,7 +63,7 @@ Export-Package: org.eclipse.mylyn.internal.provisional.tasks.ui.wizards;x-intern
  org.eclipse.mylyn.tasks.ui,
  org.eclipse.mylyn.tasks.ui.editors,
  org.eclipse.mylyn.tasks.ui.wizards
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Localization: plugin
 Import-Package: com.ibm.icu.text,
  net.bytebuddy.agent;version="[1.14.0,2.0.0)",

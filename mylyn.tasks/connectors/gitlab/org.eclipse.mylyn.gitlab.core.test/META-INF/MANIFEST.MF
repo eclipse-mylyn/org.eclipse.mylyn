@@ -22,5 +22,5 @@ Require-Bundle: org.eclipse.ui,
  net.bytebuddy.byte-buddy-agent,
  org.apache.httpcomponents.httpclient,
  org.apache.httpcomponents.httpcore
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Automatic-Module-Name: org.eclipse.mylyn.gitlab.core.test

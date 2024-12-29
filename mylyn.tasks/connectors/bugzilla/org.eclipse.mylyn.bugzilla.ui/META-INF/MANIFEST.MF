@@ -29,6 +29,6 @@ Export-Package: org.eclipse.mylyn.internal.bugzilla.ui;x-internal:=true,
  org.eclipse.mylyn.internal.bugzilla.ui.search;x-internal:=true,
  org.eclipse.mylyn.internal.bugzilla.ui.tasklist;x-internal:=true,
  org.eclipse.mylyn.internal.bugzilla.ui.wizard;x-internal:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ClassPath: .
 Bundle-Localization: plugin

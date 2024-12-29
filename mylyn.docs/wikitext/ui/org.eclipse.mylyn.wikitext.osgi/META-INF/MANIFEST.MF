@@ -6,7 +6,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.wikitext.osgi
 Bundle-Version: 4.6.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: META-INF/l10n/bundle
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="4.4.0"
 Export-Package: org.eclipse.mylyn.wikitext.core.osgi;x-internal:=true

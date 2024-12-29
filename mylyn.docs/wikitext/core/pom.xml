@@ -78,7 +78,7 @@
 					<manifestLocation>META-INF</manifestLocation>
 					<instructions>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-						<Bundle-RequiredExecutionEnvironment>JavaSE-17</Bundle-RequiredExecutionEnvironment>
+						<Bundle-RequiredExecutionEnvironment>JavaSE-21</Bundle-RequiredExecutionEnvironment>
 						<Export-Package>
 							${project.artifactId}.internal*;x-internal:=true,${project.artifactId}*</Export-Package>
 						<Import-Package>!java.*, com.google.common*;

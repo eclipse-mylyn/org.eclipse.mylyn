@@ -8,6 +8,6 @@ Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="4.4.0",
  org.eclipse.mylyn.wikitext.mediawiki;bundle-version="4.4.0",
  org.eclipse.mylyn.wikitext.ui;bundle-version="4.4.0"
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: org.eclipse.mylyn.internal.wikitext.mediawiki.ui;x-internal:=true
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.mediawiki.ui

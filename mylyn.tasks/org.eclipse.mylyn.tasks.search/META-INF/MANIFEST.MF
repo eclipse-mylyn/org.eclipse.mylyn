@@ -18,5 +18,5 @@ Bundle-Vendor: %Bundle-Vendor
 Export-Package: org.eclipse.mylyn.internal.tasks.ui,
  org.eclipse.mylyn.internal.tasks.ui.actions,
  org.eclipse.mylyn.internal.tasks.ui.search;x-internal:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Localization: plugin

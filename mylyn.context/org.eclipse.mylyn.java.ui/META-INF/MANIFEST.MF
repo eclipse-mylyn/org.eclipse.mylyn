@@ -39,4 +39,4 @@ Export-Package: org.eclipse.mylyn.internal.java.ui;x-internal:=true,
  org.eclipse.mylyn.internal.java.ui.editor;x-internal:=true,
  org.eclipse.mylyn.internal.java.ui.junit;x-internal:=true,
  org.eclipse.mylyn.internal.java.ui.search;x-internal:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21

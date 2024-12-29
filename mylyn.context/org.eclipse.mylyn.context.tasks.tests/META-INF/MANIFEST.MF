@@ -29,4 +29,4 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
  org.junit;bundle-version="4.8.2"
 Export-Package: org.eclipse.mylyn.context.tasks.tests;x-internal:=true
 Import-Package: org.apache.commons.collections4;version="4.4.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
