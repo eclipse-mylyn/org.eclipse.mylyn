@@ -23,6 +23,7 @@ import static org.mockito.Mockito.when;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.junit.Before;
@@ -40,6 +41,7 @@ public class ShellDragSupportTest {
 	public void setUp() {
 		shell.setLocation(100, 150);
 		when(composite.getShell()).thenReturn(shell);
+		when(composite.getDisplay()).thenReturn(Display.getDefault());
 		support = new ShellDragSupport(composite);
 	}
 
