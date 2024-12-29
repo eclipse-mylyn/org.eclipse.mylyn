@@ -20,7 +20,7 @@ Require-Bundle: org.eclipse.core.databinding;bundle-version="0.0.0",
  org.eclipse.ui;bundle-version="0.0.0",
  org.eclipse.ui.forms;bundle-version="0.0.0",
  org.eclipse.ui.navigator;bundle-version="0.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.mylyn.commons.repositories.ui;x-internal:=true,
  org.eclipse.mylyn.internal.commons.repositories.ui;x-internal:=true,

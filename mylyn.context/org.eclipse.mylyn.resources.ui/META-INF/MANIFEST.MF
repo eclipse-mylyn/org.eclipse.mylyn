@@ -25,5 +25,5 @@ Export-Package: org.eclipse.mylyn.internal.resources.ui;x-internal:=true,
  org.eclipse.mylyn.internal.resources.ui.preferences;x-internal:=true,
  org.eclipse.mylyn.resources.ui
 Import-Package: org.apache.tools.ant.types.selectors;version="1.10.12"
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Localization: plugin

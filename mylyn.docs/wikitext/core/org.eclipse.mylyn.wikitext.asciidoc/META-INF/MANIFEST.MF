@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.wikitext.asciidoc
 Bundle-Version: 4.6.0.qualifier
 Bundle-Name: Mylyn WikiText AsciiDoc
 Bundle-Vendor: Eclipse Mylyn
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=17))"
 Import-Package: com.google.common.base;version="[33.0,34.0)",
  org.apache.commons.lang3;version="[3.14.0,4.0.0)",

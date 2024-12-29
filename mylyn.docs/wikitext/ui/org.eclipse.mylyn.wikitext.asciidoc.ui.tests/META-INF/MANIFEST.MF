@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.wikitext.asciidoc.ui.tests;singleton:=tru
 Bundle-Version: 4.6.0.qualifier
 Bundle-Name: %Bundle-Name.0
 Bundle-Vendor: %Bundle-Vendor.0
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Import-Package: org.eclipse.jface.text.templates.persistence,
  org.eclipse.mylyn.internal.wikitext.ui,
  org.eclipse.mylyn.internal.wikitext.ui.editor.assist

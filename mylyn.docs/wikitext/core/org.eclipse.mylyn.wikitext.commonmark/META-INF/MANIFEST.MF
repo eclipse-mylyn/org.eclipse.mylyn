@@ -9,7 +9,7 @@ Export-Package: org.eclipse.mylyn.wikitext.commonmark;version="4.6.0";x-friends:
  org.eclipse.mylyn.wikitext.commonmark.internal.inlines;x-internal:=true
 Bundle-Name: Mylyn WikiText CommonMark
 Bundle-Vendor: Eclipse Mylyn
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=17))"
 Import-Package: org.apache.commons.io;version="[2.16.0,3.0.0)",
  org.apache.commons.lang3.builder;version="[3.14.0,4.0.0)",

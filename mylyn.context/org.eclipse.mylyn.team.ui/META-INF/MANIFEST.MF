@@ -36,6 +36,6 @@ Export-Package: org.eclipse.mylyn.internal.team.ui;x-internal:=true,
  org.eclipse.mylyn.team.ui
 Import-Package: org.osgi.service.event;version="[1.4.0,2.0.0)"
 Bundle-ClassPath: .
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Localization: plugin
 Service-Component: OSGI-INF/org.eclipse.mylyn.internal.team.ui.FocusedTeamUiStartup.xml

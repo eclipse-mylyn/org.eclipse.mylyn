@@ -14,5 +14,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-Vendor: %Bundle-Vendor
 Export-Package: org.eclipse.mylyn.context.core,
  org.eclipse.mylyn.internal.context.core;x-friends:="org.eclipse.mylyn.context.ui"
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ClassPath: .

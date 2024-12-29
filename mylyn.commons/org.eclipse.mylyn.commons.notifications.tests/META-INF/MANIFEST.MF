@@ -15,4 +15,4 @@ Require-Bundle: com.sun.xml.bind;bundle-version="2.3.3",
 Export-Package: org.eclipse.mylyn.commons.notifications.tests;x-internal:=true,
  org.eclipse.mylyn.commons.notifications.tests.core;x-internal:=true,
  org.eclipse.mylyn.commons.notifications.tests.feed;x-internal:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21

@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.wikitext.markdown
 Bundle-Version: 4.6.0.qualifier
 Bundle-Name: Mylyn WikiText Markdown
 Bundle-Vendor: Eclipse Mylyn
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Import-Package: org.eclipse.mylyn.wikitext.parser;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.parser.builder;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.parser.markup;version="[4.2,5)",

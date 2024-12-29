@@ -5,7 +5,7 @@ Bundle-Name: Mylyn Reviews Tests
 Bundle-SymbolicName: org.eclipse.mylyn.reviews.tests;singleton:=true
 Bundle-Version: 4.6.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: org.eclipse.mylyn.reviews.spi.edit.remote;x-internal:=true,
  org.eclipse.mylyn.reviews.tests;x-internal:=true,
  org.eclipse.mylyn.reviews.tests.ui;x-internal:=true,

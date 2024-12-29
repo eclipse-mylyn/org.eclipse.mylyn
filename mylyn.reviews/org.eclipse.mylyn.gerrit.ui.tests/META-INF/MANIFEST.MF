@@ -6,7 +6,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.gerrit.ui.tests;singleton:=true
 Bundle-Version: 4.6.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.gerrit.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.hamcrest;bundle-version="2.0.0",
  org.junit;bundle-version="4.5.0",
  org.mockito.mockito-core;bundle-version="4.8.1"

@@ -21,4 +21,4 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
  org.mockito.mockito-core;bundle-version="0.0.0"
 Export-Package: org.eclipse.mylyn.context.tasks.ui.tests,
  org.eclipse.mylyn.internal.context.tasks.ui;x-internal:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
