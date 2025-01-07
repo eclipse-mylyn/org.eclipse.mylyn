@@ -120,14 +120,21 @@
         "ci_job_token_scope_enabled": false,
         "ci_separated_caches": true,
         "ci_allow_fork_pipelines_to_run_in_parent_project": true,
+        "ci_id_token_sub_claim_components": [
+          "project_path",
+          "ref_type",
+          "ref"
+        ],
         "build_git_strategy": "fetch",
         "keep_latest_artifact": true,
-        "restrict_user_defined_variables": false,
+        "restrict_user_defined_variables": true,
+        "ci_pipeline_variables_minimum_override_role": "developer",
         "group_runners_enabled": true,
         "auto_cancel_pending_pipelines": "enabled",
         "build_timeout": 3600,
         "auto_devops_enabled": true,
         "auto_devops_deploy_strategy": "continuous",
+        "ci_push_repository_for_job_token_allowed": false,
         "public_jobs": true,
         "shared_with_groups": [],
         "only_allow_merge_if_pipeline_succeeds": false,
@@ -164,7 +171,20 @@
       "math_rendering_limits_enabled": true,
       "lock_math_rendering_limits_enabled": false,
       "default_branch_protection": 2,
-      "default_branch_protection_defaults": {},
+      "default_branch_protection_defaults": {
+        "allowed_to_push": [
+          {
+            "access_level": 40
+          }
+        ],
+        "allow_force_push": false,
+        "allowed_to_merge": [
+          {
+            "access_level": 40
+          }
+        ],
+        "developer_can_initial_push": false
+      },
       "request_access_enabled": true,
       "full_name": "eclipse-mylyn",
       "full_path": "eclipse-mylyn",

@@ -17,7 +17,20 @@
     "math_rendering_limits_enabled": true,
     "lock_math_rendering_limits_enabled": false,
     "default_branch_protection": 2,
-    "default_branch_protection_defaults": {},
+    "default_branch_protection_defaults": {
+      "allowed_to_push": [
+        {
+          "access_level": 40
+        }
+      ],
+      "allow_force_push": false,
+      "allowed_to_merge": [
+        {
+          "access_level": 40
+        }
+      ],
+      "developer_can_initial_push": false
+    },
     "request_access_enabled": true,
     "full_name": "eclipse-mylyn / ci-test",
     "full_path": "eclipse-mylyn/ci-test",
@@ -44,7 +57,20 @@
     "math_rendering_limits_enabled": true,
     "lock_math_rendering_limits_enabled": false,
     "default_branch_protection": 2,
-    "default_branch_protection_defaults": {},
+    "default_branch_protection_defaults": {
+      "allowed_to_push": [
+        {
+          "access_level": 40
+        }
+      ],
+      "allow_force_push": false,
+      "allowed_to_merge": [
+        {
+          "access_level": 40
+        }
+      ],
+      "developer_can_initial_push": false
+    },
     "request_access_enabled": true,
     "full_name": "eclipse-mylyn",
     "full_path": "eclipse-mylyn",

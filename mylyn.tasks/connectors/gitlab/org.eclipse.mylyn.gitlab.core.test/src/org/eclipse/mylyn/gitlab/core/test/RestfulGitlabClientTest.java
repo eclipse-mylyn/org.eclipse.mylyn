@@ -143,6 +143,13 @@ class RestfulGitlabClientTest {
 				jsonObject.addProperty("avatar_url", //$NON-NLS-1$
 						"https://secure.gravatar.com/avatar/42?s\u003d80\u0026d\u003didenticon"); //$NON-NLS-1$
 			}
+			// Adapt repository URL if necessary
+			if (!"https://gitlab.mylyn.local".equals(GitlabTestFixture.current().getRepositoryUrl())) {
+				String webURL = jsonObject.get("web_url")
+						.getAsString()
+						.replace(GitlabTestFixture.current().getRepositoryUrl(), "https://gitlab.mylyn.local");
+				jsonObject.addProperty("web_url", webURL);
+			}
 		}
 		techUsers.sort(Comparator.naturalOrder());
 		String fName = "testdata/getNamespaces" + (techUsers.size() > 0 ? "_" : "") + String.join("_", techUsers)
@@ -167,6 +174,14 @@ class RestfulGitlabClientTest {
 		userObj.remove("current_sign_in_at"); //$NON-NLS-1$
 		// The avatar_url can change with a newer Gitlab version
 		userObj.remove("avatar_url"); //$NON-NLS-1$
+		
+		// Adapt repository URL if necessary
+		if (!"https://gitlab.mylyn.local".equals(GitlabTestFixture.current().getRepositoryUrl())) {
+			String webURL = userObj.get("web_url")
+					.getAsString()
+					.replace(GitlabTestFixture.current().getRepositoryUrl(), "https://gitlab.mylyn.local");
+			userObj.addProperty("web_url", webURL);
+		}
 		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(user);
 		String expectedStr = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/getUser.json"), //$NON-NLS-1$
 				Charset.defaultCharset());
@@ -193,6 +208,22 @@ class RestfulGitlabClientTest {
 			jsonObject.remove("current_sign_in_at"); //$NON-NLS-1$
 			// The avatar_url can change with a newer Gitlab version
 			jsonObject.remove("avatar_url"); //$NON-NLS-1$
+
+			// Adapt repository URL if necessary
+			if (!"https://gitlab.mylyn.local".equals(GitlabTestFixture.current().getRepositoryUrl())) {
+				String webURL = jsonObject.get("web_url")
+						.getAsString()
+						.replace(GitlabTestFixture.current().getRepositoryUrl(), "https://gitlab.mylyn.local");
+				jsonObject.addProperty("web_url", webURL);
+			}
+			// change administrator email
+			if (jsonObject.get("email").getAsString().startsWith("gitlab_admin_")) {
+				jsonObject.addProperty("email", "gitlab_admin_e5012d@example.com");
+			}
+			if (jsonObject.get("commit_email").getAsString().startsWith("gitlab_admin_")) {
+				jsonObject.addProperty("commit_email", "gitlab_admin_e5012d@example.com");
+			}
+
 		}
 		techUsers.sort(Comparator.naturalOrder());
 		String fName = "testdata/getUsers" + (techUsers.size() > 0 ? "_" : "") + String.join("_", techUsers) + ".json";
@@ -209,6 +240,13 @@ class RestfulGitlabClientTest {
 		for (JsonElement resultObj : resultElement.getAsJsonArray()) {
 			JsonObject jsonObject = resultObj.getAsJsonObject();
 			jsonObject.addProperty("created_at", "2024-02-14T11:11:11.111Z"); //$NON-NLS-1$ //$NON-NLS-2$
+			// Adapt repository URL if necessary
+			if (!"https://gitlab.mylyn.local".equals(GitlabTestFixture.current().getRepositoryUrl())) {
+				String webURL = jsonObject.get("web_url")
+						.getAsString()
+						.replace(GitlabTestFixture.current().getRepositoryUrl(), "https://gitlab.mylyn.local");
+				jsonObject.addProperty("web_url", webURL);
+			}
 		}
 		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(resultElement);
 		String expected = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/getGroups.json"), //$NON-NLS-1$
@@ -232,6 +270,13 @@ class RestfulGitlabClientTest {
 		user.remove("current_sign_in_at"); //$NON-NLS-1$
 		// The avatar_url can change with a newer Gitlab version
 		user.remove("avatar_url"); //$NON-NLS-1$
+		// Adapt repository URL if necessary
+		if (!"https://gitlab.mylyn.local".equals(GitlabTestFixture.current().getRepositoryUrl())) {
+			String webURL = user.get("web_url")
+					.getAsString()
+					.replace(GitlabTestFixture.current().getRepositoryUrl(), "https://gitlab.mylyn.local");
+			user.addProperty("web_url", webURL);
+		}
 
 		for (Integer integer : configuration.getProjectIDs()) {
 			JsonObject project = configuration.getProductWithID(integer);
@@ -245,13 +290,24 @@ class RestfulGitlabClientTest {
 			project.remove("open_issues_count"); //$NON-NLS-1$
 			project.remove("runners_token"); //$NON-NLS-1$
 			project.addProperty("auto_devops_enabled", true); //$NON-NLS-1$
+			// Adapt repository URL if necessary
+			if (!"https://gitlab.mylyn.local".equals(GitlabTestFixture.current().getRepositoryUrl())) {
+				String ssh_url_to_repo = project.get("ssh_url_to_repo")
+						.getAsString()
+						.replace(GitlabTestFixture.current().getRepositoryUrl().substring(8), "gitlab.mylyn.local");
+				project.addProperty("ssh_url_to_repo", ssh_url_to_repo);
+			}
+
 		}
 		for (String string : configuration.getGroupNames()) {
 			JsonObject group = configuration.getGroupDetail(string).getAsJsonObject();
 			group.remove("created_at"); //$NON-NLS-1$
 			group.remove("runners_token"); //$NON-NLS-1$
 		}
-		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(configuration);
+		String actual = new GsonBuilder().setPrettyPrinting()
+				.create()
+				.toJson(configuration)
+				.replace(GitlabTestFixture.current().getRepositoryUrl(), "https://gitlab.mylyn.local");
 		String expected = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/configuration.json"), //$NON-NLS-1$
 				Charset.defaultCharset());
 		assertEquals(expected, actual);
