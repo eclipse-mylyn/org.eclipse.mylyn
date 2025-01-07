@@ -109,7 +109,7 @@
         - gitlab
       vars:
         common_domain_name: "{{ hostvars['localhost'].mylyn_service_domain }}"
-        gitlabImageVersion: "17.4.0"
+        gitlabImageVersion: "17.7.0"
         gitlabHostURL: "gitlab.{{ hostvars['localhost'].mylyn_service_domain }}"
     - role: jenkins
       tags:

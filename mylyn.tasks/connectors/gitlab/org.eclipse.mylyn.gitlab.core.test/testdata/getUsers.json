@@ -84,7 +84,7 @@
     "followers": 0,
     "following": 0,
     "is_followed": false,
-    "email": "admin@example.com",
+    "email": "gitlab_admin_e5012d@example.com",
     "theme_id": 3,
     "color_scheme_id": 1,
     "projects_limit": 100000,
@@ -94,7 +94,7 @@
     "two_factor_enabled": false,
     "external": false,
     "private_profile": false,
-    "commit_email": "admin@example.com",
+    "commit_email": "gitlab_admin_e5012d@example.com",
     "is_admin": true,
     "namespace_id": 1
   }
