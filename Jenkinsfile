@@ -10,6 +10,14 @@
  * Contributors:
  *   See git history
  *******************************************************************************/
+def secrets = [
+  [path: 'cbi/org.eclipse.mylyn/develocity.eclipse.org', secretValues: [
+    [envVar: 'DEVELOCITY_ACCESS_KEY', vaultKey: 'develocity-token']
+    ]
+  ]
+]
+
+
 pipeline {
 	options {
 		timeout(time: 80, unit: 'MINUTES')
@@ -73,20 +81,22 @@ MAVEN_PROFILES=${env.MAVEN_PROFILES}
 			steps {
 				sshagent (['projects-storage.eclipse.org-bot-ssh']) {
 					wrap([$class: 'Xvnc', useXauthority: true]) {
-						sh '''
-							mvn \
-							clean \
-							verify \
-							-B \
-							$MAVEN_PROFILES \
-							-Dmaven.repo.local=$WORKSPACE/.m2/repository \
-							-Dmaven.test.failure.ignore=true \
-							-Dmaven.test.error.ignore=true \
-							-Ddash.fail=false \
-							-Dorg.eclipse.justj.p2.manager.build.url=$JOB_URL \
-							-Dbuild.type=$BUILD_TYPE \
-							-Dgit.commit=$GIT_COMMIT
-						'''
+                        withVault([vaultSecrets: secrets]) {
+                            sh '''
+                                mvn \
+                                clean \
+                                verify \
+                                -B \
+                                $MAVEN_PROFILES \
+                                -Dmaven.repo.local=$WORKSPACE/.m2/repository \
+                                -Dmaven.test.failure.ignore=true \
+                                -Dmaven.test.error.ignore=true \
+                                -Ddash.fail=false \
+                                -Dorg.eclipse.justj.p2.manager.build.url=$JOB_URL \
+                                -Dbuild.type=$BUILD_TYPE \
+                                -Dgit.commit=$GIT_COMMIT
+                            '''
+                        }
 					}
 				}
 			}
