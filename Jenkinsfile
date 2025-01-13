@@ -89,7 +89,6 @@ MAVEN_PROFILES=${env.MAVEN_PROFILES}
                                 -B \
                                 $MAVEN_PROFILES \
                                 -Dmaven.repo.local=$WORKSPACE/.m2/repository \
-                                -Ddevelocity.storage.directory=$WORKSPACE/.m2/.develocity \
                                 -Dmaven.test.failure.ignore=true \
                                 -Dmaven.test.error.ignore=true \
                                 -Ddash.fail=false \
