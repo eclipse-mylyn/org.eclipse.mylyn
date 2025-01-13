@@ -12,7 +12,7 @@
  *******************************************************************************/
 def secrets = [
   [path: 'cbi/org.eclipse.mylyn/develocity.eclipse.org', secretValues: [
-    [envVar: 'DEVELOCITY_ACCESS_KEY', vaultKey: 'develocity-token']
+    [envVar: 'DEVELOCITY_ACCESS_KEY', vaultKey: 'api-token']
     ]
   ]
 ]
@@ -89,6 +89,7 @@ MAVEN_PROFILES=${env.MAVEN_PROFILES}
                                 -B \
                                 $MAVEN_PROFILES \
                                 -Dmaven.repo.local=$WORKSPACE/.m2/repository \
+                                -Ddevelocity.storage.directory=$WORKSPACE/.m2/.develocity \
                                 -Dmaven.test.failure.ignore=true \
                                 -Dmaven.test.error.ignore=true \
                                 -Ddash.fail=false \
