@@ -214,6 +214,8 @@
    <bundle id="org.apache.ws.commons.util"/>
    <bundle id="org.glassfish.hk2.osgi-resource-locator"/>
    <bundle id="org.jsoup"/>
+   <bundle id="org.eclipse.ecf.discovery"/>
+   <bundle id="org.eclipse.ecf.provider.jmdns"/>
    <category-def name="org.eclipse.mylyn.docs.category" label="Mylyn Docs">
       <description>
          Mylyn Docs
