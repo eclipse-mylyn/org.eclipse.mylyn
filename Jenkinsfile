@@ -11,7 +11,7 @@
  *   See git history
  *******************************************************************************/
 def secrets = [
-  [path: 'cbi/org.eclipse.mylyn/develocity.eclipse.org', secretValues: [
+  [path: 'cbi/tools.mylyn/develocity.eclipse.org', secretValues: [
     [envVar: 'DEVELOCITY_ACCESS_KEY', vaultKey: 'api-token']
     ]
   ]
