@@ -223,14 +223,7 @@
                 </environment>
               </environments>
               <target>
-                <artifact>
-<!-- revert back to ${project.parent.groupId} after Mylyn.Docs integration -->
-                  <groupId>org.eclipse.mylyn</groupId>
-<!-- revert back to ${project.parent.groupId}.target after Mylyn.Docs integration -->
-                  <artifactId>org.eclipse.mylyn.target</artifactId>
-<!-- revert back to ${project.parent.version} after Mylyn.Docs integration -->
-                  <version>4.6.0-SNAPSHOT</version>
-                </artifact>
+                 <file>${maven.multiModuleProjectDirectory}/org.eclipse.mylyn-target/org.eclipse.mylyn.target.target</file>
               </target>
             </configuration>
           </plugin>
