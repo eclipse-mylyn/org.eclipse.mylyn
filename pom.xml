@@ -27,7 +27,6 @@
   <name>Mylyn Root</name>
   <packaging>pom</packaging>
   <modules>
-    <module>org.eclipse.mylyn-target</module>
     <module>mylyn.docs/docs</module>
     <module>mylyn.docs/wikitext</module>
 <!--
