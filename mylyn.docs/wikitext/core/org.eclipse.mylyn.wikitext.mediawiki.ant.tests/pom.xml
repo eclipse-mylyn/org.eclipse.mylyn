@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  *******************************************************************************
- * Copyright (c) 2024 ArSysOp
+ * Copyright (c) 2024, 2025 ArSysOp
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,6 +11,7 @@
  * 
  * Contributors:
  *     ArSysOp - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -20,7 +21,7 @@
 	<parent>
 		<groupId>org.eclipse.mylyn.docs</groupId>
 		<artifactId>wikitext.core</artifactId>
-		<version>4.6.0-SNAPSHOT</version>
+		<version>4.7.0-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>org.eclipse.mylyn.wikitext.mediawiki.ant.tests</artifactId>

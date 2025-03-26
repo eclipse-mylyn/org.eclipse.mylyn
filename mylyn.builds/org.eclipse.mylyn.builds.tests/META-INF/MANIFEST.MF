@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.builds.test
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Build Framework
 Bundle-SymbolicName: org.eclipse.mylyn.builds.tests;singleton:=true
-Bundle-Version: 4.6.0.qualifier
+Bundle-Version: 4.7.0.qualifier
 Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.emf.ecore;bundle-version="0.0.0",
  org.eclipse.equinox.event;bundle-version="0.0.0",

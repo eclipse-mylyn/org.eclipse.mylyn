@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.commons.ui.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Commons UI
 Bundle-SymbolicName: org.eclipse.mylyn.commons.ui.tests;singleton:=true
-Bundle-Version: 4.6.0.qualifier
+Bundle-Version: 4.7.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.commons.ui;bundle-version="4.4.0"
 Require-Bundle: org.junit;bundle-version="4.13.2",

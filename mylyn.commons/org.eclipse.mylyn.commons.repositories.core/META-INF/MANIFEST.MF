@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.commons.repositories.core
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.commons.repositories.core;singleton:=true
-Bundle-Version: 4.6.0.qualifier
+Bundle-Version: 4.7.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: org.eclipse.mylyn.commons.repositories.core;x-friends:="org.eclipse.mylyn.commons.repositories.http.core,org.eclipse.mylyn.commons.repositories.ui",
