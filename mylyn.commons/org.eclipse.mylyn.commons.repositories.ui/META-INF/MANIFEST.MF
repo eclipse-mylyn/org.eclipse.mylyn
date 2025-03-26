@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.commons.repositories.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.commons.repositories.ui; singleton:=true
-Bundle-Version: 4.6.0.qualifier
+Bundle-Version: 4.7.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.internal.commons.repositories.ui.RepositoriesUiPlugin
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: plugin
