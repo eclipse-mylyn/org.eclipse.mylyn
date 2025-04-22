@@ -49,3 +49,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.ui
+Require-Capability: eclipse.swt;filter:="(image.format=svg)"
