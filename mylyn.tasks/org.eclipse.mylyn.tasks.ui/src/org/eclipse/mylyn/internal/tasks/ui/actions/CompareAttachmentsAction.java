@@ -108,7 +108,7 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 		}
 	}
 
-	private static final String[] IMAGE_EXTENSIONS = { ".jpg", ".gif", ".png", ".tiff", ".tif", ".bmp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+	private static final String[] IMAGE_EXTENSIONS = { ".jpg", ".gif", ".png", ".tiff", ".tif", ".bmp", ".svg" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 
 	private Image getImage(ITaskAttachment attachment) {
 		if (AttachmentUtil.isContext(attachment)) {
@@ -169,7 +169,7 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 
 		@Override
 		public String getType() {
-			// ImageMergeViewerCreator - gif,jpg,jpeg,png,bmp,ico,tif,tiff
+			// ImageMergeViewerCreator - gif,jpg,jpeg,png,bmp,ico,tif,tiff,svg
 			// BinaryCompareViewerCreator - class,exe,dll,binary,zip,jar
 			// TextMergeViewerCreator - txt
 			// PropertiesFileMergeViewerCreator - properties,properties2
