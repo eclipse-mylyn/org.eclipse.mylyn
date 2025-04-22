@@ -110,5 +110,42 @@
         </configuration>
       </plugin>
     </plugins>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>com.gradle</groupId>
+          <artifactId>develocity-maven-extension</artifactId>
+          <configuration>
+            <develocity>
+              <plugins>
+                <plugin>
+                  <groupId>org.eclipse.tycho</groupId>
+                  <artifactId>tycho-surefire-plugin</artifactId>
+                  <inputs>
+                    <fileSets combine.children="append">
+                      <fileSet>
+                        <name>test-fixture</name>
+                        <paths>
+                          <path>${basedir}/test-fixture.xsl</path>
+                        </paths>
+                        <normalization>RELATIVE_PATH</normalization>
+                      </fileSet>
+                      <fileSet>
+                        <name>test-suite</name>
+                        <paths>
+                          <path>${basedir}/test-suite.xsl</path>
+                        </paths>
+                        <normalization>RELATIVE_PATH</normalization>
+                      </fileSet>
+                    </fileSets>
+                  </inputs>
+                </plugin>
+              </plugins>
+            </develocity>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
 </project>
