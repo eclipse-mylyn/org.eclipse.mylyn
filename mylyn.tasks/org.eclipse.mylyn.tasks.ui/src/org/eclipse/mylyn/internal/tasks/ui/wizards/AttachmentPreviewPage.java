@@ -99,6 +99,7 @@ public class AttachmentPreviewPage extends WizardPage {
 		imageTypes.add("image/gif"); //$NON-NLS-1$
 		imageTypes.add("image/png"); //$NON-NLS-1$
 		imageTypes.add("image/tiff"); //$NON-NLS-1$
+		imageTypes.add("image/svg"); //$NON-NLS-1$
 	}
 
 	private void adjustScrollbars(Rectangle imgSize) {
