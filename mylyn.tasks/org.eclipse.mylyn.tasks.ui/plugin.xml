@@ -40,7 +40,7 @@
          allowMultiple="true"
          category="org.eclipse.mylyn.ui"
          class="org.eclipse.mylyn.internal.tasks.ui.views.TaskListView"
-         icon="icons/eview16/task-list.png"
+         icon="icons/eview16/task-list.svg"
          id="org.eclipse.mylyn.tasks.ui.views.tasks"
          name="%TaskListView.name"/>
       <view
@@ -48,7 +48,7 @@
             allowMultiple="false"
             category="org.eclipse.mylyn.ui"
             class="org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView"
-            icon="icons/eview16/repositories.png"
+            icon="icons/eview16/repositories.svg"
             name="%TaskRepositoriesView.name">
       </view>
   	</extension>
@@ -81,7 +81,7 @@
             category="org.eclipse.mylyn.wizards"
             class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard"
             hasPages="false"
-            icon="icons/etool16/task-new.png"
+            icon="icons/etool16/task-new.svg"
             id="org.eclipse.mylyn.tasks.ui.wizards.new.task"
             name="Task"/> -->
       <wizard
@@ -89,20 +89,20 @@
             category="org.eclipse.mylyn.ui.wizards.new"
             class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalCategoryWizard"
             hasPages="false"
-            icon="icons/etool16/category-new.png"
+            icon="icons/etool16/category-new.svg"
             id="org.eclipse.mylyn.tasks.ui.wizards.new.category"
             name="%NewLocalCategoryWizard.name">
       </wizard>
 	  <wizard
             category="org.eclipse.mylyn.ui.wizards.new"
             class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizardInternal"
-            icon="icons/etool16/task-new.png"
+            icon="icons/etool16/task-new.svg"
             id="org.eclipse.mylyn.tasks.ui.wizards.new.repository.task"
             name="%NewTaskWizard.name"/>
       <wizard
             category="org.eclipse.mylyn.ui.wizards.new"
             class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewQueryWizard"
-            icon="icons/etool16/query-new.png"
+            icon="icons/etool16/query-new.svg"
             id="org.eclipse.mylyn.tasks.ui.wizards.new.query"
             name="%NewQueryWizard.name"/>
 	</extension>
@@ -112,7 +112,7 @@
      <wizard
            category="org.eclipse.mylyn.tasks.ui.wizards.import.category"
            class="org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataImportWizard"
-           icon="icons/etool16/tasklist-import.png"
+           icon="icons/etool16/tasklist-import.svg"
            id="org.eclipse.mylyn.tasks.ui.wizards.import"
            name="%TaskDataImportWizard.name">
         <description>
@@ -128,7 +128,7 @@
       <wizard
             category="org.eclipse.mylyn.tasks.ui.wizards.export.category"
             class="org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizard"
-            icon="icons/etool16/tasklist-export.png"
+            icon="icons/etool16/tasklist-export.svg"
             id="org.eclipse.mylyn.tasks.ui.wizards.export"
             name="%TaskDataExportWizard.name">
          <description>
@@ -168,7 +168,7 @@
      <editor
            class="org.eclipse.mylyn.tasks.ui.editors.TaskEditor"
            contributorClass="org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor"
-           icon="icons/etool16/task.png"
+           icon="icons/etool16/task.svg"
            id="org.eclipse.mylyn.tasks.ui.editors.task"
            name="%TaskEditor.name"/>
 	</extension>
@@ -235,7 +235,7 @@
 	  		<action
 	          class="org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeAllAction"
 	          enablesFor="*"
-	          icon="icons/etool16/repository-synchronize.png"
+	          icon="icons/etool16/repository-synchronize.svg"
 	          id="org.eclipse.mylyn.tasks.ui.synchronize.changed"
 	          label="%SynchronizeAllAction.label"
 	          menubarPath="tasks"
@@ -244,7 +244,7 @@
 	         </action>
 		    <action
 		          class="org.eclipse.mylyn.internal.tasks.ui.actions.RestoreTaskListAction"
-		          icon="icons/etool16/import.png"
+		          icon="icons/etool16/import.svg"
 		          id="org.eclipse.mylyn.tasks.ui.tasks.restore"
 		          label="%RestoreTaskListAction.label"
 		          menubarPath="tasks"
@@ -254,7 +254,7 @@
 	  		<action
 	          class="org.eclipse.mylyn.internal.tasks.ui.actions.ShowTaskRepositoriesViewAction"
 	          enablesFor="*"
-	          icon="icons/eview16/repositories.png"
+	          icon="icons/eview16/repositories.svg"
 	          id="org.eclipse.mylyn.tasks.ui.open.repositories.view"
 	          label="%ShowTaskRepositoriesViewAction.label"
 	          menubarPath="tasks"
@@ -262,7 +262,7 @@
 	         </action>           		
 	         <action
 	               class="org.eclipse.mylyn.internal.tasks.ui.actions.ShowTasksUiLegendAction"
-	               icon="icons/etool16/icons-legend.png"
+	               icon="icons/etool16/icons-legend.svg"
 	               id="org.eclipse.mylyn.doc.legend.show.action"
 	               label="%ShowTasksUiLegendAction.label"
 	               menubarPath="additions"
@@ -273,7 +273,7 @@
 			<action		
 				class="org.eclipse.mylyn.internal.tasks.ui.actions.FocusTaskListAction"		
 				enablesFor="*"		
-				icon="icons/eview16/focus.png"		
+				icon="icons/eview16/focus.svg"		
 				id="org.eclipse.mylyn.context.ui.actions.tasklist.focus"		
 				label="%FocusTaskListAction.label"		
 				menubarPath="additions"		
@@ -293,7 +293,7 @@
                class="org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeSelectedAction"
                definitionId="org.eclipse.ui.file.refresh"
                enablesFor="*"
-               icon="icons/etool16/repository-synchronize.png"
+               icon="icons/etool16/repository-synchronize.svg"
                id="org.eclipse.mylyn.tasks.ui.actions.synchronize.selected"
                label="%SynchronizeSelectedAction.label"
                menubarPath="repository"
@@ -310,7 +310,7 @@
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.QueryCloneAction"
                enablesFor="org.eclipse.mylyn.internal.tasks.core.RepositoryQuery"
-               icon="icons/etool16/query-new.png"
+               icon="icons/etool16/query-new.svg"
                id="org.eclipse.mylyn.tasks.ui.actions.clone.query"
                label="%QueryCloneAction.label"
                menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/clone"
@@ -319,7 +319,7 @@
   <action
         class="org.eclipse.mylyn.internal.tasks.ui.actions.CloneTaskAction"
         enablesFor="1"
-        icon="icons/etool16/task-new.png"
+        icon="icons/etool16/task-new.svg"
         id="org.eclipse.mylyn.tasks.ui.actions.task.query"
         label="%CloneTaskAction.label"
         menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/clone"
@@ -342,7 +342,7 @@
 
          <action
           	class="org.eclipse.mylyn.internal.tasks.ui.actions.RestoreTaskListAction"
-          	icon="icons/etool16/import.png"
+          	icon="icons/etool16/import.svg"
           	id="org.eclipse.mylyn.tasks.ui.tasks.restore"
           	label="%RestoreTaskListAction.label"
           	menubarPath="org.eclipse.mylyn.tasks.ui.menu.operations/restore"
@@ -352,7 +352,7 @@
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.ExportAction"
                enablesFor="+"
-               icon="icons/etool16/export.png"
+               icon="icons/etool16/export.svg"
                id="org.eclipse.mylyn.tasks.ui.actions.export"
                label="%ExportAction.label"
                menubarPath="org.eclipse.mylyn.tasks.ui.menu.operations/importexport"
@@ -362,7 +362,7 @@
 		  <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.ImportAction"
                enablesFor="*"
-               icon="icons/etool16/import.png"
+               icon="icons/etool16/import.svg"
                id="org.eclipse.mylyn.tasks.ui.actions.import"
                label="%ImportAction.label"
                menubarPath="org.eclipse.mylyn.tasks.ui.menu.operations/importexport"
@@ -374,7 +374,7 @@
   		<action
 	        class="org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction:local"
 	        enablesFor="*"
-	        icon="icons/etool16/task-new.png"
+	        icon="icons/etool16/task-new.svg"
 	        id="org.eclipse.mylyn.tasks.ui.new.local.task"
 	        definitionId="org.eclipse.mylyn.tasks.ui.command.new.local.task"
 	        label="%NewTaskAction.local.label"
@@ -384,7 +384,7 @@
   		<action
 	        class="org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction"
 	        enablesFor="*"
-	        icon="icons/etool16/task-new.png"
+	        icon="icons/etool16/task-new.svg"
 	        id="org.eclipse.mylyn.tasks.ui.new.repository.task"
 	        label="%NewTaskAction.label"
 	        menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/repository"
@@ -393,7 +393,7 @@
 		<action
               class="org.eclipse.mylyn.internal.tasks.ui.actions.NewQueryAction"
               enablesFor="*"
-              icon="icons/etool16/query-new.png"
+              icon="icons/etool16/query-new.svg"
               id="org.eclipse.mylyn.tasks.ui.new.query"
               menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/repository"
               label="%NewQueryAction.label"
@@ -405,7 +405,7 @@
           class="org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction"
           definitionId="org.eclipse.mylyn.tasks.ui.command.new.subtask"
           enablesFor="1"
-          icon="icons/etool16/sub-task-new.png"
+          icon="icons/etool16/sub-task-new.svg"
           id="org.eclipse.mylyn.tasks.ui.new.subtask"
           label="%NewSubTaskAction.label"
           menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/afterRepository"
@@ -454,7 +454,7 @@
 
   <!--<action
         class="org.eclipse.mylyn.internal.tasks.ui.actions.NewLocalTaskAction"
-        icon="icons/etool16/task-new.png"
+        icon="icons/etool16/task-new.svg"
         id="org.eclipse.mylyn.tasks.ui.actions.new.task"
         label="Task"
         menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/local"
@@ -463,7 +463,7 @@
   </action>-->
   <action
         class="org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction"
-        icon="icons/etool16/category-new.png"
+        icon="icons/etool16/category-new.svg"
         id="org.eclipse.mylyn.tasks.ui.actions.new.category"
         label="%NewCategoryAction.label"
         menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/local"
@@ -475,7 +475,7 @@
             targetID="org.eclipse.mylyn.tasks.ui.views.repositories">
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.RefreshRepositoryTasksAction"
-               icon="icons/etool16/repository-synchronize.png"
+               icon="icons/etool16/repository-synchronize.svg"
                id="org.eclipse.mylyn.tasks.ui.open.task.remote"
                label="%RefreshRepositoryTasksAction.label"
                menubarPath="repository"
@@ -491,7 +491,7 @@
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.OpenRepositoryTaskAction"
                definitionId="org.eclipse.mylyn.tasks.ui.command.openRemoteTask"
-               icon="icons/etool16/open-repository-task.png"
+               icon="icons/etool16/open-repository-task.svg"
                id="org.eclipse.mylyn.tasks.ui.open.task.remote"
                label="%OpenRepositoryTask.label"
                menubarPath="repository"
@@ -507,7 +507,7 @@
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.NewQueryAction:skipFirstPage"
                enablesFor="*"
-               icon="icons/etool16/query-new.png"
+               icon="icons/etool16/query-new.svg"
                id="org.eclipse.mylyn.tasks.ui.new.query"
                label="%NewQueryAction.skipFirstPage.label"
                menubarPath="repository"
@@ -523,7 +523,7 @@
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction:skipFirstPage"
                enablesFor="*"
-               icon="icons/etool16/task-new.png"
+               icon="icons/etool16/task-new.svg"
                id="org.eclipse.mylyn.tasks.ui.new.repository.task"
                label="%NewTaskAction.skipFirstPage.label"
                menubarPath="repository"
@@ -544,7 +544,7 @@
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.CompareAttachmentsAction"
                enablesFor="2"
-               icon="icons/etool16/compare.png"
+               icon="icons/etool16/compare.svg"
                id="org.eclipse.mylyn.tasks.ui.action.attachment.compare"
                label="%CompareAttachmentsAction.label"
                menubarPath="actions"
@@ -806,7 +806,7 @@
       <perspective
             class="org.eclipse.mylyn.internal.tasks.ui.PlanningPerspectiveFactory"
             fixed="false"
-            icon="icons/eview16/perspective-planning.png"
+            icon="icons/eview16/perspective-planning.svg"
             id="org.eclipse.mylyn.tasks.ui.perspectives.planning"
             name="%PlanningPerspectiveFactory.name"/>
    </extension>
@@ -838,7 +838,7 @@
 		<action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.DeactivateAllTasksAction"
                definitionId="org.eclipse.mylyn.tasks.ui.command.deactivateAllTasks"
-               icon="icons/etool16/task-inactive-centered.png"
+               icon="icons/etool16/task-inactive-centered.svg"
                id="org.eclipse.mylyn.tasks.ui.deactivateAllTasks"
                label="%DeactivateAllTasksAction.label"
                menubarPath="navigate/open.ext3"
@@ -846,7 +846,7 @@
 		<action
         	class="org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction"
         	definitionId="org.eclipse.mylyn.tasks.ui.command.activateTask"
-        	icon="icons/etool16/task-active-centered.png"
+        	icon="icons/etool16/task-active-centered.svg"
         	id="org.eclipse.mylyn.tasks.ui.switchTask"
         	label="%ActivateTaskDialogAction.label"
         	menubarPath="navigate/open.ext3"
@@ -854,7 +854,7 @@
         <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskAction"
                definitionId="org.eclipse.mylyn.tasks.ui.command.openTask"
-               icon="icons/etool16/open-task.png"
+               icon="icons/etool16/open-task.svg"
                id="org.eclipse.mylyn.tasks.ui.openTask"
                label="%OpenTaskAction.label"
                menubarPath="navigate/open.ext3"
@@ -920,7 +920,7 @@
     <menuContribution locationURI="toolbar:org.eclipse.ui.workbench.navigate">
         <command id="org.eclipse.mylyn.tasks.ui.previous.task"
                  commandId="org.eclipse.mylyn.tasks.ui.command.previousTask"
-                 icon="icons/etool16/navigate-previous.png"
+                 icon="icons/etool16/navigate-previous.svg"
                  label="Activate Previous Task"
                  tooltip="Activate Previous Task"
                  style="pulldown">
@@ -944,7 +944,7 @@
   		<action
 	          allowLabelUpdate="true"
 	          class="org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction"
-	          icon="icons/etool16/navigate-previous.png"
+	          icon="icons/etool16/navigate-previous.svg"
 	          id="org.eclipse.mylyn.tasks.ui.navigate.task.history"
 	          label="%ActivateTaskHistoryDropDownAction.label"
 	          style="pulldown"
@@ -954,7 +954,7 @@
       	<action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.OpenRepositoryTaskAction"
                definitionId="org.eclipse.mylyn.tasks.ui.command.openRemoteTask"
-               icon="icons/etool16/open-repository-task.png"
+               icon="icons/etool16/open-repository-task.svg"
                id="org.eclipse.mylyn.tasks.ui.open.task.remote"
                label="%OpenRepositoryTask.label"
                menubarPath="navigate/open.ext3"
@@ -1112,7 +1112,7 @@
 		point="org.eclipse.ui.workingSets">
 		<workingSet
         elementAdapterClass="org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetElementAdapter"
-        icon="icons/obj16/workingSet.png"
+        icon="icons/obj16/workingSet.svg"
         id="org.eclipse.mylyn.tasks.ui.workingSet"
         name="%TaskWorkingSetElementAdapter.name"
         pageClass="org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetPage"
@@ -1193,10 +1193,10 @@
             class="org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector"
             name="%LocalRepositoryConnector.name"/>
       <connectorUi
-            brandingIcon="icons/etool16/person.png"
+            brandingIcon="icons/etool16/person.svg"
             class="org.eclipse.mylyn.internal.tasks.ui.LocalRepositoryConnectorUi"
             name="%LocalRepositoryConnectorUi.name"
-            overlayIcon="icons/ovr16/overlay-local.png"/>
+            overlayIcon="icons/ovr16/overlay-local.svg"/>
       <repositoryMigrator
             class="org.eclipse.mylyn.internal.tasks.ui.LocalRepositoryMigrator">
       </repositoryMigrator>
@@ -1209,13 +1209,13 @@
    <extension point="org.eclipse.mylyn.tasks.ui.presentations">
       <presentation
             class="org.eclipse.mylyn.internal.tasks.ui.CategorizedPresentation"
-            icon="icons/etool16/presentation-categorized.png"
+            icon="icons/etool16/presentation-categorized.svg"
             id="org.eclipse.mylyn.tasks.ui.categorized"
             name="%CategorizedPresentation.name"
             primary="true"/>
       <presentation
             class="org.eclipse.mylyn.internal.tasks.ui.ScheduledPresentation"
-            icon="icons/etool16/presentation-scheduled.png"
+            icon="icons/etool16/presentation-scheduled.svg"
             id="org.eclipse.mylyn.tasks.ui.scheduled"
             name="%ScheduledPresentation.name"
             primary="true"/>
@@ -1799,7 +1799,7 @@
             locationURI="popup:org.eclipse.mylyn.tasks.ui.menu.task.mark?after=group.taskStatus">
          <command
                commandId="org.eclipse.mylyn.tasks.ui.command.markTaskComplete"
-               icon="icons/etool16/task-complete.png"
+               icon="icons/etool16/task-complete.svg"
                label="%command.markTaskComplete.label"
                mnemonic="C"
                style="push">
@@ -1821,7 +1821,7 @@
          </command>
          <command
                commandId="org.eclipse.mylyn.tasks.ui.command.markTaskIncomplete"
-               icon="icons/etool16/task-incomplete.png"
+               icon="icons/etool16/task-incomplete.svg"
                label="%command.markTaskIncomplete.label"
                mnemonic="I"
                style="push">
@@ -2014,7 +2014,7 @@
       <navigatorContent
             activeByDefault="true"
             contentProvider="org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesNavigatorContentProvider"
-            icon="icons/eview16/repositories.png"
+            icon="icons/eview16/repositories.svg"
             id="org.eclipse.mylyn.tasks.ui.navigator.Repositories"
             labelProvider="org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider"
             name="Task Repositories">
@@ -2045,7 +2045,7 @@
        <wizard
              category="org.eclipse.mylyn.tasks.ui.category.Tasks"
              class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewRepositoryWizard"
-             icon="icons/etool16/repository-new.png"
+             icon="icons/etool16/repository-new.svg"
              id="org.eclipse.mylyn.tasks.ui.wizard.NewTaskRepository"
              name="%TaskRepositoryWizard.name">
           <description>
@@ -2088,7 +2088,7 @@
     <extension
           point="org.eclipse.mylyn.commons.notifications.notifications">
        <category
-             icon="icons/eview16/task-list.png"
+             icon="icons/eview16/task-list.svg"
              id="org.eclipse.mylyn.tasks.ui.category.Tasks"
              label="Tasks">
        </category>
@@ -2121,7 +2121,7 @@
 	            id="org.eclipse.mylyn.tasks.ui.trim"
 	            commandId="org.eclipse.mylyn.tasks.ui.command.previousTask"
 	            label="Previous Task"
-	            icon="icons/etool16/navigate-previous.png"
+	            icon="icons/etool16/navigate-previous.svg"
 	            style="pulldown">
 		        <visibleWhen checkEnabled="false">
 		             <test
@@ -2214,13 +2214,13 @@
           </separator>
           <command
                 commandId="org.eclipse.mylyn.context.ui.commands.task.attachContext"
-                icon="icons/etool16/context-attach.png"
+                icon="icons/etool16/context-attach.svg"
                 label="%commands.task.attachContext.label"
                 style="push">
           </command>
           <command
                 commandId="org.eclipse.mylyn.context.ui.commands.task.retrieveContext"
-                icon="icons/etool16/context-retrieve.png"
+                icon="icons/etool16/context-retrieve.svg"
                 label="%commands.task.retrieveContext.label"
                 style="push">
           </command>
@@ -2230,13 +2230,13 @@
           </separator>
           <command
                 commandId="org.eclipse.mylyn.context.ui.commands.task.copyContext"
-                icon="icons/elcl16/context-transfer.png"
+                icon="icons/elcl16/context-transfer.svg"
                 label="%commands.task.copyContext.label"
                 style="push">
           </command>
           <command
                 commandId="org.eclipse.mylyn.context.ui.commands.task.clearContext"
-                icon="icons/elcl16/context-clear.png"
+                icon="icons/elcl16/context-clear.svg"
                 label="%commands.task.clearContext.label"
                 style="push">
           </command>
@@ -2249,7 +2249,7 @@
           locationURI="popup:org.eclipse.ui.popup.any?after=additions">
        <command
              commandId="org.eclipse.mylyn.context.ui.commands.attachment.retrieveContext"
-             icon="icons/etool16/context-retrieve.png"
+             icon="icons/etool16/context-retrieve.svg"
              label="%commands.attachment.retrieveContext.label"
              style="push">
           <visibleWhen
@@ -2426,7 +2426,7 @@
        </separator>
        <command
              commandId="org.eclipse.mylyn.tasks.ui.command.RefreshRepositoryTasks"
-             icon="icons/etool16/repository-synchronize.png"
+             icon="icons/etool16/repository-synchronize.svg"
              label="Synchronize All Tasks"
              style="push">
           <visibleWhen

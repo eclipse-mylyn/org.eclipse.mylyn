@@ -35,7 +35,7 @@ public class ContextHelpAction extends Action {
 		this.contextId = contextId;
 		setToolTipText(Messages.ContextHelpAction_tooltip);
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(WikiTextUiPlugin.getDefault().getPluginId(),
-				"icons/help.png")); //$NON-NLS-1$
+				"icons/help.svg")); //$NON-NLS-1$
 	}
 
 	public ContextHelpAction() {
