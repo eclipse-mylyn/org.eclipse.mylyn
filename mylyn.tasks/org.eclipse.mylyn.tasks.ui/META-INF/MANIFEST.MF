@@ -79,3 +79,4 @@ Import-Package: com.ibm.icu.text,
  org.apache.tika.mime;version="[2.9.0,3.0.0)",
  org.osgi.service.event;version="[1.4.0,2.0.0)"
 Service-Component: OSGI-INF/org.eclipse.mylyn.internal.tasks.ui.TaskUiStartup.xml
+Require-Capability: eclipse.swt;filter:="(image.format=svg)"
