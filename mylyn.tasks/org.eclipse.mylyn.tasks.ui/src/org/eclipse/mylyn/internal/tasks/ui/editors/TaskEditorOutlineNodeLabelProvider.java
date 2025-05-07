@@ -32,7 +32,7 @@ import org.eclipse.ui.internal.WorkbenchImages;
  */
 public class TaskEditorOutlineNodeLabelProvider extends LabelProvider {
 
-	private static final String[] IMAGE_EXTENSIONS = { "jpg", "gif", "png", "tiff", "tif", "bmp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$	@Override
+	private static final String[] IMAGE_EXTENSIONS = { "jpg", "gif", "png", "tiff", "tif", "bmp", "svg" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$	@Override
 
 	@Override
 	public Image getImage(Object element) {
