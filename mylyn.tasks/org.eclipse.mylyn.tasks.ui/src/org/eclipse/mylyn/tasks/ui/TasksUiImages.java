@@ -195,11 +195,11 @@ public class TasksUiImages {
 
 	// Wizard banners
 
-	public static final ImageDescriptor BANNER_REPOSITORY = create(WIZBAN, "banner-repository.svg"); //$NON-NLS-1$
+	public static final ImageDescriptor BANNER_REPOSITORY = create(WIZBAN, "banner-repository.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor BANNER_REPOSITORY_SETTINGS = create(WIZBAN, "banner-repository-settings.svg"); //$NON-NLS-1$
+	public static final ImageDescriptor BANNER_REPOSITORY_SETTINGS = create(WIZBAN, "banner-repository-settings.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor BANNER_REPOSITORY_CONTEXT = create(WIZBAN, "banner-repository-context.svg"); //$NON-NLS-1$
+	public static final ImageDescriptor BANNER_REPOSITORY_CONTEXT = create(WIZBAN, "banner-repository-context.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor BANNER_WORKING_SET = create(WIZBAN, "workset_wiz.svg"); //$NON-NLS-1$
 
@@ -216,7 +216,7 @@ public class TasksUiImages {
 	/**
 	 * @since 3.2
 	 */
-	public static final ImageDescriptor BANNER_REPORT_BUG = create(WIZBAN, "bug-wizard.svg"); //$NON-NLS-1$
+	public static final ImageDescriptor BANNER_REPORT_BUG = create(WIZBAN, "bug-wizard.gif"); //$NON-NLS-1$
 
 	/**
 	 * @since 3.7
