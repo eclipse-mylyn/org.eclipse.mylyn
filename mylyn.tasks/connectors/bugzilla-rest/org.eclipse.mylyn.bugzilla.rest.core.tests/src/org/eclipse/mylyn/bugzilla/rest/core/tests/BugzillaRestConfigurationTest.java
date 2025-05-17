@@ -86,9 +86,9 @@ public class BugzillaRestConfigurationTest implements IFixtureJUnitClass {
 						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/configuration.json"),
 						Charset.defaultCharset()),
 				new Gson().toJson(configuration)
-				.replaceAll(actualFixture.getRepositoryUrl(), "http://dummy.url/")
+				.replaceAll(actualFixture.getRepositoryUrl(), "http://dummy.url")
 				.replaceAll(actualFixture.getRepositoryUrl().replaceFirst("https://", "http://"),
-						"http://dummy.url/"));
+						"http://dummy.url"));
 
 	}
 
