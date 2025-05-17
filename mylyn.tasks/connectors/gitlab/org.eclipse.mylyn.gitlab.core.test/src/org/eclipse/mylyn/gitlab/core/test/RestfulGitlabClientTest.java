@@ -174,7 +174,7 @@ class RestfulGitlabClientTest {
 		userObj.remove("current_sign_in_at"); //$NON-NLS-1$
 		// The avatar_url can change with a newer Gitlab version
 		userObj.remove("avatar_url"); //$NON-NLS-1$
-		
+
 		// Adapt repository URL if necessary
 		if (!"https://gitlab.mylyn.local".equals(GitlabTestFixture.current().getRepositoryUrl())) {
 			String webURL = userObj.get("web_url")
@@ -210,11 +210,27 @@ class RestfulGitlabClientTest {
 			jsonObject.remove("avatar_url"); //$NON-NLS-1$
 
 			// Adapt repository URL if necessary
-			if (!"https://gitlab.mylyn.local".equals(GitlabTestFixture.current().getRepositoryUrl())) {
+			if (jsonObject.get("web_url")
+					.getAsString()
+					.contains(GitlabTestFixture.current().getProperty("host-name"))) {
 				String webURL = jsonObject.get("web_url")
 						.getAsString()
-						.replace(GitlabTestFixture.current().getRepositoryUrl(), "https://gitlab.mylyn.local");
+						.replace(GitlabTestFixture.current().getProperty("host-name"), "gitlab.mylyn.local");
 				jsonObject.addProperty("web_url", webURL);
+			}
+			if (jsonObject.get("email").getAsString().contains(GitlabTestFixture.current().getProperty("host-name"))) {
+				String email = jsonObject.get("email")
+						.getAsString()
+						.replace(GitlabTestFixture.current().getProperty("host-name"), "gitlab.mylyn.local");
+				jsonObject.addProperty("email", email);
+			}
+			if (jsonObject.get("commit_email")
+					.getAsString()
+					.contains(GitlabTestFixture.current().getProperty("host-name"))) {
+				String commit_email = jsonObject.get("commit_email")
+						.getAsString()
+						.replace(GitlabTestFixture.current().getProperty("host-name"), "gitlab.mylyn.local");
+				jsonObject.addProperty("commit_email", commit_email);
 			}
 			// change administrator email
 			if (jsonObject.get("email").getAsString().startsWith("gitlab_admin_")) {
@@ -307,7 +323,7 @@ class RestfulGitlabClientTest {
 		String actual = new GsonBuilder().setPrettyPrinting()
 				.create()
 				.toJson(configuration)
-				.replace(GitlabTestFixture.current().getRepositoryUrl(), "https://gitlab.mylyn.local");
+				.replace(GitlabTestFixture.current().getProperty("host-name"), "gitlab.mylyn.local");
 		String expected = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/configuration.json"), //$NON-NLS-1$
 				Charset.defaultCharset());
 		assertEquals(expected, actual);
