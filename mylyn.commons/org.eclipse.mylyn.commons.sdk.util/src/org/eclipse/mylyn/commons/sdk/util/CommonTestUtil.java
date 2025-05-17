@@ -367,10 +367,13 @@ public class CommonTestUtil {
 	 * tests (using CI Server).
 	 */
 	public static boolean runNonCIServerTestsOnly() {
-		return !Boolean.getBoolean("org.eclipse.mylyn.ci.server.tests");
+		return !runOnCIServerTestsOnly();
 	}
+
 	public static boolean runOnCIServerTestsOnly() {
-		return Boolean.getBoolean("org.eclipse.mylyn.ci.server.tests");
+
+		return TestConfiguration.URL_SERVICES_CI_DEFAULT.equals(TestConfiguration.URL_SERVICES_DEFAULT)
+				|| TestConfiguration.URL_SERVICES_CI_DEFAULT.equals(TestConfiguration.URL_SERVICES_LOCALHOST);
 	}
 
 	/**

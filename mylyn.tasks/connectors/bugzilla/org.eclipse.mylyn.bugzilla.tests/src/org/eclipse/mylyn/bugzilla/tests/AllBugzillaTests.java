@@ -47,7 +47,7 @@ public class AllBugzillaTests {
 
 		TestSuite suite = new ManagedTestSuite(AllBugzillaTests.class.getName());
 		TestConfiguration testConfiguration = ManagedSuite.getTestConfigurationOrCreateDefault();
-		testConfiguration.setLocalOnly(true); // No CI Server
+		testConfiguration.setLocalOnly(CommonTestUtil.runNonCIServerTestsOnly());
 		addTests(suite, testConfiguration);
 		return suite;
 	}

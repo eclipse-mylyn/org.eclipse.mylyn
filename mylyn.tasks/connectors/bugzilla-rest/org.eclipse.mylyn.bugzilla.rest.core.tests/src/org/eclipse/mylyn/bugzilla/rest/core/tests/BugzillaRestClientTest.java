@@ -258,17 +258,17 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/parameters.json"),
 						Charset.defaultCharset()),
 				new Gson().toJson(parameter)
-				.replaceAll(repository.getRepositoryUrl(), "http://dummy.url/")
+				.replaceAll(repository.getRepositoryUrl(), "http://dummy.url")
 				.replaceAll(repository.getRepositoryUrl().replaceFirst("https://", "http://"),
-						"http://dummy.url/"));
+						"http://dummy.url"));
 		assertEquals(
 				IOUtils.toString(
 						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/configuration.json"),
 						Charset.defaultCharset()),
 				new Gson().toJson(configuration)
-				.replaceAll(repository.getRepositoryUrl(), "http://dummy.url/")
+				.replaceAll(repository.getRepositoryUrl(), "http://dummy.url")
 				.replaceAll(repository.getRepositoryUrl().replaceFirst("https://", "http://"),
-						"http://dummy.url/"));
+						"http://dummy.url"));
 	}
 
 	private void assertConfigurationFieldNames(Collection<Field> fields) throws IOException {
@@ -360,7 +360,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 				url= url.substring(0, url.length()-1);
 			}
 			assertEquals("You must select/enter a product.  (status: Bad Request from "
-					+ url.substring(url.lastIndexOf('/')) + "//rest.cgi/bug)", e.getMessage());
+					+ url.substring(url.lastIndexOf('/')) + "/rest.cgi/bug)", e.getMessage());
 		}
 	}
 
@@ -408,7 +408,7 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 				url = url.substring(0, url.length() - 1);
 			}
 			assertEquals("You must select/enter a milestone.  (status: Bad Request from "
-					+ url.substring(url.lastIndexOf('/')) + "//rest.cgi/bug)", e.getMessage());
+					+ url.substring(url.lastIndexOf('/')) + "/rest.cgi/bug)", e.getMessage());
 		}
 	}
 

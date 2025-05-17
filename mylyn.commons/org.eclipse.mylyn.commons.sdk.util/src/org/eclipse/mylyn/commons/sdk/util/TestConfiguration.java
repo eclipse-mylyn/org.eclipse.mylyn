@@ -47,10 +47,12 @@ import junit.framework.AssertionFailedError;
 @SuppressWarnings("nls")
 public class TestConfiguration {
 
-	private static final String URL_SERVICES_LOCALHOST = System.getProperty("localhost.test.server",
-			"https://mylyn.local");
+	static final String URL_SERVICES_LOCALHOST = System.getProperty("localhost.test.server", "https://mylyn.local");
 
-	private static final String URL_SERVICES_DEFAULT = System.getProperty("mylyn.test.server", "https://mylyn.org");
+	static final String URL_SERVICES_DEFAULT = System.getProperty("mylyn.test.server", "https://mylyn.frank-becker.de");
+
+	static final String URL_SERVICES_CI_DEFAULT = System.getProperty("mylyn.test.server.ci",
+			"https://mylyn.frank-becker.de");
 
 	public static TestConfiguration defaultConfiguration;
 
@@ -115,41 +117,42 @@ public class TestConfiguration {
 		if (!CommonTestUtil.ignoreLocalTestServices()) {
 			try {
 				File file = CommonTestUtil.getFile(clazz, "local.json");
-				fixtures = discover(file.toURI().toASCIIString(), "", clazz, fixtureType, defaultOnly, exception);
+				fixtures = discover(file.toURI().toASCIIString(), "", clazz, fixtureType, defaultOnly, "local.json",
+						exception);
 			} catch (AssertionFailedError | IOException e) {
 				// ignore
 			}
 
 			if (fixtures.isEmpty()) {
 				fixtures = discover(URL_SERVICES_LOCALHOST + "/mylyn_idx/service", URL_SERVICES_LOCALHOST, clazz,
-						fixtureType, defaultOnly, exception);
+						fixtureType, defaultOnly, "URL_SERVICES_LOCALHOST", exception);
 			}
 		}
 		if (fixtures.isEmpty() && !CommonTestUtil.ignoreGlobalTestServices()) {
-			fixtures = discover(URL_SERVICES_DEFAULT + "/cgi-bin/services", URL_SERVICES_DEFAULT, clazz, fixtureType,
-					defaultOnly, exception);
+			fixtures = discover(URL_SERVICES_DEFAULT + "/mylyn_idx/service", URL_SERVICES_DEFAULT, clazz, fixtureType,
+					defaultOnly, "URL_SERVICES_DEFAULT", exception);
 		}
 
-		if (fixtures.isEmpty() && CommonTestUtil.runOnCIServerTestsOnly()) {
+		if (fixtures.isEmpty() && CommonTestUtil.runOnCIServerTestsOnly()) { //CommonTestUtil.runOnCIServerTestsOnly()) {
 			throw new RuntimeException(
 					NLS.bind("Failed to discover any fixtures for kind {0} with defaultOnly={1} ({2} and {3})",
-							new Object[] { fixtureType, Boolean.toString(defaultOnly), URL_SERVICES_LOCALHOST,
-									URL_SERVICES_DEFAULT }),
+							fixtureType, Boolean.toString(defaultOnly), URL_SERVICES_LOCALHOST, URL_SERVICES_DEFAULT),
 					exception[0]);
 		}
-
 		return fixtures;
 	}
 
 	private static <T> List<T> discover(String location, String baseUrl, Class<T> clazz, String fixtureType,
-			boolean defaultOnly, Exception[] result) {
+			boolean defaultOnly, String kind, Exception[] result) {
 		Assert.isNotNull(fixtureType);
 		List<FixtureConfiguration> configurations = getConfigurations(location, result);
 		if (configurations != null) {
 			for (FixtureConfiguration configuration : configurations) {
-				if (configuration != null && configuration.getUrl() != null
-						&& !configuration.getUrl().startsWith("http")) {
-					configuration.setUrl(baseUrl + configuration.getUrl());
+				if (configuration != null) {
+					if (configuration.getUrl() != null && !configuration.getUrl().startsWith("http")) {
+						configuration.setUrl(baseUrl + configuration.getUrl());
+					}
+					configuration.getProperties().put("kind", kind);
 				}
 			}
 			return loadFixtures(configurations, clazz, fixtureType, defaultOnly);
@@ -199,10 +202,10 @@ public class TestConfiguration {
 			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 			// Create all-trusting host name verifier
 			HostnameVerifier allHostsValid = (hostname, session) -> true;
-
 			// Install the all-trusting host verifier
 			HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
 			URLConnection connection = new URL(url).openConnection();
+			connection.setReadTimeout(5000);
 			InputStreamReader in = new InputStreamReader(connection.getInputStream());
 			try (in) {
 				TypeToken<List<FixtureConfiguration>> type = new TypeToken<>() {
