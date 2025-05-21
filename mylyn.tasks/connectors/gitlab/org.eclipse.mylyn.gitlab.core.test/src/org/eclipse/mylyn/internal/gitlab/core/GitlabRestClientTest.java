@@ -29,11 +29,11 @@ import org.mockito.Mockito;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-class GitlabRestClientTest {
+public class GitlabRestClientTest {
 
 	@SuppressWarnings("nls")
 	@Test
-	void ignoreMilestonesForProjectsWithIssuesDisabled() throws Exception {
+	public void ignoreMilestonesForProjectsWithIssuesDisabled() throws Exception {
 		RepositoryLocation location = new RepositoryLocation("http://localhost");
 		CommonHttpClient httpClient = Mockito.mock(CommonHttpClient.class);
 		when(httpClient.getLocation()).thenReturn(location);
