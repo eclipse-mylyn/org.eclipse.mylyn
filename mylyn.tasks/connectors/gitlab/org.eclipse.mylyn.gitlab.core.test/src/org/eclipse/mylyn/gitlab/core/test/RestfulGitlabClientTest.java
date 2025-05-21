@@ -46,10 +46,10 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 @SuppressWarnings({ "nls", "restriction" })
-class RestfulGitlabClientTest {
+public final class RestfulGitlabClientTest {
 
 	@BeforeAll
-	static void setUpBeforeClass() throws Exception {
+	public static void setUpBeforeClass() throws Exception {
 		try {
 			GitlabTestFixture.current();
 			System.setProperty("gitlabInstance", "active"); //$NON-NLS-1$//$NON-NLS-2$
@@ -65,12 +65,12 @@ class RestfulGitlabClientTest {
 	}
 
 	@AfterAll
-	static void tearDownAfterClass() throws Exception {
+	public static void tearDownAfterClass() throws Exception {
 	}
 
 	@BeforeEach
 	@GitLabTestService
-	void setUp() throws Exception {
+	public void setUp() throws Exception {
 		GitlabTestFixture.current().clearOverwriteProperties();
 // when you want to execute the tests with user and password instead of the accestoken.
 // change the password stored in
@@ -80,12 +80,12 @@ class RestfulGitlabClientTest {
 	}
 
 	@AfterEach
-	void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 	}
 
 	@Test
 	@GitLabTestService
-	void testVersion() throws Exception {
+	public void testVersion() throws Exception {
 		String version = GitlabTestFixture.current().client().getVersion(new NullOperationMonitor());
 		assertNotNull(version);
 		assertTrue(version.matches("\\d+\\.\\d+\\.\\d+")); //$NON-NLS-1$
@@ -93,7 +93,7 @@ class RestfulGitlabClientTest {
 
 	@Test
 	@GitLabTestService
-	void testVersionAndRevision() throws Exception {
+	public void testVersionAndRevision() throws Exception {
 		String version = GitlabTestFixture.current().client().getVersionAndRevision(new NullOperationMonitor());
 		assertNotNull(version);
 		assertTrue(version.matches("\\d+\\.\\d+\\.\\d+\\(rev: \\w+\\)")); //$NON-NLS-1$
@@ -101,13 +101,13 @@ class RestfulGitlabClientTest {
 
 	@Test
 	@GitLabTestService
-	void validate() throws Exception {
+	public void validate() throws Exception {
 		assertTrue(GitlabTestFixture.current().client().validate(new NullOperationMonitor()));
 	}
 
 	@Test
 	@GitLabTestService
-	void testGetMetadata() throws Exception {
+	public void testGetMetadata() throws Exception {
 		JsonObject metaData = GitlabTestFixture.current().client().getMetadata(new NullOperationMonitor());
 		assertNotNull(metaData);
 		Set<String> keys = metaData.keySet();
@@ -120,7 +120,7 @@ class RestfulGitlabClientTest {
 
 	@Test
 	@GitLabTestService
-	void testGetNamespaces() throws Exception {
+	public void testGetNamespaces() throws Exception {
 		JsonElement resultElement = GitlabTestFixture.current().client().getNamespaces(new NullOperationMonitor());
 		assertNotNull(resultElement);
 		assertTrue(resultElement.isJsonArray());
@@ -162,7 +162,7 @@ class RestfulGitlabClientTest {
 
 	@Test
 	@GitLabTestService
-	void testGetUser() throws Exception {
+	public void testGetUser() throws Exception {
 		JsonElement user = GitlabTestFixture.current().client().getUser(new NullOperationMonitor());
 		assertNotNull(user);
 		JsonObject userObj = user.getAsJsonObject();
@@ -190,7 +190,7 @@ class RestfulGitlabClientTest {
 
 	@Test
 	@GitLabTestService
-	void testGetUsers() throws Exception {
+	public void testGetUsers() throws Exception {
 		JsonElement resultElement = GitlabTestFixture.current().client().getUsers("", new NullOperationMonitor());
 		assertNotNull(resultElement);
 		ArrayList<String> techUsers = new ArrayList<>();
@@ -250,7 +250,7 @@ class RestfulGitlabClientTest {
 
 	@Test
 	@GitLabTestService
-	void testGetGroups() throws Exception {
+	public void testGetGroups() throws Exception {
 		JsonElement resultElement = GitlabTestFixture.current().client().getGroups(new NullOperationMonitor());
 		assertNotNull(resultElement);
 		for (JsonElement resultObj : resultElement.getAsJsonArray()) {
@@ -272,7 +272,7 @@ class RestfulGitlabClientTest {
 
 	@Test
 	@GitLabTestService
-	void testgetConfiguration() throws Exception {
+	public void testgetConfiguration() throws Exception {
 		GitlabRestClient client = GitlabTestFixture.current().client();
 		GitlabConfiguration configuration = client.getConfiguration(client.getTaskRepository(),
 				new NullOperationMonitor());
