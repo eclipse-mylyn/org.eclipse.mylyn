@@ -33,10 +33,10 @@
   </buildScan>
   <buildCache>
     <local>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
     </local>
     <remote>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <storeEnabled>#{isTrue(env['JENKINS_URL'])}</storeEnabled>
     </remote>
   </buildCache>

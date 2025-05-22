@@ -360,45 +360,6 @@
             <rerunFailingTestsCount>1</rerunFailingTestsCount>
           </configuration>
         </plugin>
-        <plugin>
-          <groupId>com.gradle</groupId>
-          <artifactId>develocity-maven-extension</artifactId>
-          <configuration>
-            <develocity>
-              <plugins>
-                <plugin>
-                  <groupId>org.eclipse.tycho</groupId>
-                  <artifactId>tycho-surefire-plugin</artifactId>
-                  <inputs>
-                    <fileSets>
-                      <fileSet>
-                        <name>config.ini</name>
-                        <paths>
-                          <path>${test.keyring.password}</path>
-                        </paths>
-                        <normalization>RELATIVE_PATH</normalization>
-                      </fileSet>
-                      <fileSet>
-                        <name>.eclipse.keyring</name>
-                        <paths>
-                          <path>${project.build.directory}/.eclipse.keyring</path>
-                        </paths>
-                        <normalization>RELATIVE_PATH</normalization>
-                      </fileSet>
-                      <fileSet>
-                        <name>testdata</name>
-                        <paths>
-                          <path>testdata</path>
-                        </paths>
-                        <normalization>RELATIVE_PATH</normalization>
-                      </fileSet>
-                    </fileSets>
-                  </inputs>
-                </plugin>
-              </plugins>
-            </develocity>
-          </configuration>
-        </plugin>
       </plugins>
     </pluginManagement>
   </build>
