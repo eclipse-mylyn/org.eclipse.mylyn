@@ -93,8 +93,6 @@ MAVEN_PROFILES=${env.MAVEN_PROFILES}
                                 -B \
                                 $MAVEN_PROFILES \
                                 -Dmaven.repo.local=$WORKSPACE/.m2/repository \
-                                -Dmaven.test.failure.ignore=true \
-                                -Dmaven.test.error.ignore=true \
                                 -Ddash.fail=false \
                                 -Dorg.eclipse.justj.p2.manager.build.url=$JOB_URL \
                                 -Dbuild.type=$BUILD_TYPE \
