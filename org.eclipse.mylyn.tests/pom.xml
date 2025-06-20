@@ -113,7 +113,6 @@
 
     <pluginManagement>
       <plugins>
-<!-- develocity disabled to prщduce 4.7.0 M3
         <plugin>
           <groupId>com.gradle</groupId>
           <artifactId>develocity-maven-extension</artifactId>
@@ -146,7 +145,6 @@
             </develocity>
           </configuration>
         </plugin>
--->
       </plugins>
     </pluginManagement>
   </build>
