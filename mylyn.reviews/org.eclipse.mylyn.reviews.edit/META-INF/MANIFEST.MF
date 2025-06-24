@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.reviews.edit
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Reviews Edit
 Bundle-SymbolicName: org.eclipse.mylyn.reviews.edit;singleton:=true
-Bundle-Version: 4.7.0.qualifier
+Bundle-Version: 4.8.0.qualifier
 Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
  org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.emf.common;bundle-version="0.0.0",

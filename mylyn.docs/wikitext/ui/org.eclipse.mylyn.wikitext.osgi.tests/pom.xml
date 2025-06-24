@@ -21,7 +21,7 @@
 	<parent>
 		<artifactId>wikitext.ui</artifactId>
 		<groupId>org.eclipse.mylyn.docs</groupId>
-		<version>4.7.0-SNAPSHOT</version>
+		<version>4.8.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>org.eclipse.mylyn.wikitext.osgi.tests</artifactId>
 	<packaging>eclipse-test-plugin</packaging>

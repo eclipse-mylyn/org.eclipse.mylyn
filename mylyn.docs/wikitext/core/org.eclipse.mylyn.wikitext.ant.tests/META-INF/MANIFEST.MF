@@ -2,12 +2,12 @@ Manifest-Version: 1.0
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.ant.tests
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.ant.tests
-Bundle-Version: 4.7.0.qualifier
+Bundle-Version: 4.8.0.qualifier
 Bundle-Name: Mylyn WikiText Ant Tasks Tests
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.wikitext.ant
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=17))"
 Import-Package: 
- org.eclipse.mylyn.wikitext.textile;version="4.7.0",
+ org.eclipse.mylyn.wikitext.textile;version="4.8.0",
  org.junit;version="4.13.2"
