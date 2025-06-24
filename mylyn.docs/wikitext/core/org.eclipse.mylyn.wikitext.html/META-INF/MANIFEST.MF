@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.html
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.html
-Bundle-Version: 4.7.0.qualifier
-Export-Package: org.eclipse.mylyn.wikitext.html;version="4.7.0";x-internal:=true,
+Bundle-Version: 4.8.0.qualifier
+Export-Package: org.eclipse.mylyn.wikitext.html;version="4.8.0";x-internal:=true,
  org.eclipse.mylyn.wikitext.html.internal;x-internal:=true
 Bundle-Name: Mylyn WikiText HTML
 Bundle-Vendor: Eclipse Mylyn

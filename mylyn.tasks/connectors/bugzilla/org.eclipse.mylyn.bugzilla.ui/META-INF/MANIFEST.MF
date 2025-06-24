@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.bugzilla.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.ui; singleton:=true
-Bundle-Version: 4.7.0.qualifier
+Bundle-Version: 4.8.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.compare;bundle-version="0.0.0",

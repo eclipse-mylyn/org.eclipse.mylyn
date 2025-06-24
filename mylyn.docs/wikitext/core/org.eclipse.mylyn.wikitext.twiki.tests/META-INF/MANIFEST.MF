@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.twiki.tests
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.twiki.tests
-Bundle-Version: 4.7.0.qualifier
+Bundle-Version: 4.8.0.qualifier
 Bundle-Name: Mylyn WikiText Twiki Tests
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.wikitext.twiki

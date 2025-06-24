@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.commons.identity.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.commons.identity.ui;singleton:=true
-Bundle-Version: 4.7.0.qualifier
+Bundle-Version: 4.8.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.internal.commons.identity.ui.IdentityUiPlugin
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: plugin

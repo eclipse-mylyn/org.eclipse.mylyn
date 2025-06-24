@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.confluence
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.confluence
-Bundle-Version: 4.7.0.qualifier
+Bundle-Version: 4.8.0.qualifier
 Bundle-Name: Mylyn WikiText Confluence
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-21
@@ -15,23 +15,23 @@ Import-Package: com.google.common.base;version="[33.0,34.0)",
  org.eclipse.mylyn.wikitext.confluence.internal.phrase,
  org.eclipse.mylyn.wikitext.confluence.internal.token,
  org.eclipse.mylyn.wikitext.confluence.internal.util,
- org.eclipse.mylyn.wikitext.html;version="4.7.0";resolution:=optional,
+ org.eclipse.mylyn.wikitext.html;version="4.8.0";resolution:=optional,
  org.eclipse.mylyn.wikitext.parser;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.parser.builder;version="[4.2,5)",
- org.eclipse.mylyn.wikitext.parser.builder.event;version="4.7.0";resolution:=optional,
+ org.eclipse.mylyn.wikitext.parser.builder.event;version="4.8.0";resolution:=optional,
  org.eclipse.mylyn.wikitext.parser.markup;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.parser.markup.token;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.parser.outline;version="[4.2,5)",
- org.eclipse.mylyn.wikitext.toolkit;version="4.7.0";resolution:=optional,
- org.eclipse.mylyn.wikitext.util;version="4.7.0";resolution:=optional,
+ org.eclipse.mylyn.wikitext.toolkit;version="4.8.0";resolution:=optional,
+ org.eclipse.mylyn.wikitext.util;version="4.8.0";resolution:=optional,
  org.eclipse.mylyn.wikitext.validation;version="[4.2,5)",
  org.junit;version="4.13.2";resolution:=optional
-Export-Package: org.eclipse.mylyn.wikitext.confluence;version="4.7.0";x-friends:="org.eclipse.mylyn.wikitext.tasks.ui";
+Export-Package: org.eclipse.mylyn.wikitext.confluence;version="4.8.0";x-friends:="org.eclipse.mylyn.wikitext.tasks.ui";
   uses:="org.eclipse.mylyn.wikitext.parser,
    org.eclipse.mylyn.wikitext.parser.markup",
- org.eclipse.mylyn.wikitext.confluence.internal;version="4.7.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser,org.eclipse.mylyn.wikitext.parser.builder,org.eclipse.mylyn.wikitext.parser.markup",
- org.eclipse.mylyn.wikitext.confluence.internal.block;version="4.7.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser,org.eclipse.mylyn.wikitext.parser.markup",
- org.eclipse.mylyn.wikitext.confluence.internal.phrase;version="4.7.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser,org.eclipse.mylyn.wikitext.parser.markup",
- org.eclipse.mylyn.wikitext.confluence.internal.token;version="4.7.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser.markup,org.eclipse.mylyn.wikitext.parser.markup.token",
- org.eclipse.mylyn.wikitext.confluence.internal.util;version="4.7.0";x-internal:=true,
- org.eclipse.mylyn.wikitext.confluence.internal.validation;version="4.7.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser.markup,org.eclipse.mylyn.wikitext.validation"
+ org.eclipse.mylyn.wikitext.confluence.internal;version="4.8.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser,org.eclipse.mylyn.wikitext.parser.builder,org.eclipse.mylyn.wikitext.parser.markup",
+ org.eclipse.mylyn.wikitext.confluence.internal.block;version="4.8.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser,org.eclipse.mylyn.wikitext.parser.markup",
+ org.eclipse.mylyn.wikitext.confluence.internal.phrase;version="4.8.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser,org.eclipse.mylyn.wikitext.parser.markup",
+ org.eclipse.mylyn.wikitext.confluence.internal.token;version="4.8.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser.markup,org.eclipse.mylyn.wikitext.parser.markup.token",
+ org.eclipse.mylyn.wikitext.confluence.internal.util;version="4.8.0";x-internal:=true,
+ org.eclipse.mylyn.wikitext.confluence.internal.validation;version="4.8.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser.markup,org.eclipse.mylyn.wikitext.validation"
