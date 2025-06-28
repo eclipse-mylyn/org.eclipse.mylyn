@@ -10,15 +10,13 @@
  * Contributors:
  *   See git history
  *******************************************************************************/
-/* develocity disabled to produce 4.7.0 M3
-
 def secrets = [
   [path: 'cbi/tools.mylyn/develocity.eclipse.org', secretValues: [
     [envVar: 'DEVELOCITY_ACCESS_KEY', vaultKey: 'api-token']
     ]
   ]
 ]
-*/
+
 
 pipeline {
 	options {
@@ -83,9 +81,7 @@ MAVEN_PROFILES=${env.MAVEN_PROFILES}
 			steps {
 				sshagent (['projects-storage.eclipse.org-bot-ssh']) {
 					wrap([$class: 'Xvnc', useXauthority: true]) {
-                        /* develocity disabled to produce 4.7.0 M3
                         withVault([vaultSecrets: secrets]) {
-						*/
                             sh '''
                                 mvn \
                                 clean \
@@ -93,16 +89,12 @@ MAVEN_PROFILES=${env.MAVEN_PROFILES}
                                 -B \
                                 $MAVEN_PROFILES \
                                 -Dmaven.repo.local=$WORKSPACE/.m2/repository \
-                                -Dmaven.test.failure.ignore=true \
-                                -Dmaven.test.error.ignore=true \
                                 -Ddash.fail=false \
                                 -Dorg.eclipse.justj.p2.manager.build.url=$JOB_URL \
                                 -Dbuild.type=$BUILD_TYPE \
                                 -Dgit.commit=$GIT_COMMIT
                             '''
-                        /* develocity disabled to produce 4.7.0 M3
                         }
-                        */
 					}
 				}
 			}
