@@ -50,6 +50,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
+import org.junit.Ignore;
 
 /**
  * Tests should be run against Bugzilla 3.6 or greater
@@ -57,6 +58,7 @@ import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
  * @author Frank Becker
  */
 @SuppressWarnings("nls")
+@Ignore //FIXME: re-enable with https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/716
 public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 
 	private static final String BUGZILLA_LE_4_0 = "<4.0";

@@ -37,6 +37,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TasksUiTestUtil;
 import org.eclipse.ui.PlatformUI;
+import org.junit.Ignore;
 
 import junit.framework.TestCase;
 
@@ -44,6 +45,7 @@ import junit.framework.TestCase;
  * @author Rob Elves
  */
 @SuppressWarnings("nls")
+@Ignore //FIXME: re-enable with https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/716
 public class BugzillaRepositorySettingsPageTest extends TestCase {
 
 	private TaskRepositoryManager manager;
