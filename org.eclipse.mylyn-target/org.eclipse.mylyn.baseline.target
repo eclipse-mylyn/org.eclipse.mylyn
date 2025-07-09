@@ -13,14 +13,14 @@
  * Contributors:
  *   See git history
  *******************************************************************************
---><target name="org.eclipse.mylyn.target">
+--><target name="org.eclipse.mylyn.baseline">
 	<locations>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/cbi/updates/license/"/>
 			<unit id="org.eclipse.license.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/eclipse/updates/4.37-I-builds/I20250708-0510/"/>
+			<repository location="https://download.eclipse.org/eclipse/updates/4.36/R-4.36-202505281830"/>
 			<unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.equinox.p2.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.sdk.feature.group" version="0.0.0"/>
@@ -30,7 +30,7 @@
 			<unit id="org.eclipse.egit.github.core" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/egit/staging/v7.4.0.202507080956-m1/"/>
+			<repository location="https://download.eclipse.org/egit/updates-7.3/"/>
 			<unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.jgit.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.jgit.lfs.feature.group" version="0.0.0"/>
@@ -40,11 +40,41 @@
 			<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="https://download.eclipse.org/mylyn/updates/release/4.7.0/"/>
+			<unit id="org.eclipse.mylyn.bugzilla.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.builds.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.cdt.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.commons.activity.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.commons.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.commons.identity.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.commons.notifications.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.commons.repositories.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.context.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.egit.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.gerrit.dashboard.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.gerrit.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.git.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.github.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.gitlab.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.htmltext.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.ide.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.jdt.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.jenkins.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.monitor.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.pde.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.reviews.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.tasks.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.team.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.versions.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.wikitext.extras.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.mylyn.wikitext.feature.feature.group" version="0.0.0"/>
+		</location>
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/rt/ecf/3.16.1/site.p2/3.16.1.v20250520-0158/"/>
 			<unit id="org.eclipse.ecf.remoteservice.sdk.feature.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/tools/cdt/releases/12.1/cdt-12.1.0/"/>
+			<repository location="https://download.eclipse.org/tools/cdt/builds/12.1/cdt-12.1.0-rc1/"/>
 			<unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.cdt.sdk.feature.group" version="0.0.0"/>
 		</location>
@@ -73,7 +103,7 @@
 			<unit id="org.apache.commons.io" version="2.8.0.v20210415-0900"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/2025-09/"/>
+			<repository location="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/2025-06/"/>
 			<unit id="org.glassfish.hk2.osgi-resource-locator" version="0.0.0"/>
 			<unit id="org.apache.commons.lang3" version="0.0.0"/>
 			<unit id="org.apache.commons.logging" version="0.0.0"/>
