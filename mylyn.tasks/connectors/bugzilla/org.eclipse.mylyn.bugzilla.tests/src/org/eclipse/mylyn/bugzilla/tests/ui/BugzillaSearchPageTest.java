@@ -18,6 +18,7 @@ import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.junit.Ignore;
 
 import junit.framework.TestCase;
 
@@ -27,6 +28,7 @@ import junit.framework.TestCase;
  * @author Jeff Pound
  * @author Steffen Pingel
  */
+@Ignore //FIXME: re-enable with https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/716
 public class BugzillaSearchPageTest extends TestCase {
 
 	private TaskRepository repository;

@@ -48,6 +48,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
+import org.junit.Ignore;
 
 import junit.framework.TestCase;
 
@@ -58,6 +59,7 @@ import junit.framework.TestCase;
  * @author Robert Elves
  */
 @SuppressWarnings("nls")
+@Ignore //FIXME: re-enable with https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/716
 public class BugzillaCustomFieldsTest extends TestCase {
 
 	private TaskData fruitTaskData;

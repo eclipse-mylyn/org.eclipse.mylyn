@@ -26,6 +26,7 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tests.util.TestFixture;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.junit.Ignore;
 
 import junit.framework.TestCase;
 
@@ -34,6 +35,7 @@ import junit.framework.TestCase;
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
+@Ignore //FIXME: re-enable with https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/716
 public class BugzillaTaskEditorTest extends TestCase {
 
 	private TaskRepository repository;

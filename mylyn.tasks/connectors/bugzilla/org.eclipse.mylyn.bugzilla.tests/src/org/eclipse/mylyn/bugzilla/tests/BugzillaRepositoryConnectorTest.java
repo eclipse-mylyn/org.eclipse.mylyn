@@ -69,12 +69,14 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.junit.Ignore;
 
 /**
  * @author Rob Elves
  * @author Frank Becker
  */
 @SuppressWarnings("nls")
+@Ignore //FIXME: re-enable with https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/716
 public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 	public void testSingleRetrievalFailure() throws CoreException {

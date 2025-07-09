@@ -31,6 +31,7 @@ import org.eclipse.mylyn.internal.jenkins.core.client.RestfulJenkinsClient.Build
 import org.eclipse.mylyn.jenkins.tests.support.JenkinsFixture;
 import org.eclipse.mylyn.jenkins.tests.support.JenkinsHarness;
 import org.eclipse.mylyn.jenkins.tests.support.JenkinsTestUtil;
+import org.junit.Ignore;
 
 import junit.framework.TestCase;
 
@@ -41,6 +42,7 @@ import junit.framework.TestCase;
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
+@Ignore //FIXME: re-enable with https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/716
 public class JenkinsClientTest extends TestCase {
 
 	private JenkinsHarness harness;
