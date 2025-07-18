@@ -103,3 +103,38 @@
         "mylyn.local" : "{{ hostvars[inventory_hostname].ansible_host }}"
       }
     labels: "{{ label_data | from_yaml }}"
+  when: ((docker_mode is defined) and (docker_mode == 'container' or docker_mode == 'single' or docker_mode == 'gitlab'))
+
+- name: Deploy swarm service
+  community.docker.docker_swarm_service:
+    name: artifactory
+    image: docker.bintray.io/jfrog/artifactory-cpp-ce:latest
+    networks:
+      - mylyn_net
+    publish:       
+      - published_port: "8081"
+        target_port: "8081"
+      - published_port: "8082"
+        target_port: "8082"
+    mounts:
+      - source: "{{ role_name }}-data-volume"
+        target: "/var/opt/jfrog/artifactory"
+        type: volume
+    replicas: 1
+    hosts:
+      "artifactory.mylyn.local": "{{ hostvars[inventory_hostname].ansible_host }}"
+      "mylyn.local" : "{{ hostvars[inventory_hostname].ansible_host }}"
+    update_config:
+      parallelism: 1
+      delay: 10s
+      order: start-first
+    restart_config:
+      condition: on-failure
+      delay: 10s
+      max_attempts: 1
+      window: 120s
+    labels: "{{ label_data | from_yaml }}"
+    placement:
+      constraints:
+       - node.role == worker
+  when: ((docker_mode is defined) and (docker_mode == 'swarm'))

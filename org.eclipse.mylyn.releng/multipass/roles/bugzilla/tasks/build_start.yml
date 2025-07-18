@@ -37,10 +37,9 @@
 - set_fact:
     bugzilla_info: "{{bugzilla_info_array | join(', ') | to_yaml }}"
     extra_info_label: "{{ (',' + act_item.extra_info) if (act_item.extra_info | length > 0 ) else ''}}"
-    label_service_ip: "{{mylyn_network_ip if mylyn_network_ip is defined else ansible_ssh_host }}"
 - name: myServiceLabel {{ act_item.image_tag }}
   set_fact:
-    serviceLabel: '{"type":"{{ bugzilla_type }}","url":"/{{ act_item.servmame }}/", "version": "{{ bugzilla_version.stdout }}", "info": "{{ bugzilla_info }}", "properties":  { "host-name": "{{ common_domain_name }}", "remote_ip": "{{ label_service_ip }}", "ansible-name": "{{ inventory_hostname }}", "ansible-host-ip": "{{ansible_ssh_host}}", "docker": "true"  {{ extra_info_label }} } }'
+    serviceLabel: '{"type":"{{ bugzilla_type }}","url":"/{{ act_item.servmame }}", "version": "{{ bugzilla_version.stdout }}", "info": "{{ bugzilla_info }}", "properties":  { "host-name": "{{ common_domain_name }}"  {{ extra_info_label }} } }'
 
 - name: setlabels {{ act_item.image_tag }}
   ansible.builtin.set_fact:
