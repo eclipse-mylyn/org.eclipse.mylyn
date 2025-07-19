@@ -47,7 +47,7 @@ def serviceJson():
     if 'callback' in request.args:
         result = request.args.get('callback', type = str) + "("+ result + ")"
  
-    html = "<html><head><title>Mylyn Index</title></head>" \
+    html = "<html><head><title>Mylyn Index Mac mini M4</title></head>" \
         "<style>" \
         "body {" \
         "background-color: white;" \
@@ -59,7 +59,7 @@ def serviceJson():
         "</head>" \
         "<body>"
  
-    html += "<h2>Mylyn Index from <font color='#337ab7'>{name}</font></h2>".format(name=request.host)
+    html += "<h2>Mylyn Index from (Mac mini M4)<font color='#337ab7'>{name}</font></h2>".format(name=request.host)
     html += "<b>Backend hostname:</b> {hostname}<br>".format(hostname=socket.gethostname())
     html += "<b>Backend socket:</b> {socket}<br>".format(socket=getsocket(os.getpid()))
     html += "<br>"
@@ -106,7 +106,7 @@ def serviceJson():
 @app.route("/")
 @app.route("/index.html")
 def tableView():
-    html = "<html><head><title>Mylyn Service Index</title></head>" \
+    html = "<html><head><title>Mylyn Service Index Mac mini M4</title></head>" \
         "<style>" \
         "body {" \
         "background-color: white;" \
@@ -126,7 +126,7 @@ def tableView():
       for (var i=0,len=content.length; i<len; i++) {
         erg = erg + "<tr><td>" + content[i].type
             + "</td><td><a href=\\"" + content[i].url
-            + "\\">"+ content[i].url + "</a></td><td>" + content[i].version+ "</td><td>"
+            + "/\\">"+ content[i].url + "/</a></td><td>" + content[i].version+ "</td><td>"
             + content[i].info + "</td><td>";
         var properties = content[i].properties;
         if(!properties) {
@@ -154,7 +154,7 @@ def tableView():
 </body>
 </html>"""
 
-    html += "<h2>Mylyn Service Index from <font color='#337ab7'>{name}</font></h2>".format(name=request.host)
+    html += "<h2>Mylyn Service Index  (Mac mini M4) from <font color='#337ab7'>{name}</font></h2>".format(name=request.host)
     html += "<b>Backend hostname:</b> {hostname}<br>".format(hostname=socket.gethostname())
     html += "<b>Backend socket:</b> {socket}<br>".format(socket=getsocket(os.getpid()))
     html += "<br>"

@@ -24,12 +24,9 @@
     name: traefik:latest
     source: pull
 
-
 - name: include {{docker_mode}}
   ansible.builtin.include_tasks:
     file: "{{docker_mode}}_tasks.yml"
-
-
 
 - name: Create secret foo (from a file on the target machine)
   community.docker.docker_secret:

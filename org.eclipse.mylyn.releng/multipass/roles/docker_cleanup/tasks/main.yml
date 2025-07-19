@@ -71,6 +71,7 @@
     state: absent
   become: true
   with_items: "{{  cleanup_config_dir.files | map(attribute='path') | list  }}"
+  ignore_errors: true
 
 - name: delete runtime directory
   tags:

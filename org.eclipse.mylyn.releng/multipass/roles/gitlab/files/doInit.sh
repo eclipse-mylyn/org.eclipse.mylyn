@@ -18,6 +18,8 @@ export GITLAB_ROOTGROUP=eclipse-mylyn
 export GITLAB_SUBGROUP=ci-test
 export GITLAB_PROJECT=ci-mylyn-test-project
 
+echo "parm1 = $1"
+echo "parm2 = $2"
 echo "GITLAB_SERVER = $GITLAB_SERVER"
 #
 #creating root group
@@ -71,9 +73,10 @@ git config --global http.sslverify false
 git config --global user.email "admin@mylyn.eclipse.org"
 git config --global user.name "Mylyn Admin"
 
-git remote add origin ssh://git@$1:2222/$GITLAB_ROOTGROUP/$GITLAB_SUBGROUP/$GITLAB_PROJECT.git
+git remote add origin ssh://git@$2:2222/$GITLAB_ROOTGROUP/$GITLAB_SUBGROUP/$GITLAB_PROJECT.git
 git add .
 git commit -m "Initial commit"
+git config --list
 GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git push -u origin master 
 #
 # Git branches initial structure as per gitflow

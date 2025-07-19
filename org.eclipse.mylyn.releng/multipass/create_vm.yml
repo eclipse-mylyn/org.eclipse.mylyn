@@ -14,7 +14,7 @@
     - no_log: false
       copy:
         force: true
-        dest: "mylyn_vars/{{ inventory_hostname }}.json"
+        dest: "mylyn_vars/{{ inventory_hostname }}-{{local_prefix}}.json"
         content: "{{ vars | dict2items | json_query('[?starts_with(key, `mylyn_`)]') | items2dict }}"
   tasks:
     - name: include global mode
@@ -27,15 +27,12 @@
 - hosts: localhost
   gather_facts: false
   pre_tasks:
-    - include_vars:
-        dir: mylyn_vars
-        extensions:
-        - json
+    - ansible.builtin.include_vars: "mylyn_vars/localhost-{{local_prefix}}.json"
   post_tasks:
     - no_log: false
       delegate_to: localhost
       copy:
-        dest: "mylyn_vars/{{ inventory_hostname }}.json"
+        dest: "mylyn_vars/{{ inventory_hostname }}-{{local_prefix}}.json"
         content: "{{ vars | dict2items | json_query('[?starts_with(key, `mylyn_`)]') | items2dict }}"
   roles:
     - role: multipass_create_vm
@@ -58,6 +55,7 @@
         ethernets:
           extra0:
             dhcp4: yes
+            dhcp-identifier: "mac"
             match:
               macaddress: "{{ hostvars[inventory_hostname].additional_network_mac_adr }}"
             addresses: {{ hostvars[inventory_hostname].additional_network_addresses }}
@@ -71,15 +69,12 @@
 - hosts: "{{ hostvars['localhost'].rootca_server_name }}"
   gather_facts: false
   pre_tasks:
-    - include_vars:
-        dir: mylyn_vars
-        extensions:
-        - json
+    - ansible.builtin.include_vars: "mylyn_vars/localhost-{{local_prefix}}.json"
   post_tasks:
     - no_log: false
       delegate_to: localhost
       copy:
-        dest: "mylyn_vars/{{ inventory_hostname }}.json"
+        dest: "mylyn_vars/{{ inventory_hostname }}-{{local_prefix}}.json"
         content: "{{ vars | dict2items | json_query('[?starts_with(key, `mylyn_`)]') | items2dict }}"
   vars:
     rootca_name: "{{ hostvars['localhost'].rootca_server_name }}"
