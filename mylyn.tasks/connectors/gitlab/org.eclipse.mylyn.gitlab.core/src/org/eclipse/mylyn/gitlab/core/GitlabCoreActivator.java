@@ -41,10 +41,6 @@ public final class GitlabCoreActivator extends Plugin {
 
 	public static final String SHOW_ACTIVITY_ICONS = "gitlab.show.activity.icons"; //$NON-NLS-1$
 
-	public static final String USE_PERSONAL_ACCESS_TOKEN = "gitlab.use.personal.access.token"; //$NON-NLS-1$
-
-	public static final String PERSONAL_ACCESS_TOKEN = "gitlab.personal.access.token"; //$NON-NLS-1$
-
 	public static final String API_VERSION = "/api/v4"; //$NON-NLS-1$
 
 	public static final String ATTRIBUTE_TYPE_ACTIVITY = "activity"; //$NON-NLS-1$

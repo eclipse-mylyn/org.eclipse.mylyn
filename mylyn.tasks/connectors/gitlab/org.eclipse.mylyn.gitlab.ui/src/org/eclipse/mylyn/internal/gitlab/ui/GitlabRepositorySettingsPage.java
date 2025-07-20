@@ -75,6 +75,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 		setNeedsEncoding(false);
 		setNeedsTimeZone(false);
 		setNeedsProxy(false);
+		setUseTokenForAuthentication(true);
 	}
 
 	@Override
@@ -84,6 +85,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 
 	@Override
 	protected void createAdditionalControls(Composite parent) {
+		setUseTokenSelection(true);
 		FormToolkit toolkit = new FormToolkit(TasksUiPlugin.getDefault().getFormColors(parent.getDisplay()));
 		Composite aditionalContainer = new Composite(parent, SWT.NONE);
 		GridLayoutFactory.fillDefaults().margins(0, 0).numColumns(3).applyTo(aditionalContainer);
@@ -257,6 +259,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 			showActivityIconsButton.setSelection(value == null ? true : Boolean.parseBoolean(value));
 		}
 
+		/*
 		gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = 3;
 		gd.verticalSpan = 1;
@@ -284,7 +287,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 
 		String accessTokenValue = getRepository() != null
 				? getRepository().getProperty(GitlabCoreActivator.PERSONAL_ACCESS_TOKEN)
-				: null;
+						: null;
 		if (accessTokenValue == null) {
 			accessTokenValue = ""; //$NON-NLS-1$
 		}
@@ -295,6 +298,7 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 		gd.grabExcessHorizontalSpace = true;
 		personalAccessTokenText.setLayoutData(gd);
 
+		 */
 		updateUIEnablement();
 	}
 
@@ -317,9 +321,11 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 		repository.setProperty(GitlabCoreActivator.AVANTAR, Boolean.toString(avatarSupportButton.getSelection()));
 		repository.setProperty(GitlabCoreActivator.SHOW_ACTIVITY_ICONS,
 				Boolean.toString(showActivityIconsButton.getSelection()));
+		/*
 		repository.setProperty(GitlabCoreActivator.USE_PERSONAL_ACCESS_TOKEN,
 				Boolean.toString(usePersonalAccessTokenButton.getSelection()));
 		repository.setProperty(GitlabCoreActivator.PERSONAL_ACCESS_TOKEN, personalAccessTokenText.getText());
+		 */
 		super.applyTo(repository);
 	}
 

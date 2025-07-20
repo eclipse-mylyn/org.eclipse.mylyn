@@ -65,7 +65,6 @@ public class AbstractTaskEditorPageTest {
 
 	private TaskAttribute attribute;
 
-	@SuppressWarnings("restriction")
 	@Before
 	public void setUp() {
 		repository = TaskTestUtil.createMockRepository();

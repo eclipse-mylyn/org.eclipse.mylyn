@@ -32,7 +32,6 @@ import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.gitlab.core.GitlabConfiguration;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
 import org.eclipse.mylyn.internal.gitlab.core.GitlabRestClient;
-import org.junit.Ignore;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -47,7 +46,6 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 @SuppressWarnings({ "nls", "restriction" })
-@Ignore //FIXME: re-enable with https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/716
 public final class RestfulGitlabClientTest {
 
 	@BeforeAll
@@ -74,11 +72,6 @@ public final class RestfulGitlabClientTest {
 	@GitLabTestService
 	public void setUp() throws Exception {
 		GitlabTestFixture.current().clearOverwriteProperties();
-// when you want to execute the tests with user and password instead of the accestoken.
-// change the password stored in
-// /org.eclipse.mylyn.gitlab.core.test/testdata/credentials.properties
-// and uncomment the next line
-//		GitlabTestFixture.current().addOverwriteProperty(GitlabCoreActivator.USE_PERSONAL_ACCESS_TOKEN, "false");
 	}
 
 	@AfterEach
