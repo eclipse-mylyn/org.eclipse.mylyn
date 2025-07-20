@@ -117,11 +117,7 @@
       vars:
         common_domain_name: "{{ hostvars['localhost'].mylyn_service_domain }}"
         jenkins_instances:
-#          - {  servmame: "jenkins-2_303_3", port1: 8081, port2: 50001, data_dir: "jenkins-2.303.3", image_tag: "jenkins/jenkins:2.303.3-lts-jdk11", extra_info: '' }
-#          - {  servmame: "jenkins-1_651_1", port1: 8084, port2: 50004, data_dir: "jenkins-2.303.3", image_tag: "jenkins:1.651.1", extra_info: '"' }
-#          - {  servmame: "jenkins-latest-jdk11", port1: 8083, port2: 50003, data_dir: "jenkins-2.303.3", image_tag: "jenkins/jenkins:latest-jdk11", extra_info: '"default": "true"' }
           - {  servmame: "jenkins-latest", port1: 8084, port2: 50004, data_dir: "jenkins-2.303.3", image_tag: "jenkins/jenkins:latest", extra_info: '' }
-#          - {  servmame: "jenkinsci", port1: 8082, port2: 50002, data_dir: "jenkinsci", image_tag: "jenkins/jenkins:2.375.2-lts", extra_info: '"local_test_service":"true"' }
     - role: bugzilla
       tags:
         - bugzilla

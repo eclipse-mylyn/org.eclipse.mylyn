@@ -1,6 +1,6 @@
     - name: set global var
       ansible.builtin.set_fact:
-        mylyn_grp_prefix: "{{ prefix | default('mylyn')}}"
+        mylyn_grp_prefix: "{{ local_prefix | default('mylyn')}}"
         mylyn_service_domain: "{{ local_domain | default('mylyn.local')}}"
         mylyn_docker_swarm_recreate: "{{ swarm_recreate | default(false) }}"
         mylyn_docker_mode_global: "{{ docker_run_mode | default('container') }}"

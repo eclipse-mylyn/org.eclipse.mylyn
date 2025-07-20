@@ -31,7 +31,7 @@
     extra_info_label: "{{ (',' + act_item.extra_info) if (act_item.extra_info | length > 0 ) else ''}}"
 - name: myServiceLabel {{act_item.servmame}}
   set_fact:
-    serviceLabel: '{"type":"{{ jenkins_type }}","url":"/{{act_item.servmame}}/", "version": "{{version.stdout}}", "info": "", "properties":  { "host-name": "{{ common_domain_name }}", "remote_ip": "{{ label_service_ip }}", "ansible-host-ip": "{{ansible_ssh_host}}", "ansible-name": "{{ inventory_hostname }}", "docker": "true" {{ extra_info_label }} } }'
+    serviceLabel: '{"type":"{{ jenkins_type }}","url":"/{{act_item.servmame}}", "version": "{{version.stdout}}", "info": "", "properties":  { "host-name": "{{ common_domain_name }}" {{ extra_info_label }} } }'
 
 - name: setlabels {{act_item.servmame}}
   ansible.builtin.set_fact:

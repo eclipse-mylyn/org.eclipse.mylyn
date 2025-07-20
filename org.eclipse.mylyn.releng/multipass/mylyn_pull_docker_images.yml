@@ -1,10 +1,7 @@
 - hosts: localhost
   gather_facts: true
   pre_tasks:
-    - include_vars:
-        dir: mylyn_vars
-        extensions:
-        - json
+    - ansible.builtin.include_vars: "mylyn_vars/localhost-{{local_prefix}}.json"
   tasks:
     - name: mylyn_service_domain
       debug:

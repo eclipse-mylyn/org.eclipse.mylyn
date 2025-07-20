@@ -38,8 +38,9 @@ all:
       ansible_ssh_private_key_file: first_setup/ubuntu_key
 #      internal_traefik_adress: "internaltraefik.frank-becker.de"
       default_etc_hosts: "mylynmstr01.local mylyn.local traefik.mylyn.local gitlab.mylyn.local artifactory.mylyn.local"
+#      default_etc_hosts: "mylynmstr01.local mylyn.frank-becker.de traefik.mylyn.frank-becker.de gitlab.mylyn.frank-becker.de artifactory.mylyn.frank-becker.de"
 # only needed when you want to share your instance to other devices in Network or Internet
-#default_etc_hosts: "mylynmstr01.local mylyn.local traefik.mylyn.local jenkins.mylyn.local artifactory.mylyn.local gitlab.mylyn.local internaltraefik.frank-becker.de mylyntest.frank-becker.de"
+#      default_etc_hosts: "mylynmstr01.local mylyn.local traefik.mylyn.local jenkins.mylyn.local artifactory.mylyn.local gitlab.mylyn.local internaltraefik.frank-becker.de mylyntest.frank-becker.de"
 #      default_etc_hosts: "mylynmstr01.local mylyn.frank-becker.de traefik.mylyn.frank-becker.de jenkins.mylyn.frank-becker.de artifactory.mylyn.frank-becker.de gitlab.mylyn.frank-becker.de internaltraefik.mylyn.frank-becker.de"
 #      additional_launch_parms: '--network name=en0,mode=manual,mac="52:54:00:af:4B:C3"'
 #      additional_network_mac_adr: "52:54:00:AF:4B:C3"
