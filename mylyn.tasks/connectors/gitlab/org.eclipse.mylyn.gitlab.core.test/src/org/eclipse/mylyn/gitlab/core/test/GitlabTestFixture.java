@@ -27,6 +27,7 @@ import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;
 import org.eclipse.mylyn.internal.gitlab.core.GitlabRepositoryConnector;
 import org.eclipse.mylyn.internal.gitlab.core.GitlabRestClient;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tests.util.TestFixture;
 
@@ -41,8 +42,7 @@ public class GitlabTestFixture extends TestFixture {
 		private static final long serialVersionUID = 1751817962812899025L;
 
 		{
-			put(GitlabCoreActivator.USE_PERSONAL_ACCESS_TOKEN, "true");
-			put(GitlabCoreActivator.PERSONAL_ACCESS_TOKEN, "glpat-Test1nPwd12345");
+			put(IRepositoryConstants.PROPERTY_USE_TOKEN, "true");
 			put(GitlabCoreActivator.GROUPS, "eclipse-mylyn");
 		}
 	};

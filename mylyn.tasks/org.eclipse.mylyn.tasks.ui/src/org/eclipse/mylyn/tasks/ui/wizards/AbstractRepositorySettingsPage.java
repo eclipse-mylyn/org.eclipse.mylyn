@@ -285,6 +285,28 @@ implements ITaskRepositoryPage, IAdaptable {
 
 	private Button useToken;
 
+	private SelectionAdapter useTokenListener;
+
+	/**
+	 * @since 4.8
+	 */
+	public void setUseTokenSelection(boolean selection) {
+		if (useToken != null) {
+			useToken.setSelection(selection);
+			// setSelection does not fire a selection event
+			useTokenListener.widgetSelected(null);
+		}
+	}
+
+	/**
+	 * @since 4.8
+	 */
+	public void setUseTokenButtonEnabled(boolean enabled) {
+		if (useToken != null) {
+			useToken.setEnabled(enabled);
+		}
+	}
+
 	/**
 	 * @since 3.10
 	 */
@@ -676,7 +698,7 @@ implements ITaskRepositoryPage, IAdaptable {
 			GridDataFactory.defaultsFor(useToken).span(3, 1).applyTo(useToken);
 			String savePasswordText = savePasswordButton.getText();
 			boolean[] allowAnon = { isAnonymousAccess() };
-			SelectionAdapter listener = new SelectionAdapter() {
+			useTokenListener = new SelectionAdapter() {
 
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -718,12 +740,12 @@ implements ITaskRepositoryPage, IAdaptable {
 					}
 				}
 			};
-			useToken.addSelectionListener(listener);
+			useToken.addSelectionListener(useTokenListener);
 			TaskRepository taskRepository = getRepository();
 			if (taskRepository != null) {
 				useToken.setSelection(useTokenChecked(taskRepository));
 				// setSelection does not fire a selection event
-				listener.widgetSelected(null);
+				useTokenListener.widgetSelected(null);
 			}
 
 		}

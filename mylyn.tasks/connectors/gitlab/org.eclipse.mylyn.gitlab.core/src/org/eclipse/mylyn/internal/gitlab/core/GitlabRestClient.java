@@ -62,6 +62,7 @@ import org.eclipse.mylyn.gitlab.core.GitlabConfiguration;
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator.ActivityType;
 import org.eclipse.mylyn.gitlab.core.GitlabException;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -107,8 +108,7 @@ public class GitlabRestClient {
 	public static String AUTHORIZATION_HEADER = "authorization_header"; //$NON-NLS-1$
 
 	@SuppressWarnings("restriction")
-	public GitlabRestClient(RepositoryLocation location, CommonHttpClient client,
-			GitlabRepositoryConnector connector,
+	public GitlabRestClient(RepositoryLocation location, CommonHttpClient client, GitlabRepositoryConnector connector,
 			TaskRepository taskRepository) {
 		this.client = client;
 		this.connector = connector;
@@ -467,8 +467,10 @@ public class GitlabRestClient {
 
 	public String obtainAccessToken(IOperationMonitor monitor) throws Exception {
 		String accessToken;
-		if (Boolean.parseBoolean(taskRepository.getProperty(GitlabCoreActivator.USE_PERSONAL_ACCESS_TOKEN))) {
-			accessToken = taskRepository.getProperty(GitlabCoreActivator.PERSONAL_ACCESS_TOKEN);
+		if (Boolean.parseBoolean(taskRepository.getProperty(IRepositoryConstants.PROPERTY_USE_TOKEN))) {
+			AuthenticationCredentials credentials1 = taskRepository
+					.getCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY);
+			accessToken = credentials1.getPassword();
 		} else {
 			AuthenticationCredentials credentials1 = taskRepository
 					.getCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY);
@@ -478,8 +480,8 @@ public class GitlabRestClient {
 			connection.setRequestMethod("POST"); //$NON-NLS-1$
 			connection.setDoOutput(true);
 			connection.getOutputStream()
-					.write(("grant_type=password&username=" + credentials1.getUserName() + "&password=" //$NON-NLS-1$//$NON-NLS-2$
-							+ credentials1.getPassword()).getBytes());
+			.write(("grant_type=password&username=" + credentials1.getUserName() + "&password=" //$NON-NLS-1$//$NON-NLS-2$
+					+ credentials1.getPassword()).getBytes());
 			connection.connect();
 
 			int responseCode = connection.getResponseCode();
@@ -657,7 +659,7 @@ public class GitlabRestClient {
 						labelText = DefaultTaskSchema.getField(TaskAttribute.COMMENT_TEXT)
 								.createAttribute(taskAttribute);
 						taskAttribute.getMetaData()
-								.putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, labelText.getId());
+						.putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, labelText.getId());
 					}
 					if (label.getAsJsonObject().get("action").getAsString().equals("add")) { //$NON-NLS-1$ //$NON-NLS-2$
 						added.add(label.get("label").getAsJsonObject().get("name").getAsString()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1276,7 +1278,7 @@ public class GitlabRestClient {
 					if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 						GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
 								/* repository.getRepositoryUrl() + */ "get Project: (" + (i + 1) + "/" //$NON-NLS-1$ //$NON-NLS-2$
-										+ projectList.length + "): " + project + " "); //$NON-NLS-1$ //$NON-NLS-2$
+								+ projectList.length + "): " + project + " "); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					JsonObject projectObject = projectDetail;
 					JsonArray labels = getProjectLabels(projectObject.get(ID_KEY).getAsString(), monitor);
@@ -1284,7 +1286,7 @@ public class GitlabRestClient {
 					if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 						GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
 								/* repository.getRepositoryUrl() + */ "get Project: (" + (i + 1) + "/" //$NON-NLS-1$ //$NON-NLS-2$
-										+ projectList.length + "): " + project + " Labels/Milestone "); //$NON-NLS-1$ //$NON-NLS-2$
+								+ projectList.length + "): " + project + " Labels/Milestone "); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					config.addProject(projectObject, labels, milestones);
 				} catch (UnsupportedEncodingException e) {
@@ -1303,13 +1305,13 @@ public class GitlabRestClient {
 				if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 					GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
 							/* repository.getRepositoryUrl() + */ "get Group (" + (i + 1) + "/" + groupList.length //$NON-NLS-1$ //$NON-NLS-2$
-									+ "): " + group); //$NON-NLS-1$
+							+ "): " + group); //$NON-NLS-1$
 				}
 				projects = getGroupProjects(group, monitor);
 				if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 					GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
 							/* repository.getRepositoryUrl() + */ "get Group (" + (i + 1) + "/" + groupList.length //$NON-NLS-1$ //$NON-NLS-2$
-									+ "): " + group + " projects"); //$NON-NLS-1$ //$NON-NLS-2$
+							+ "): " + group + " projects"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				JsonArray projectsArray = (JsonArray) projects;
 				for (int j = 0; j < projectsArray.size(); j++) {
@@ -1321,8 +1323,8 @@ public class GitlabRestClient {
 					if (GitlabCoreActivator.DEBUG_REST_CLIENT_TRACE) {
 						GitlabCoreActivator.DEBUG_TRACE.trace(GitlabCoreActivator.REST_CLIENT_TRACE,
 								/* repository.getRepositoryUrl() + */ "get Group (" + (i + 1) + "/" + groupList.length //$NON-NLS-1$ //$NON-NLS-2$
-										+ "): " + group + " Projects (" + (j + 1) + "/" + projectsArray.size() + "): " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-										+ projectId + " Labels/Milestone: "); //$NON-NLS-1$
+								+ "): " + group + " Projects (" + (j + 1) + "/" + projectsArray.size() + "): " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+								+ projectId + " Labels/Milestone: "); //$NON-NLS-1$
 					}
 					config.addProject(projectObject, labels, milestones);
 				}

@@ -78,7 +78,6 @@ public class AttributeEditorToolkitTest {
 
 	private final TaskDataModel taskDataModel = mock(TaskDataModel.class);
 
-	@SuppressWarnings("restriction")
 	@Before
 	public void setUp() {
 		CommonTextSupport textSupport = mock(CommonTextSupport.class);
