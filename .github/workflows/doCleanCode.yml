@@ -1,0 +1,31 @@
+###############################################################################
+# Copyright (c) 2025 Contributors to Eclipse Foundation
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# https://www.eclipse.org/legal/epl-2.0/.
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#     see git history
+###############################################################################
+name: Perform Code Clean
+concurrency: 
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 2 * * *'
+
+jobs:
+  clean-code:
+    uses: eclipse-platform/eclipse.platform.releng.aggregator/.github/workflows/cleanCode.yml@master
+    with:
+      author: Eclipse Mylyn Bot <mylyn-bot@eclipse.org>
+      do-quickfix: false
+      do-cleanups: true
+      bundle-folders: mylyn.builds/*/ mylyn.commons/*/ mylyn.context/*/ mylyn.docs/docs/*/ mylyn.docs/epub/*/ mylyn.docs/wikitext/*/ mylyn.egit/*/ mylyn.github/*/ mylyn.reviews/*/ mylyn.tasks/*/ mylyn.versions/*/
+    secrets:
+      token: ${{ secrets.MYLYN_BOT_PAT }}
