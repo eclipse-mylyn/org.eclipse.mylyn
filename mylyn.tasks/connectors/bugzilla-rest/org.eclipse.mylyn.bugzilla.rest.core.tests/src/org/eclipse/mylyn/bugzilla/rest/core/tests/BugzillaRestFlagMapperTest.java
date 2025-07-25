@@ -126,8 +126,8 @@ public class BugzillaRestFlagMapperTest {
 		TaskAttribute taskAttribute = mockTestData.getRoot()
 				.createAttribute(IBugzillaRestConstants.KIND_FLAG_TYPE + "11");
 		flagMapper.applyTo(taskAttribute);
-		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.txt"), Charset.defaultCharset()),
-				taskAttribute.toString());
+		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.txt"), Charset.defaultCharset())
+				.replace("\r\n", "\n"), taskAttribute.toString().replace("\r\n", "\n"));
 	}
 
 	@Test
@@ -139,8 +139,8 @@ public class BugzillaRestFlagMapperTest {
 		TaskAttribute taskAttribute = mockTestData.getRoot()
 				.createAttribute(IBugzillaRestConstants.KIND_FLAG_TYPE + "11");
 		flagMapper.applyTo(taskAttribute);
-		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag1.txt"), Charset.defaultCharset()),
-				taskAttribute.toString());
+		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag1.txt"), Charset.defaultCharset())
+				.replace("\r\n", "\n"), taskAttribute.toString().replace("\r\n", "\n"));
 	}
 
 	@Test
@@ -157,8 +157,8 @@ public class BugzillaRestFlagMapperTest {
 				Charset.defaultCharset()), taskAttribute.toString());
 
 		flagMapper = BugzillaRestFlagMapper.createFrom(taskAttribute);
-		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.json"), Charset.defaultCharset()),
-				new Gson().toJson(flagMapper));
+		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.json"), Charset.defaultCharset())
+				.replace("\r\n", "\n"), new Gson().toJson(flagMapper).replace("\r\n", "\n"));
 	}
 
 	@Test
@@ -175,8 +175,9 @@ public class BugzillaRestFlagMapperTest {
 
 		flagMapper = BugzillaRestFlagMapper.createFrom(taskAttribute);
 		assertEquals(
-				IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag1.json"), Charset.defaultCharset()),
-				new Gson().toJson(flagMapper));
+				IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag1.json"), Charset.defaultCharset())
+						.replace("\r\n", "\n"),
+				new Gson().toJson(flagMapper).replace("\r\n", "\n"));
 	}
 
 }
