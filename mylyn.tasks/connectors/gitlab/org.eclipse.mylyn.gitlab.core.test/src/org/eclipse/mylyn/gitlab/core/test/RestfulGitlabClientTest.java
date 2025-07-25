@@ -152,7 +152,7 @@ public final class RestfulGitlabClientTest {
 
 		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(resultElement);
 		String expected = IOUtils.toString(CommonTestUtil.getResource(this, fName), Charset.defaultCharset());
-		assertEquals(expected, actual);
+		assertEquals(expected.replace("\r\n", "\n"), actual.replace("\r\n", "\n"));
 	}
 
 	@Test
@@ -180,7 +180,7 @@ public final class RestfulGitlabClientTest {
 		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(user);
 		String expectedStr = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/getUser.json"), //$NON-NLS-1$
 				Charset.defaultCharset());
-		assertEquals(expectedStr, actual);
+		assertEquals(expectedStr.replace("\r\n", "\n"), actual.replace("\r\n", "\n"));
 	}
 
 	@Test
@@ -240,7 +240,7 @@ public final class RestfulGitlabClientTest {
 		String fName = "testdata/getUsers" + (techUsers.size() > 0 ? "_" : "") + String.join("_", techUsers) + ".json";
 		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(resultElement);
 		String expected = IOUtils.toString(CommonTestUtil.getResource(this, fName), Charset.defaultCharset());
-		assertEquals(expected, actual);
+		assertEquals(expected.replace("\r\n", "\n"), actual.replace("\r\n", "\n"));
 	}
 
 	@Test
@@ -262,7 +262,7 @@ public final class RestfulGitlabClientTest {
 		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(resultElement);
 		String expected = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/getGroups.json"), //$NON-NLS-1$
 				Charset.defaultCharset());
-		assertEquals(expected, actual);
+		assertEquals(expected.replace("\r\n", "\n"), actual.replace("\r\n", "\n"));
 	}
 
 	@Test
@@ -321,7 +321,7 @@ public final class RestfulGitlabClientTest {
 				.replace(GitlabTestFixture.current().getProperty("host-name"), "gitlab.mylyn.local");
 		String expected = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/configuration.json"), //$NON-NLS-1$
 				Charset.defaultCharset());
-		assertEquals(expected, actual);
+		assertEquals(expected.replace("\r\n", "\n"), actual.replace("\r\n", "\n"));
 	}
 
 }
