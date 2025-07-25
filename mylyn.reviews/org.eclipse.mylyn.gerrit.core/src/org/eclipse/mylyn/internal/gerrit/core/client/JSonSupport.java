@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jgit.diff.Edit;
 
 import com.google.gerrit.common.data.GerritConfig;
-import com.google.gerrit.reviewdb.ApprovalCategory;
 import com.google.gerrit.reviewdb.ApprovalCategory.Id;
 import com.google.gerrit.reviewdb.AuthType;
 import com.google.gerrit.reviewdb.PatchSetApproval;
@@ -130,50 +129,50 @@ public class JSonSupport {
 		gson = JsonServlet.defaultGsonBuilder()
 				.registerTypeAdapter(JSonResponse.class, new JSonResponseDeserializer())
 				.registerTypeAdapter(Edit.class, (JsonDeserializer<Edit>) (json, typeOfT, context) -> {
-if (json.isJsonArray()) {
-				JsonArray array = json.getAsJsonArray();
-				if (array.size() == 4) {
-					return new Edit(array.get(0).getAsInt(), array.get(1).getAsInt(),
-							array.get(2).getAsInt(), array.get(3).getAsInt());
-				}
-}
-return new Edit(0, 0);
-})
+					if (json.isJsonArray()) {
+						JsonArray array = json.getAsJsonArray();
+						if (array.size() == 4) {
+							return new Edit(array.get(0).getAsInt(), array.get(1).getAsInt(),
+									array.get(2).getAsInt(), array.get(3).getAsInt());
+						}
+					}
+					return new Edit(0, 0);
+				})
 				// ignore GerritForge specific AuthType "TEAMFORGE" which is unknown to Gerrit
 				.registerTypeAdapter(AuthType.class, (JsonDeserializer<AuthType>) (json, typeOfT, context) -> {
-String jsonString = json.getAsString();
-if (jsonString != null) {
-				try {
-					return AuthType.valueOf(jsonString);
-				} catch (IllegalArgumentException e) {
-					// ignore the error since the connector does not make use of AuthType
-					//GerritCorePlugin.logWarning("Ignoring unkown authentication type: " + jsonString, e);
-				}
-}
-return null;
-})
+					String jsonString = json.getAsString();
+					if (jsonString != null) {
+						try {
+							return AuthType.valueOf(jsonString);
+						} catch (IllegalArgumentException e) {
+							// ignore the error since the connector does not make use of AuthType
+							//GerritCorePlugin.logWarning("Ignoring unkown authentication type: " + jsonString, e);
+						}
+					}
+					return null;
+				})
 				.registerTypeAdapter(approvalMapType.getType(), (JsonDeserializer<Map<Id, PatchSetApproval>>) (json, typeOfT, context) -> {
 // Gerrit 2.2: the type of PatchSetPublishDetail.given changed from a map to a list
-Map<Id, PatchSetApproval> map = new HashMap<>();
-if (json.isJsonArray()) {
-				JsonArray array = json.getAsJsonArray();
-				for (Iterator<JsonElement> it = array.iterator(); it.hasNext();) {
-					JsonElement element = it.next();
-					Id key = context.deserialize(element, Id.class);
-					if (key.get() != null) {
-						// Gerrit < 2.1.x: json is map
-						element = it.next();
+					Map<Id, PatchSetApproval> map = new HashMap<>();
+					if (json.isJsonArray()) {
+						JsonArray array = json.getAsJsonArray();
+						for (Iterator<JsonElement> it = array.iterator(); it.hasNext();) {
+							JsonElement element = it.next();
+							Id key = context.deserialize(element, Id.class);
+							if (key.get() != null) {
+								// Gerrit < 2.1.x: json is map
+								element = it.next();
+							}
+							PatchSetApproval value = context.deserialize(element, PatchSetApproval.class);
+							if (key.get() == null) {
+								// Gerrit 2.2: json is a list, deduct key from value
+								key = value.getCategoryId();
+							}
+							map.put(key, value);
+						}
 					}
-					PatchSetApproval value = context.deserialize(element, PatchSetApproval.class);
-					if (key.get() == null) {
-						// Gerrit 2.2: json is a list, deduct key from value
-						key = value.getCategoryId();
-					}
-					map.put(key, value);
-				}
-}
-return map;
-})
+					return map;
+				})
 				.setExclusionStrategies(exclustionStrategy)
 				.create();
 	}
@@ -207,6 +206,9 @@ return map;
 		// see http://code.google.com/p/gerrit/issues/detail?id=1648
 		if (responseMessage.startsWith(")]}'\n")) { //$NON-NLS-1$
 			responseMessage = responseMessage.substring(5);
+		}
+		if (responseMessage.startsWith(")]}'\r\n")) { //$NON-NLS-1$
+			responseMessage = responseMessage.substring(6);
 		}
 		return gson.fromJson(responseMessage, resultType);
 	}
