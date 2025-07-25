@@ -43,8 +43,8 @@ public class BugzillaAttributeTest extends TestCase {
 			taskDataAttribute.getMetaData().setKind(attribute.getKind());
 			taskDataAttribute.getMetaData().setType(attribute.getType());
 		}
-		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/schema/taskdata.txt")),
-				taskData.getRoot().toString());
+		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/schema/taskdata.txt"))
+				.replace("\r\n", "\n"), taskData.getRoot().toString().replace("\r\n", "\n"));
 	}
 
 }
