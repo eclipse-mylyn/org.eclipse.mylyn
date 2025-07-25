@@ -27,5 +27,6 @@ jobs:
       do-quickfix: false
       do-cleanups: true
       bundle-folders: mylyn.builds/*/ mylyn.commons/*/ mylyn.context/*/ mylyn.docs/docs/*/ mylyn.docs/epub/*/ mylyn.docs/wikitext/*/ mylyn.egit/*/ mylyn.github/*/ mylyn.reviews/*/ mylyn.tasks/*/ mylyn.versions/*/
+      branch: main
     secrets:
       token: ${{ secrets.MYLYN_BOT_PAT }}
