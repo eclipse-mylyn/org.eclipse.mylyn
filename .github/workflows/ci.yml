@@ -26,4 +26,4 @@ jobs:
   build:
     uses: eclipse-platform/eclipse.platform.releng.aggregator/.github/workflows/mavenBuild.yml@master
     with:
-      maven-goals: clean verify -Dmaven.test.failure.ignore=true -Dmaven.test.error.ignore=true
+      maven-goals: clean verify
