@@ -54,6 +54,11 @@ public class WebBrowserDialogTest extends TestCase {
 			System.err.println("Skipping WebBrowserDialogTest.testCreate()");
 			return;
 		}
+		if ("amd64".equals(System.getProperty("os.arch")) && "linux".equals(System.getProperty("os.name"))) {
+			System.err.println(
+					"kipping WebBrowserDialogTest.testCreate() on Ubuntu because of missing GTK 3.x/4.x bindings");
+			return;
+		}
 		TestWebBrowserDialog dialog = new TestWebBrowserDialog(WorkbenchUtil.getShell(), "title", null, "message", 0,
 				new String[0], 0);
 		dialog.create();
@@ -68,6 +73,11 @@ public class WebBrowserDialogTest extends TestCase {
 			System.err.println("Skipping WebBrowserDialogTest.testSetShow()");
 			return;
 		}
+		if ("amd64".equals(System.getProperty("os.arch")) && "linux".equals(System.getProperty("os.name"))) {
+			System.err.println(
+					"kipping WebBrowserDialogTest.testSetShow() on Ubuntu because of missing GTK 3.x/4.x bindings");
+			return;
+		}
 		TestWebBrowserDialog dialog = new TestWebBrowserDialog(WorkbenchUtil.getShell(), "title", null, "message", 0,
 				new String[0], 0);
 		dialog.setShowLocation(false);
@@ -80,6 +90,11 @@ public class WebBrowserDialogTest extends TestCase {
 	public void testSetShowAfterCreate() {
 		if (CommonTestUtil.skipBrowserTests()) {
 			System.err.println("Skipping WebBrowserDialogTest.testSetShowAfterCreate()");
+			return;
+		}
+		if ("amd64".equals(System.getProperty("os.arch")) && "linux".equals(System.getProperty("os.name"))) {
+			System.err.println(
+					"kipping WebBrowserDialogTest.testSetShowAfterCreate() on Ubuntu because of missing GTK 3.x/4.x bindings");
 			return;
 		}
 		WebBrowserDialog dialog = new WebBrowserDialog(WorkbenchUtil.getShell(), "title", null, "message", 0,
