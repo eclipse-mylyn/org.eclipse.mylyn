@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.commons.tests.workbench.browser;
 
+import java.util.Locale;
+
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.commons.workbench.browser.WebBrowserDialog;
@@ -54,9 +56,9 @@ public class WebBrowserDialogTest extends TestCase {
 			System.err.println("Skipping WebBrowserDialogTest.testCreate()");
 			return;
 		}
-		if ("amd64".equals(System.getProperty("os.arch")) && "linux".equals(System.getProperty("os.name"))) {
+		if (System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("linux")) {
 			System.err.println(
-					"kipping WebBrowserDialogTest.testCreate() on Ubuntu because of missing GTK 3.x/4.x bindings");
+					"Skipping WebBrowserDialogTest.testCreate() on Ubuntu because of missing GTK 3.x/4.x bindings");
 			return;
 		}
 		TestWebBrowserDialog dialog = new TestWebBrowserDialog(WorkbenchUtil.getShell(), "title", null, "message", 0,
@@ -73,9 +75,9 @@ public class WebBrowserDialogTest extends TestCase {
 			System.err.println("Skipping WebBrowserDialogTest.testSetShow()");
 			return;
 		}
-		if ("amd64".equals(System.getProperty("os.arch")) && "linux".equals(System.getProperty("os.name"))) {
+		if (System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("linux")) {
 			System.err.println(
-					"kipping WebBrowserDialogTest.testSetShow() on Ubuntu because of missing GTK 3.x/4.x bindings");
+					"Skipping WebBrowserDialogTest.testSetShow() on Ubuntu because of missing GTK 3.x/4.x bindings");
 			return;
 		}
 		TestWebBrowserDialog dialog = new TestWebBrowserDialog(WorkbenchUtil.getShell(), "title", null, "message", 0,
@@ -92,9 +94,9 @@ public class WebBrowserDialogTest extends TestCase {
 			System.err.println("Skipping WebBrowserDialogTest.testSetShowAfterCreate()");
 			return;
 		}
-		if ("amd64".equals(System.getProperty("os.arch")) && "linux".equals(System.getProperty("os.name"))) {
+		if (System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("linux")) {
 			System.err.println(
-					"kipping WebBrowserDialogTest.testSetShowAfterCreate() on Ubuntu because of missing GTK 3.x/4.x bindings");
+					"Skipping WebBrowserDialogTest.testSetShowAfterCreate() on Ubuntu because of missing GTK 3.x/4.x bindings");
 			return;
 		}
 		WebBrowserDialog dialog = new WebBrowserDialog(WorkbenchUtil.getShell(), "title", null, "message", 0,
