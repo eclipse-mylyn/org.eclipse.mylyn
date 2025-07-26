@@ -16,6 +16,7 @@ package org.eclipse.mylyn.tasks.tests;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
@@ -85,6 +86,10 @@ public class LinkProviderTest extends TestCase {
 	}
 
 	public void testTimeoutInfinite() {
+		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
+			System.err.println("Skipping LinkProviderTest.testTimeoutInfinite() on Intel Macs");
+			return;
+		}
 		System.setProperty(ITasksCoreConstants.PROPERTY_LINK_PROVIDER_TIMEOUT, "50");
 
 		provider.timeout = 40;

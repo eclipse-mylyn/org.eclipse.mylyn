@@ -39,7 +39,7 @@ public class CheckActivityJobTest extends TestCase {
 
 	public void testInactivityTimeout() throws Exception {
 		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
-			System.err.println("Skipping MonitorUserActivityJobTest.testInactivityTimeout() on Intel Macs");
+			System.err.println("Skipping CheckActivityJobTest.testInactivityTimeout() on Intel Macs");
 			return;
 		}
 		callback.lastEventTime = System.currentTimeMillis() - 201;
@@ -62,7 +62,7 @@ public class CheckActivityJobTest extends TestCase {
 
 	public void testResumeFromSleepNoTimeout() throws Exception {
 		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
-			System.err.println("Skipping MonitorUserActivityJobTest.testInactivityTimeout() on Intel Macs");
+			System.err.println("Skipping CheckActivityJobTest.testResumeFromSleepNoTimeout() on Intel Macs");
 			return;
 		}
 		job.setInactivityTimeout(0);
@@ -83,7 +83,7 @@ public class CheckActivityJobTest extends TestCase {
 
 	public void testResumeFromSleepTimeoutNoEvent() throws Exception {
 		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
-			System.err.println("Skipping MonitorUserActivityJobTest.testInactivityTimeout() on Intel Macs");
+			System.err.println("Skipping CheckActivityJobTest.testResumeFromSleepTimeoutNoEvent() on Intel Macs");
 			return;
 		}
 		callback.lastEventTime = System.currentTimeMillis();
@@ -107,7 +107,7 @@ public class CheckActivityJobTest extends TestCase {
 
 	public void testResumeFromSleepTimeoutEvent() throws Exception {
 		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
-			System.err.println("Skipping MonitorUserActivityJobTest.testInactivityTimeout() on Intel Macs");
+			System.err.println("Skipping CheckActivityJobTest.testResumeFromSleepTimeoutEvent() on Intel Macs");
 			return;
 		}
 		callback.lastEventTime = System.currentTimeMillis();
@@ -143,7 +143,8 @@ public class CheckActivityJobTest extends TestCase {
 
 	public void testResumeFromSleepTimeoutEventDiscarded() throws Exception {
 		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
-			System.err.println("Skipping MonitorUserActivityJobTest.testInactivityTimeout() on Intel Macs");
+			System.err
+					.println("Skipping CheckActivityJobTest.testResumeFromSleepTimeoutEventDiscarded() on Intel Macs");
 			return;
 		}
 		// record one tick
