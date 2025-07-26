@@ -14,6 +14,7 @@ package org.eclipse.mylyn.commons.activity.tests;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.commons.activity.ui.IUserActivityManagerCallback;
 import org.eclipse.mylyn.internal.commons.activity.ui.MonitorUserActivityJob;
 
@@ -36,7 +37,7 @@ public class MonitorUserActivityJobTest extends TestCase {
 	}
 
 	public void testInactivityTimeout() throws Exception {
-		if ("x86_64".equals(System.getProperty("os.arch")) && "Mac OS X".equals(System.getProperty("os.name"))) {
+		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
 			System.err.println("Skipping MonitorUserActivityJobTest.testInactivityTimeout() on Intel Macs");
 			return;
 		}
@@ -59,6 +60,10 @@ public class MonitorUserActivityJobTest extends TestCase {
 	}
 
 	public void testResumeFromSleepNoTimeout() throws Exception {
+		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
+			System.err.println("Skipping MonitorUserActivityJobTest.testInactivityTimeout() on Intel Macs");
+			return;
+		}
 		job.setInactivityTimeout(0);
 		job.run();
 		assertTrue(job.isActive());
@@ -76,6 +81,10 @@ public class MonitorUserActivityJobTest extends TestCase {
 	}
 
 	public void testResumeFromSleepTimeoutNoEvent() throws Exception {
+		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
+			System.err.println("Skipping MonitorUserActivityJobTest.testInactivityTimeout() on Intel Macs");
+			return;
+		}
 		callback.lastEventTime = System.currentTimeMillis();
 		job.setInactivityTimeout(20);
 		job.setTick(20);
@@ -96,6 +105,10 @@ public class MonitorUserActivityJobTest extends TestCase {
 	}
 
 	public void testResumeFromSleepTimeoutEvent() throws Exception {
+		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
+			System.err.println("Skipping MonitorUserActivityJobTest.testInactivityTimeout() on Intel Macs");
+			return;
+		}
 		callback.lastEventTime = System.currentTimeMillis();
 		job.setInactivityTimeout(20);
 		job.setTick(20);
@@ -128,6 +141,10 @@ public class MonitorUserActivityJobTest extends TestCase {
 	}
 
 	public void testResumeFromSleepTimeoutEventDiscarded() throws Exception {
+		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
+			System.err.println("Skipping MonitorUserActivityJobTest.testInactivityTimeout() on Intel Macs");
+			return;
+		}
 		// record one tick
 		callback.lastEventTime = System.currentTimeMillis();
 		job.setInactivityTimeout(20);
