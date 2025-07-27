@@ -23,7 +23,13 @@ on:
     branches: [ main ]
 
 jobs:
+  check-dash-licenses:
+    uses: eclipse-dash/dash-licenses/.github/workflows/mavenLicenseCheck.yml@master
+    with:
+      projectId: tools.mylyn
+    secrets:
+      gitlabAPIToken: ${{ secrets.GITLAB_API_TOKEN }}
   build:
     uses: eclipse-platform/eclipse.platform.releng.aggregator/.github/workflows/mavenBuild.yml@master
     with:
-      maven-goals: clean verify -Dmaven.test.failure.ignore=true -Dmaven.test.error.ignore=true
+      maven-goals: clean verify
