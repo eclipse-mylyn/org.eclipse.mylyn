@@ -24,13 +24,13 @@ package org.eclipse.mylyn.htmltext.configuration;
  * Note: Changing the default value might introduce unpredictable usability
  * issues.
  * </p>
- * 
+ *
  * @author Tom Seidel <tom.seidel@remus-software.org>
  * @since 0.8
  * @noextend This class is not intended to be subclassed by clients.
  */
 public class AutoparagrahConfiguration extends ConfigurationElement {
-	
+
 	public AutoparagrahConfiguration(boolean value) {
 		super("autoParagraph", Boolean.valueOf(value)); //$NON-NLS-1$
 	}

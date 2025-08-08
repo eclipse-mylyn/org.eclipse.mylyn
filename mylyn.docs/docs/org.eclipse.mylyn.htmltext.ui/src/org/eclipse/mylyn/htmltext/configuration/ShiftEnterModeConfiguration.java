@@ -20,7 +20,7 @@ import org.eclipse.mylyn.htmltext.configuration.EnterModeConfiguration.EnterMode
  * Just like the {@link EnterModeConfiguration} setting, it defines the behavior for
  * the SHIFT+ENTER key. The allowed values are the following constants, and
  * their relative behavior:
- * 
+ *
  * @author Tom Seidel <tom.seidel@remus-software.org>
  * @since 0.8
  * @noextend This class is not intended to be subclassed by clients.

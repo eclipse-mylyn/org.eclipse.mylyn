@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets;
  */
 public abstract class ConfigurationElement {
 
-	private String ckConfigElement;
+	private final String ckConfigElement;
 	protected Object value;
 
 	protected ConfigurationElement(String ckConfigElement, Object value) {

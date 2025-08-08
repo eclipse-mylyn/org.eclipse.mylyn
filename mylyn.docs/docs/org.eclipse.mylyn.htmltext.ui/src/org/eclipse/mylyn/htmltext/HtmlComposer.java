@@ -82,7 +82,7 @@ public class HtmlComposer {
 	 * modification will be notified to the appended listeners. There is an
 	 * additional polling mechanismus which tracks modifications.
 	 * </p>
-	 * 
+	 *
 	 * @author Tom Seidel <tom.seidel@remus-software.org>
 	 */
 	private class ModifiedFunction extends BrowserFunction {
@@ -121,7 +121,7 @@ public class HtmlComposer {
 
 	/**
 	 * BrowserFunction that is called if the wrapped Ckeditor is initialized.
-	 * 
+	 *
 	 * @author Tom Seidel <tom.seidel@remus-software.org>
 	 */
 	private class RenderCompleteFunction extends BrowserFunction {
@@ -141,7 +141,7 @@ public class HtmlComposer {
 	/**
 	 * BrowserFunction that delegates the event from ckeditor that is thrown if
 	 * the selected dom-node changed.
-	 * 
+	 *
 	 * @author Tom Seidel <tom.seidel@remus-software.org>
 	 */
 	private class SelectionChangedFunction extends BrowserFunction {
@@ -196,7 +196,7 @@ public class HtmlComposer {
 	 * a temporary collection of commands that are executed before the ckeditor
 	 * was initialized. If the ckeditor finishes its initialization all commands
 	 * are executed.
-	 * 
+	 *
 	 * @see HtmlComposer#initialize()
 	 */
 	private final List<Command> pendingCommands = Collections
@@ -206,12 +206,12 @@ public class HtmlComposer {
 	 * A map of commands that were executed before the widget was initialized
 	 * and their appending listeners which are still waiting for an event.
 	 */
-	private Map<Command, List<ModifyListener>> pendingListeners = new HashMap<>();
+	private final Map<Command, List<ModifyListener>> pendingListeners = new HashMap<>();
 
 	/**
 	 * A map of callback-Ids and their appended Listeners. This is
 	 */
-	private Map<String, List<ModifyListener>> pendingListenerCallBackMap = new HashMap<>();
+	private final Map<String, List<ModifyListener>> pendingListenerCallBackMap = new HashMap<>();
 
 	/**
 	 * Tracked {@link Command}s.
@@ -224,27 +224,27 @@ public class HtmlComposer {
 	 */
 	private boolean initialized;
 
-	
+
 	/**
 	 * Constructs a new instance of a {@link Browser} and includes a ckeditor
 	 * instance.
-	 * 
+	 *
 	 * @param parent
 	 *            a composite control which will be the parent of the new
 	 *            instance (cannot be null)
 	 * @param style
 	 *            the style of control to construct
 	 * @see Browser#Browser(Composite, int)
-	 * 
+	 *
 	 */
 	public HtmlComposer(final Composite parent, final int style) {
 		this(parent, style, null);
-		
+
 	}
 	/**
 	 * Constructs a new instance of a {@link Browser} and includes a ckeditor
 	 * instance.
-	 * 
+	 *
 	 * @param parent
 	 *            a composite control which will be the parent of the new
 	 *            instance (cannot be null)
@@ -399,7 +399,7 @@ public class HtmlComposer {
 
 	/**
 	 * Executes a given command
-	 * 
+	 *
 	 * @param command
 	 *            the command to execute
 	 */
@@ -433,7 +433,7 @@ public class HtmlComposer {
 
 	/**
 	 * Execute a command wit a result.
-	 * 
+	 *
 	 * @param command
 	 *            the command to execute
 	 * @return the result of the execution.
@@ -588,7 +588,7 @@ public class HtmlComposer {
 
 	/**
 	 * Returns the current html content of the widget
-	 * 
+	 *
 	 * @return the html
 	 */
 	public String getHtml() {
@@ -1095,11 +1095,11 @@ public class HtmlComposer {
 	/**
 	 * Replaces the current content of the widget with the given html. For
 	 * inserting html at the current selection use:
-	 * 
+	 *
 	 * <pre>
 	 * HtmlComposer.execute(&quot;integration.editor.insertHtml('myHtmlToInsert');&quot;);
 	 * </pre>
-	 * 
+	 *
 	 * @param html
 	 */
 	public void setHtml(String html) {

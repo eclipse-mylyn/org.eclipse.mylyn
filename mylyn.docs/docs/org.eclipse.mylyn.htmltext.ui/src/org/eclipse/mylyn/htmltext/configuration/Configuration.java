@@ -24,7 +24,7 @@ import org.eclipse.mylyn.htmltext.HtmlComposer;
  * A configuration for the underlying CK-Editor. The editor has several
  * configuration elements that are collected in this class and are set
  * to the receiver of the {@link HtmlComposer}.
- * 
+ *
  * @author Tom Seidel <tom.seidel@remus-software.org>
  * @since 0.8
  * @noextend This class is not intended to be subclassed by clients.
@@ -32,13 +32,13 @@ import org.eclipse.mylyn.htmltext.HtmlComposer;
 public class Configuration {
 
 	private static final String QUERY_SEPARATOR = "&"; //$NON-NLS-1$
-	
+
 	private List<ConfigurationElement> configNodes;
 
 	public Configuration() {
 		super();
 	}
-	
+
 	public Configuration(List<ConfigurationElement> configNodes) {
 		super();
 		this.configNodes = configNodes;
@@ -56,7 +56,7 @@ public class Configuration {
 		configNodes.add(element);
 	}
 
-	
+
 
 	/**
 	 * Iterates through all configuration nodes and constructs a
