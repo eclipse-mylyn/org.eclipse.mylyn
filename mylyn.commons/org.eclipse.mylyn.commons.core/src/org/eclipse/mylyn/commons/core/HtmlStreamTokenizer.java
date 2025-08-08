@@ -335,38 +335,6 @@ public class HtmlStreamTokenizer {
 	}
 
 	/**
-	 * Parses HTML character and entity references and returns the corresponding character.
-	 */
-	private static Character parseReference(String s) {
-		if (s.length() == 0) {
-			return null;
-		}
-
-		if (s.charAt(0) == '#') {
-			// character reference
-			if (s.length() == 1) {
-				return null;
-			}
-
-			try {
-				int value;
-				if (s.charAt(1) == 'x') {
-					// Hex reference
-					value = Integer.parseInt(s.substring(2), 16);
-				} else {
-					// Decimal reference
-					value = Integer.parseInt(s.substring(1));
-				}
-				return (char) value;
-			} catch (NumberFormatException e) {
-				return null;
-			}
-		} else {
-			return entities.get(s);
-		}
-	}
-
-	/**
 	 * Class for current token.
 	 */
 	public static class Token {

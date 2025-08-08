@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2000, 2011 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
@@ -57,7 +57,7 @@ public abstract class SubstitutionTextReader extends SingleCharReader {
 	/**
 	 * Computes the substitution for the given character and if necessary subsequent characters. Implementation should use
 	 * <code>nextChar</code> to read subsequent characters.
-	 * 
+	 *
 	 * @param c
 	 *            the character to be substituted
 	 * @return the substitution for <code>c</code>
@@ -68,7 +68,7 @@ public abstract class SubstitutionTextReader extends SingleCharReader {
 
 	/**
 	 * Returns the internal reader.
-	 * 
+	 *
 	 * @return the internal reader
 	 */
 	protected Reader getReader() {
@@ -77,7 +77,7 @@ public abstract class SubstitutionTextReader extends SingleCharReader {
 
 	/**
 	 * Returns the next character.
-	 * 
+	 *
 	 * @return the next character
 	 * @throws IOException
 	 *             in case reading the character fails

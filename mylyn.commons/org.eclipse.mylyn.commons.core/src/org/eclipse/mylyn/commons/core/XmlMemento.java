@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2000, 2013 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
@@ -45,7 +45,7 @@ import org.xml.sax.SAXParseException;
  * <p>
  * This class is not intended to be extended by clients.
  * </p>
- * 
+ *
  * @see XmlMemento
  * @author Manuel Doninger
  * @since 3.7
@@ -64,7 +64,7 @@ public final class XmlMemento {
 	 * <p>
 	 * Same as calling createReadRoot(reader, null)
 	 * </p>
-	 * 
+	 *
 	 * @param reader
 	 *            the <code>Reader</code> used to create the memento's document
 	 * @return a memento on the first <code>Element</code> for reading the document
@@ -78,7 +78,7 @@ public final class XmlMemento {
 	/**
 	 * Creates a <code>Document</code> from the <code>Reader</code> and returns a memento on the first <code>Element</code> for reading the
 	 * document.
-	 * 
+	 *
 	 * @param reader
 	 *            the <code>Reader</code> used to create the memento's document
 	 * @param baseDir
@@ -155,7 +155,7 @@ public final class XmlMemento {
 
 	/**
 	 * Returns a root memento for writing a document.
-	 * 
+	 *
 	 * @param type
 	 *            the element node type to create on the document
 	 * @return the root memento for writing a document
@@ -179,7 +179,7 @@ public final class XmlMemento {
 	 * <p>
 	 * Clients should use <code>createReadRoot</code> and <code>createWriteRoot</code> to create the initial memento on a document.
 	 * </p>
-	 * 
+	 *
 	 * @param document
 	 *            the document for the memento
 	 * @param element
@@ -195,7 +195,7 @@ public final class XmlMemento {
 	 * <p>
 	 * The <code>getChild</code> and <code>getChildren</code> methods are used to retrieve children of a given type.
 	 * </p>
-	 * 
+	 *
 	 * @param type
 	 *            the type
 	 * @return a new child memento
@@ -216,7 +216,7 @@ public final class XmlMemento {
 	 * <p>
 	 * The <code>getChild</code> and <code>getChildren</code> methods are used to retrieve children of a given type.
 	 * </p>
-	 * 
+	 *
 	 * @param type
 	 *            the type
 	 * @param id
@@ -235,7 +235,7 @@ public final class XmlMemento {
 
 	/**
 	 * Create a copy of the child node and append it to this node.
-	 * 
+	 *
 	 * @param child
 	 * @return An IMenento for the new child node.
 	 * @throws DOMException
@@ -385,7 +385,7 @@ public final class XmlMemento {
 
 	/**
 	 * Returns the data of the Text node of the memento. Each memento is allowed only one Text node.
-	 * 
+	 *
 	 * @return the data of the Text node of the memento, or <code>null</code> if the memento has no Text node.
 	 * @since 2.0
 	 * @throws DOMException
@@ -415,7 +415,7 @@ public final class XmlMemento {
 
 	/**
 	 * Returns the Text node of the memento. Each memento is allowed only one Text node.
-	 * 
+	 *
 	 * @return the Text node of the memento, or <code>null</code> if the memento has no Text node.
 	 */
 	private Text getTextNode() {
@@ -437,7 +437,7 @@ public final class XmlMemento {
 
 	/**
 	 * Places the element's attributes into the document.
-	 * 
+	 *
 	 * @param copyText
 	 *            true if the first text node should be copied
 	 * @throws DOMException
@@ -470,7 +470,7 @@ public final class XmlMemento {
 
 	/**
 	 * Sets the value of the given key to the given floating point number.
-	 * 
+	 *
 	 * @param key
 	 *            the key
 	 * @param f
@@ -484,7 +484,7 @@ public final class XmlMemento {
 
 	/**
 	 * Sets the value of the given key to the given integer.
-	 * 
+	 *
 	 * @param key
 	 *            the key
 	 * @param n
@@ -498,7 +498,7 @@ public final class XmlMemento {
 
 	/**
 	 * Copy the attributes and children from <code>memento</code> to the receiver.
-	 * 
+	 *
 	 * @param memento
 	 *            the XMLMemento to be copied.
 	 * @throws DOMException
@@ -512,7 +512,7 @@ public final class XmlMemento {
 
 	/**
 	 * Sets the value of the given key to the given string.
-	 * 
+	 *
 	 * @param key
 	 *            the key
 	 * @param value
@@ -529,7 +529,7 @@ public final class XmlMemento {
 
 	/**
 	 * Sets the value of the given key to the given boolean value.
-	 * 
+	 *
 	 * @param key
 	 *            the key
 	 * @param value
@@ -545,7 +545,7 @@ public final class XmlMemento {
 	/**
 	 * Sets the memento's Text node to contain the given data. Creates the Text node if none exists. If a Text node does exist, it's current
 	 * contents are replaced. Each memento is allowed only one text node.
-	 * 
+	 *
 	 * @param data
 	 *            the data to be placed on the Text node
 	 * @since 2.0
@@ -565,7 +565,7 @@ public final class XmlMemento {
 
 	/**
 	 * Saves this memento's document current values to the specified writer.
-	 * 
+	 *
 	 * @param writer
 	 *            the writer used to save the memento's document
 	 * @throws IOException
@@ -588,7 +588,7 @@ public final class XmlMemento {
 
 		/**
 		 * Creates a new DOM writer on the given output writer.
-		 * 
+		 *
 		 * @param output
 		 *            the output writer
 		 */
@@ -599,7 +599,7 @@ public final class XmlMemento {
 
 		/**
 		 * Prints the given element.
-		 * 
+		 *
 		 * @param element
 		 *            the element to print
 		 */

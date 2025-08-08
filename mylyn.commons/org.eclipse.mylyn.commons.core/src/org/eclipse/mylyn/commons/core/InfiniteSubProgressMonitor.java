@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2000, 2011 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
  * progress dialog (or propogated up to a parent IProgressMonitor). The totalWork parameter provided in actually a hint used to determine
  * how work is translated into ticks. The number of totalWork that can actually be worked is n*totalWork/2 where 2^n = totalWork. What this
  * means is that if you provide a totalWork of 32 (2^5) than the maximum number of ticks is 5*32/2 = 80.
- * 
+ *
  * @since 3.7
  */
 public class InfiniteSubProgressMonitor extends SubProgressMonitor {
@@ -37,7 +37,7 @@ public class InfiniteSubProgressMonitor extends SubProgressMonitor {
 
 	/**
 	 * Constructor for InfiniteSubProgressMonitor.
-	 * 
+	 *
 	 * @param monitor
 	 * @param ticks
 	 */
@@ -47,7 +47,7 @@ public class InfiniteSubProgressMonitor extends SubProgressMonitor {
 
 	/**
 	 * Constructor for InfiniteSubProgressMonitor.
-	 * 
+	 *
 	 * @param monitor
 	 * @param ticks
 	 * @param style
@@ -87,7 +87,7 @@ public class InfiniteSubProgressMonitor extends SubProgressMonitor {
 
 	/**
 	 * Don't allow clearing of the subtask. This will stop the flickering of the subtask in the progress dialogs.
-	 * 
+	 *
 	 * @see IProgressMonitor#subTask(String)
 	 */
 	@Override

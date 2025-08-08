@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2009, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -24,7 +24,7 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * Intended to be implemented by high-level operation that run on a single thread.
- * 
+ *
  * @author Steffen Pingel
  * @since 3.7
  * @see OperationUtil#execute(IProgressMonitor, Operation)

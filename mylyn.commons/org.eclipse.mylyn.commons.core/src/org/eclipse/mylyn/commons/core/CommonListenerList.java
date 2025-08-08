@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -24,7 +24,7 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * A list like class for managing listeners. It is safe to call this class from different threads concurrently.
- * 
+ *
  * @since 3.7
  */
 public class CommonListenerList<T> implements Iterable<T> {
@@ -36,7 +36,7 @@ public class CommonListenerList<T> implements Iterable<T> {
 
 		/**
 		 * Fires an event to <code>listener</code>.
-		 * 
+		 *
 		 * @param listener
 		 *            the listener to be notified
 		 * @throws Exception
@@ -52,7 +52,7 @@ public class CommonListenerList<T> implements Iterable<T> {
 
 	/**
 	 * Constructs an empty list.
-	 * 
+	 *
 	 * @param pluginId
 	 *            the ID of the bundle that is managing this instance
 	 */

@@ -67,9 +67,8 @@ public class CoreUtil {
 	}
 
 	private static void toString(StringBuilder sb, Object object) {
-		if (object instanceof Object[]) {
+		if (object instanceof Object[] entries) {
 			sb.append("["); //$NON-NLS-1$
-			Object[] entries = (Object[]) object;
 			boolean prependSeparator = false;
 			for (Object entry : entries) {
 				if (prependSeparator) {

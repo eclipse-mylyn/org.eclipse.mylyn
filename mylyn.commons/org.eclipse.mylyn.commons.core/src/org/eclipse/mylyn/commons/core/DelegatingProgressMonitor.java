@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.ProgressMonitorWrapper;
 
 /**
  * Delegates to all attached monitors.
- * 
+ *
  * @author Steffen Pingel
  * @author Thomas Ehrnhoefer
  * @author Robert Elves
@@ -31,7 +31,7 @@ public class DelegatingProgressMonitor implements IDelegatingProgressMonitor {
 
 	/**
 	 * Returns the parent delegating progress monitor of <code>monitor</code>.
-	 * 
+	 *
 	 * @param monitor
 	 *            the child monitor
 	 * @return the monitor; null, if none
