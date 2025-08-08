@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Balazs Brinkus - initial API and implementation
@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.ToolBar;
 
 /**
  * A UI component to capture images of the screen.
- * 
+ *
  * @author Balazs Brinkus
  * @author Willian Mitsuda
  * @author Mik Kersten
@@ -808,7 +808,7 @@ public class ScreenshotViewer {
 
 	/**
 	 * Invoked when the state of the viewer changes, e.g. when the screen is captured. Sub-classes may override.
-	 * 
+	 *
 	 * @see #isComplete()
 	 */
 	protected void stateChanged() {
@@ -1737,7 +1737,7 @@ public class ScreenshotViewer {
 
 	/**
 	 * Creates the final screenshot.
-	 * 
+	 *
 	 * @return The final screenshot, with all markings, and cropped according to user settings; <strong>The caller is responsible for
 	 *         disposing the returned image</strong>
 	 */
@@ -1762,7 +1762,7 @@ public class ScreenshotViewer {
 
 	/**
 	 * Sets the dirty flag to indicate if the image was modified since {@link #createImage()} was invoked last.
-	 * 
+	 *
 	 * @param dirty
 	 *            the dirty flag
 	 * @see #isDirty()
@@ -1773,7 +1773,7 @@ public class ScreenshotViewer {
 
 	/**
 	 * Returns true, if the image was modified since {@link #createImage()} was invoked last.
-	 * 
+	 *
 	 * @see #setDirty(boolean)
 	 */
 	public boolean isDirty() {
