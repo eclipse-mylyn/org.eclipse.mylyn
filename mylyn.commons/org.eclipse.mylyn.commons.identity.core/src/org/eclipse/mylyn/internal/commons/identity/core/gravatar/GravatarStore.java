@@ -1,10 +1,10 @@
 /*******************************************************************************
  *  Copyright (c) 2011, 2024 GitHub Inc and others
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -34,7 +34,7 @@ import org.eclipse.core.runtime.jobs.Job;
 
 /**
  * Class that loads and stores gravatars.
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class GravatarStore implements Serializable, ISchedulingRule {
@@ -70,7 +70,7 @@ public class GravatarStore implements Serializable, ISchedulingRule {
 
 	/**
 	 * Create gravatar store
-	 * 
+	 *
 	 * @param url
 	 */
 	public GravatarStore(String url) {
