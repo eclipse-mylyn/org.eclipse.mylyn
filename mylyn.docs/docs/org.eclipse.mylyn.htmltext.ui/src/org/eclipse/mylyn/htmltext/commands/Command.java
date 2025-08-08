@@ -23,7 +23,7 @@ import org.eclipse.mylyn.htmltext.model.TriState;
 /**
  * A command is a wrapper for a JavaScript command which is executed in the context of a {@link HtmlComposer}. It can
  * has a state (see {@link TriState} )which is calculated by the {@link HtmlComposer} if possible.
- * 
+ *
  * @author Tom Seidel <tom.seidel@remus-software.org>
  */
 public abstract class Command {
@@ -50,7 +50,7 @@ public abstract class Command {
 
 	/**
 	 * Returns the "native" JavaScript command which executed against a {@link HtmlComposer}
-	 * 
+	 *
 	 * @return the command to execute
 	 */
 	public String getCommand() {
@@ -59,7 +59,7 @@ public abstract class Command {
 
 	/**
 	 * Returns the current state of the command. Can change if the selected dom node within the editor changes
-	 * 
+	 *
 	 * @return
 	 */
 	public TriState getState() {
@@ -68,7 +68,7 @@ public abstract class Command {
 
 	/**
 	 * Sets the state of the command. It's not intended that clients are setting the state.
-	 * 
+	 *
 	 * @param state
 	 *            the state to set
 	 */
@@ -106,7 +106,7 @@ public abstract class Command {
 	 * Indicates whether the commands state should be set by the {@link HtmlComposer}. If the editor should track this
 	 * event the underlying ckeditor must be a command defined which has the same id like in
 	 * {@link #getCommandIdentifier()}.
-	 * 
+	 *
 	 * @return <code>true</code> if the composer should set changes to the commands state, else <code>false</code>.
 	 */
 	protected boolean trackCommand() {

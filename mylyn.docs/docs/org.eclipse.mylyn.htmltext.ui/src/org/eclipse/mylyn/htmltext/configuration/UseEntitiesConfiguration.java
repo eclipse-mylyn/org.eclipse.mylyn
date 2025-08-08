@@ -16,7 +16,7 @@ package org.eclipse.mylyn.htmltext.configuration;
 
 
 /**
- * Whether to use HTML entities in the output. 
+ * Whether to use HTML entities in the output.
  * @author Tom Seidel <tom.seidel@remus-software.org>
  * @since 0.8
  * @noextend This class is not intended to be subclassed by clients.

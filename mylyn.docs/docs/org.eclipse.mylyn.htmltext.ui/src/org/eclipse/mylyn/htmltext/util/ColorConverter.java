@@ -20,7 +20,7 @@ import org.eclipse.swt.graphics.RGB;
 
 /**
  * Utitlity class for converting RGB colors to hex-colors.
- * 
+ *
  * @author Tom Seidel <tom.seidel@remus-software.org>
  */
 public final class ColorConverter {

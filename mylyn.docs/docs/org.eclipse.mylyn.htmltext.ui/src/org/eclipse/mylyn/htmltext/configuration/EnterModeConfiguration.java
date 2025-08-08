@@ -20,7 +20,7 @@ package org.eclipse.mylyn.htmltext.configuration;
  * in the editor, like whether the <br>
  * element is to be used as a paragraph separator when indenting text. The
  * allowed values are the following constants, and their relative behavior:
- * 
+ *
  * @author Tom Seidel <tom.seidel@remus-software.org>
  * @since 0.8
  * @noextend This class is not intended to be subclassed by clients.
