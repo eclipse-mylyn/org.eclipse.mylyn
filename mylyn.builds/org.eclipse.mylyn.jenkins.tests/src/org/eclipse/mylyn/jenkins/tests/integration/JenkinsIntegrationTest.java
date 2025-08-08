@@ -28,6 +28,7 @@ import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.jenkins.core.JenkinsCore;
 import org.eclipse.mylyn.jenkins.tests.support.JenkinsFixture;
 import org.eclipse.mylyn.jenkins.tests.support.JenkinsHarness;
+import org.junit.Ignore;
 
 import junit.framework.TestCase;
 
@@ -35,6 +36,8 @@ import junit.framework.TestCase;
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
+//FIXME: [#772] Nothing for Jenkins available at https://mylyn.frank-becker.de/mylyn_idx/service
+@Ignore
 public class JenkinsIntegrationTest extends TestCase {
 
 	private JenkinsHarness harness;

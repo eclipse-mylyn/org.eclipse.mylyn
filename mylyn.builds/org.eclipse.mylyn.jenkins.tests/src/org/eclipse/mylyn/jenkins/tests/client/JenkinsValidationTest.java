@@ -18,6 +18,7 @@ import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsException;
 import org.eclipse.mylyn.internal.jenkins.core.client.RestfulJenkinsClient;
 import org.eclipse.mylyn.jenkins.tests.support.JenkinsFixture;
+import org.junit.Ignore;
 
 import junit.framework.TestCase;
 
@@ -25,6 +26,8 @@ import junit.framework.TestCase;
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
+//FIXME: [#772] Nothing for Jenkins available at https://mylyn.frank-becker.de/mylyn_idx/service
+@Ignore
 public class JenkinsValidationTest extends TestCase {
 
 	public void testValidateNonExistantUrl() throws Exception {
