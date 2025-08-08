@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -17,7 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Polls {@link ICancellableOperation} objects for cancellation and aborts the corresponding operations.
- * 
+ *
  * @author Steffen Pingel
  * @since 3.9
  */
@@ -52,7 +52,7 @@ public class CancellableOperationMonitorThread extends Thread {
 	/**
 	 * Registers <code>operation</code> to be be monitored for cancellation. If the operation is complete it must be unregistered by
 	 * invoking {@link #removeOperation(ICancellableOperation)}.
-	 * 
+	 *
 	 * @see #removeOperation(ICancellableOperation)
 	 */
 	public synchronized void addOperation(ICancellableOperation operation) {
@@ -89,7 +89,7 @@ public class CancellableOperationMonitorThread extends Thread {
 
 	/**
 	 * Unregisters <code>operation</code> to be be monitored for cancellation.
-	 * 
+	 *
 	 * @see #removeOperation(ICancellableOperation)
 	 */
 	public synchronized void removeOperation(ICancellableOperation operation) {
@@ -129,7 +129,7 @@ public class CancellableOperationMonitorThread extends Thread {
 
 	/**
 	 * Stops the thread and waits for it to complete. Can be called multiple times.
-	 * 
+	 *
 	 * @throws InterruptedException
 	 *             thrown if an interrupted signal is received while waiting for shutdown to complete
 	 */
@@ -143,7 +143,7 @@ public class CancellableOperationMonitorThread extends Thread {
 
 	/**
 	 * Starts the thread.
-	 * 
+	 *
 	 * @throws IllegalStateException
 	 *             thrown if the thread was already shutdown
 	 * @see #shutdown()

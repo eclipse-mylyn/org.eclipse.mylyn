@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2000, 2011 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
@@ -27,7 +27,7 @@ import org.eclipse.mylyn.commons.core.operations.OperationUtil;
  * after an InterruptedIOException REGARDLESS of whether the underlying stream does unless the underlying stream itself generates
  * InterruptedIOExceptions in which case it must also support resuming. Check the bytesTransferred field to determine how much of the
  * operation completed; conversely, at what point to resume.
- * 
+ *
  * @since 3.7
  */
 public class TimeoutInputStream extends FilterInputStream {
@@ -58,7 +58,7 @@ public class TimeoutInputStream extends FilterInputStream {
 
 	/**
 	 * Creates a timeout wrapper for an input stream.
-	 * 
+	 *
 	 * @param in
 	 *            the underlying input stream
 	 * @param bufferSize
@@ -88,7 +88,7 @@ public class TimeoutInputStream extends FilterInputStream {
 	 * Wraps the underlying stream's method. It may be important to wait for a stream to actually be closed because it holds an implicit
 	 * lock on a system resoure (such as a file) while it is open. Closing a stream may take time if the underlying stream is still
 	 * servicing a previous request.
-	 * 
+	 *
 	 * @throws InterruptedIOException
 	 *             if the timeout expired
 	 * @throws IOException
@@ -124,7 +124,7 @@ public class TimeoutInputStream extends FilterInputStream {
 
 	/**
 	 * Returns the number of unread bytes in the buffer.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if an i/o error occurs
 	 */
@@ -138,7 +138,7 @@ public class TimeoutInputStream extends FilterInputStream {
 
 	/**
 	 * Reads a byte from the stream.
-	 * 
+	 *
 	 * @throws InterruptedIOException
 	 *             if the timeout expired and no data was received, bytesTransferred will be zero
 	 * @throws IOException
@@ -160,7 +160,7 @@ public class TimeoutInputStream extends FilterInputStream {
 
 	/**
 	 * Reads multiple bytes from the stream.
-	 * 
+	 *
 	 * @throws InterruptedIOException
 	 *             if the timeout expired and no data was received, bytesTransferred will be zero
 	 * @throws IOException
@@ -188,7 +188,7 @@ public class TimeoutInputStream extends FilterInputStream {
 
 	/**
 	 * Skips multiple bytes in the stream.
-	 * 
+	 *
 	 * @throws InterruptedIOException
 	 *             if the timeout expired before all of the bytes specified have been skipped, bytesTransferred may be non-zero
 	 * @throws IOException
@@ -225,7 +225,7 @@ public class TimeoutInputStream extends FilterInputStream {
 
 	/**
 	 * Waits for the buffer to fill if it is empty and the stream has not reached EOF.
-	 * 
+	 *
 	 * @return true if bytes are available, false if EOF has been reached
 	 * @throws InterruptedIOException
 	 *             if EOF not reached but no bytes are available

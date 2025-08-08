@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -39,7 +39,7 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * Provides network access related utility methods.
- * 
+ *
  * @since 3.7
  * @author Steffen Pingel
  */
@@ -71,7 +71,7 @@ public class NetUtil {
 	 * <p>
 	 * If an operation is provided a cancellation listener is attached that aborts the connect in case the operation is aborted while
 	 * connecting.
-	 * 
+	 *
 	 * @param socket
 	 *            the socket
 	 * @param address
@@ -126,7 +126,7 @@ public class NetUtil {
 
 	/**
 	 * Returns the host portion of <code>url</code>.
-	 * 
+	 *
 	 * @return the host portion of <code>url</code>; empty string, if url is not valid
 	 * @since 3.7
 	 */
@@ -162,7 +162,7 @@ public class NetUtil {
 	/**
 	 * Returns the connection port for <code>url</code>. If no port is specified, 443 is returned for URLs that use the https protocol;
 	 * otherwise, 80 is returned.
-	 * 
+	 *
 	 * @return the port portion of <code>url</code>
 	 * @throws NumberFormatException
 	 *             if the port is not a parseable integer
@@ -248,7 +248,7 @@ public class NetUtil {
 
 	/**
 	 * Returns the request path part of <code>url</code>.
-	 * 
+	 *
 	 * @return the request path portion of <code>url</code>; empty string, if url is not valid or not path is specified
 	 * @since 3.7
 	 */
@@ -265,7 +265,7 @@ public class NetUtil {
 
 	/**
 	 * Returns true if <code>url</code> uses https as the protocol.
-	 * 
+	 *
 	 * @since 3.7
 	 */
 	public static boolean isUrlHttps(String url) {

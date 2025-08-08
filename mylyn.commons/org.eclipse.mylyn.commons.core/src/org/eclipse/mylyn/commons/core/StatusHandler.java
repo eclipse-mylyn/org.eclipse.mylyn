@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -36,7 +36,7 @@ public class StatusHandler {
 	/**
 	 * Logs <code>status</code> to this bundle's log if a platform is running. Does nothing if no platform is running. Plug-ins that require
 	 * running in Eclipse are encouraged to use their plug-in log.
-	 * 
+	 *
 	 * @param status
 	 *            status to log
 	 * @since 3.0
@@ -58,7 +58,7 @@ public class StatusHandler {
 	 * <p>
 	 * Listeners should not block.
 	 * </p>
-	 * 
+	 *
 	 * @see #log(IStatus)
 	 * @since 3.0
 	 * @deprecated

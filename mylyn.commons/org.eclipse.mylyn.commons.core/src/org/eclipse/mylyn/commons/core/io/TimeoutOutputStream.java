@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2000, 2011 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
@@ -23,7 +23,7 @@ import java.io.OutputStream;
  * after an InterruptedIOException REGARDLESS of whether the underlying stream does unless the underlying stream itself generates
  * InterruptedIOExceptions in which case it must also support resuming. Check the bytesTransferred field to determine how much of the
  * operation completed; conversely, at what point to resume.
- * 
+ *
  * @since 3.7
  */
 public class TimeoutOutputStream extends FilterOutputStream {
@@ -52,7 +52,7 @@ public class TimeoutOutputStream extends FilterOutputStream {
 
 	/**
 	 * Creates a timeout wrapper for an output stream.
-	 * 
+	 *
 	 * @param out
 	 *            the underlying input stream
 	 * @param bufferSize
@@ -78,7 +78,7 @@ public class TimeoutOutputStream extends FilterOutputStream {
 	 * Wraps the underlying stream's method. It may be important to wait for a stream to actually be closed because it holds an implicit
 	 * lock on a system resoure (such as a file) while it is open. Closing a stream may take time if the underlying stream is still
 	 * servicing a previous request.
-	 * 
+	 *
 	 * @throws InterruptedIOException
 	 *             if the timeout expired, bytesTransferred will reflect the number of bytes flushed from the buffer
 	 * @throws IOException
@@ -114,7 +114,7 @@ public class TimeoutOutputStream extends FilterOutputStream {
 
 	/**
 	 * Writes a byte to the stream.
-	 * 
+	 *
 	 * @throws InterruptedIOException
 	 *             if the timeout expired and no data was sent, bytesTransferred will be zero
 	 * @throws IOException
@@ -130,7 +130,7 @@ public class TimeoutOutputStream extends FilterOutputStream {
 
 	/**
 	 * Writes multiple bytes to the stream.
-	 * 
+	 *
 	 * @throws InterruptedIOException
 	 *             if the timeout expired, bytesTransferred will reflect the number of bytes sent
 	 * @throws IOException
@@ -157,7 +157,7 @@ public class TimeoutOutputStream extends FilterOutputStream {
 
 	/**
 	 * Flushes the stream.
-	 * 
+	 *
 	 * @throws InterruptedIOException
 	 *             if the timeout expired, bytesTransferred will reflect the number of bytes flushed from the buffer
 	 * @throws IOException
@@ -178,7 +178,7 @@ public class TimeoutOutputStream extends FilterOutputStream {
 
 	/**
 	 * Waits for the buffer to drain if it is full.
-	 * 
+	 *
 	 * @param partial
 	 *            if true, waits until the buffer is partially empty, else drains it entirely
 	 * @throws InterruptedIOException
