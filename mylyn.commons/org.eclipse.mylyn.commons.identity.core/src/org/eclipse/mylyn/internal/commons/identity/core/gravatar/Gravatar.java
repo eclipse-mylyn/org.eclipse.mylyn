@@ -1,10 +1,10 @@
 /*******************************************************************************
  *  Copyright (c) 2011 GitHub Inc.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.Assert;
 
 /**
  * Gravatar class containing id and image data.
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class Gravatar implements Serializable {
@@ -36,7 +36,7 @@ public class Gravatar implements Serializable {
 
 	/**
 	 * Create gravatar
-	 * 
+	 *
 	 * @param id
 	 * @param updateTime
 	 * @param bytes
@@ -72,7 +72,7 @@ public class Gravatar implements Serializable {
 
 	/**
 	 * Get gravatar image as byte array
-	 * 
+	 *
 	 * @return non-null byte array
 	 */
 	public byte[] getBytes() {
@@ -91,7 +91,7 @@ public class Gravatar implements Serializable {
 
 	/**
 	 * Get gravatar id
-	 * 
+	 *
 	 * @return id
 	 */
 	public String getId() {
@@ -100,7 +100,7 @@ public class Gravatar implements Serializable {
 
 	/**
 	 * Get time gravatar was loaded
-	 * 
+	 *
 	 * @return update time
 	 */
 	public long getUpdateTime() {

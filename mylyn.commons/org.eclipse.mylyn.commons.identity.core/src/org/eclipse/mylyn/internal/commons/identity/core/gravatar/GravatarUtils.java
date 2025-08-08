@@ -1,10 +1,10 @@
 /*******************************************************************************
  *  Copyright (c) 2011 GitHub Inc. and others
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.IAdaptable;
 
 /**
  * Gravatar utililites.
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public abstract class GravatarUtils {
@@ -50,7 +50,7 @@ public abstract class GravatarUtils {
 	/**
 	 * Get hash for object by attempting to adapt it to an {@link IGravatarHashProvider} and fall back on {@link Object#toString()} value if
 	 * adaptation fails and {@link Object#toString()} is or can be transformed into a valid hash.
-	 * 
+	 *
 	 * @param element
 	 * @return hash
 	 */
@@ -81,7 +81,7 @@ public abstract class GravatarUtils {
 
 	/**
 	 * Is the specified string a valid graavatar hash?
-	 * 
+	 *
 	 * @param hash
 	 * @return true if valid hash, false otherwise
 	 */
@@ -92,7 +92,7 @@ public abstract class GravatarUtils {
 
 	/**
 	 * Get gravatar hash for specified e-mail address
-	 * 
+	 *
 	 * @param email
 	 * @return hash
 	 */
