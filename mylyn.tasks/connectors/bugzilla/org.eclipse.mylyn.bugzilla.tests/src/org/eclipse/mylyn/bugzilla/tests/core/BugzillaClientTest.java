@@ -44,7 +44,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tests.util.UrlBuilder;
-import org.junit.Ignore;
 
 /**
  * @author Robert Elves
@@ -53,7 +52,6 @@ import org.junit.Ignore;
  * @author David Green
  */
 @SuppressWarnings("nls")
-@Ignore //FIXME: re-enable with https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/716
 public class BugzillaClientTest extends AbstractBugzillaTest {
 
 	public void testRDFProductConfig() throws Exception {

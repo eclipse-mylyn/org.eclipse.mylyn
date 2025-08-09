@@ -45,7 +45,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.junit.Ignore;
 
 import junit.framework.TestCase;
 
@@ -57,7 +56,6 @@ import junit.framework.TestCase;
  * @author Frank Becker
  */
 @SuppressWarnings("nls")
-@Ignore //FIXME: re-enable with https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/716
 public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 
 	private TaskRepository repository;

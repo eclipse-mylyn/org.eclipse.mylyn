@@ -25,7 +25,6 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.junit.Ignore;
 
 import junit.framework.TestCase;
 
@@ -36,7 +35,6 @@ import junit.framework.TestCase;
  * @author Robert Elves
  */
 @SuppressWarnings("nls")
-@Ignore //FIXME: re-enable with https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/716
 public class BugzillaFlagsTest extends TestCase {
 
 	private BugzillaClient client;

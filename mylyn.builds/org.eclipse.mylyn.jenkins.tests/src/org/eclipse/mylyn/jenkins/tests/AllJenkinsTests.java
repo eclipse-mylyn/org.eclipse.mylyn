@@ -11,13 +11,19 @@
 
 package org.eclipse.mylyn.jenkins.tests;
 
+import java.util.List;
+
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.ManagedSuite;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
+import org.eclipse.mylyn.jenkins.tests.client.JenkinsClientTest;
 import org.eclipse.mylyn.jenkins.tests.client.JenkinsUrlTest;
+import org.eclipse.mylyn.jenkins.tests.client.JenkinsValidationTest;
 import org.eclipse.mylyn.jenkins.tests.core.JenkinsConnectorTest;
 import org.eclipse.mylyn.jenkins.tests.core.JenkinsServerBehaviourTest;
+import org.eclipse.mylyn.jenkins.tests.integration.JenkinsIntegrationTest;
+import org.eclipse.mylyn.jenkins.tests.support.JenkinsFixture;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -49,8 +55,7 @@ public class AllJenkinsTests {
 		suite.addTestSuite(JenkinsConnectorTest.class);
 		suite.addTestSuite(JenkinsServerBehaviourTest.class);
 		suite.addTestSuite(JenkinsUrlTest.class);
-		//FIXME: [#772] Nothing for Jenkins available at https://mylyn.frank-becker.de/mylyn_idx/service
-/*
+
 		if (!configuration.isLocalOnly()) {
 			// network tests
 			suite.addTestSuite(JenkinsValidationTest.class);
@@ -68,7 +73,6 @@ public class AllJenkinsTests {
 				fixture.done();
 			}
 		}
- */
 	}
 
 }
