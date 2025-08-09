@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -34,12 +34,6 @@ import org.eclipse.swt.graphics.Image;
 public class BuildNotification extends AbstractUiNotification {
 
 	private static final String ID_EVENT_PLAN_STATUS_CHANGED = "org.eclipse.mylyn.builds.ui.events.PlanStatusChanged"; //$NON-NLS-1$
-
-	@SuppressWarnings("unused")
-	private static final String ID_EVENT_BUILD_COMPLETED = "org.eclipse.mylyn.builds.ui.events.BuildCompleted"; //$NON-NLS-1$
-
-	@SuppressWarnings("unused")
-	private static final String ID_EVENT_BUILD_STARTED = "org.eclipse.mylyn.builds.ui.events.BuildStarted"; //$NON-NLS-1$
 
 	private final IBuildElement element;
 
