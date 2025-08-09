@@ -93,8 +93,6 @@ public class JenkinsDiscovery {
 
 	private static final String ECF_DISCOVERY_JMDNS = "ecf.discovery.jmdns"; //$NON-NLS-1$
 
-	private static final String HUDSON_MDNS_ID = "_hudson._tcp.local._iana"; //$NON-NLS-1$
-
 	private static final String JENKINS_MDNS_ID = "_jenkins._tcp.local._iana"; //$NON-NLS-1$
 
 	private static final String URL_PROPERTY = "url"; //$NON-NLS-1$
@@ -164,7 +162,7 @@ public class JenkinsDiscovery {
 			// Change the first segment (org.eclipse.mylyn.hudson) to the id of
 			// the new repository type when we start differentiation between the two
 			notifyMessage(Messages.JenkinsDiscovery_MessageTitle, NLS.bind(Messages.JenkinsDiscovery_MessageText,
-					new Object[] { url, Messages.JenkinsDiscovery_ServerName, url, id }));
+					url, Messages.JenkinsDiscovery_ServerName, url, id));
 		}
 	}
 
