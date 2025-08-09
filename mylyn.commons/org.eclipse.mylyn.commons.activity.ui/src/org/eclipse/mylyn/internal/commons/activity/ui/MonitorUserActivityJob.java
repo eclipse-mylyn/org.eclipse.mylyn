@@ -20,7 +20,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 
 /**
  * A job that is scheduled periodically to check for user activity.
- * 
+ *
  * @author Robert Elves
  * @author Steffen Pingel
  */

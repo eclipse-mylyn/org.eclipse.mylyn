@@ -26,7 +26,7 @@ import org.eclipse.mylyn.internal.commons.activity.ui.UserActivityManager;
 
 /**
  * Entry point for registering listener to monitor user activity.
- * 
+ *
  * @author Steffen Pingel
  * @since 3.7
  */
@@ -44,7 +44,7 @@ public class ActivityUi {
 
 	/**
 	 * Registers a user activity listener.
-	 * 
+	 *
 	 * @since 3.7
 	 * @param listener
 	 *            listener to add
@@ -55,7 +55,7 @@ public class ActivityUi {
 
 	/**
 	 * Unregisters a user activity listener.
-	 * 
+	 *
 	 * @since 3.7
 	 * @param listener
 	 *            listener to remote

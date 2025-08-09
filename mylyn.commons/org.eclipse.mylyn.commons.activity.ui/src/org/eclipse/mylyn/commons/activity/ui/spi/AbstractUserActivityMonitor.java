@@ -12,7 +12,7 @@ package org.eclipse.mylyn.commons.activity.ui.spi;
 
 /**
  * Extend to monitor periods of user activity and inactivity.
- * 
+ *
  * @author Mik Kersten
  * @author Rob Elves
  * @since 3.7
@@ -24,7 +24,7 @@ public abstract class AbstractUserActivityMonitor {
 	/**
 	 * Returns the priority of the monitor. A lower priority means that the monitor is preferred over other monitors. The priority of the
 	 * default monitor is <code>0</code>.
-	 * 
+	 *
 	 * @since 3.7
 	 */
 	public abstract int getPriority();
