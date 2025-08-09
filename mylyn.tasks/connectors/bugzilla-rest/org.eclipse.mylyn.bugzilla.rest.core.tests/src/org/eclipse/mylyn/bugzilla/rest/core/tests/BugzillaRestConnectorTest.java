@@ -47,7 +47,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +56,6 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 @RunWith(Junit4TestFixtureRunner.class)
 @FixtureDefinition(fixtureClass = BugzillaRestTestFixture.class, fixtureType = "bugzillaREST")
 @SuppressWarnings({ "nls", "restriction" })
-@Ignore //FIXME: re-enable with https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/716
 public class BugzillaRestConnectorTest implements IFixtureJUnitClass {
 	private final BugzillaRestTestFixture actualFixture;
 	@Rule

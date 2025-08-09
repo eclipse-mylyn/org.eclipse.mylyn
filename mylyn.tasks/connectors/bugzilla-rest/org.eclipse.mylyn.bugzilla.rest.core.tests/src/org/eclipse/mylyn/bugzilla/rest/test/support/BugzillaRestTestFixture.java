@@ -115,4 +115,9 @@ public class BugzillaRestTestFixture extends RepositoryTestFixture {
 		return new BugzillaRestHarness(this);
 	}
 
+	@Override
+	public String toString() {
+		// ignore
+		return getRepositoryUrl();
+	}
 }
