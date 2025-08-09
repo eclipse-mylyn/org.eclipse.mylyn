@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2024 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -152,7 +152,7 @@ public class ServiceMessage extends AbstractNotification {
 
 	/**
 	 * Called when the user clicks a link in the message.
-	 * 
+	 *
 	 * @return whether the message should be closed when the link is clicked
 	 */
 	public boolean openLink(String link) {
