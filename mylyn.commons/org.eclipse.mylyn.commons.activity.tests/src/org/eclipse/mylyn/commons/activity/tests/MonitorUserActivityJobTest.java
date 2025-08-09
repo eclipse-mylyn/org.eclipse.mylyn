@@ -199,7 +199,7 @@ public class MonitorUserActivityJobTest extends TestCase {
 
 	}
 
-	private class StubCallback implements IUserActivityManagerCallback {
+	private static class StubCallback implements IUserActivityManagerCallback {
 
 		private boolean inactive;
 
