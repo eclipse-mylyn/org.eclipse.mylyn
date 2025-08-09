@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2010, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -20,7 +20,7 @@ package org.eclipse.mylyn.builds.core;
  * <li>{@link org.eclipse.mylyn.builds.core.IBuildParameterDefinition#getBuildPlan <em>Build Plan</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface IBuildParameterDefinition extends IParameterDefinition {
@@ -30,7 +30,7 @@ public interface IBuildParameterDefinition extends IParameterDefinition {
 	 * If the meaning of the '<em>Build Plan Id</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Build Plan Id</em>' attribute.
 	 * @see #setBuildPlanId(String)
 	 * @generated
@@ -40,7 +40,7 @@ public interface IBuildParameterDefinition extends IParameterDefinition {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildParameterDefinition#getBuildPlanId <em>Build Plan Id</em>}'
 	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Build Plan Id</em>' attribute.
 	 * @see #getBuildPlanId()
@@ -54,7 +54,7 @@ public interface IBuildParameterDefinition extends IParameterDefinition {
 	 * If the meaning of the '<em>Build Plan</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Build Plan</em>' reference.
 	 * @generated
 	 */

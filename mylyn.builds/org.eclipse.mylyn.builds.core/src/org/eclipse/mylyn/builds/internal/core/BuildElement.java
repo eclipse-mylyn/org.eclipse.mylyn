@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2010, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -47,13 +47,13 @@ import org.eclipse.mylyn.builds.core.IOperation;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildElement#getAttributes <em>Attributes</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public abstract class BuildElement extends EObjectImpl implements IBuildElement {
 	/**
 	 * The default value of the '{@link #getUrl() <em>Url</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getUrl()
 	 * @generated
 	 * @ordered
@@ -62,7 +62,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * The cached value of the '{@link #getUrl() <em>Url</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getUrl()
 	 * @generated
 	 * @ordered
@@ -71,7 +71,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -80,7 +80,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -89,7 +89,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * The cached value of the '{@link #getOperations() <em>Operations</em>}' attribute list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getOperations()
 	 * @generated
 	 * @ordered
@@ -99,7 +99,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	/**
 	 * The default value of the '{@link #getElementStatus() <em>Element Status</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @see #getElementStatus()
 	 * @generated
 	 * @ordered
@@ -109,7 +109,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 	/**
 	 * The cached value of the '{@link #getElementStatus() <em>Element Status</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @see #getElementStatus()
 	 * @generated
 	 * @ordered
@@ -118,7 +118,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * The default value of the '{@link #getRefreshDate() <em>Refresh Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getRefreshDate()
 	 * @generated
 	 * @ordered
@@ -127,7 +127,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * The cached value of the '{@link #getRefreshDate() <em>Refresh Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getRefreshDate()
 	 * @generated
 	 * @ordered
@@ -136,7 +136,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' map. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getAttributes()
 	 * @generated
 	 * @ordered
@@ -145,7 +145,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected BuildElement() {
@@ -153,7 +153,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -163,7 +163,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -173,7 +173,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -187,7 +187,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -197,7 +197,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -211,7 +211,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -225,7 +225,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -235,7 +235,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -250,7 +250,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -260,7 +260,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -275,7 +275,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -295,7 +295,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -310,7 +310,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -338,7 +338,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -371,7 +371,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -401,7 +401,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -427,7 +427,7 @@ public abstract class BuildElement extends EObjectImpl implements IBuildElement 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

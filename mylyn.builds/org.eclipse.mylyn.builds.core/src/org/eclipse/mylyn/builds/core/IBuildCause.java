@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2010, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -21,7 +21,7 @@ package org.eclipse.mylyn.builds.core;
  * <li>{@link org.eclipse.mylyn.builds.core.IBuildCause#getUser <em>User</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface IBuildCause {
@@ -31,7 +31,7 @@ public interface IBuildCause {
 	 * If the meaning of the '<em>Description</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Description</em>' attribute.
 	 * @see #setDescription(String)
 	 * @generated
@@ -41,7 +41,7 @@ public interface IBuildCause {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildCause#getDescription <em>Description</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Description</em>' attribute.
 	 * @see #getDescription()
@@ -55,7 +55,7 @@ public interface IBuildCause {
 	 * If the meaning of the '<em>Build</em>' containment reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Build</em>' containment reference.
 	 * @see #setBuild(IBuildReference)
 	 * @generated
@@ -65,7 +65,7 @@ public interface IBuildCause {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildCause#getBuild <em>Build</em>}' containment reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Build</em>' containment reference.
 	 * @see #getBuild()
@@ -79,7 +79,7 @@ public interface IBuildCause {
 	 * If the meaning of the '<em>User</em>' containment reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>User</em>' containment reference.
 	 * @see #setUser(IUser)
 	 * @generated
@@ -89,7 +89,7 @@ public interface IBuildCause {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildCause#getUser <em>User</em>}' containment reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>User</em>' containment reference.
 	 * @see #getUser()

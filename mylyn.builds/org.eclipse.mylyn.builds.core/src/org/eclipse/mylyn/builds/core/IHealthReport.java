@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2010, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -20,7 +20,7 @@ package org.eclipse.mylyn.builds.core;
  * <li>{@link org.eclipse.mylyn.builds.core.IHealthReport#getDescription <em>Description</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface IHealthReport {
@@ -30,7 +30,7 @@ public interface IHealthReport {
 	 * If the meaning of the '<em>Health</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Health</em>' attribute.
 	 * @see #setHealth(int)
 	 * @generated
@@ -40,7 +40,7 @@ public interface IHealthReport {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IHealthReport#getHealth <em>Health</em>}' attribute. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Health</em>' attribute.
 	 * @see #getHealth()
@@ -54,7 +54,7 @@ public interface IHealthReport {
 	 * If the meaning of the '<em>Description</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Description</em>' attribute.
 	 * @see #setDescription(String)
 	 * @generated
@@ -64,7 +64,7 @@ public interface IHealthReport {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IHealthReport#getDescription <em>Description</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Description</em>' attribute.
 	 * @see #getDescription()

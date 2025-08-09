@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2010, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -22,7 +22,7 @@ import java.util.List;
  * <li>{@link org.eclipse.mylyn.builds.core.ITestSuite#getResult <em>Result</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface ITestSuite extends ITestElement {
@@ -34,7 +34,7 @@ public interface ITestSuite extends ITestElement {
 	 * If the meaning of the '<em>Cases</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Cases</em>' containment reference list.
 	 * @see org.eclipse.mylyn.builds.core.ITestCase#getSuite
 	 * @generated
@@ -48,7 +48,7 @@ public interface ITestSuite extends ITestElement {
 	 * If the meaning of the '<em>Result</em>' container reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Result</em>' container reference.
 	 * @see #setResult(ITestResult)
 	 * @see org.eclipse.mylyn.builds.core.ITestResult#getSuites
@@ -59,7 +59,7 @@ public interface ITestSuite extends ITestElement {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestSuite#getResult <em>Result</em>}' container reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Result</em>' container reference.
 	 * @see #getResult()

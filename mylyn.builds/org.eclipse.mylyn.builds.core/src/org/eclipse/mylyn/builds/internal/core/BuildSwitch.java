@@ -41,21 +41,21 @@ import org.eclipse.mylyn.builds.core.IUser;
  * <!-- begin-user-doc --> The <b>Switch</b> for the model's inheritance hierarchy. It supports the call {@link #doSwitch(EObject)
  * doSwitch(object)} to invoke the <code>caseXXX</code> method for each class of the model, starting with the actual class of the object and
  * proceeding up the inheritance hierarchy until a non-null result is returned, which is the result of the switch. <!-- end-user-doc -->
- * 
+ *
  * @see org.eclipse.mylyn.builds.internal.core.BuildPackage
  * @generated
  */
 public class BuildSwitch<T> {
 	/**
 	 * The cached model package <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected static BuildPackage modelPackage;
 
 	/**
 	 * Creates an instance of the switch. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public BuildSwitch() {
@@ -67,7 +67,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
@@ -78,7 +78,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
@@ -94,7 +94,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
@@ -359,7 +359,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Element</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Element</em>'.
@@ -373,7 +373,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Artifact</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Artifact</em>'.
@@ -387,7 +387,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Build</em>'. <!-- begin-user-doc --> This implementation returns
 	 * null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Build</em>'.
@@ -401,7 +401,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Cause</em>'. <!-- begin-user-doc --> This implementation returns
 	 * null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Cause</em>'.
@@ -415,7 +415,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Reference</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Reference</em>'.
@@ -429,7 +429,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Plan</em>'. <!-- begin-user-doc --> This implementation returns
 	 * null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Plan</em>'.
@@ -443,7 +443,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Health Report</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Health Report</em>'.
@@ -457,7 +457,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Server</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Server</em>'.
@@ -471,7 +471,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Model</em>'. <!-- begin-user-doc --> This implementation returns
 	 * null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Model</em>'.
@@ -485,7 +485,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Change</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Change</em>'.
@@ -499,7 +499,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Change Set</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Change Set</em>'.
@@ -513,7 +513,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Change Artifact</em>'. <!-- begin-user-doc --> This
 	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Change Artifact</em>'.
@@ -527,7 +527,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>String To String Map</em>'. <!-- begin-user-doc --> This
 	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>String To String Map</em>'.
@@ -541,7 +541,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>User</em>'. <!-- begin-user-doc --> This implementation returns
 	 * null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>User</em>'.
@@ -555,7 +555,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Parameter Definition</em>'. <!-- begin-user-doc --> This
 	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Parameter Definition</em>'.
@@ -569,7 +569,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Choice Parameter Definition</em>'. <!-- begin-user-doc --> This
 	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Choice Parameter Definition</em>'.
@@ -583,7 +583,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Boolean Parameter Definition</em>'. <!-- begin-user-doc --> This
 	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Boolean Parameter Definition</em>'.
@@ -597,7 +597,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>File Parameter Definition</em>'. <!-- begin-user-doc --> This
 	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>File Parameter Definition</em>'.
@@ -611,7 +611,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Plan Parameter Definition</em>'. <!-- begin-user-doc --> This
 	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Plan Parameter Definition</em>'.
@@ -625,7 +625,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Password Parameter Definition</em>'. <!-- begin-user-doc -->
 	 * This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Password Parameter Definition</em>'.
@@ -639,7 +639,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Parameter Definition</em>'. <!-- begin-user-doc --> This
 	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Parameter Definition</em>'.
@@ -653,7 +653,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>String Parameter Definition</em>'. <!-- begin-user-doc --> This
 	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>String Parameter Definition</em>'.
@@ -667,7 +667,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Test Result</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Test Result</em>'.
@@ -681,7 +681,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Test Element</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Test Element</em>'.
@@ -695,7 +695,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Test Suite</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Test Suite</em>'.
@@ -709,7 +709,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Test Case</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Test Case</em>'.
@@ -723,7 +723,7 @@ public class BuildSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>EObject</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch, but this is the last case anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>EObject</em>'.

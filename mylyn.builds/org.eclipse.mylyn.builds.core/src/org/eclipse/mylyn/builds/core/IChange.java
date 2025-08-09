@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2010, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -25,7 +25,7 @@ import java.util.List;
  * <li>{@link org.eclipse.mylyn.builds.core.IChange#getRevision <em>Revision</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface IChange {
@@ -36,7 +36,7 @@ public interface IChange {
 	 * If the meaning of the '<em>Artifacts</em>' reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Artifacts</em>' containment reference list.
 	 * @generated
 	 */
@@ -48,7 +48,7 @@ public interface IChange {
 	 * If the meaning of the '<em>Author</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Author</em>' containment reference.
 	 * @see #setAuthor(IUser)
 	 * @generated
@@ -58,7 +58,7 @@ public interface IChange {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChange#getAuthor <em>Author</em>}' containment reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Author</em>' containment reference.
 	 * @see #getAuthor()
@@ -72,7 +72,7 @@ public interface IChange {
 	 * If the meaning of the '<em>Message</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Message</em>' attribute.
 	 * @see #setMessage(String)
 	 * @generated
@@ -82,7 +82,7 @@ public interface IChange {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChange#getMessage <em>Message</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Message</em>' attribute.
 	 * @see #getMessage()
@@ -96,7 +96,7 @@ public interface IChange {
 	 * If the meaning of the '<em>Date</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Date</em>' attribute.
 	 * @see #setDate(long)
 	 * @generated
@@ -106,7 +106,7 @@ public interface IChange {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChange#getDate <em>Date</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Date</em>' attribute.
 	 * @see #getDate()
@@ -120,7 +120,7 @@ public interface IChange {
 	 * If the meaning of the '<em>Revision</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Revision</em>' attribute.
 	 * @see #setRevision(String)
 	 * @generated
@@ -130,7 +130,7 @@ public interface IChange {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChange#getRevision <em>Revision</em>}' attribute. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Revision</em>' attribute.
 	 * @see #getRevision()

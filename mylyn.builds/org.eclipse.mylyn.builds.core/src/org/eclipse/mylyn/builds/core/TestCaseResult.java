@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2010, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -18,14 +18,14 @@ import java.util.List;
 /**
  * <!-- begin-user-doc --> A representation of the literals of the enumeration '<em><b>Test Case Result</b></em>', and utility methods for
  * working with them. <!-- end-user-doc -->
- * 
+ *
  * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getTestCaseResult()
  * @generated
  */
 public enum TestCaseResult implements InternalTestCaseResult {
 	/**
 	 * The '<em><b>PASSED</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #PASSED_VALUE
 	 * @generated
 	 * @ordered
@@ -34,7 +34,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 
 	/**
 	 * The '<em><b>SKIPPED</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #SKIPPED_VALUE
 	 * @generated
 	 * @ordered
@@ -43,7 +43,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 
 	/**
 	 * The '<em><b>FAILED</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #FAILED_VALUE
 	 * @generated
 	 * @ordered
@@ -52,7 +52,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 
 	/**
 	 * The '<em><b>FIXED</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #FIXED_VALUE
 	 * @generated
 	 * @ordered
@@ -61,7 +61,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 
 	/**
 	 * The '<em><b>REGRESSION</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #REGRESSION_VALUE
 	 * @generated
 	 * @ordered
@@ -74,7 +74,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 	 * If the meaning of '<em><b>PASSED</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #PASSED
 	 * @generated
 	 * @ordered
@@ -87,7 +87,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 	 * If the meaning of '<em><b>SKIPPED</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #SKIPPED
 	 * @generated
 	 * @ordered
@@ -100,7 +100,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 	 * If the meaning of '<em><b>FAILED</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #FAILED
 	 * @generated
 	 * @ordered
@@ -113,7 +113,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 	 * If the meaning of '<em><b>FIXED</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #FIXED
 	 * @generated
 	 * @ordered
@@ -126,7 +126,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 	 * If the meaning of '<em><b>REGRESSION</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #REGRESSION
 	 * @generated
 	 * @ordered
@@ -135,14 +135,14 @@ public enum TestCaseResult implements InternalTestCaseResult {
 
 	/**
 	 * An array of all the '<em><b>Test Case Result</b></em>' enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private static final TestCaseResult[] VALUES_ARRAY = { PASSED, SKIPPED, FAILED, FIXED, REGRESSION, };
 
 	/**
 	 * A public read-only list of all the '<em><b>Test Case Result</b></em>' enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public static final List<TestCaseResult> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
@@ -150,7 +150,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 	/**
 	 * Returns the '<em><b>Test Case Result</b></em>' literal with the specified literal value. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public static TestCaseResult get(String literal) {
@@ -164,7 +164,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 
 	/**
 	 * Returns the '<em><b>Test Case Result</b></em>' literal with the specified name. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public static TestCaseResult getByName(String name) {
@@ -179,7 +179,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 	/**
 	 * Returns the '<em><b>Test Case Result</b></em>' literal with the specified integer value. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public static TestCaseResult get(int value) {
@@ -200,28 +200,28 @@ public enum TestCaseResult implements InternalTestCaseResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private final int value;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private final String name;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private final String literal;
 
 	/**
 	 * Only this class can construct instances. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	TestCaseResult(int value, String name, String literal) {
@@ -232,7 +232,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -242,7 +242,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -252,7 +252,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -262,7 +262,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 
 	/**
 	 * Returns the literal value of the enumerator, which is its string representation. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -274,7 +274,7 @@ public enum TestCaseResult implements InternalTestCaseResult {
 
 /**
  * A private implementation interface used to hide the inheritance from Enumerator. <!-- begin-user-doc --> <!-- end-user-doc -->
- * 
+ *
  * @generated
  */
 interface InternalTestCaseResult extends org.eclipse.emf.common.util.Enumerator {

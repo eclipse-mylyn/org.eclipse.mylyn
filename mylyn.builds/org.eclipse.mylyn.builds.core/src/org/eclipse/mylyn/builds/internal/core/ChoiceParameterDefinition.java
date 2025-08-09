@@ -25,13 +25,13 @@ import org.eclipse.mylyn.builds.core.IChoiceParameterDefinition;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.ChoiceParameterDefinition#getDefaultValue <em>Default Value</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class ChoiceParameterDefinition extends ParameterDefinition implements IChoiceParameterDefinition {
 	/**
 	 * The cached value of the '{@link #getOptions() <em>Options</em>}' attribute list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getOptions()
 	 * @generated
 	 * @ordered
@@ -40,7 +40,7 @@ public class ChoiceParameterDefinition extends ParameterDefinition implements IC
 
 	/**
 	 * The default value of the '{@link #getDefaultValue() <em>Default Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDefaultValue()
 	 * @generated
 	 * @ordered
@@ -49,7 +49,7 @@ public class ChoiceParameterDefinition extends ParameterDefinition implements IC
 
 	/**
 	 * The cached value of the '{@link #getDefaultValue() <em>Default Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDefaultValue()
 	 * @generated
 	 * @ordered
@@ -58,7 +58,7 @@ public class ChoiceParameterDefinition extends ParameterDefinition implements IC
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected ChoiceParameterDefinition() {
@@ -66,7 +66,7 @@ public class ChoiceParameterDefinition extends ParameterDefinition implements IC
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -80,7 +80,7 @@ public class ChoiceParameterDefinition extends ParameterDefinition implements IC
 	 * If the meaning of the '<em>Options</em>' attribute list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -94,7 +94,7 @@ public class ChoiceParameterDefinition extends ParameterDefinition implements IC
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -104,7 +104,7 @@ public class ChoiceParameterDefinition extends ParameterDefinition implements IC
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -119,7 +119,7 @@ public class ChoiceParameterDefinition extends ParameterDefinition implements IC
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -135,7 +135,7 @@ public class ChoiceParameterDefinition extends ParameterDefinition implements IC
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -155,7 +155,7 @@ public class ChoiceParameterDefinition extends ParameterDefinition implements IC
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -173,7 +173,7 @@ public class ChoiceParameterDefinition extends ParameterDefinition implements IC
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -191,7 +191,7 @@ public class ChoiceParameterDefinition extends ParameterDefinition implements IC
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

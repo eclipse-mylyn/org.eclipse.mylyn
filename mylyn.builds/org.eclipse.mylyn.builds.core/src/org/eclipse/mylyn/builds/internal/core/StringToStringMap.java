@@ -28,13 +28,13 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.StringToStringMap#getTypedValue <em>Value</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<String, String> {
 	/**
 	 * The default value of the '{@link #getTypedKey() <em>Key</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getTypedKey()
 	 * @generated
 	 * @ordered
@@ -43,7 +43,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 
 	/**
 	 * The cached value of the '{@link #getTypedKey() <em>Key</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getTypedKey()
 	 * @generated
 	 * @ordered
@@ -52,7 +52,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 
 	/**
 	 * The default value of the '{@link #getTypedValue() <em>Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getTypedValue()
 	 * @generated
 	 * @ordered
@@ -61,7 +61,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 
 	/**
 	 * The cached value of the '{@link #getTypedValue() <em>Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getTypedValue()
 	 * @generated
 	 * @ordered
@@ -70,7 +70,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected StringToStringMap() {
@@ -78,7 +78,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -92,7 +92,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 	 * If the meaning of the '<em>Key</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public String getTypedKey() {
@@ -101,7 +101,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public void setTypedKey(String newKey) {
@@ -118,7 +118,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 	 * If the meaning of the '<em>Value</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public String getTypedValue() {
@@ -127,7 +127,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public void setTypedValue(String newValue) {
@@ -141,7 +141,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -157,7 +157,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -175,7 +175,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -193,7 +193,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -209,7 +209,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -229,14 +229,14 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected int hash = -1;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -250,7 +250,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -260,7 +260,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -270,7 +270,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -280,7 +280,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -290,7 +290,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -302,7 +302,7 @@ public class StringToStringMap extends EObjectImpl implements BasicEMap.Entry<St
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")

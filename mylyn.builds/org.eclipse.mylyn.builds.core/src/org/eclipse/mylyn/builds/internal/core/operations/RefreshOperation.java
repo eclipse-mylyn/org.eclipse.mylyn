@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -35,13 +35,13 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * The refresh operation refreshes elements of the model with the latest state from the server.
- * 
+ *
  * @author Steffen Pingel
  * @author Lucas Panjer
  */
 public class RefreshOperation extends AbstractElementOperation<IBuildServer> {
 
-	private final class RefreshData {
+	private static final class RefreshData {
 
 		private IBuildServer server;
 

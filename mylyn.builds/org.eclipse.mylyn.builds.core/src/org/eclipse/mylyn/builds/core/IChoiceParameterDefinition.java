@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2010, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -22,7 +22,7 @@ import java.util.List;
  * <li>{@link org.eclipse.mylyn.builds.core.IChoiceParameterDefinition#getDefaultValue <em>Default Value</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface IChoiceParameterDefinition extends IParameterDefinition {
@@ -33,7 +33,7 @@ public interface IChoiceParameterDefinition extends IParameterDefinition {
 	 * If the meaning of the '<em>Options</em>' attribute list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Options</em>' attribute list.
 	 * @generated
 	 */
@@ -45,7 +45,7 @@ public interface IChoiceParameterDefinition extends IParameterDefinition {
 	 * If the meaning of the '<em>Default Value</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Default Value</em>' attribute.
 	 * @see #setDefaultValue(String)
 	 * @generated
@@ -55,7 +55,7 @@ public interface IChoiceParameterDefinition extends IParameterDefinition {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChoiceParameterDefinition#getDefaultValue <em>Default Value</em>}'
 	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Default Value</em>' attribute.
 	 * @see #getDefaultValue()

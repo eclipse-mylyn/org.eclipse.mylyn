@@ -56,13 +56,13 @@ import org.eclipse.mylyn.builds.core.IParameterDefinition;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildPlan#getFlags <em>Flags</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * The cached value of the '{@link #getServer() <em>Server</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getServer()
 	 * @generated
 	 * @ordered
@@ -71,7 +71,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The cached value of the '{@link #getChildren() <em>Children</em>}' reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getChildren()
 	 * @generated
 	 * @ordered
@@ -80,7 +80,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The cached value of the '{@link #getParent() <em>Parent</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getParent()
 	 * @generated
 	 * @ordered
@@ -89,7 +89,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The default value of the '{@link #getHealth() <em>Health</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getHealth()
 	 * @generated
 	 * @ordered
@@ -98,7 +98,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The cached value of the '{@link #getHealth() <em>Health</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getHealth()
 	 * @generated
 	 * @ordered
@@ -107,7 +107,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -116,7 +116,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -125,7 +125,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The default value of the '{@link #getInfo() <em>Info</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getInfo()
 	 * @generated
 	 * @ordered
@@ -134,7 +134,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The cached value of the '{@link #getInfo() <em>Info</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getInfo()
 	 * @generated
 	 * @ordered
@@ -143,7 +143,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The default value of the '{@link #isSelected() <em>Selected</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #isSelected()
 	 * @generated
 	 * @ordered
@@ -152,7 +152,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The cached value of the '{@link #isSelected() <em>Selected</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #isSelected()
 	 * @generated
 	 * @ordered
@@ -161,7 +161,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The default value of the '{@link #getSummary() <em>Summary</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getSummary()
 	 * @generated
 	 * @ordered
@@ -170,7 +170,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The cached value of the '{@link #getSummary() <em>Summary</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getSummary()
 	 * @generated
 	 * @ordered
@@ -179,7 +179,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The default value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getState()
 	 * @generated
 	 * @ordered
@@ -188,7 +188,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The cached value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getState()
 	 * @generated
 	 * @ordered
@@ -197,7 +197,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The default value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getStatus()
 	 * @generated
 	 * @ordered
@@ -206,7 +206,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getStatus()
 	 * @generated
 	 * @ordered
@@ -215,7 +215,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDescription()
 	 * @generated
 	 * @ordered
@@ -224,7 +224,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDescription()
 	 * @generated
 	 * @ordered
@@ -233,7 +233,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The cached value of the '{@link #getLastBuild() <em>Last Build</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getLastBuild()
 	 * @generated
 	 * @ordered
@@ -243,7 +243,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * The cached value of the '{@link #getParameterDefinitions() <em>Parameter Definitions</em>}' containment reference list. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getParameterDefinitions()
 	 * @generated
 	 * @ordered
@@ -253,7 +253,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	/**
 	 * The cached value of the '{@link #getHealthReports() <em>Health Reports</em>}' containment reference list. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getHealthReports()
 	 * @generated
 	 * @ordered
@@ -262,7 +262,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * The cached value of the '{@link #getFlags() <em>Flags</em>}' attribute list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getFlags()
 	 * @generated
 	 * @ordered
@@ -271,7 +271,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected BuildPlan() {
@@ -279,7 +279,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -293,7 +293,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * If the meaning of the '<em>Server</em>' container reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -313,7 +313,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IBuildServer basicGetServer() {
@@ -322,7 +322,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -340,7 +340,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * If the meaning of the '<em>Children</em>' reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -358,7 +358,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * If the meaning of the '<em>Parent</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -378,7 +378,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IBuildPlan basicGetParent() {
@@ -387,7 +387,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public NotificationChain basicSetParent(IBuildPlan newParent, NotificationChain msgs) {
@@ -407,7 +407,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -438,7 +438,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * If the meaning of the '<em>Health</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -448,7 +448,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -466,7 +466,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * If the meaning of the '<em>Id</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -476,7 +476,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -494,7 +494,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * If the meaning of the '<em>Info</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -504,7 +504,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -522,7 +522,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * If the meaning of the '<em>Selected</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -532,7 +532,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -551,7 +551,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * If the meaning of the '<em>Summary</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -561,7 +561,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -580,7 +580,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * If the meaning of the '<em>State</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -590,7 +590,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -608,7 +608,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * If the meaning of the '<em>Status</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -618,7 +618,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -636,7 +636,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * If the meaning of the '<em>Description</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -646,7 +646,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -665,7 +665,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * If the meaning of the '<em>Last Build</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -685,7 +685,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IBuild basicGetLastBuild() {
@@ -694,7 +694,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -714,7 +714,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -729,7 +729,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -743,7 +743,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -756,7 +756,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -780,7 +780,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -800,7 +800,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -851,7 +851,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -913,7 +913,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -970,7 +970,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -1012,7 +1012,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -1060,7 +1060,6 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	public void merge(BuildPlan source) {
 		Assert.isNotNull(source);
-		@SuppressWarnings("serial")
 		EcoreUtil.Copier copier = new EcoreUtil.Copier() {
 			@Override
 			protected EObject createCopy(EObject source) {

@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2010, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -26,13 +26,13 @@ import org.eclipse.mylyn.builds.core.IHealthReport;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.HealthReport#getDescription <em>Description</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class HealthReport extends EObjectImpl implements IHealthReport {
 	/**
 	 * The default value of the '{@link #getHealth() <em>Health</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getHealth()
 	 * @generated
 	 * @ordered
@@ -41,7 +41,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 
 	/**
 	 * The cached value of the '{@link #getHealth() <em>Health</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getHealth()
 	 * @generated
 	 * @ordered
@@ -50,7 +50,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 
 	/**
 	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDescription()
 	 * @generated
 	 * @ordered
@@ -59,7 +59,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 
 	/**
 	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDescription()
 	 * @generated
 	 * @ordered
@@ -68,7 +68,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected HealthReport() {
@@ -76,7 +76,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -86,7 +86,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -96,7 +96,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -111,7 +111,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -121,7 +121,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -136,7 +136,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -152,7 +152,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -170,7 +170,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -188,7 +188,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -204,7 +204,7 @@ public class HealthReport extends EObjectImpl implements IHealthReport {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

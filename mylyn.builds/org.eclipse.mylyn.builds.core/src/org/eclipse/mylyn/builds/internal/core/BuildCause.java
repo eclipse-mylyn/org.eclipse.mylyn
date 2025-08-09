@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2010, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -31,13 +31,13 @@ import org.eclipse.mylyn.builds.core.IUser;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildCause#getUser <em>User</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class BuildCause extends EObjectImpl implements IBuildCause {
 	/**
 	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDescription()
 	 * @generated
 	 * @ordered
@@ -46,7 +46,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 
 	/**
 	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDescription()
 	 * @generated
 	 * @ordered
@@ -55,7 +55,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 
 	/**
 	 * The cached value of the '{@link #getBuild() <em>Build</em>}' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getBuild()
 	 * @generated
 	 * @ordered
@@ -64,7 +64,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 
 	/**
 	 * The cached value of the '{@link #getUser() <em>User</em>}' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getUser()
 	 * @generated
 	 * @ordered
@@ -73,7 +73,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected BuildCause() {
@@ -81,7 +81,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -91,7 +91,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -101,7 +101,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -116,7 +116,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -126,7 +126,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public NotificationChain basicSetBuild(IBuildReference newBuild, NotificationChain msgs) {
@@ -146,7 +146,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -172,7 +172,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -182,7 +182,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public NotificationChain basicSetUser(IUser newUser, NotificationChain msgs) {
@@ -202,7 +202,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -228,7 +228,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -244,7 +244,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -262,7 +262,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -283,7 +283,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -304,7 +304,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -322,7 +322,7 @@ public class BuildCause extends EObjectImpl implements IBuildCause {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

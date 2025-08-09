@@ -30,13 +30,13 @@ import org.eclipse.mylyn.builds.core.TestCaseResult;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.TestCase#getStackTrace <em>Stack Trace</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class TestCase extends TestElement implements ITestCase {
 	/**
 	 * The default value of the '{@link #getClassName() <em>Class Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getClassName()
 	 * @generated
 	 * @ordered
@@ -45,7 +45,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * The cached value of the '{@link #getClassName() <em>Class Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getClassName()
 	 * @generated
 	 * @ordered
@@ -54,7 +54,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * The default value of the '{@link #isSkipped() <em>Skipped</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #isSkipped()
 	 * @generated
 	 * @ordered
@@ -63,7 +63,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * The cached value of the '{@link #isSkipped() <em>Skipped</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #isSkipped()
 	 * @generated
 	 * @ordered
@@ -72,7 +72,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * The default value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getStatus()
 	 * @generated
 	 * @ordered
@@ -81,7 +81,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getStatus()
 	 * @generated
 	 * @ordered
@@ -90,7 +90,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * The default value of the '{@link #getMessage() <em>Message</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getMessage()
 	 * @generated
 	 * @ordered
@@ -99,7 +99,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * The cached value of the '{@link #getMessage() <em>Message</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getMessage()
 	 * @generated
 	 * @ordered
@@ -108,7 +108,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * The default value of the '{@link #getStackTrace() <em>Stack Trace</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getStackTrace()
 	 * @generated
 	 * @ordered
@@ -117,7 +117,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * The cached value of the '{@link #getStackTrace() <em>Stack Trace</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getStackTrace()
 	 * @generated
 	 * @ordered
@@ -126,7 +126,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected TestCase() {
@@ -134,7 +134,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -148,7 +148,7 @@ public class TestCase extends TestElement implements ITestCase {
 	 * If the meaning of the '<em>Class Name</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -158,7 +158,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -177,7 +177,7 @@ public class TestCase extends TestElement implements ITestCase {
 	 * If the meaning of the '<em>Skipped</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -187,7 +187,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -206,7 +206,7 @@ public class TestCase extends TestElement implements ITestCase {
 	 * If the meaning of the '<em>Suite</em>' container reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -219,7 +219,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public NotificationChain basicSetSuite(ITestSuite newSuite, NotificationChain msgs) {
@@ -229,7 +229,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -262,7 +262,7 @@ public class TestCase extends TestElement implements ITestCase {
 	 * If the meaning of the '<em>Status</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -272,7 +272,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -286,7 +286,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -296,7 +296,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -311,7 +311,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -321,7 +321,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -336,7 +336,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -353,7 +353,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -367,7 +367,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -382,7 +382,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -406,7 +406,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -436,7 +436,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -466,7 +466,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -490,7 +490,7 @@ public class TestCase extends TestElement implements ITestCase {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

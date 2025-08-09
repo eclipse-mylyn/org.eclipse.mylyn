@@ -34,14 +34,14 @@ import org.eclipse.mylyn.builds.core.IUser;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.Change#getRevision <em>Revision</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class Change extends EObjectImpl implements IChange {
 	/**
 	 * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' containment reference list. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getArtifacts()
 	 * @generated
 	 * @ordered
@@ -50,7 +50,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * The cached value of the '{@link #getAuthor() <em>Author</em>}' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getAuthor()
 	 * @generated
 	 * @ordered
@@ -59,7 +59,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * The default value of the '{@link #getMessage() <em>Message</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getMessage()
 	 * @generated
 	 * @ordered
@@ -68,7 +68,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * The cached value of the '{@link #getMessage() <em>Message</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getMessage()
 	 * @generated
 	 * @ordered
@@ -77,7 +77,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * The default value of the '{@link #getDate() <em>Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDate()
 	 * @generated
 	 * @ordered
@@ -86,7 +86,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * The cached value of the '{@link #getDate() <em>Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDate()
 	 * @generated
 	 * @ordered
@@ -95,7 +95,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * The default value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getRevision()
 	 * @generated
 	 * @ordered
@@ -104,7 +104,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * The cached value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getRevision()
 	 * @generated
 	 * @ordered
@@ -113,7 +113,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected Change() {
@@ -121,7 +121,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -131,7 +131,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -149,7 +149,7 @@ public class Change extends EObjectImpl implements IChange {
 	 * If the meaning of the '<em>Author</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -159,7 +159,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public NotificationChain basicSetAuthor(IUser newAuthor, NotificationChain msgs) {
@@ -179,7 +179,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -209,7 +209,7 @@ public class Change extends EObjectImpl implements IChange {
 	 * If the meaning of the '<em>Message</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -219,7 +219,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -237,7 +237,7 @@ public class Change extends EObjectImpl implements IChange {
 	 * If the meaning of the '<em>Date</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -247,7 +247,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -261,7 +261,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -271,7 +271,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -286,7 +286,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -302,7 +302,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -324,7 +324,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -353,7 +353,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -380,7 +380,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -402,7 +402,7 @@ public class Change extends EObjectImpl implements IChange {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

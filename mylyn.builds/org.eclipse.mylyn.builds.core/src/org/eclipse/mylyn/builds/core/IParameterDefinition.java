@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2010, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -21,7 +21,7 @@ package org.eclipse.mylyn.builds.core;
  * <li>{@link org.eclipse.mylyn.builds.core.IParameterDefinition#getContainingBuildPlan <em>Containing Build Plan</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface IParameterDefinition {
@@ -31,7 +31,7 @@ public interface IParameterDefinition {
 	 * If the meaning of the '<em>Name</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
 	 * @generated
@@ -41,7 +41,7 @@ public interface IParameterDefinition {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IParameterDefinition#getName <em>Name</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Name</em>' attribute.
 	 * @see #getName()
@@ -55,7 +55,7 @@ public interface IParameterDefinition {
 	 * If the meaning of the '<em>Description</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Description</em>' attribute.
 	 * @see #setDescription(String)
 	 * @generated
@@ -65,7 +65,7 @@ public interface IParameterDefinition {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IParameterDefinition#getDescription <em>Description</em>}' attribute.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Description</em>' attribute.
 	 * @see #getDescription()
@@ -81,7 +81,7 @@ public interface IParameterDefinition {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Containing Build Plan</em>' container reference.
 	 * @see #setContainingBuildPlan(IBuildPlan)
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getParameterDefinitions
@@ -92,7 +92,7 @@ public interface IParameterDefinition {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IParameterDefinition#getContainingBuildPlan <em>Containing Build
 	 * Plan</em>}' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Containing Build Plan</em>' container reference.
 	 * @see #getContainingBuildPlan()

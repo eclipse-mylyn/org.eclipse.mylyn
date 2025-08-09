@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -24,7 +24,7 @@ import java.util.List;
  * <li>{@link org.eclipse.mylyn.builds.core.IBuildModel#getBuilds <em>Builds</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface IBuildModel {
@@ -35,7 +35,7 @@ public interface IBuildModel {
 	 * If the meaning of the '<em>Servers</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Servers</em>' containment reference list.
 	 * @generated
 	 */
@@ -48,7 +48,7 @@ public interface IBuildModel {
 	 * If the meaning of the '<em>Plans</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Plans</em>' containment reference list.
 	 * @generated
 	 */
@@ -61,7 +61,7 @@ public interface IBuildModel {
 	 * If the meaning of the '<em>Builds</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Builds</em>' containment reference list.
 	 * @generated
 	 */
