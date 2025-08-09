@@ -27,7 +27,7 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * Monitors user activity and notifies listeners.
- * 
+ *
  * @author Steffen Pingel
  */
 public class UserActivityManager implements IUserActivityManager {
@@ -175,7 +175,7 @@ public class UserActivityManager implements IUserActivityManager {
 
 	/**
 	 * Invoked when activity is recorded.
-	 * 
+	 *
 	 * @param start
 	 *            time in milliseconds when user activity started
 	 * @param end
