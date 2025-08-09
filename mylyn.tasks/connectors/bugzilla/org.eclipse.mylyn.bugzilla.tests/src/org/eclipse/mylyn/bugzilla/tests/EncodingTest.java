@@ -33,13 +33,11 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.junit.Ignore;
 
 /**
  * @author Mik Kersten
  */
 @SuppressWarnings("nls")
-@Ignore //FIXME: re-enable with https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/716
 public class EncodingTest extends AbstractBugzillaTest {
 
 	public void testEncodingSetting() {

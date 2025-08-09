@@ -36,7 +36,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,7 +46,7 @@ import com.google.gson.Gson;
 @RunWith(Junit4TestFixtureRunner.class)
 @FixtureDefinition(fixtureClass = BugzillaRestTestFixture.class, fixtureType = "bugzillaREST")
 //@RunOnlyWhenProperty(property = "default", value = "1")
-@Ignore //FIXME: re-enable with https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/716
+
 public class BugzillaRestConfigurationTest implements IFixtureJUnitClass {
 	private final BugzillaRestTestFixture actualFixture;
 
