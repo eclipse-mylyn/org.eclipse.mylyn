@@ -60,7 +60,8 @@
     <dist.site></dist.site>
     <timestampProvider>jgit</timestampProvider>
     <test.vmargs>-ea ${test.osvmargs} ${test.uservmargs}</test.vmargs>
-    <previous-release.baseline>https://download.eclipse.org/eclipse/updates/4.36/R-4.36-202505281830/</previous-release.baseline>
+    <previous-nightly.baseline>https://download.eclipse.org/mylyn/updates/nightly/latest/</previous-nightly.baseline>
+    <previous-release.baseline>https://download.eclipse.org/mylyn/updates/release/4.7.0/</previous-release.baseline>
   </properties>
   <mailingLists>
     <mailingList>
@@ -115,6 +116,25 @@
     <url>https://www.eclipse.org/</url>
   </organization>
   <profiles>
+   <profile>
+      <id>build-individual-bundles</id>
+      <activation>
+        <property>
+          <!-- Enable if aggregatorBuild system-property is not set -->
+          <name>!aggregatorBuild</name>
+        </property>
+      </activation>
+      <properties>
+        <mylyn-p2-repo.url>${previous-nightly.baseline}</mylyn-p2-repo.url>
+      </properties>
+      <repositories>
+        <repository>
+          <id>eclipse</id>
+          <url>${mylyn-p2-repo.url}</url>
+          <layout>p2</layout>
+        </repository>
+      </repositories>
+    </profile>
     <profile>
       <id>sign</id>
       <build>
