@@ -345,7 +345,7 @@ public class WebUtil {
 	 */
 	public static <T> T execute(IProgressMonitor monitor, WebRequest<T> request) throws Throwable {
 		// check for legacy reasons
-		SubMonitor subMonitor = monitor instanceof SubMonitor ? (SubMonitor) monitor : SubMonitor.convert(null);
+		SubMonitor subMonitor = monitor instanceof SubMonitor s ? s : SubMonitor.convert(null);
 
 		Future<T> future = CommonsNetPlugin.getExecutorService().submit(request);
 		while (true) {

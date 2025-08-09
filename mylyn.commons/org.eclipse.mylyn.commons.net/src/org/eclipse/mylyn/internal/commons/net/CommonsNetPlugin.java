@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -24,7 +24,7 @@ import org.osgi.framework.BundleContext;
 
 /**
  * Provides an entry point for the proxy service and potentially other web facilities
- * 
+ *
  * @author Mik Kersten
  * @author Steffen Pingel
  * @since 2.0
@@ -45,7 +45,7 @@ public class CommonsNetPlugin extends Plugin {
 
 	/**
 	 * Return the {@link IProxyService} or <code>null</code> if the service is not available.
-	 * 
+	 *
 	 * @return the {@link IProxyService} or <code>null</code>
 	 */
 	public synchronized static IProxyService getProxyService() {

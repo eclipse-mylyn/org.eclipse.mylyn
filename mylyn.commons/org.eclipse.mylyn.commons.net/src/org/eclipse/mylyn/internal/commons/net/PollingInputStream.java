@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2000, 2011 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
@@ -39,7 +39,7 @@ public class PollingInputStream extends FilterInputStream {
 
 	/**
 	 * Creates a new polling input stream.
-	 * 
+	 *
 	 * @param in
 	 *            the underlying input stream
 	 * @param numAttempts
@@ -58,7 +58,7 @@ public class PollingInputStream extends FilterInputStream {
 	 * Wraps the underlying stream's method. It may be important to wait for an input stream to be closed because it holds an implicit lock
 	 * on a system resource (such as a file) while it is open. Closing a stream may take time if the underlying stream is still servicing a
 	 * previous request.
-	 * 
+	 *
 	 * @throws OperationCanceledException
 	 *             if the progress monitor is canceled
 	 * @throws InterruptedIOException
@@ -100,7 +100,7 @@ public class PollingInputStream extends FilterInputStream {
 
 	/**
 	 * Wraps the underlying stream's method.
-	 * 
+	 *
 	 * @return the next byte of data, or -1 if the end of the stream is reached.
 	 * @throws OperationCanceledException
 	 *             if the progress monitor is canceled
@@ -131,7 +131,7 @@ public class PollingInputStream extends FilterInputStream {
 
 	/**
 	 * Wraps the underlying stream's method.
-	 * 
+	 *
 	 * @param buffer
 	 *            - the buffer into which the data is read.
 	 * @param off
@@ -172,7 +172,7 @@ public class PollingInputStream extends FilterInputStream {
 
 	/**
 	 * Wraps the underlying stream's method.
-	 * 
+	 *
 	 * @param count
 	 *            - the number of bytes to be skipped.
 	 * @return the actual number of bytes skipped.
@@ -229,7 +229,7 @@ public class PollingInputStream extends FilterInputStream {
 	 * Called to set whether cancellation will be checked by this stream. Turning cancellation checking off can be very useful for
 	 * protecting critical portions of a protocol that shouldn't be interrupted. For example, it is often necessary to protect login
 	 * sequences.
-	 * 
+	 *
 	 * @param cancellable
 	 *            a flag controlling whether this stream will check for cancellation.
 	 */
@@ -240,7 +240,7 @@ public class PollingInputStream extends FilterInputStream {
 	/**
 	 * Checked whether the monitor for this stream has been cancelled. If the cancellable flag is <code>false</code> then the monitor is
 	 * never cancelled.
-	 * 
+	 *
 	 * @return <code>true</code> if the monitor has been cancelled and <code>false</code> otherwise.
 	 */
 	private boolean checkCancellation() {

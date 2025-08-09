@@ -28,7 +28,7 @@ import org.eclipse.mylyn.commons.net.http.CommonHttpMethod3;
 
 /**
  * Based on {@code org.eclipse.ecf.provider.filetransfer.httpclient.HttpClientRetrieveFileTransfer}.
- * 
+ *
  * @author Steffen Pingel
  */
 public class CommonPostMethod3 extends PostMethod implements CommonHttpMethod3 {
