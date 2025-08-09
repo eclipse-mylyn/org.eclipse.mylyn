@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2010, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -35,7 +35,7 @@ import java.util.List;
  * <li>{@link org.eclipse.mylyn.builds.core.IBuildPlan#getFlags <em>Flags</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface IBuildPlan extends IBuildElement {
@@ -45,7 +45,7 @@ public interface IBuildPlan extends IBuildElement {
 	 * If the meaning of the '<em>Server</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Server</em>' reference.
 	 * @see #setServer(IBuildServer)
 	 * @generated
@@ -56,7 +56,7 @@ public interface IBuildPlan extends IBuildElement {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getServer <em>Server</em>}' reference. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Server</em>' reference.
 	 * @see #getServer()
@@ -72,7 +72,7 @@ public interface IBuildPlan extends IBuildElement {
 	 * If the meaning of the '<em>Children</em>' reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Children</em>' reference list.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getParent
 	 * @generated
@@ -86,7 +86,7 @@ public interface IBuildPlan extends IBuildElement {
 	 * If the meaning of the '<em>Parent</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Parent</em>' reference.
 	 * @see #setParent(IBuildPlan)
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getChildren
@@ -97,7 +97,7 @@ public interface IBuildPlan extends IBuildElement {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getParent <em>Parent</em>}' reference. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Parent</em>' reference.
 	 * @see #getParent()
@@ -111,7 +111,7 @@ public interface IBuildPlan extends IBuildElement {
 	 * If the meaning of the '<em>Health</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Health</em>' attribute.
 	 * @see #setHealth(int)
 	 * @generated
@@ -121,7 +121,7 @@ public interface IBuildPlan extends IBuildElement {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getHealth <em>Health</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Health</em>' attribute.
 	 * @see #getHealth()
@@ -135,7 +135,7 @@ public interface IBuildPlan extends IBuildElement {
 	 * If the meaning of the '<em>Id</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Id</em>' attribute.
 	 * @see #setId(String)
 	 * @generated
@@ -145,7 +145,7 @@ public interface IBuildPlan extends IBuildElement {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getId <em>Id</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Id</em>' attribute.
 	 * @see #getId()
@@ -159,7 +159,7 @@ public interface IBuildPlan extends IBuildElement {
 	 * If the meaning of the '<em>Info</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Info</em>' attribute.
 	 * @see #setInfo(String)
 	 * @generated
@@ -169,7 +169,7 @@ public interface IBuildPlan extends IBuildElement {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getInfo <em>Info</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Info</em>' attribute.
 	 * @see #getInfo()
@@ -183,7 +183,7 @@ public interface IBuildPlan extends IBuildElement {
 	 * If the meaning of the '<em>Selected</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Selected</em>' attribute.
 	 * @see #setSelected(boolean)
 	 * @generated
@@ -193,7 +193,7 @@ public interface IBuildPlan extends IBuildElement {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildPlan#isSelected <em>Selected</em>}' attribute. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Selected</em>' attribute.
 	 * @see #isSelected()
@@ -207,7 +207,7 @@ public interface IBuildPlan extends IBuildElement {
 	 * If the meaning of the '<em>Summary</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Summary</em>' attribute.
 	 * @see #setSummary(String)
 	 * @generated
@@ -217,7 +217,7 @@ public interface IBuildPlan extends IBuildElement {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getSummary <em>Summary</em>}' attribute. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Summary</em>' attribute.
 	 * @see #getSummary()
@@ -231,7 +231,7 @@ public interface IBuildPlan extends IBuildElement {
 	 * If the meaning of the '<em>State</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>State</em>' attribute.
 	 * @see #setState(BuildState)
 	 * @generated
@@ -241,7 +241,7 @@ public interface IBuildPlan extends IBuildElement {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getState <em>State</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>State</em>' attribute.
 	 * @see #getState()
@@ -255,7 +255,7 @@ public interface IBuildPlan extends IBuildElement {
 	 * If the meaning of the '<em>Status</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Status</em>' attribute.
 	 * @see #setStatus(BuildStatus)
 	 * @generated
@@ -265,7 +265,7 @@ public interface IBuildPlan extends IBuildElement {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getStatus <em>Status</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Status</em>' attribute.
 	 * @see #getStatus()
@@ -279,7 +279,7 @@ public interface IBuildPlan extends IBuildElement {
 	 * If the meaning of the '<em>Description</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Description</em>' attribute.
 	 * @see #setDescription(String)
 	 * @generated
@@ -289,7 +289,7 @@ public interface IBuildPlan extends IBuildElement {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getDescription <em>Description</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Description</em>' attribute.
 	 * @see #getDescription()
@@ -303,7 +303,7 @@ public interface IBuildPlan extends IBuildElement {
 	 * If the meaning of the '<em>Last Build</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Last Build</em>' reference.
 	 * @see #setLastBuild(IBuild)
 	 * @generated
@@ -313,7 +313,7 @@ public interface IBuildPlan extends IBuildElement {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getLastBuild <em>Last Build</em>}' reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Last Build</em>' reference.
 	 * @see #getLastBuild()
@@ -331,7 +331,7 @@ public interface IBuildPlan extends IBuildElement {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Parameter Definitions</em>' containment reference list.
 	 * @see org.eclipse.mylyn.builds.core.IParameterDefinition#getContainingBuildPlan
 	 * @generated
@@ -345,7 +345,7 @@ public interface IBuildPlan extends IBuildElement {
 	 * If the meaning of the '<em>Health Reports</em>' reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Health Reports</em>' containment reference list.
 	 * @generated
 	 */
@@ -358,7 +358,7 @@ public interface IBuildPlan extends IBuildElement {
 	 * If the meaning of the '<em>Flags</em>' attribute list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Flags</em>' attribute list.
 	 * @generated
 	 */

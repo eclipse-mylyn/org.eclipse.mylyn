@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2010, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -27,7 +27,7 @@ import java.util.List;
  * <li>{@link org.eclipse.mylyn.builds.core.ITestResult#getSuites <em>Suites</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface ITestResult {
@@ -38,7 +38,7 @@ public interface ITestResult {
 	 * If the meaning of the '<em>Build</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Build</em>' container reference.
 	 * @see #setBuild(IBuild)
 	 * @see org.eclipse.mylyn.builds.core.IBuild#getTestResult
@@ -49,7 +49,7 @@ public interface ITestResult {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestResult#getBuild <em>Build</em>}' container reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Build</em>' container reference.
 	 * @see #getBuild()
@@ -63,7 +63,7 @@ public interface ITestResult {
 	 * If the meaning of the '<em>Duration</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Duration</em>' attribute.
 	 * @see #setDuration(long)
 	 * @generated
@@ -73,7 +73,7 @@ public interface ITestResult {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestResult#getDuration <em>Duration</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Duration</em>' attribute.
 	 * @see #getDuration()
@@ -87,7 +87,7 @@ public interface ITestResult {
 	 * If the meaning of the '<em>Fail Count</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Fail Count</em>' attribute.
 	 * @see #setFailCount(int)
 	 * @generated
@@ -97,7 +97,7 @@ public interface ITestResult {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestResult#getFailCount <em>Fail Count</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Fail Count</em>' attribute.
 	 * @see #getFailCount()
@@ -111,7 +111,7 @@ public interface ITestResult {
 	 * If the meaning of the '<em>Pass Count</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Pass Count</em>' attribute.
 	 * @see #setPassCount(int)
 	 * @generated
@@ -121,7 +121,7 @@ public interface ITestResult {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestResult#getPassCount <em>Pass Count</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Pass Count</em>' attribute.
 	 * @see #getPassCount()
@@ -135,7 +135,7 @@ public interface ITestResult {
 	 * If the meaning of the '<em>Ignored Count</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Ignored Count</em>' attribute.
 	 * @see #setIgnoredCount(int)
 	 * @generated
@@ -145,7 +145,7 @@ public interface ITestResult {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestResult#getIgnoredCount <em>Ignored Count</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Ignored Count</em>' attribute.
 	 * @see #getIgnoredCount()
@@ -159,7 +159,7 @@ public interface ITestResult {
 	 * If the meaning of the '<em>Error Count</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Error Count</em>' attribute.
 	 * @see #setErrorCount(int)
 	 * @generated
@@ -169,7 +169,7 @@ public interface ITestResult {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestResult#getErrorCount <em>Error Count</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Error Count</em>' attribute.
 	 * @see #getErrorCount()
@@ -185,7 +185,7 @@ public interface ITestResult {
 	 * If the meaning of the '<em>Suites</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Suites</em>' containment reference list.
 	 * @see org.eclipse.mylyn.builds.core.ITestSuite#getResult
 	 * @generated

@@ -38,13 +38,13 @@ import org.eclipse.mylyn.builds.core.ITestSuite;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.TestResult#getSuites <em>Suites</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class TestResult extends EObjectImpl implements ITestResult {
 	/**
 	 * The default value of the '{@link #getDuration() <em>Duration</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDuration()
 	 * @generated
 	 * @ordered
@@ -53,7 +53,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * The cached value of the '{@link #getDuration() <em>Duration</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDuration()
 	 * @generated
 	 * @ordered
@@ -62,7 +62,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * The default value of the '{@link #getFailCount() <em>Fail Count</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getFailCount()
 	 * @generated
 	 * @ordered
@@ -71,7 +71,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * The cached value of the '{@link #getFailCount() <em>Fail Count</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getFailCount()
 	 * @generated
 	 * @ordered
@@ -80,7 +80,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * The default value of the '{@link #getPassCount() <em>Pass Count</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getPassCount()
 	 * @generated
 	 * @ordered
@@ -89,7 +89,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * The cached value of the '{@link #getPassCount() <em>Pass Count</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getPassCount()
 	 * @generated
 	 * @ordered
@@ -98,7 +98,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * The default value of the '{@link #getIgnoredCount() <em>Ignored Count</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getIgnoredCount()
 	 * @generated
 	 * @ordered
@@ -107,7 +107,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * The cached value of the '{@link #getIgnoredCount() <em>Ignored Count</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getIgnoredCount()
 	 * @generated
 	 * @ordered
@@ -116,7 +116,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * The default value of the '{@link #getErrorCount() <em>Error Count</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getErrorCount()
 	 * @generated
 	 * @ordered
@@ -125,7 +125,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * The cached value of the '{@link #getErrorCount() <em>Error Count</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getErrorCount()
 	 * @generated
 	 * @ordered
@@ -135,7 +135,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	/**
 	 * The cached value of the '{@link #getSuites() <em>Suites</em>}' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @see #getSuites()
 	 * @generated
 	 * @ordered
@@ -144,7 +144,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected TestResult() {
@@ -152,7 +152,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -166,7 +166,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * If the meaning of the '<em>Build</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -179,7 +179,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public NotificationChain basicSetBuild(IBuild newBuild, NotificationChain msgs) {
@@ -189,7 +189,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -222,7 +222,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * If the meaning of the '<em>Duration</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -232,7 +232,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -251,7 +251,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * If the meaning of the '<em>Fail Count</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -261,7 +261,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -280,7 +280,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * If the meaning of the '<em>Pass Count</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -290,7 +290,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -305,7 +305,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -315,7 +315,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -330,7 +330,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -340,7 +340,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -359,7 +359,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 	 * If the meaning of the '<em>Suites</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -373,7 +373,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -393,7 +393,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -409,7 +409,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -423,7 +423,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -449,7 +449,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -484,7 +484,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -517,7 +517,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -543,7 +543,7 @@ public class TestResult extends EObjectImpl implements ITestResult {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

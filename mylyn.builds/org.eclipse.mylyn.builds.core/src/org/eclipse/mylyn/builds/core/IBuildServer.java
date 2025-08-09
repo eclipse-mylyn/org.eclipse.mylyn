@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2010, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -24,7 +24,7 @@ import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
  * <li>{@link org.eclipse.mylyn.builds.core.IBuildServer#getRepositoryUrl <em>Repository Url</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface IBuildServer extends IBuildElement {
@@ -34,7 +34,7 @@ public interface IBuildServer extends IBuildElement {
 	 * If the meaning of the '<em>Location</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Location</em>' attribute.
 	 * @see #setLocation(RepositoryLocation)
 	 * @generated
@@ -44,7 +44,7 @@ public interface IBuildServer extends IBuildElement {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildServer#getLocation <em>Location</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Location</em>' attribute.
 	 * @see #getLocation()
@@ -58,7 +58,7 @@ public interface IBuildServer extends IBuildElement {
 	 * If the meaning of the '<em>Connector Kind</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Connector Kind</em>' attribute.
 	 * @see #setConnectorKind(String)
 	 * @generated
@@ -68,7 +68,7 @@ public interface IBuildServer extends IBuildElement {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildServer#getConnectorKind <em>Connector Kind</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Connector Kind</em>' attribute.
 	 * @see #getConnectorKind()
@@ -82,7 +82,7 @@ public interface IBuildServer extends IBuildElement {
 	 * If the meaning of the '<em>Repository Url</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Repository Url</em>' attribute.
 	 * @see #setRepositoryUrl(String)
 	 * @generated
@@ -92,7 +92,7 @@ public interface IBuildServer extends IBuildElement {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IBuildServer#getRepositoryUrl <em>Repository Url</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Repository Url</em>' attribute.
 	 * @see #getRepositoryUrl()

@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2010, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -26,13 +26,13 @@ import org.eclipse.mylyn.builds.core.IBuildReference;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildReference#getBuild <em>Build</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class BuildReference extends EObjectImpl implements IBuildReference {
 	/**
 	 * The default value of the '{@link #getPlan() <em>Plan</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getPlan()
 	 * @generated
 	 * @ordered
@@ -41,7 +41,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 
 	/**
 	 * The cached value of the '{@link #getPlan() <em>Plan</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getPlan()
 	 * @generated
 	 * @ordered
@@ -50,7 +50,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 
 	/**
 	 * The default value of the '{@link #getBuild() <em>Build</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getBuild()
 	 * @generated
 	 * @ordered
@@ -59,7 +59,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 
 	/**
 	 * The cached value of the '{@link #getBuild() <em>Build</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getBuild()
 	 * @generated
 	 * @ordered
@@ -68,7 +68,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected BuildReference() {
@@ -76,7 +76,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -86,7 +86,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -96,7 +96,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -110,7 +110,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -120,7 +120,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -135,7 +135,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -151,7 +151,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -169,7 +169,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -187,7 +187,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -203,7 +203,7 @@ public class BuildReference extends EObjectImpl implements IBuildReference {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

@@ -13,13 +13,13 @@ import org.eclipse.mylyn.builds.core.IPlanParameterDefinition;
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Plan Parameter Definition</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class PlanParameterDefinition extends ParameterDefinition implements IPlanParameterDefinition {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected PlanParameterDefinition() {
@@ -27,7 +27,7 @@ public class PlanParameterDefinition extends ParameterDefinition implements IPla
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

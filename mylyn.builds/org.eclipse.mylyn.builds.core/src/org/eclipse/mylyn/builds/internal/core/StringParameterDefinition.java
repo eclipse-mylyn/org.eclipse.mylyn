@@ -19,13 +19,13 @@ import org.eclipse.mylyn.builds.core.IStringParameterDefinition;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.StringParameterDefinition#getDefaultValue <em>Default Value</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class StringParameterDefinition extends ParameterDefinition implements IStringParameterDefinition {
 	/**
 	 * The default value of the '{@link #getDefaultValue() <em>Default Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDefaultValue()
 	 * @generated
 	 * @ordered
@@ -34,7 +34,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 
 	/**
 	 * The cached value of the '{@link #getDefaultValue() <em>Default Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDefaultValue()
 	 * @generated
 	 * @ordered
@@ -43,7 +43,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected StringParameterDefinition() {
@@ -51,7 +51,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -65,7 +65,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 	 * If the meaning of the '<em>Default Value</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -75,7 +75,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -90,7 +90,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -104,7 +104,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -119,7 +119,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -134,7 +134,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -150,7 +150,7 @@ public class StringParameterDefinition extends ParameterDefinition implements IS
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

@@ -23,13 +23,13 @@ import org.eclipse.mylyn.builds.core.ITestElement;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.TestElement#getOutput <em>Output</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class TestElement extends EObjectImpl implements ITestElement {
 	/**
 	 * The default value of the '{@link #getLabel() <em>Label</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getLabel()
 	 * @generated
 	 * @ordered
@@ -38,7 +38,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 
 	/**
 	 * The cached value of the '{@link #getLabel() <em>Label</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getLabel()
 	 * @generated
 	 * @ordered
@@ -47,7 +47,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 
 	/**
 	 * The default value of the '{@link #getDuration() <em>Duration</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDuration()
 	 * @generated
 	 * @ordered
@@ -56,7 +56,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 
 	/**
 	 * The cached value of the '{@link #getDuration() <em>Duration</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDuration()
 	 * @generated
 	 * @ordered
@@ -65,7 +65,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 
 	/**
 	 * The default value of the '{@link #getErrorOutput() <em>Error Output</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getErrorOutput()
 	 * @generated
 	 * @ordered
@@ -74,7 +74,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 
 	/**
 	 * The cached value of the '{@link #getErrorOutput() <em>Error Output</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getErrorOutput()
 	 * @generated
 	 * @ordered
@@ -83,7 +83,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 
 	/**
 	 * The default value of the '{@link #getOutput() <em>Output</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getOutput()
 	 * @generated
 	 * @ordered
@@ -92,7 +92,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 
 	/**
 	 * The cached value of the '{@link #getOutput() <em>Output</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getOutput()
 	 * @generated
 	 * @ordered
@@ -101,7 +101,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected TestElement() {
@@ -109,7 +109,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -123,7 +123,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	 * If the meaning of the '<em>Label</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -133,7 +133,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -151,7 +151,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	 * If the meaning of the '<em>Duration</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -161,7 +161,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -180,7 +180,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	 * If the meaning of the '<em>Error Output</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -190,7 +190,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -209,7 +209,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 	 * If the meaning of the '<em>Output</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -219,7 +219,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -234,7 +234,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -254,7 +254,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -278,7 +278,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -302,7 +302,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -322,7 +322,7 @@ public class TestElement extends EObjectImpl implements ITestElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

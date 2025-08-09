@@ -59,35 +59,35 @@ import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
  * <li>and each data type</li>
  * </ul>
  * <!-- end-user-doc -->
- * 
+ *
  * @see org.eclipse.mylyn.builds.core.IBuildFactory
  * @generated
  */
 public class BuildPackage extends EPackageImpl {
 	/**
 	 * The package name. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public static final String eNAME = "builds"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace URI. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public static final String eNS_URI = "http://eclipse.org/mylyn/models/build"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace name. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public static final String eNS_PREFIX = "builds"; //$NON-NLS-1$
 
 	/**
 	 * The singleton instance of the package. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public static final BuildPackage eINSTANCE = org.eclipse.mylyn.builds.internal.core.BuildPackage.init();
@@ -95,7 +95,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.BuildElement <em>Element</em>}' class. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildElement
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildElement()
 	 * @generated
@@ -105,7 +105,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.Artifact <em>Artifact</em>}' class. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.Artifact
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getArtifact()
 	 * @generated
@@ -115,7 +115,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.Build <em>Build</em>}' class. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.Build
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuild()
 	 * @generated
@@ -125,7 +125,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.BuildPlan <em>Plan</em>}' class. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPlan
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildPlan()
 	 * @generated
@@ -135,7 +135,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.BuildServer <em>Server</em>}' class. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildServer
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildServer()
 	 * @generated
@@ -145,7 +145,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.BuildModel <em>Model</em>}' class. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildModel
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildModel()
 	 * @generated
@@ -155,7 +155,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.Change <em>Change</em>}' class. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.Change
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getChange()
 	 * @generated
@@ -165,7 +165,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.ChangeSet <em>Change Set</em>}' class. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.ChangeSet
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getChangeSet()
 	 * @generated
@@ -175,7 +175,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.ChangeArtifact <em>Change Artifact</em>}' class. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.ChangeArtifact
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getChangeArtifact()
 	 * @generated
@@ -185,7 +185,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.StringToStringMap <em>String To String Map</em>}' class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.StringToStringMap
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getStringToStringMap()
 	 * @generated
@@ -194,7 +194,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -202,7 +202,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -210,7 +210,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>String To String Map</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -218,7 +218,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The meta object id for the '<em>IOperation</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.core.IOperation
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getIOperation()
 	 * @generated
@@ -227,7 +227,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The meta object id for the '<em>IStatus</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.core.runtime.IStatus
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getIStatus()
 	 * @generated
@@ -236,7 +236,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -244,7 +244,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -252,7 +252,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Operations</b></em>' attribute list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -260,7 +260,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Element Status</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -268,7 +268,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Refresh Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -276,7 +276,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Attributes</b></em>' map. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -284,7 +284,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Element</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -292,7 +292,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -300,7 +300,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -308,7 +308,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Operations</b></em>' attribute list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -316,7 +316,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Element Status</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -324,7 +324,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Refresh Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -332,7 +332,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Attributes</b></em>' map. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -340,7 +340,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Relative Path</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -348,7 +348,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Artifact</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -356,7 +356,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -364,7 +364,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -372,7 +372,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Operations</b></em>' attribute list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -380,7 +380,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Element Status</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -388,7 +388,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Refresh Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -396,7 +396,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Attributes</b></em>' map. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -404,7 +404,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -412,7 +412,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Build Number</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -420,7 +420,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Timestamp</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -428,7 +428,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Duration</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -436,7 +436,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Display Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -444,7 +444,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -452,7 +452,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Status</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -460,7 +460,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Artifacts</b></em>' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -468,7 +468,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Change Set</b></em>' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -476,7 +476,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Plan</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -484,7 +484,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Label</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -492,7 +492,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Server</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -500,7 +500,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Test Result</b></em>' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -508,7 +508,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Culprits</b></em>' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -516,7 +516,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Summary</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -524,7 +524,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Cause</b></em>' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -532,7 +532,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Build</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -541,7 +541,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.BuildCause <em>Cause</em>}' class. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildCause
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildCause()
 	 * @generated
@@ -550,7 +550,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -558,7 +558,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Build</b></em>' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -566,7 +566,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>User</b></em>' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -574,7 +574,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Cause</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -583,7 +583,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.BuildReference <em>Reference</em>}' class. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildReference
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildReference()
 	 * @generated
@@ -592,7 +592,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Plan</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -600,7 +600,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Build</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -608,7 +608,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Reference</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -616,7 +616,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -624,7 +624,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -632,7 +632,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Operations</b></em>' attribute list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -640,7 +640,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Element Status</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -648,7 +648,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Refresh Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -656,7 +656,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Attributes</b></em>' map. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -664,7 +664,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Server</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -672,7 +672,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Children</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -680,7 +680,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Parent</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -688,7 +688,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Health</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -696,7 +696,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -704,7 +704,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Info</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -712,7 +712,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Selected</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -720,7 +720,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Summary</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -728,7 +728,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>State</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -736,7 +736,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Status</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -744,7 +744,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -752,7 +752,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Last Build</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -761,7 +761,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The feature id for the '<em><b>Parameter Definitions</b></em>' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -769,7 +769,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Health Reports</b></em>' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -777,7 +777,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Flags</b></em>' attribute list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -785,7 +785,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Plan</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -794,7 +794,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.HealthReport <em>Health Report</em>}' class. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.HealthReport
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getHealthReport()
 	 * @generated
@@ -803,7 +803,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Health</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -811,7 +811,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -819,7 +819,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Health Report</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -827,7 +827,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Servers</b></em>' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -835,7 +835,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Plans</b></em>' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -843,7 +843,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Builds</b></em>' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -851,7 +851,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Model</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -859,7 +859,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -867,7 +867,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -875,7 +875,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Operations</b></em>' attribute list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -883,7 +883,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Element Status</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -891,7 +891,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Refresh Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -899,7 +899,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Attributes</b></em>' map. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -907,7 +907,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Location</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -915,7 +915,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Connector Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -923,7 +923,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Repository Url</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -931,7 +931,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Server</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -939,7 +939,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Artifacts</b></em>' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -947,7 +947,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Author</b></em>' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -955,7 +955,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Message</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -963,7 +963,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -971,7 +971,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Revision</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -979,7 +979,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Change</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -987,7 +987,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Changes</b></em>' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -995,7 +995,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1003,7 +1003,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Change Set</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1011,7 +1011,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>File</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1019,7 +1019,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Relative Path</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1027,7 +1027,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Prev Revision</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1035,7 +1035,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Revision</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1043,7 +1043,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Dead</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1051,7 +1051,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Edit Type</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1059,7 +1059,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Change Artifact</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1068,7 +1068,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.User <em>User</em>}' class. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.User
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getUser()
 	 * @generated
@@ -1077,7 +1077,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1085,7 +1085,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1093,7 +1093,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Operations</b></em>' attribute list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1101,7 +1101,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Element Status</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1109,7 +1109,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Refresh Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1117,7 +1117,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Attributes</b></em>' map. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1125,7 +1125,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1133,7 +1133,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Email</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1141,7 +1141,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>User</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1150,7 +1150,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.ParameterDefinition <em>Parameter Definition</em>}' class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.ParameterDefinition
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getParameterDefinition()
 	 * @generated
@@ -1159,7 +1159,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1167,7 +1167,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1175,7 +1175,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1183,7 +1183,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Parameter Definition</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1192,7 +1192,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.ChoiceParameterDefinition <em>Choice Parameter
 	 * Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.ChoiceParameterDefinition
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getChoiceParameterDefinition()
 	 * @generated
@@ -1201,7 +1201,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1209,7 +1209,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1217,7 +1217,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1225,7 +1225,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Options</b></em>' attribute list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1233,7 +1233,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Default Value</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1241,7 +1241,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Choice Parameter Definition</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1250,7 +1250,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.BooleanParameterDefinition <em>Boolean Parameter
 	 * Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.BooleanParameterDefinition
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBooleanParameterDefinition()
 	 * @generated
@@ -1259,7 +1259,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1267,7 +1267,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1275,7 +1275,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1283,7 +1283,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Default Value</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1291,7 +1291,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Boolean Parameter Definition</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1300,7 +1300,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.FileParameterDefinition <em>File Parameter
 	 * Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.FileParameterDefinition
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getFileParameterDefinition()
 	 * @generated
@@ -1309,7 +1309,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1317,7 +1317,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1325,7 +1325,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1333,7 +1333,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>File Parameter Definition</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1342,7 +1342,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.PlanParameterDefinition <em>Plan Parameter
 	 * Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.PlanParameterDefinition
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getPlanParameterDefinition()
 	 * @generated
@@ -1351,7 +1351,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1359,7 +1359,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1367,7 +1367,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1375,7 +1375,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Plan Parameter Definition</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1384,7 +1384,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.PasswordParameterDefinition <em>Password Parameter
 	 * Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.PasswordParameterDefinition
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getPasswordParameterDefinition()
 	 * @generated
@@ -1393,7 +1393,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1401,7 +1401,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1409,7 +1409,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1417,7 +1417,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Default Value</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1426,7 +1426,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The number of structural features of the '<em>Password Parameter Definition</em>' class. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1435,7 +1435,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.BuildParameterDefinition <em>Parameter Definition</em>}'
 	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildParameterDefinition
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildParameterDefinition()
 	 * @generated
@@ -1444,7 +1444,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1452,7 +1452,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1460,7 +1460,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1468,7 +1468,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Build Plan Id</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1476,7 +1476,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Build Plan</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1484,7 +1484,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Parameter Definition</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1493,7 +1493,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.StringParameterDefinition <em>String Parameter
 	 * Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.StringParameterDefinition
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getStringParameterDefinition()
 	 * @generated
@@ -1502,7 +1502,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1510,7 +1510,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1518,7 +1518,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Containing Build Plan</b></em>' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1526,7 +1526,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Default Value</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1534,7 +1534,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>String Parameter Definition</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1543,7 +1543,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.TestResult <em>Test Result</em>}' class. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.TestResult
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getTestResult()
 	 * @generated
@@ -1552,7 +1552,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Build</b></em>' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1560,7 +1560,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Duration</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1568,7 +1568,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Fail Count</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1576,7 +1576,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Pass Count</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1584,7 +1584,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Ignored Count</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1592,7 +1592,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Error Count</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1600,7 +1600,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Suites</b></em>' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1608,7 +1608,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Test Result</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1617,7 +1617,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.TestElement <em>Test Element</em>}' class. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.TestElement
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getTestElement()
 	 * @generated
@@ -1626,7 +1626,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Label</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1634,7 +1634,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Duration</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1642,7 +1642,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Error Output</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1650,7 +1650,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Output</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1658,7 +1658,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Test Element</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1667,7 +1667,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.TestSuite <em>Test Suite</em>}' class. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.TestSuite
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getTestSuite()
 	 * @generated
@@ -1676,7 +1676,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Label</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1684,7 +1684,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Duration</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1692,7 +1692,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Error Output</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1700,7 +1700,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Output</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1708,7 +1708,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Cases</b></em>' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1716,7 +1716,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Result</b></em>' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1724,7 +1724,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Test Suite</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1733,7 +1733,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.internal.core.TestCase <em>Test Case</em>}' class. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.internal.core.TestCase
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getTestCase()
 	 * @generated
@@ -1742,7 +1742,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Label</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1750,7 +1750,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Duration</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1758,7 +1758,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Error Output</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1766,7 +1766,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Output</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1774,7 +1774,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Class Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1782,7 +1782,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Skipped</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1790,7 +1790,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Suite</b></em>' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1798,7 +1798,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Status</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1806,7 +1806,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Message</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1814,7 +1814,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The feature id for the '<em><b>Stack Trace</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1822,7 +1822,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The number of structural features of the '<em>Test Case</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1831,7 +1831,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.builds.core.TestCaseResult <em>Test Case Result</em>}' enum. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.core.TestCaseResult
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getTestCaseResult()
 	 * @generated
@@ -1840,7 +1840,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The meta object id for the '<em>Repository Location</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.commons.repositories.core.RepositoryLocation
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getRepositoryLocation()
 	 * @generated
@@ -1849,7 +1849,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The meta object id for the '<em>State</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.core.BuildState
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildState()
 	 * @generated
@@ -1858,7 +1858,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The meta object id for the '<em>Status</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.core.BuildStatus
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildStatus()
 	 * @generated
@@ -1867,7 +1867,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * The meta object id for the '<em>Edit Type</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.builds.core.EditType
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getEditType()
 	 * @generated
@@ -1876,231 +1876,231 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass buildElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass buildModelEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass buildPlanEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass healthReportEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass buildServerEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass artifactEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass buildEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass buildCauseEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass buildReferenceEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass changeSetEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass changeArtifactEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass changeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass userEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass parameterDefinitionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass choiceParameterDefinitionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass booleanParameterDefinitionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass fileParameterDefinitionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass planParameterDefinitionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass passwordParameterDefinitionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass buildParameterDefinitionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass stringParameterDefinitionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass testResultEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass testElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass testSuiteEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass testCaseEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EEnum testCaseResultEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EClass stringToStringMapEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EDataType repositoryLocationEDataType = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EDataType buildStateEDataType = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EDataType buildStatusEDataType = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EDataType editTypeEDataType = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EDataType iStatusEDataType = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private EDataType iOperationEDataType = null;
@@ -2111,7 +2111,7 @@ public class BuildPackage extends EPackageImpl {
 	 * <p>
 	 * Note: the correct way to create the package is via the static factory method {@link #init init()}, which also performs initialization
 	 * of the package, or returns the registered package, if one already exists. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
 	 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#eNS_URI
 	 * @see #init()
@@ -2123,7 +2123,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private static boolean isInited = false;
@@ -2133,7 +2133,7 @@ public class BuildPackage extends EPackageImpl {
 	 * <p>
 	 * This method is used to initialize {@link BuildPackage#eINSTANCE} when that field is accessed. Clients should not invoke it directly.
 	 * Instead, they should simply access that field to obtain the package. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #eNS_URI
 	 * @see #createPackageContents()
 	 * @see #initializePackageContents()
@@ -2168,7 +2168,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBuildElement <em>Element</em>}'. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Element</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildElement
 	 * @generated
@@ -2180,7 +2180,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildElement#getUrl <em>Url</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Url</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildElement#getUrl()
 	 * @see #getBuildElement()
@@ -2193,7 +2193,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildElement#getName <em>Name</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Name</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildElement#getName()
 	 * @see #getBuildElement()
@@ -2206,7 +2206,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute list '{@link org.eclipse.mylyn.builds.core.IBuildElement#getOperations
 	 * <em>Operations</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute list '<em>Operations</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildElement#getOperations()
 	 * @see #getBuildElement()
@@ -2219,7 +2219,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildElement#getElementStatus <em>Element
 	 * Status</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Element Status</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildElement#getElementStatus()
 	 * @see #getBuildElement()
@@ -2232,7 +2232,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildElement#getRefreshDate <em>Refresh Date</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Refresh Date</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildElement#getRefreshDate()
 	 * @see #getBuildElement()
@@ -2245,7 +2245,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the map '{@link org.eclipse.mylyn.builds.core.IBuildElement#getAttributes <em>Attributes</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the map '<em>Attributes</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildElement#getAttributes()
 	 * @see #getBuildElement()
@@ -2258,7 +2258,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBuildModel <em>Model</em>}'. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Model</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildModel
 	 * @generated
@@ -2270,7 +2270,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the containment reference list ' {@link org.eclipse.mylyn.builds.core.IBuildModel#getServers
 	 * <em>Servers</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference list '<em>Servers</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildModel#getServers()
 	 * @see #getBuildModel()
@@ -2283,7 +2283,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the containment reference list ' {@link org.eclipse.mylyn.builds.core.IBuildModel#getPlans
 	 * <em>Plans</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference list '<em>Plans</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildModel#getPlans()
 	 * @see #getBuildModel()
@@ -2296,7 +2296,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the containment reference list ' {@link org.eclipse.mylyn.builds.core.IBuildModel#getBuilds
 	 * <em>Builds</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference list '<em>Builds</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildModel#getBuilds()
 	 * @see #getBuildModel()
@@ -2309,7 +2309,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBuildPlan <em>Plan</em>}'. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Plan</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan
 	 * @generated
@@ -2321,7 +2321,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getServer <em>Server</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the reference '<em>Server</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getServer()
 	 * @see #getBuildPlan()
@@ -2334,7 +2334,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the reference list '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getChildren <em>Children</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the reference list '<em>Children</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getChildren()
 	 * @see #getBuildPlan()
@@ -2347,7 +2347,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getParent <em>Parent</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the reference '<em>Parent</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getParent()
 	 * @see #getBuildPlan()
@@ -2360,7 +2360,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getHealth <em>Health</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Health</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getHealth()
 	 * @see #getBuildPlan()
@@ -2373,7 +2373,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getId <em>Id</em>}'. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Id</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getId()
 	 * @see #getBuildPlan()
@@ -2386,7 +2386,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getInfo <em>Info</em>} '. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Info</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getInfo()
 	 * @see #getBuildPlan()
@@ -2399,7 +2399,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#isSelected <em>Selected</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Selected</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#isSelected()
 	 * @see #getBuildPlan()
@@ -2412,7 +2412,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getSummary <em>Summary</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Summary</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getSummary()
 	 * @see #getBuildPlan()
@@ -2425,7 +2425,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getState <em>State</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>State</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getState()
 	 * @see #getBuildPlan()
@@ -2438,7 +2438,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getStatus <em>Status</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Status</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getStatus()
 	 * @see #getBuildPlan()
@@ -2451,7 +2451,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getDescription <em>Description</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Description</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getDescription()
 	 * @see #getBuildPlan()
@@ -2464,7 +2464,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getLastBuild <em>Last Build</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the reference '<em>Last Build</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getLastBuild()
 	 * @see #getBuildPlan()
@@ -2477,7 +2477,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the containment reference list ' {@link org.eclipse.mylyn.builds.core.IBuildPlan#getParameterDefinitions
 	 * <em>Parameter Definitions</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference list '<em>Parameter Definitions</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getParameterDefinitions()
 	 * @see #getBuildPlan()
@@ -2490,7 +2490,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the containment reference list ' {@link org.eclipse.mylyn.builds.core.IBuildPlan#getHealthReports
 	 * <em>Health Reports</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference list '<em>Health Reports</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getHealthReports()
 	 * @see #getBuildPlan()
@@ -2503,7 +2503,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute list '{@link org.eclipse.mylyn.builds.core.IBuildPlan#getFlags <em>Flags</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute list '<em>Flags</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildPlan#getFlags()
 	 * @see #getBuildPlan()
@@ -2516,7 +2516,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IHealthReport <em>Health Report</em>}'. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Health Report</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IHealthReport
 	 * @generated
@@ -2528,7 +2528,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IHealthReport#getHealth <em>Health</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Health</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IHealthReport#getHealth()
 	 * @see #getHealthReport()
@@ -2541,7 +2541,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IHealthReport#getDescription <em>Description</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Description</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IHealthReport#getDescription()
 	 * @see #getHealthReport()
@@ -2554,7 +2554,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBuildServer <em>Server</em>}'. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Server</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildServer
 	 * @generated
@@ -2566,7 +2566,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildServer#getLocation <em>Location</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Location</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildServer#getLocation()
 	 * @see #getBuildServer()
@@ -2579,7 +2579,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildServer#getConnectorKind <em>Connector
 	 * Kind</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Connector Kind</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildServer#getConnectorKind()
 	 * @see #getBuildServer()
@@ -2592,7 +2592,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildServer#getRepositoryUrl <em>Repository
 	 * Url</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Repository Url</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildServer#getRepositoryUrl()
 	 * @see #getBuildServer()
@@ -2605,7 +2605,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IArtifact <em>Artifact</em>}'. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Artifact</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IArtifact
 	 * @generated
@@ -2617,7 +2617,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IArtifact#getRelativePath <em>Relative Path</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Relative Path</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IArtifact#getRelativePath()
 	 * @see #getArtifact()
@@ -2630,7 +2630,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBuild <em>Build</em>}'. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Build</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuild
 	 * @generated
@@ -2642,7 +2642,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuild#getId <em>Id</em>}'. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Id</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuild#getId()
 	 * @see #getBuild()
@@ -2655,7 +2655,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuild#getBuildNumber <em>Build Number</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Build Number</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuild#getBuildNumber()
 	 * @see #getBuild()
@@ -2668,7 +2668,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuild#getTimestamp <em>Timestamp</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Timestamp</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuild#getTimestamp()
 	 * @see #getBuild()
@@ -2681,7 +2681,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuild#getDuration <em>Duration</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Duration</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuild#getDuration()
 	 * @see #getBuild()
@@ -2694,7 +2694,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuild#getDisplayName <em>Display Name</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Display Name</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuild#getDisplayName()
 	 * @see #getBuild()
@@ -2707,7 +2707,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuild#getState <em>State</em>}'. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>State</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuild#getState()
 	 * @see #getBuild()
@@ -2720,7 +2720,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuild#getStatus <em>Status</em>} '. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Status</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuild#getStatus()
 	 * @see #getBuild()
@@ -2733,7 +2733,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the containment reference list ' {@link org.eclipse.mylyn.builds.core.IBuild#getArtifacts
 	 * <em>Artifacts</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference list '<em>Artifacts</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuild#getArtifacts()
 	 * @see #getBuild()
@@ -2746,7 +2746,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the containment reference '{@link org.eclipse.mylyn.builds.core.IBuild#getChangeSet <em>Change
 	 * Set</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference '<em>Change Set</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuild#getChangeSet()
 	 * @see #getBuild()
@@ -2759,7 +2759,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.builds.core.IBuild#getPlan <em>Plan</em>}'. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the reference '<em>Plan</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuild#getPlan()
 	 * @see #getBuild()
@@ -2772,7 +2772,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuild#getLabel <em>Label</em>}'. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Label</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuild#getLabel()
 	 * @see #getBuild()
@@ -2785,7 +2785,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.builds.core.IBuild#getServer <em>Server</em>} '. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the reference '<em>Server</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuild#getServer()
 	 * @see #getBuild()
@@ -2798,7 +2798,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the containment reference '{@link org.eclipse.mylyn.builds.core.IBuild#getTestResult <em>Test
 	 * Result</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference '<em>Test Result</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuild#getTestResult()
 	 * @see #getBuild()
@@ -2811,7 +2811,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the containment reference list ' {@link org.eclipse.mylyn.builds.core.IBuild#getCulprits
 	 * <em>Culprits</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference list '<em>Culprits</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuild#getCulprits()
 	 * @see #getBuild()
@@ -2824,7 +2824,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuild#getSummary <em>Summary</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Summary</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuild#getSummary()
 	 * @see #getBuild()
@@ -2837,7 +2837,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.mylyn.builds.core.IBuild#getCause <em>Cause</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference list '<em>Cause</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuild#getCause()
 	 * @see #getBuild()
@@ -2850,7 +2850,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBuildCause <em>Cause</em>}'. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Cause</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildCause
 	 * @generated
@@ -2862,7 +2862,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildCause#getDescription <em>Description</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Description</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildCause#getDescription()
 	 * @see #getBuildCause()
@@ -2875,7 +2875,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the containment reference '{@link org.eclipse.mylyn.builds.core.IBuildCause#getBuild <em>Build</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference '<em>Build</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildCause#getBuild()
 	 * @see #getBuildCause()
@@ -2888,7 +2888,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the containment reference '{@link org.eclipse.mylyn.builds.core.IBuildCause#getUser <em>User</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference '<em>User</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildCause#getUser()
 	 * @see #getBuildCause()
@@ -2901,7 +2901,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBuildReference <em>Reference</em>}'. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Reference</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildReference
 	 * @generated
@@ -2913,7 +2913,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildReference#getPlan <em>Plan</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Plan</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildReference#getPlan()
 	 * @see #getBuildReference()
@@ -2926,7 +2926,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IBuildReference#getBuild <em>Build</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Build</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildReference#getBuild()
 	 * @see #getBuildReference()
@@ -2939,7 +2939,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IChangeSet <em>Change Set</em>}'. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Change Set</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IChangeSet
 	 * @generated
@@ -2951,7 +2951,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the containment reference list ' {@link org.eclipse.mylyn.builds.core.IChangeSet#getChanges
 	 * <em>Changes</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference list '<em>Changes</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IChangeSet#getChanges()
 	 * @see #getChangeSet()
@@ -2964,7 +2964,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IChangeSet#getKind <em>Kind</em>} '. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Kind</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IChangeSet#getKind()
 	 * @see #getChangeSet()
@@ -2977,7 +2977,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IChangeArtifact <em>Change Artifact</em>} '. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Change Artifact</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IChangeArtifact
 	 * @generated
@@ -2989,7 +2989,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IChangeArtifact#getFile <em>File</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>File</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IChangeArtifact#getFile()
 	 * @see #getChangeArtifact()
@@ -3002,7 +3002,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IChangeArtifact#getRelativePath <em>Relative
 	 * Path</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Relative Path</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IChangeArtifact#getRelativePath()
 	 * @see #getChangeArtifact()
@@ -3015,7 +3015,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IChangeArtifact#getPrevRevision <em>Prev
 	 * Revision</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Prev Revision</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IChangeArtifact#getPrevRevision()
 	 * @see #getChangeArtifact()
@@ -3028,7 +3028,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IChangeArtifact#getRevision <em>Revision</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Revision</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IChangeArtifact#getRevision()
 	 * @see #getChangeArtifact()
@@ -3041,7 +3041,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IChangeArtifact#isDead <em>Dead</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Dead</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IChangeArtifact#isDead()
 	 * @see #getChangeArtifact()
@@ -3054,7 +3054,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IChangeArtifact#getEditType <em>Edit Type</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Edit Type</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IChangeArtifact#getEditType()
 	 * @see #getChangeArtifact()
@@ -3067,7 +3067,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IChange <em>Change</em>}'. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Change</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IChange
 	 * @generated
@@ -3079,7 +3079,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the containment reference list ' {@link org.eclipse.mylyn.builds.core.IChange#getArtifacts
 	 * <em>Artifacts</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference list '<em>Artifacts</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IChange#getArtifacts()
 	 * @see #getChange()
@@ -3092,7 +3092,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the containment reference '{@link org.eclipse.mylyn.builds.core.IChange#getAuthor <em>Author</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference '<em>Author</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IChange#getAuthor()
 	 * @see #getChange()
@@ -3105,7 +3105,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IChange#getMessage <em>Message</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Message</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IChange#getMessage()
 	 * @see #getChange()
@@ -3118,7 +3118,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IChange#getDate <em>Date</em>}'. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Date</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IChange#getDate()
 	 * @see #getChange()
@@ -3131,7 +3131,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IChange#getRevision <em>Revision</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Revision</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IChange#getRevision()
 	 * @see #getChange()
@@ -3144,7 +3144,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IUser <em>User</em>}'. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>User</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IUser
 	 * @generated
@@ -3156,7 +3156,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IUser#getId <em>Id</em>}'. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Id</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IUser#getId()
 	 * @see #getUser()
@@ -3169,7 +3169,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IUser#getEmail <em>Email</em>}'. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Email</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IUser#getEmail()
 	 * @see #getUser()
@@ -3182,7 +3182,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IParameterDefinition <em>Parameter Definition</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Parameter Definition</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IParameterDefinition
 	 * @generated
@@ -3194,7 +3194,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.IParameterDefinition#getName <em>Name</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Name</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IParameterDefinition#getName()
 	 * @see #getParameterDefinition()
@@ -3207,7 +3207,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute ' {@link org.eclipse.mylyn.builds.core.IParameterDefinition#getDescription
 	 * <em>Description</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Description</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IParameterDefinition#getDescription()
 	 * @see #getParameterDefinition()
@@ -3221,7 +3221,7 @@ public class BuildPackage extends EPackageImpl {
 	 * Returns the meta object for the container reference '
 	 * {@link org.eclipse.mylyn.builds.core.IParameterDefinition#getContainingBuildPlan <em>Containing Build Plan</em>} '. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the container reference '<em>Containing Build Plan</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IParameterDefinition#getContainingBuildPlan()
 	 * @see #getParameterDefinition()
@@ -3234,7 +3234,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IChoiceParameterDefinition <em>Choice Parameter
 	 * Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Choice Parameter Definition</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IChoiceParameterDefinition
 	 * @generated
@@ -3246,7 +3246,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute list ' {@link org.eclipse.mylyn.builds.core.IChoiceParameterDefinition#getOptions
 	 * <em>Options</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute list '<em>Options</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IChoiceParameterDefinition#getOptions()
 	 * @see #getChoiceParameterDefinition()
@@ -3259,7 +3259,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute ' {@link org.eclipse.mylyn.builds.core.IChoiceParameterDefinition#getDefaultValue
 	 * <em>Default Value</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Default Value</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IChoiceParameterDefinition#getDefaultValue()
 	 * @see #getChoiceParameterDefinition()
@@ -3272,7 +3272,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBooleanParameterDefinition <em>Boolean Parameter
 	 * Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Boolean Parameter Definition</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBooleanParameterDefinition
 	 * @generated
@@ -3284,7 +3284,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute ' {@link org.eclipse.mylyn.builds.core.IBooleanParameterDefinition#isDefaultValue
 	 * <em>Default Value</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Default Value</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBooleanParameterDefinition#isDefaultValue()
 	 * @see #getBooleanParameterDefinition()
@@ -3297,7 +3297,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IFileParameterDefinition <em>File Parameter
 	 * Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>File Parameter Definition</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IFileParameterDefinition
 	 * @generated
@@ -3309,7 +3309,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IPlanParameterDefinition <em>Plan Parameter
 	 * Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Plan Parameter Definition</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IPlanParameterDefinition
 	 * @generated
@@ -3321,7 +3321,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IPasswordParameterDefinition <em>Password Parameter
 	 * Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Password Parameter Definition</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IPasswordParameterDefinition
 	 * @generated
@@ -3333,7 +3333,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute ' {@link org.eclipse.mylyn.builds.core.IPasswordParameterDefinition#getDefaultValue
 	 * <em>Default Value</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Default Value</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IPasswordParameterDefinition#getDefaultValue()
 	 * @see #getPasswordParameterDefinition()
@@ -3346,7 +3346,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IBuildParameterDefinition <em>Parameter Definition</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Parameter Definition</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildParameterDefinition
 	 * @generated
@@ -3358,7 +3358,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute ' {@link org.eclipse.mylyn.builds.core.IBuildParameterDefinition#getBuildPlanId <em>Build
 	 * Plan Id</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Build Plan Id</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildParameterDefinition#getBuildPlanId()
 	 * @see #getBuildParameterDefinition()
@@ -3371,7 +3371,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the reference ' {@link org.eclipse.mylyn.builds.core.IBuildParameterDefinition#getBuildPlan <em>Build
 	 * Plan</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the reference '<em>Build Plan</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IBuildParameterDefinition#getBuildPlan()
 	 * @see #getBuildParameterDefinition()
@@ -3384,7 +3384,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.IStringParameterDefinition <em>String Parameter
 	 * Definition</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>String Parameter Definition</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IStringParameterDefinition
 	 * @generated
@@ -3396,7 +3396,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute ' {@link org.eclipse.mylyn.builds.core.IStringParameterDefinition#getDefaultValue
 	 * <em>Default Value</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Default Value</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IStringParameterDefinition#getDefaultValue()
 	 * @see #getStringParameterDefinition()
@@ -3409,7 +3409,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.ITestResult <em>Test Result</em>}'. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Test Result</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestResult
 	 * @generated
@@ -3421,7 +3421,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the container reference '{@link org.eclipse.mylyn.builds.core.ITestResult#getBuild <em>Build</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the container reference '<em>Build</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestResult#getBuild()
 	 * @see #getTestResult()
@@ -3434,7 +3434,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestResult#getDuration <em>Duration</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Duration</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestResult#getDuration()
 	 * @see #getTestResult()
@@ -3447,7 +3447,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestResult#getFailCount <em>Fail Count</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Fail Count</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestResult#getFailCount()
 	 * @see #getTestResult()
@@ -3460,7 +3460,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestResult#getPassCount <em>Pass Count</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Pass Count</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestResult#getPassCount()
 	 * @see #getTestResult()
@@ -3473,7 +3473,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestResult#getIgnoredCount <em>Ignored Count</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Ignored Count</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestResult#getIgnoredCount()
 	 * @see #getTestResult()
@@ -3486,7 +3486,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestResult#getErrorCount <em>Error Count</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Error Count</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestResult#getErrorCount()
 	 * @see #getTestResult()
@@ -3499,7 +3499,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the containment reference list ' {@link org.eclipse.mylyn.builds.core.ITestResult#getSuites
 	 * <em>Suites</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference list '<em>Suites</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestResult#getSuites()
 	 * @see #getTestResult()
@@ -3512,7 +3512,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.ITestElement <em>Test Element</em>}'. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Test Element</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestElement
 	 * @generated
@@ -3524,7 +3524,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestElement#getLabel <em>Label</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Label</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestElement#getLabel()
 	 * @see #getTestElement()
@@ -3537,7 +3537,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestElement#getDuration <em>Duration</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Duration</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestElement#getDuration()
 	 * @see #getTestElement()
@@ -3550,7 +3550,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestElement#getErrorOutput <em>Error Output</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Error Output</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestElement#getErrorOutput()
 	 * @see #getTestElement()
@@ -3563,7 +3563,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestElement#getOutput <em>Output</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Output</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestElement#getOutput()
 	 * @see #getTestElement()
@@ -3576,7 +3576,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.ITestSuite <em>Test Suite</em>}'. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Test Suite</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestSuite
 	 * @generated
@@ -3588,7 +3588,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the containment reference list ' {@link org.eclipse.mylyn.builds.core.ITestSuite#getCases
 	 * <em>Cases</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference list '<em>Cases</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestSuite#getCases()
 	 * @see #getTestSuite()
@@ -3601,7 +3601,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the container reference '{@link org.eclipse.mylyn.builds.core.ITestSuite#getResult <em>Result</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the container reference '<em>Result</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestSuite#getResult()
 	 * @see #getTestSuite()
@@ -3614,7 +3614,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.builds.core.ITestCase <em>Test Case</em>}'. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Test Case</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestCase
 	 * @generated
@@ -3626,7 +3626,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestCase#getClassName <em>Class Name</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Class Name</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestCase#getClassName()
 	 * @see #getTestCase()
@@ -3639,7 +3639,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestCase#isSkipped <em>Skipped</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Skipped</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestCase#isSkipped()
 	 * @see #getTestCase()
@@ -3652,7 +3652,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the container reference '{@link org.eclipse.mylyn.builds.core.ITestCase#getSuite <em>Suite</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the container reference '<em>Suite</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestCase#getSuite()
 	 * @see #getTestCase()
@@ -3665,7 +3665,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestCase#getStatus <em>Status</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Status</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestCase#getStatus()
 	 * @see #getTestCase()
@@ -3678,7 +3678,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestCase#getMessage <em>Message</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Message</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestCase#getMessage()
 	 * @see #getTestCase()
@@ -3691,7 +3691,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.builds.core.ITestCase#getStackTrace <em>Stack Trace</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Stack Trace</em>'.
 	 * @see org.eclipse.mylyn.builds.core.ITestCase#getStackTrace()
 	 * @see #getTestCase()
@@ -3704,7 +3704,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for enum '{@link org.eclipse.mylyn.builds.core.TestCaseResult <em>Test Case Result</em>} '. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for enum '<em>Test Case Result</em>'.
 	 * @see org.eclipse.mylyn.builds.core.TestCaseResult
 	 * @generated
@@ -3716,7 +3716,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link java.util.Map.Entry <em>String To String Map</em>}'. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>String To String Map</em>'.
 	 * @see java.util.Map.Entry
 	 * @generated
@@ -3727,7 +3727,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * Returns the meta object for the attribute '{@link java.util.Map.Entry <em>Key</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Key</em>'.
 	 * @see java.util.Map.Entry
 	 * @see #getStringToStringMap()
@@ -3739,7 +3739,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * Returns the meta object for the attribute '{@link java.util.Map.Entry <em>Value</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Value</em>'.
 	 * @see java.util.Map.Entry
 	 * @see #getStringToStringMap()
@@ -3752,7 +3752,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for data type '{@link org.eclipse.mylyn.builds.core.IOperation <em>IOperation</em>}'. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for data type '<em>IOperation</em>'.
 	 * @see org.eclipse.mylyn.builds.core.IOperation
 	 * @generated
@@ -3764,7 +3764,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for data type '{@link org.eclipse.core.runtime.IStatus <em>IStatus</em>}'. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for data type '<em>IStatus</em>'.
 	 * @see org.eclipse.core.runtime.IStatus
 	 * @generated
@@ -3776,7 +3776,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for data type '{@link org.eclipse.mylyn.commons.repositories.RepositoryLocation <em>Repository
 	 * Location</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for data type '<em>Repository Location</em>'.
 	 * @see org.eclipse.mylyn.commons.repositories.RepositoryLocation
 	 * @generated
@@ -3788,7 +3788,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for data type '{@link org.eclipse.mylyn.builds.core.BuildState <em>State</em>}'. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for data type '<em>State</em>'.
 	 * @see org.eclipse.mylyn.builds.core.BuildState
 	 * @generated
@@ -3800,7 +3800,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for data type '{@link org.eclipse.mylyn.builds.core.BuildStatus <em>Status</em>}'. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for data type '<em>Status</em>'.
 	 * @see org.eclipse.mylyn.builds.core.BuildStatus
 	 * @generated
@@ -3812,7 +3812,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for data type '{@link org.eclipse.mylyn.builds.core.EditType <em>Edit Type</em>}'. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for data type '<em>Edit Type</em>'.
 	 * @see org.eclipse.mylyn.builds.core.EditType
 	 * @generated
@@ -3823,7 +3823,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * Returns the factory that creates the instances of the model. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the factory that creates the instances of the model.
 	 * @generated
 	 */
@@ -3833,7 +3833,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private boolean isCreated = false;
@@ -3841,7 +3841,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Creates the meta-model objects for the package. This method is guarded to have no affect on any invocation but its first. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public void createPackageContents() {
@@ -4014,7 +4014,7 @@ public class BuildPackage extends EPackageImpl {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private boolean isInitialized = false;
@@ -4022,7 +4022,7 @@ public class BuildPackage extends EPackageImpl {
 	/**
 	 * Complete the initialization of the package and its meta-model. This method is guarded to have no affect on any invocation but its
 	 * first. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public void initializePackageContents() {
@@ -4418,14 +4418,14 @@ public class BuildPackage extends EPackageImpl {
 	 * <li>and each data type</li>
 	 * </ul>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public interface Literals {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.BuildElement <em>Element</em>} ' class. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildElement
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildElement()
 		 * @generated
@@ -4434,14 +4434,14 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em><b>Url</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_ELEMENT__URL = eINSTANCE.getBuildElement_Url();
 
 		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_ELEMENT__NAME = eINSTANCE.getBuildElement_Name();
@@ -4449,28 +4449,28 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Operations</b></em>' attribute list feature. <!-- begin-user-doc --> <!-- end-user-doc
 		 * -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_ELEMENT__OPERATIONS = eINSTANCE.getBuildElement_Operations();
 
 		/**
 		 * The meta object literal for the '<em><b>Element Status</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_ELEMENT__ELEMENT_STATUS = eINSTANCE.getBuildElement_ElementStatus();
 
 		/**
 		 * The meta object literal for the '<em><b>Refresh Date</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_ELEMENT__REFRESH_DATE = eINSTANCE.getBuildElement_RefreshDate();
 
 		/**
 		 * The meta object literal for the '<em><b>Attributes</b></em>' map feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference BUILD_ELEMENT__ATTRIBUTES = eINSTANCE.getBuildElement_Attributes();
@@ -4478,7 +4478,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.Artifact <em>Artifact</em>}' class. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.Artifact
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getArtifact()
 		 * @generated
@@ -4487,7 +4487,7 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em><b>Relative Path</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute ARTIFACT__RELATIVE_PATH = eINSTANCE.getArtifact_RelativePath();
@@ -4495,7 +4495,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.Build <em>Build</em>}' class. <!-- begin-user-doc
 		 * --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.Build
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuild()
 		 * @generated
@@ -4504,49 +4504,49 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD__ID = eINSTANCE.getBuild_Id();
 
 		/**
 		 * The meta object literal for the '<em><b>Build Number</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD__BUILD_NUMBER = eINSTANCE.getBuild_BuildNumber();
 
 		/**
 		 * The meta object literal for the '<em><b>Timestamp</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD__TIMESTAMP = eINSTANCE.getBuild_Timestamp();
 
 		/**
 		 * The meta object literal for the '<em><b>Duration</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD__DURATION = eINSTANCE.getBuild_Duration();
 
 		/**
 		 * The meta object literal for the '<em><b>Display Name</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD__DISPLAY_NAME = eINSTANCE.getBuild_DisplayName();
 
 		/**
 		 * The meta object literal for the '<em><b>State</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD__STATE = eINSTANCE.getBuild_State();
 
 		/**
 		 * The meta object literal for the '<em><b>Status</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD__STATUS = eINSTANCE.getBuild_Status();
@@ -4554,7 +4554,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Artifacts</b></em>' containment reference list feature. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference BUILD__ARTIFACTS = eINSTANCE.getBuild_Artifacts();
@@ -4562,28 +4562,28 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Change Set</b></em>' containment reference feature. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference BUILD__CHANGE_SET = eINSTANCE.getBuild_ChangeSet();
 
 		/**
 		 * The meta object literal for the '<em><b>Plan</b></em>' reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference BUILD__PLAN = eINSTANCE.getBuild_Plan();
 
 		/**
 		 * The meta object literal for the '<em><b>Label</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD__LABEL = eINSTANCE.getBuild_Label();
 
 		/**
 		 * The meta object literal for the '<em><b>Server</b></em>' reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference BUILD__SERVER = eINSTANCE.getBuild_Server();
@@ -4591,7 +4591,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Test Result</b></em>' containment reference feature. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference BUILD__TEST_RESULT = eINSTANCE.getBuild_TestResult();
@@ -4599,14 +4599,14 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Culprits</b></em>' containment reference list feature. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference BUILD__CULPRITS = eINSTANCE.getBuild_Culprits();
 
 		/**
 		 * The meta object literal for the '<em><b>Summary</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD__SUMMARY = eINSTANCE.getBuild_Summary();
@@ -4614,7 +4614,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Cause</b></em>' containment reference list feature. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference BUILD__CAUSE = eINSTANCE.getBuild_Cause();
@@ -4622,7 +4622,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.BuildCause <em>Cause</em>}' class. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildCause
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildCause()
 		 * @generated
@@ -4631,7 +4631,7 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_CAUSE__DESCRIPTION = eINSTANCE.getBuildCause_Description();
@@ -4639,7 +4639,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Build</b></em>' containment reference feature. <!-- begin-user-doc --> <!-- end-user-doc
 		 * -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference BUILD_CAUSE__BUILD = eINSTANCE.getBuildCause_Build();
@@ -4647,7 +4647,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>User</b></em>' containment reference feature. <!-- begin-user-doc --> <!-- end-user-doc
 		 * -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference BUILD_CAUSE__USER = eINSTANCE.getBuildCause_User();
@@ -4655,7 +4655,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.BuildReference <em>Reference</em>}' class. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildReference
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildReference()
 		 * @generated
@@ -4664,14 +4664,14 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em><b>Plan</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_REFERENCE__PLAN = eINSTANCE.getBuildReference_Plan();
 
 		/**
 		 * The meta object literal for the '<em><b>Build</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_REFERENCE__BUILD = eINSTANCE.getBuildReference_Build();
@@ -4679,7 +4679,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.BuildPlan <em>Plan</em>}' class. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPlan
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildPlan()
 		 * @generated
@@ -4688,84 +4688,84 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em><b>Server</b></em>' reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference BUILD_PLAN__SERVER = eINSTANCE.getBuildPlan_Server();
 
 		/**
 		 * The meta object literal for the '<em><b>Children</b></em>' reference list feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference BUILD_PLAN__CHILDREN = eINSTANCE.getBuildPlan_Children();
 
 		/**
 		 * The meta object literal for the '<em><b>Parent</b></em>' reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference BUILD_PLAN__PARENT = eINSTANCE.getBuildPlan_Parent();
 
 		/**
 		 * The meta object literal for the '<em><b>Health</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_PLAN__HEALTH = eINSTANCE.getBuildPlan_Health();
 
 		/**
 		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_PLAN__ID = eINSTANCE.getBuildPlan_Id();
 
 		/**
 		 * The meta object literal for the '<em><b>Info</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_PLAN__INFO = eINSTANCE.getBuildPlan_Info();
 
 		/**
 		 * The meta object literal for the '<em><b>Selected</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_PLAN__SELECTED = eINSTANCE.getBuildPlan_Selected();
 
 		/**
 		 * The meta object literal for the '<em><b>Summary</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_PLAN__SUMMARY = eINSTANCE.getBuildPlan_Summary();
 
 		/**
 		 * The meta object literal for the '<em><b>State</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_PLAN__STATE = eINSTANCE.getBuildPlan_State();
 
 		/**
 		 * The meta object literal for the '<em><b>Status</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_PLAN__STATUS = eINSTANCE.getBuildPlan_Status();
 
 		/**
 		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_PLAN__DESCRIPTION = eINSTANCE.getBuildPlan_Description();
 
 		/**
 		 * The meta object literal for the '<em><b>Last Build</b></em>' reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference BUILD_PLAN__LAST_BUILD = eINSTANCE.getBuildPlan_LastBuild();
@@ -4773,7 +4773,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Parameter Definitions</b></em>' containment reference list feature. <!-- begin-user-doc
 		 * --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference BUILD_PLAN__PARAMETER_DEFINITIONS = eINSTANCE.getBuildPlan_ParameterDefinitions();
@@ -4781,14 +4781,14 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Health Reports</b></em>' containment reference list feature. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference BUILD_PLAN__HEALTH_REPORTS = eINSTANCE.getBuildPlan_HealthReports();
 
 		/**
 		 * The meta object literal for the '<em><b>Flags</b></em>' attribute list feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_PLAN__FLAGS = eINSTANCE.getBuildPlan_Flags();
@@ -4796,7 +4796,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.HealthReport <em>Health Report</em>}' class. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.HealthReport
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getHealthReport()
 		 * @generated
@@ -4805,14 +4805,14 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em><b>Health</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute HEALTH_REPORT__HEALTH = eINSTANCE.getHealthReport_Health();
 
 		/**
 		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute HEALTH_REPORT__DESCRIPTION = eINSTANCE.getHealthReport_Description();
@@ -4820,7 +4820,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.BuildServer <em>Server</em>}' class. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildServer
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildServer()
 		 * @generated
@@ -4829,21 +4829,21 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em><b>Location</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_SERVER__LOCATION = eINSTANCE.getBuildServer_Location();
 
 		/**
 		 * The meta object literal for the '<em><b>Connector Kind</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_SERVER__CONNECTOR_KIND = eINSTANCE.getBuildServer_ConnectorKind();
 
 		/**
 		 * The meta object literal for the '<em><b>Repository Url</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_SERVER__REPOSITORY_URL = eINSTANCE.getBuildServer_RepositoryUrl();
@@ -4851,7 +4851,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.BuildModel <em>Model</em>}' class. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildModel
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildModel()
 		 * @generated
@@ -4861,7 +4861,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Servers</b></em>' containment reference list feature. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference BUILD_MODEL__SERVERS = eINSTANCE.getBuildModel_Servers();
@@ -4869,7 +4869,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Plans</b></em>' containment reference list feature. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference BUILD_MODEL__PLANS = eINSTANCE.getBuildModel_Plans();
@@ -4877,7 +4877,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Builds</b></em>' containment reference list feature. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference BUILD_MODEL__BUILDS = eINSTANCE.getBuildModel_Builds();
@@ -4885,7 +4885,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.Change <em>Change</em>}' class. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.Change
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getChange()
 		 * @generated
@@ -4895,7 +4895,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Artifacts</b></em>' containment reference list feature. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference CHANGE__ARTIFACTS = eINSTANCE.getChange_Artifacts();
@@ -4903,28 +4903,28 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Author</b></em>' containment reference feature. <!-- begin-user-doc --> <!-- end-user-doc
 		 * -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference CHANGE__AUTHOR = eINSTANCE.getChange_Author();
 
 		/**
 		 * The meta object literal for the '<em><b>Message</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute CHANGE__MESSAGE = eINSTANCE.getChange_Message();
 
 		/**
 		 * The meta object literal for the '<em><b>Date</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute CHANGE__DATE = eINSTANCE.getChange_Date();
 
 		/**
 		 * The meta object literal for the '<em><b>Revision</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute CHANGE__REVISION = eINSTANCE.getChange_Revision();
@@ -4932,7 +4932,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.ChangeSet <em>Change Set</em>} ' class. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.ChangeSet
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getChangeSet()
 		 * @generated
@@ -4942,14 +4942,14 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Changes</b></em>' containment reference list feature. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference CHANGE_SET__CHANGES = eINSTANCE.getChangeSet_Changes();
 
 		/**
 		 * The meta object literal for the '<em><b>Kind</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute CHANGE_SET__KIND = eINSTANCE.getChangeSet_Kind();
@@ -4957,7 +4957,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.ChangeArtifact <em>Change Artifact</em>}' class.
 		 * <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.ChangeArtifact
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getChangeArtifact()
 		 * @generated
@@ -4966,42 +4966,42 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em><b>File</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute CHANGE_ARTIFACT__FILE = eINSTANCE.getChangeArtifact_File();
 
 		/**
 		 * The meta object literal for the '<em><b>Relative Path</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute CHANGE_ARTIFACT__RELATIVE_PATH = eINSTANCE.getChangeArtifact_RelativePath();
 
 		/**
 		 * The meta object literal for the '<em><b>Prev Revision</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute CHANGE_ARTIFACT__PREV_REVISION = eINSTANCE.getChangeArtifact_PrevRevision();
 
 		/**
 		 * The meta object literal for the '<em><b>Revision</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute CHANGE_ARTIFACT__REVISION = eINSTANCE.getChangeArtifact_Revision();
 
 		/**
 		 * The meta object literal for the '<em><b>Dead</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute CHANGE_ARTIFACT__DEAD = eINSTANCE.getChangeArtifact_Dead();
 
 		/**
 		 * The meta object literal for the '<em><b>Edit Type</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute CHANGE_ARTIFACT__EDIT_TYPE = eINSTANCE.getChangeArtifact_EditType();
@@ -5009,7 +5009,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.StringToStringMap <em>String To String Map</em>}'
 		 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.StringToStringMap
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getStringToStringMap()
 		 * @generated
@@ -5018,21 +5018,21 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute STRING_TO_STRING_MAP__KEY = eINSTANCE.getStringToStringMap_Key();
 
 		/**
 		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute STRING_TO_STRING_MAP__VALUE = eINSTANCE.getStringToStringMap_Value();
 
 		/**
 		 * The meta object literal for the '<em>IOperation</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.core.IOperation
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getIOperation()
 		 * @generated
@@ -5041,7 +5041,7 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em>IStatus</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.core.runtime.IStatus
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getIStatus()
 		 * @generated
@@ -5051,7 +5051,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.User <em>User</em>}' class. <!-- begin-user-doc
 		 * --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.User
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getUser()
 		 * @generated
@@ -5060,14 +5060,14 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute USER__ID = eINSTANCE.getUser_Id();
 
 		/**
 		 * The meta object literal for the '<em><b>Email</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute USER__EMAIL = eINSTANCE.getUser_Email();
@@ -5075,7 +5075,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.ParameterDefinition <em>Parameter
 		 * Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.ParameterDefinition
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getParameterDefinition()
 		 * @generated
@@ -5084,14 +5084,14 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute PARAMETER_DEFINITION__NAME = eINSTANCE.getParameterDefinition_Name();
 
 		/**
 		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute PARAMETER_DEFINITION__DESCRIPTION = eINSTANCE.getParameterDefinition_Description();
@@ -5099,7 +5099,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Containing Build Plan</b></em>' container reference feature. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference PARAMETER_DEFINITION__CONTAINING_BUILD_PLAN = eINSTANCE.getParameterDefinition_ContainingBuildPlan();
@@ -5107,7 +5107,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.ChoiceParameterDefinition <em>Choice Parameter
 		 * Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.ChoiceParameterDefinition
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getChoiceParameterDefinition()
 		 * @generated
@@ -5116,14 +5116,14 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em><b>Options</b></em>' attribute list feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute CHOICE_PARAMETER_DEFINITION__OPTIONS = eINSTANCE.getChoiceParameterDefinition_Options();
 
 		/**
 		 * The meta object literal for the '<em><b>Default Value</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute CHOICE_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE.getChoiceParameterDefinition_DefaultValue();
@@ -5131,7 +5131,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.BooleanParameterDefinition <em>Boolean Parameter
 		 * Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.BooleanParameterDefinition
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBooleanParameterDefinition()
 		 * @generated
@@ -5140,7 +5140,7 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em><b>Default Value</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BOOLEAN_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE.getBooleanParameterDefinition_DefaultValue();
@@ -5148,7 +5148,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.FileParameterDefinition <em>File Parameter
 		 * Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.FileParameterDefinition
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getFileParameterDefinition()
 		 * @generated
@@ -5158,7 +5158,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.PlanParameterDefinition <em>Plan Parameter
 		 * Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.PlanParameterDefinition
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getPlanParameterDefinition()
 		 * @generated
@@ -5168,7 +5168,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.PasswordParameterDefinition <em>Password Parameter
 		 * Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.PasswordParameterDefinition
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getPasswordParameterDefinition()
 		 * @generated
@@ -5177,7 +5177,7 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em><b>Default Value</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute PASSWORD_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE
@@ -5186,7 +5186,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.BuildParameterDefinition <em>Parameter
 		 * Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildParameterDefinition
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildParameterDefinition()
 		 * @generated
@@ -5195,14 +5195,14 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em><b>Build Plan Id</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute BUILD_PARAMETER_DEFINITION__BUILD_PLAN_ID = eINSTANCE.getBuildParameterDefinition_BuildPlanId();
 
 		/**
 		 * The meta object literal for the '<em><b>Build Plan</b></em>' reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference BUILD_PARAMETER_DEFINITION__BUILD_PLAN = eINSTANCE.getBuildParameterDefinition_BuildPlan();
@@ -5210,7 +5210,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.StringParameterDefinition <em>String Parameter
 		 * Definition</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.StringParameterDefinition
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getStringParameterDefinition()
 		 * @generated
@@ -5219,7 +5219,7 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em><b>Default Value</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute STRING_PARAMETER_DEFINITION__DEFAULT_VALUE = eINSTANCE.getStringParameterDefinition_DefaultValue();
@@ -5227,7 +5227,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.TestResult <em>Test Result</em>}' class. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.TestResult
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getTestResult()
 		 * @generated
@@ -5237,42 +5237,42 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Build</b></em>' container reference feature. <!-- begin-user-doc --> <!-- end-user-doc
 		 * -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference TEST_RESULT__BUILD = eINSTANCE.getTestResult_Build();
 
 		/**
 		 * The meta object literal for the '<em><b>Duration</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute TEST_RESULT__DURATION = eINSTANCE.getTestResult_Duration();
 
 		/**
 		 * The meta object literal for the '<em><b>Fail Count</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute TEST_RESULT__FAIL_COUNT = eINSTANCE.getTestResult_FailCount();
 
 		/**
 		 * The meta object literal for the '<em><b>Pass Count</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute TEST_RESULT__PASS_COUNT = eINSTANCE.getTestResult_PassCount();
 
 		/**
 		 * The meta object literal for the '<em><b>Ignored Count</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute TEST_RESULT__IGNORED_COUNT = eINSTANCE.getTestResult_IgnoredCount();
 
 		/**
 		 * The meta object literal for the '<em><b>Error Count</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute TEST_RESULT__ERROR_COUNT = eINSTANCE.getTestResult_ErrorCount();
@@ -5280,7 +5280,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Suites</b></em>' containment reference list feature. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference TEST_RESULT__SUITES = eINSTANCE.getTestResult_Suites();
@@ -5288,7 +5288,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.TestElement <em>Test Element</em>}' class. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.TestElement
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getTestElement()
 		 * @generated
@@ -5297,28 +5297,28 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em><b>Label</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute TEST_ELEMENT__LABEL = eINSTANCE.getTestElement_Label();
 
 		/**
 		 * The meta object literal for the '<em><b>Duration</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute TEST_ELEMENT__DURATION = eINSTANCE.getTestElement_Duration();
 
 		/**
 		 * The meta object literal for the '<em><b>Error Output</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute TEST_ELEMENT__ERROR_OUTPUT = eINSTANCE.getTestElement_ErrorOutput();
 
 		/**
 		 * The meta object literal for the '<em><b>Output</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute TEST_ELEMENT__OUTPUT = eINSTANCE.getTestElement_Output();
@@ -5326,7 +5326,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.TestSuite <em>Test Suite</em>} ' class. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.TestSuite
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getTestSuite()
 		 * @generated
@@ -5336,7 +5336,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Cases</b></em>' containment reference list feature. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference TEST_SUITE__CASES = eINSTANCE.getTestSuite_Cases();
@@ -5344,7 +5344,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Result</b></em>' container reference feature. <!-- begin-user-doc --> <!-- end-user-doc
 		 * -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference TEST_SUITE__RESULT = eINSTANCE.getTestSuite_Result();
@@ -5352,7 +5352,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.internal.core.TestCase <em>Test Case</em>}' class. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.internal.core.TestCase
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getTestCase()
 		 * @generated
@@ -5361,14 +5361,14 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em><b>Class Name</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute TEST_CASE__CLASS_NAME = eINSTANCE.getTestCase_ClassName();
 
 		/**
 		 * The meta object literal for the '<em><b>Skipped</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute TEST_CASE__SKIPPED = eINSTANCE.getTestCase_Skipped();
@@ -5376,28 +5376,28 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Suite</b></em>' container reference feature. <!-- begin-user-doc --> <!-- end-user-doc
 		 * -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EReference TEST_CASE__SUITE = eINSTANCE.getTestCase_Suite();
 
 		/**
 		 * The meta object literal for the '<em><b>Status</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute TEST_CASE__STATUS = eINSTANCE.getTestCase_Status();
 
 		/**
 		 * The meta object literal for the '<em><b>Message</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute TEST_CASE__MESSAGE = eINSTANCE.getTestCase_Message();
 
 		/**
 		 * The meta object literal for the '<em><b>Stack Trace</b></em>' attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		EAttribute TEST_CASE__STACK_TRACE = eINSTANCE.getTestCase_StackTrace();
@@ -5405,7 +5405,7 @@ public class BuildPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.builds.core.TestCaseResult <em>Test Case Result</em>}' enum. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.core.TestCaseResult
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getTestCaseResult()
 		 * @generated
@@ -5414,7 +5414,7 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em>Repository Location</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.commons.repositories.RepositoryLocation
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getRepositoryLocation()
 		 * @generated
@@ -5423,7 +5423,7 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em>State</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.core.BuildState
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildState()
 		 * @generated
@@ -5432,7 +5432,7 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em>Status</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.core.BuildStatus
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getBuildStatus()
 		 * @generated
@@ -5441,7 +5441,7 @@ public class BuildPackage extends EPackageImpl {
 
 		/**
 		 * The meta object literal for the '<em>Edit Type</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @see org.eclipse.mylyn.builds.core.EditType
 		 * @see org.eclipse.mylyn.builds.internal.core.BuildPackage#getEditType()
 		 * @generated

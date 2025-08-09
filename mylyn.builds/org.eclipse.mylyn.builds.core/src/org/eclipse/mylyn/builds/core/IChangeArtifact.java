@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2010, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -24,7 +24,7 @@ package org.eclipse.mylyn.builds.core;
  * <li>{@link org.eclipse.mylyn.builds.core.IChangeArtifact#getEditType <em>Edit Type</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface IChangeArtifact {
@@ -34,7 +34,7 @@ public interface IChangeArtifact {
 	 * If the meaning of the '<em>File</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>File</em>' attribute.
 	 * @see #setFile(String)
 	 * @generated
@@ -44,7 +44,7 @@ public interface IChangeArtifact {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChangeArtifact#getFile <em>File</em>}' attribute. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>File</em>' attribute.
 	 * @see #getFile()
@@ -58,7 +58,7 @@ public interface IChangeArtifact {
 	 * If the meaning of the '<em>Relative Path</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Relative Path</em>' attribute.
 	 * @see #setRelativePath(String)
 	 * @generated
@@ -68,7 +68,7 @@ public interface IChangeArtifact {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChangeArtifact#getRelativePath <em>Relative Path</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Relative Path</em>' attribute.
 	 * @see #getRelativePath()
@@ -82,7 +82,7 @@ public interface IChangeArtifact {
 	 * If the meaning of the '<em>Prev Revision</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Prev Revision</em>' attribute.
 	 * @see #setPrevRevision(String)
 	 * @generated
@@ -92,7 +92,7 @@ public interface IChangeArtifact {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChangeArtifact#getPrevRevision <em>Prev Revision</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Prev Revision</em>' attribute.
 	 * @see #getPrevRevision()
@@ -106,7 +106,7 @@ public interface IChangeArtifact {
 	 * If the meaning of the '<em>Revision</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Revision</em>' attribute.
 	 * @see #setRevision(String)
 	 * @generated
@@ -116,7 +116,7 @@ public interface IChangeArtifact {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChangeArtifact#getRevision <em>Revision</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Revision</em>' attribute.
 	 * @see #getRevision()
@@ -130,7 +130,7 @@ public interface IChangeArtifact {
 	 * If the meaning of the '<em>Dead</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Dead</em>' attribute.
 	 * @see #setDead(boolean)
 	 * @generated
@@ -140,7 +140,7 @@ public interface IChangeArtifact {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChangeArtifact#isDead <em>Dead</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Dead</em>' attribute.
 	 * @see #isDead()
@@ -154,7 +154,7 @@ public interface IChangeArtifact {
 	 * If the meaning of the '<em>Edit Type</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Edit Type</em>' attribute.
 	 * @see #setEditType(EditType)
 	 * @generated
@@ -164,7 +164,7 @@ public interface IChangeArtifact {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.IChangeArtifact#getEditType <em>Edit Type</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Edit Type</em>' attribute.
 	 * @see #getEditType()

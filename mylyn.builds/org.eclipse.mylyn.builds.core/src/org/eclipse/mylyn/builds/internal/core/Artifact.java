@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -25,13 +25,13 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.Artifact#getRelativePath <em>Relative Path</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class Artifact extends BuildElement implements IArtifact {
 	/**
 	 * The default value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getRelativePath()
 	 * @generated
 	 * @ordered
@@ -40,7 +40,7 @@ public class Artifact extends BuildElement implements IArtifact {
 
 	/**
 	 * The cached value of the '{@link #getRelativePath() <em>Relative Path</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getRelativePath()
 	 * @generated
 	 * @ordered
@@ -49,7 +49,7 @@ public class Artifact extends BuildElement implements IArtifact {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected Artifact() {
@@ -57,7 +57,7 @@ public class Artifact extends BuildElement implements IArtifact {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -71,7 +71,7 @@ public class Artifact extends BuildElement implements IArtifact {
 	 * If the meaning of the '<em>Relative Path</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -81,7 +81,7 @@ public class Artifact extends BuildElement implements IArtifact {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -96,7 +96,7 @@ public class Artifact extends BuildElement implements IArtifact {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -110,7 +110,7 @@ public class Artifact extends BuildElement implements IArtifact {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -125,7 +125,7 @@ public class Artifact extends BuildElement implements IArtifact {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -140,7 +140,7 @@ public class Artifact extends BuildElement implements IArtifact {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -156,7 +156,7 @@ public class Artifact extends BuildElement implements IArtifact {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

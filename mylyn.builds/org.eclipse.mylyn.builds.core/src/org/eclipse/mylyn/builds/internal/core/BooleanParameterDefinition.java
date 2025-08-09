@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -24,13 +24,13 @@ import org.eclipse.mylyn.builds.core.IBooleanParameterDefinition;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BooleanParameterDefinition#isDefaultValue <em>Default Value</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class BooleanParameterDefinition extends ParameterDefinition implements IBooleanParameterDefinition {
 	/**
 	 * The default value of the '{@link #isDefaultValue() <em>Default Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #isDefaultValue()
 	 * @generated
 	 * @ordered
@@ -39,7 +39,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 
 	/**
 	 * The cached value of the '{@link #isDefaultValue() <em>Default Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #isDefaultValue()
 	 * @generated
 	 * @ordered
@@ -48,7 +48,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected BooleanParameterDefinition() {
@@ -56,7 +56,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -70,7 +70,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 	 * If the meaning of the '<em>Default Value</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -80,7 +80,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -95,7 +95,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -109,7 +109,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -124,7 +124,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -139,7 +139,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -153,7 +153,7 @@ public class BooleanParameterDefinition extends ParameterDefinition implements I
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

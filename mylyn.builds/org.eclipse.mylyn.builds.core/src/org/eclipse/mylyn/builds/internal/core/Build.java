@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -57,13 +57,13 @@ import org.eclipse.mylyn.builds.core.IUser;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.Build#getCause <em>Cause</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class Build extends BuildElement implements IBuild {
 	/**
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -72,7 +72,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -81,7 +81,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * The default value of the '{@link #getBuildNumber() <em>Build Number</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getBuildNumber()
 	 * @generated
 	 * @ordered
@@ -90,7 +90,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * The cached value of the '{@link #getBuildNumber() <em>Build Number</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getBuildNumber()
 	 * @generated
 	 * @ordered
@@ -99,7 +99,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * The default value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getTimestamp()
 	 * @generated
 	 * @ordered
@@ -108,7 +108,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * The cached value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getTimestamp()
 	 * @generated
 	 * @ordered
@@ -117,7 +117,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * The default value of the '{@link #getDuration() <em>Duration</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDuration()
 	 * @generated
 	 * @ordered
@@ -126,7 +126,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * The cached value of the '{@link #getDuration() <em>Duration</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDuration()
 	 * @generated
 	 * @ordered
@@ -135,7 +135,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * The default value of the '{@link #getDisplayName() <em>Display Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDisplayName()
 	 * @generated
 	 * @ordered
@@ -144,7 +144,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * The cached value of the '{@link #getDisplayName() <em>Display Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDisplayName()
 	 * @generated
 	 * @ordered
@@ -153,7 +153,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * The default value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getState()
 	 * @generated
 	 * @ordered
@@ -162,7 +162,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * The cached value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getState()
 	 * @generated
 	 * @ordered
@@ -171,7 +171,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * The default value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getStatus()
 	 * @generated
 	 * @ordered
@@ -180,7 +180,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getStatus()
 	 * @generated
 	 * @ordered
@@ -190,7 +190,7 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' containment reference list. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getArtifacts()
 	 * @generated
 	 * @ordered
@@ -200,7 +200,7 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * The cached value of the '{@link #getChangeSet() <em>Change Set</em>}' containment reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getChangeSet()
 	 * @generated
 	 * @ordered
@@ -209,7 +209,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * The cached value of the '{@link #getPlan() <em>Plan</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getPlan()
 	 * @generated
 	 * @ordered
@@ -218,7 +218,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * The default value of the '{@link #getLabel() <em>Label</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getLabel()
 	 * @generated
 	 * @ordered
@@ -227,7 +227,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * The cached value of the '{@link #getLabel() <em>Label</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getLabel()
 	 * @generated
 	 * @ordered
@@ -236,7 +236,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * The cached value of the '{@link #getServer() <em>Server</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getServer()
 	 * @generated
 	 * @ordered
@@ -246,7 +246,7 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * The cached value of the '{@link #getTestResult() <em>Test Result</em>}' containment reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getTestResult()
 	 * @generated
 	 * @ordered
@@ -256,7 +256,7 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * The cached value of the '{@link #getCulprits() <em>Culprits</em>}' containment reference list. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getCulprits()
 	 * @generated
 	 * @ordered
@@ -265,7 +265,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * The default value of the '{@link #getSummary() <em>Summary</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getSummary()
 	 * @generated
 	 * @ordered
@@ -274,7 +274,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * The cached value of the '{@link #getSummary() <em>Summary</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getSummary()
 	 * @generated
 	 * @ordered
@@ -284,7 +284,7 @@ public class Build extends BuildElement implements IBuild {
 	/**
 	 * The cached value of the '{@link #getCause() <em>Cause</em>}' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @see #getCause()
 	 * @generated
 	 * @ordered
@@ -293,7 +293,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected Build() {
@@ -301,7 +301,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -315,7 +315,7 @@ public class Build extends BuildElement implements IBuild {
 	 * If the meaning of the '<em>Id</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -325,7 +325,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -343,7 +343,7 @@ public class Build extends BuildElement implements IBuild {
 	 * If the meaning of the '<em>Build Number</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -353,7 +353,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -372,7 +372,7 @@ public class Build extends BuildElement implements IBuild {
 	 * If the meaning of the '<em>Timestamp</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -382,7 +382,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -401,7 +401,7 @@ public class Build extends BuildElement implements IBuild {
 	 * If the meaning of the '<em>Duration</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -411,7 +411,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -429,7 +429,7 @@ public class Build extends BuildElement implements IBuild {
 	 * If the meaning of the '<em>Display Name</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -439,7 +439,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -458,7 +458,7 @@ public class Build extends BuildElement implements IBuild {
 	 * If the meaning of the '<em>State</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -468,7 +468,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -486,7 +486,7 @@ public class Build extends BuildElement implements IBuild {
 	 * If the meaning of the '<em>Status</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -496,7 +496,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -514,7 +514,7 @@ public class Build extends BuildElement implements IBuild {
 	 * If the meaning of the '<em>Artifacts</em>' reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -531,7 +531,7 @@ public class Build extends BuildElement implements IBuild {
 	 * If the meaning of the '<em>Change Set</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -541,7 +541,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public NotificationChain basicSetChangeSet(IChangeSet newChangeSet, NotificationChain msgs) {
@@ -561,7 +561,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -592,7 +592,7 @@ public class Build extends BuildElement implements IBuild {
 	 * If the meaning of the '<em>Plan</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -611,7 +611,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IBuildPlan basicGetPlan() {
@@ -620,7 +620,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -638,7 +638,7 @@ public class Build extends BuildElement implements IBuild {
 	 * If the meaning of the '<em>Label</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -648,7 +648,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -666,7 +666,7 @@ public class Build extends BuildElement implements IBuild {
 	 * If the meaning of the '<em>Server</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -686,7 +686,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IBuildServer basicGetServer() {
@@ -695,7 +695,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -709,7 +709,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -719,7 +719,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public NotificationChain basicSetTestResult(ITestResult newTestResult, NotificationChain msgs) {
@@ -739,7 +739,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -766,7 +766,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -779,7 +779,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -789,7 +789,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -803,7 +803,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -816,7 +816,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -834,7 +834,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -856,7 +856,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -906,7 +906,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -970,7 +970,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -1030,7 +1030,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -1074,7 +1074,7 @@ public class Build extends BuildElement implements IBuild {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

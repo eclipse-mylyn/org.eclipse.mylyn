@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2010, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -22,7 +22,7 @@ package org.eclipse.mylyn.builds.core;
  * <li>{@link org.eclipse.mylyn.builds.core.ITestElement#getOutput <em>Output</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface ITestElement {
@@ -32,7 +32,7 @@ public interface ITestElement {
 	 * If the meaning of the '<em>Label</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Label</em>' attribute.
 	 * @see #setLabel(String)
 	 * @generated
@@ -42,7 +42,7 @@ public interface ITestElement {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestElement#getLabel <em>Label</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Label</em>' attribute.
 	 * @see #getLabel()
@@ -56,7 +56,7 @@ public interface ITestElement {
 	 * If the meaning of the '<em>Duration</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Duration</em>' attribute.
 	 * @see #setDuration(long)
 	 * @generated
@@ -66,7 +66,7 @@ public interface ITestElement {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestElement#getDuration <em>Duration</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Duration</em>' attribute.
 	 * @see #getDuration()
@@ -80,7 +80,7 @@ public interface ITestElement {
 	 * If the meaning of the '<em>Error Output</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Error Output</em>' attribute.
 	 * @see #setErrorOutput(String)
 	 * @generated
@@ -90,7 +90,7 @@ public interface ITestElement {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestElement#getErrorOutput <em>Error Output</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Error Output</em>' attribute.
 	 * @see #getErrorOutput()
@@ -104,7 +104,7 @@ public interface ITestElement {
 	 * If the meaning of the '<em>Output</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Output</em>' attribute.
 	 * @see #setOutput(String)
 	 * @generated
@@ -114,7 +114,7 @@ public interface ITestElement {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.core.ITestElement#getOutput <em>Output</em>}' attribute. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Output</em>' attribute.
 	 * @see #getOutput()

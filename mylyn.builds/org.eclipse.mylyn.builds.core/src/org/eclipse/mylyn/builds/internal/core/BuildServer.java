@@ -39,13 +39,13 @@ import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildServer#getRepositoryUrl <em>Repository Url</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class BuildServer extends BuildElement implements IBuildServer {
 	/**
 	 * The default value of the '{@link #getLocation() <em>Location</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getLocation()
 	 * @generated
 	 * @ordered
@@ -54,7 +54,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 
 	/**
 	 * The cached value of the '{@link #getLocation() <em>Location</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getLocation()
 	 * @generated
 	 * @ordered
@@ -64,7 +64,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	/**
 	 * The default value of the '{@link #getConnectorKind() <em>Connector Kind</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @see #getConnectorKind()
 	 * @generated
 	 * @ordered
@@ -74,7 +74,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	/**
 	 * The cached value of the '{@link #getConnectorKind() <em>Connector Kind</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @see #getConnectorKind()
 	 * @generated
 	 * @ordered
@@ -84,7 +84,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	/**
 	 * The default value of the '{@link #getRepositoryUrl() <em>Repository Url</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @see #getRepositoryUrl()
 	 * @generated
 	 * @ordered
@@ -94,7 +94,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	/**
 	 * The cached value of the '{@link #getRepositoryUrl() <em>Repository Url</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @see #getRepositoryUrl()
 	 * @generated
 	 * @ordered
@@ -109,7 +109,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -123,7 +123,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	 * If the meaning of the '<em>Location</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -134,7 +134,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.builds.internal.core.BuildServer#getLocation <em>Location</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Location</em>' attribute.
 	 * @see #getLocation()
@@ -161,7 +161,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	 * If the meaning of the '<em>Connector Kind</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -171,7 +171,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -190,7 +190,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 	 * If the meaning of the '<em>Repository Url</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -200,7 +200,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -215,7 +215,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -233,7 +233,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -254,7 +254,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -275,7 +275,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -297,7 +297,7 @@ public class BuildServer extends BuildElement implements IBuildServer {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -379,7 +379,6 @@ public class BuildServer extends BuildElement implements IBuildServer {
 		if (original == null) {
 			throw new IllegalStateException();
 		}
-		@SuppressWarnings("serial")
 		EcoreUtil.Copier copier = new EcoreUtil.Copier() {
 			@Override
 			protected EObject createCopy(EObject source) {
