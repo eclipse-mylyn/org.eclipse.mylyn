@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2000, 2011 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
@@ -39,7 +39,7 @@ public abstract class ProgressMonitorInputStream extends FilterInputStream {
 
 	/**
 	 * Creates a progress monitoring input stream.
-	 * 
+	 *
 	 * @param in
 	 *            the underlying input stream
 	 * @param bytesTotal
@@ -61,7 +61,7 @@ public abstract class ProgressMonitorInputStream extends FilterInputStream {
 
 	/**
 	 * Wraps the underlying stream's method. Updates the progress monitor to the final number of bytes read.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if an i/o error occurs
 	 */
@@ -76,7 +76,7 @@ public abstract class ProgressMonitorInputStream extends FilterInputStream {
 
 	/**
 	 * Wraps the underlying stream's method. Updates the progress monitor if the next update increment has been reached.
-	 * 
+	 *
 	 * @throws InterruptedIOException
 	 *             if the operation was interrupted before all of the bytes specified have been skipped, bytesTransferred will be zero
 	 * @throws IOException
@@ -94,7 +94,7 @@ public abstract class ProgressMonitorInputStream extends FilterInputStream {
 
 	/**
 	 * Wraps the underlying stream's method. Updates the progress monitor if the next update increment has been reached.
-	 * 
+	 *
 	 * @throws InterruptedIOException
 	 *             if the operation was interrupted before all of the bytes specified have been skipped, bytesTransferred may be non-zero
 	 * @throws IOException
@@ -118,7 +118,7 @@ public abstract class ProgressMonitorInputStream extends FilterInputStream {
 
 	/**
 	 * Wraps the underlying stream's method. Updates the progress monitor if the next update increment has been reached.
-	 * 
+	 *
 	 * @throws InterruptedIOException
 	 *             if the operation was interrupted before all of the bytes specified have been skipped, bytesTransferred may be non-zero
 	 * @throws IOException

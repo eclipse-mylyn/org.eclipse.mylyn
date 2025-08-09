@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2008 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -17,7 +17,7 @@ import javax.net.ssl.X509TrustManager;
 
 /**
  * TrustAll class implements X509TrustManager to access all https servers with signed and unsigned certificates.
- * 
+ *
  * @author Mik Kersten
  * @since 2.0
  */
