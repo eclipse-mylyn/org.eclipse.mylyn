@@ -69,6 +69,8 @@
     publish:
       - published_port: "80"
         target_port: "80"
+      - published_port: "8080"
+        target_port: "80"
       - published_port: "443"
         target_port: "443"
     networks:

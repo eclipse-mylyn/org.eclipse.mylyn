@@ -1,0 +1,86 @@
+- name: Recursively remove directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  become: true 
+  loop:
+    - /mylyn-config-dir/{{ role_name }}
+    - /mylyn-runtime-dir/{{ role_name }}
+
+- name: Creates directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+  loop:
+    - /mylyn-config-dir/{{ role_name }}
+    - /mylyn-runtime-dir/{{ role_name }}
+
+- name: "Copy latest file(s)"
+  synchronize:
+    delete: yes
+    src: files/
+    dest: /mylyn-config-dir/{{ role_name }}/
+    recursive: yes
+
+- name: setlabels 
+  ansible.builtin.set_fact:
+    label_data: 
+       { traefik.enable: "true",
+         traefik.docker.network: "mylyn_net",
+         traefik.http.routers.prometheus_https.rule: "Host(`{{ common_domain_name }}`)  && PathPrefix(`/prometheus`)",
+         traefik.http.routers.prometheus_https.entrypoints: "websecure", 
+         traefik.http.routers.prometheus_https.tls: "true",
+         traefik.http.routers.prometheus_https.service: "prometheus",
+         traefik.http.services.prometheus.loadbalancer.server.port: "9090",
+       }
+# traefik.http.routers.prometheus_https.middlewares: "stripprefix_prometheus",
+# traefik.http.middlewares.stripprefix_prometheus.stripprefix.prefixes: "/prometheus",
+# traefik.http.services.prometheus.loadbalancer.passhostheader: "true"
+
+
+- name: delete data-volume
+  community.docker.docker_volume:
+    name: "prometheus-data-volume"
+    state: absent
+
+- name: create data-volume
+  community.docker.docker_volume:
+    name: "prometheus-data-volume"
+    state: present
+
+
+
+- name: Pull image
+  community.docker.docker_image:
+    name: "prom/prometheus:v3.5.0"
+    source: pull
+
+- name: Deploy Container
+  community.docker.docker_container:
+    name: "prometheus"
+    image: "prom/prometheus:v3.5.0"
+    networks:
+      - name: mylyn_net
+    restart: true
+    ports:
+      - "9090:9090"
+    restart_policy: "unless-stopped"
+    mounts:
+      - source: "prometheus-data-volume"
+        target: "/prometheus"
+        type: volume
+
+    volumes:
+      - /mylyn-config-dir/{{ role_name }}/prometheus.yml:/etc/prometheus/prometheus.yml
+#    labels: "{{ label_data | from_yaml }}"
+#    command:
+#      - '--web.external-url=/prometheus/'
+#      - '--web.route-prefix=/prometheus/'
+#      - '--config.file=/etc/prometheus/prometheus.yml'
+#      - '--storage.tsdb.path=/prometheus'
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'

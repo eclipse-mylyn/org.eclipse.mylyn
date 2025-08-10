@@ -99,6 +99,23 @@
     - role: mylyn_idx
       vars:
         common_domain_name: "{{ hostvars['localhost'].mylyn_service_domain }}"
+
+    - role: node-exporter
+      tags:
+        - node-exporter
+      vars:
+        common_domain_name: "{{ hostvars['localhost'].mylyn_service_domain }}"
+    - role: prometheus
+      tags:
+        - prometheus
+      vars:
+        common_domain_name: "{{ hostvars['localhost'].mylyn_service_domain }}"
+    - role: grafana
+      tags:
+        - grafana
+      vars:
+        common_domain_name: "{{ hostvars['localhost'].mylyn_service_domain }}"
+
     - role: artifactory
       tags:
         - artifactory
@@ -109,7 +126,7 @@
         - gitlab
       vars:
         common_domain_name: "{{ hostvars['localhost'].mylyn_service_domain }}"
-        gitlabImageVersion: "17.7.0"
+        gitlabImageVersion: "18.1.2-ce.0"
         gitlabHostURL: "gitlab.{{ hostvars['localhost'].mylyn_service_domain }}"
     - role: jenkins
       tags:
@@ -131,3 +148,8 @@
           - { git_branch: "release-5.2-stable", servmame: "bugzilla-5_2", port1: 8094, port2: 8494, image_tag: "5.2", extra_info: '' }
           - { git_branch: "release-5.2-stable", servmame: "bugzilla-5_2-rest", port1: 8095, port2: 8495, image_tag: "5.2-rest", extra_info: '"rest_enabled":"true", "default": "true", "testdataVersion": "Version1"' }
           - { git_branch: "release-5.2-stable", servmame: "bugzilla-5_2-rest-api", port1: 8096, port2: 8496, image_tag: "5.2-rest-api", extra_info: '"rest_enabled": "true", "api_key_enabled": "true", "testdataVersion": "Version1"' }
+#    - role: cadvisor
+#      tags:
+#        - cadvisor
+#      vars:
+#        common_domain_name: "{{ hostvars['localhost'].mylyn_service_domain }}"

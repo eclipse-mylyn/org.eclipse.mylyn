@@ -76,6 +76,7 @@
     image: traefik:latest
     ports:       
       - "80:80"
+      - "8080:8080"
       - "443:443"
     networks:
       - name: mylyn_net
