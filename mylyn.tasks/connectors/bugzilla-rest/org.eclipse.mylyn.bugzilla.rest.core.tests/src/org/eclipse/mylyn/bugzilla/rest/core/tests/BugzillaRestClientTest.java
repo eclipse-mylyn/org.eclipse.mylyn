@@ -312,22 +312,22 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		assertTrue(taskDataHandler.initializeTaskData(repository, taskData, null, null));
 		assertEquals(
 				IOUtils.toString(CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/taskData.txt"),
-						Charset.defaultCharset()),
-				taskData.getRoot().toString());
+						Charset.defaultCharset()).replace("\r\n", "\n"),
+				taskData.getRoot().toString().replace("\r\n", "\n"));
 		taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");
 		assertTrue(taskDataHandler.initializeTaskData(repository, taskData, taskMappingInit, null));
 		assertEquals(
 				IOUtils.toString(
 						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/taskData1.txt"),
-						Charset.defaultCharset()),
-				taskData.getRoot().toString());
+						Charset.defaultCharset()).replace("\r\n", "\n"),
+				taskData.getRoot().toString().replace("\r\n", "\n"));
 		taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");
 		assertTrue(taskDataHandler.initializeTaskData(repository, taskData, taskMappingSelect, null));
 		assertEquals(
 				IOUtils.toString(
 						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/taskData2.txt"),
-						Charset.defaultCharset()),
-				taskData.getRoot().toString());
+						Charset.defaultCharset()).replace("\r\n", "\n"),
+				taskData.getRoot().toString().replace("\r\n", "\n"));
 	}
 
 	@Test
@@ -599,12 +599,13 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		taskDataGet.getRoot().removeAttribute("task.common.operation-duplicate");
 		taskDataGet.getRoot().removeAttribute(BugzillaRestTaskSchema.getDefault().DUPE_OF.getKey());
 
-		assertEquals(taskData.getRoot().toString(), taskDataGet.getRoot().toString());
+		assertEquals(taskData.getRoot().toString().replace("\r\n", "\n"),
+				taskDataGet.getRoot().toString().replace("\r\n", "\n"));
 		assertEquals(
 				IOUtils.toString(
 						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/taskDataFlags.txt"),
-						Charset.defaultCharset()),
-				flags.toString());
+						Charset.defaultCharset()).replace("\r\n", "\n"),
+				flags.toString().replace("\r\n", "\n"));
 	}
 
 	@Test

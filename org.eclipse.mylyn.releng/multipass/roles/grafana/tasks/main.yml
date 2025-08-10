@@ -1,0 +1,81 @@
+- name: Recursively remove directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  become: true 
+  loop:
+    - /mylyn-config-dir/{{ role_name }}
+    - /mylyn-runtime-dir/{{ role_name }}
+
+- name: Creates directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+  loop:
+    - /mylyn-config-dir/{{ role_name }}
+    - /mylyn-runtime-dir/{{ role_name }}
+
+- name: "Copy latest file(s)"
+  synchronize:
+    delete: yes
+    src: files/
+    dest: /mylyn-config-dir/{{ role_name }}/
+    recursive: yes
+
+- name: setlabels 
+  ansible.builtin.set_fact:
+    label_data: 
+       { traefik.enable: "true",
+         traefik.docker.network: "mylyn_net",
+         traefik.http.routers.grafana_https.rule: "Host(`{{ common_domain_name }}`)  && PathPrefix(`/grafana`)",
+         traefik.http.routers.grafana_https.entrypoints: "websecure", 
+         traefik.http.routers.grafana_https.tls: "true",
+         traefik.http.routers.grafana_https.service: "grafana",
+         traefik.http.services.grafana.loadbalancer.server.port: "3000",
+       }
+#         traefik.http.routers.grafana_https.middlewares: "stripprefix_grafana",
+#         traefik.http.middlewares.stripprefix_grafana.stripprefix.prefixes: "/grafana",
+# traefik.http.services.prometheus.loadbalancer.passhostheader: "true"
+
+- name: Pull image
+  community.docker.docker_image:
+    name: "grafana/grafana:12.2.0-16636675413-ubuntu"
+    source: pull
+
+- name: Build the base image
+  community.docker.docker_image:
+    name: "127.0.0.1:5000/grafana"
+    tag: latest
+    push: true
+    build:
+      path: /mylyn-config-dir/{{ role_name }}
+    source: build
+
+
+- name: Deploy Container
+  community.docker.docker_container:
+    name: "grafana"
+    image: "127.0.0.1:5000/grafana:latest"
+    networks:
+      - name: mylyn_net
+    restart: true
+    user: "1000"
+    env:
+      GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana
+      GF_SERVER_DOMAIN="{{ common_domain_name }}"
+      GF_SERVER_SERVE_FROM_SUB_PATH=true
+      GF_PATHS_CONFIG=/usr/share/grafana/conf/mylyn/custom.ini
+#      GF_SECURITY_ADMIN_USER=“mylyn”
+#      GF_SECURITY_ADMIN_PASSWORD=“mylyntest”
+    ports:
+      - "3000:3000"
+    restart_policy: "unless-stopped"
+    volumes:
+      - /mylyn-config-dir/{{ role_name }}:/usr/share/grafana/conf/mylyn
+      - /mylyn-runtime-dir/{{ role_name }}:/var/lib/grafana
+    labels: "{{ label_data | from_yaml }}"
+
+
