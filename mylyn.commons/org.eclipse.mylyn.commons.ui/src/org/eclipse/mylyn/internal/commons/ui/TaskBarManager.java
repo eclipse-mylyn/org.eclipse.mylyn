@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -125,7 +125,7 @@ public class TaskBarManager {
 		 * Get the active non modal shell. If there isn't one return null.
 		 * <p>
 		 * <b>Note: Applied from patch on bug 99472.</b>
-		 * 
+		 *
 		 * @return Shell
 		 */
 		private static Shell getShell() {

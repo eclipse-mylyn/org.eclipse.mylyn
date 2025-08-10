@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Helen Bershadskaya and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Helen Bershadskaya - initial API and implementation
@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * Wizard dialog for displaying repository settings page. Necessary so we can add a validate button in the button bar.
- * 
+ *
  * @author Helen Bershadskaya
  * @since 3.7
  */

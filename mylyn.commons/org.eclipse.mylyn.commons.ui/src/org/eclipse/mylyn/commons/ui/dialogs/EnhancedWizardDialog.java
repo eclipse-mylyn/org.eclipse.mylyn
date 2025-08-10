@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2012 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Frank Becker - initial API and implementation
@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * Wizard dialog for displaying additional button in the button bar. Based on ValidatableWizardDialog from Helen Bershadskaya
- * 
+ *
  * @author Helen Bershadskaya
  * @author Frank Becker
  * @since 3.7
@@ -89,7 +89,7 @@ public abstract class EnhancedWizardDialog extends WizardDialog {
 	/**
 	 * Overridden so we can react to the validate button being pressed. This could have been done with a straight selection listener in the
 	 * creation method above, but this is more consistent with how the other buttons work in the wizard dialog.
-	 * 
+	 *
 	 * @since 3.1
 	 */
 	@Override

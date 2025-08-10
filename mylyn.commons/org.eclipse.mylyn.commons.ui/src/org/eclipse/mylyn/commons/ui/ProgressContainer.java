@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2000, 2011 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * A helper class for running operations in dialogs. Based on {@link WizardDialog}.
- * 
+ *
  * @author Steffen Pingel
  * @since 3.7
  */
@@ -84,7 +84,7 @@ public class ProgressContainer implements IRunnableContext {
 	/**
 	 * About to start a long running operation triggered through the wizard. Shows the progress monitor and disables the wizard's buttons
 	 * and controls.
-	 * 
+	 *
 	 * @param enableCancelButton
 	 *            <code>true</code> if the Cancel button should be enabled, and <code>false</code> if it should be disabled
 	 * @return the saved UI state
@@ -202,7 +202,7 @@ public class ProgressContainer implements IRunnableContext {
 
 	/**
 	 * Sets the given cursor for all shells currently active for this window's display.
-	 * 
+	 *
 	 * @param c
 	 *            the cursor
 	 */
@@ -216,7 +216,7 @@ public class ProgressContainer implements IRunnableContext {
 	/**
 	 * A long running operation triggered through the wizard was stopped either by user input or by normal end. Hides the progress monitor
 	 * and restores the enable state wizard's buttons and controls.
-	 * 
+	 *
 	 * @param savedState
 	 *            the saved UI state as returned by <code>aboutToStart</code>
 	 * @see #aboutToStart

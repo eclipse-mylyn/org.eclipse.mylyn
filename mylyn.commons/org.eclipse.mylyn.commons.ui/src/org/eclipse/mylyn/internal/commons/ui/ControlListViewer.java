@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2005, 2011 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Widget;
 
 /**
  * Based on {@link org.eclipse.ui.internal.progress.DetailedProgressViewer}.
- * 
+ *
  * @author Steffen Pingel
  * @deprecated use {@link org.eclipse.mylyn.commons.ui.ControlListViewer} instead
  */
@@ -58,7 +58,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 
 	/**
 	 * Create a new instance of the receiver with a control that is a child of parent with style style.
-	 * 
+	 *
 	 * @param parent
 	 * @param style
 	 */
@@ -251,7 +251,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 
 	/**
 	 * Create a new item for info.
-	 * 
+	 *
 	 * @param element
 	 * @return ControlListItem
 	 */

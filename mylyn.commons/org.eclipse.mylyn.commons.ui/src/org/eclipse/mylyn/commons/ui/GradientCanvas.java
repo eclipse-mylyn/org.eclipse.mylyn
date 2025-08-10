@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2000, 2015 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * Based on {@link org.eclipse.ui.internal.forms.widgets.FormHeading}.
- * 
+ *
  * @since 3.7
  */
 @SuppressWarnings("restriction")
@@ -60,7 +60,7 @@ public class GradientCanvas extends Canvas {
 
 	private GradientInfo gradientInfo;
 
-	private class GradientInfo {
+	private static class GradientInfo {
 		Color[] gradientColors;
 
 		int[] percents;
@@ -78,7 +78,7 @@ public class GradientCanvas extends Canvas {
 
 	/**
 	 * Creates the form content control as a child of the provided parent.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent widget
 	 */

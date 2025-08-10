@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Benjamin Pasero - initial API and implementation
@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * Based on FormColors of UI Forms.
- * 
+ *
  * @author Benjamin Pasero (initial contribution from RSSOwl, see bug 177974)
  * @author Mik Kersten
  * @since 3.7
