@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -17,7 +17,7 @@ package org.eclipse.mylyn.commons.ui.compatibility;
  * <p>
  * NOTE: Use of this class is discouraged. The specified theme settings depend on components in Mylyn Tasks and may not be available.
  * </p>
- * 
+ *
  * @author Mik Kersten
  * @since 3.7
  */

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Benjamin Pasero - initial API and implementation
@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * A popup window with a title bar and message area for displaying notifications.
- * 
+ *
  * @author Benjamin Pasero
  * @author Mik Kersten
  * @author Steffen Pingel
@@ -148,7 +148,7 @@ public abstract class AbstractNotificationPopup extends Window {
 	 * Override to return a customized name. Default is to return the name of the product, specified by the -name (e.g. "Eclipse SDK")
 	 * command line parameter that's associated with the product ID (e.g. "org.eclipse.sdk.ide"). Strips the trailing "SDK" for any name,
 	 * since this part of the label is considered visual noise.
-	 * 
+	 *
 	 * @return the name to be used in the title of the popup.
 	 */
 	protected String getPopupShellTitle() {
@@ -166,7 +166,7 @@ public abstract class AbstractNotificationPopup extends Window {
 
 	/**
 	 * Override to populate with notifications.
-	 * 
+	 *
 	 * @param parent
 	 */
 	protected void createContentArea(Composite parent) {

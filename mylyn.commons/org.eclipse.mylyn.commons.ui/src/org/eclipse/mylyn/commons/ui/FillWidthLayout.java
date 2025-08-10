@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 David Green and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     David Green - initial API and implementation
@@ -31,7 +31,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * A layout that uses the width hint or client area of a composite to recommend the width of its children, allowing children to fill the
  * width and specify their preferred height for a given width. Intended for use with a composite that contains a single child that should
  * fill available horizontal space.
- * 
+ *
  * @author David Green
  * @since 3.9
  */
@@ -62,7 +62,7 @@ public class FillWidthLayout extends Layout implements ILayoutExtension {
 
 	/**
 	 * Creates an instance with specifying margins.
-	 * 
+	 *
 	 * @param marginLeft
 	 *            the left margin in pixels, or 0 if there should be none
 	 * @param marginRight
@@ -78,7 +78,7 @@ public class FillWidthLayout extends Layout implements ILayoutExtension {
 
 	/**
 	 * Creates an instance with specifying margins and a {@link #getLayoutAdvisor() layout advisor}.
-	 * 
+	 *
 	 * @param layoutAdvisor
 	 *            the composite that is used to advise on layout based on its {@link Composite#getClientArea() client area}.
 	 * @param marginLeft
@@ -195,7 +195,7 @@ public class FillWidthLayout extends Layout implements ILayoutExtension {
 
 	/**
 	 * Returns the composite that is used to advise on layout based on its {@link Composite#getClientArea() client area} .
-	 * 
+	 *
 	 * @return the layout advisor, or null if there is none
 	 */
 	public Composite getLayoutAdvisor() {
@@ -204,7 +204,7 @@ public class FillWidthLayout extends Layout implements ILayoutExtension {
 
 	/**
 	 * Sets the composite that is used to advise on layout based on its {@link Composite#getClientArea() client area}.
-	 * 
+	 *
 	 * @param layoutAdvisor
 	 *            the layout advisor, or null if there is none
 	 */

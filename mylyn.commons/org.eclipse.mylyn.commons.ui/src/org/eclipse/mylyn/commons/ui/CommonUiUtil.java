@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -162,7 +162,7 @@ public class CommonUiUtil {
 
 	/**
 	 * Returns text masking the &amp;-character from decoration as an accelerator in SWT labels.
-	 * 
+	 *
 	 * @deprecated use LegacyActionTools#escapeMnemonics(String) instead
 	 */
 	@Deprecated
@@ -172,7 +172,7 @@ public class CommonUiUtil {
 
 	/**
 	 * Returns text for use as the label of an action to ensure that it is displayed properly.
-	 * 
+	 *
 	 * @return the cleaned text
 	 */
 	public static String toMenuLabel(String label) {

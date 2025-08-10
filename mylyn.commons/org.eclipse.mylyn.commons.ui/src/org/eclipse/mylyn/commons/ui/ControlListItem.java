@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2005, 2011 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * Based on <code>org.eclipse.ui.internal.progress.ProgressInfoItem</code>.
- * 
+ *
  * @author Steffen Pingel
  * @since 3.7
  */
@@ -83,7 +83,7 @@ public abstract class ControlListItem extends Composite {
 
 	/**
 	 * Create a new instance of the receiver with the specified parent, style and info object/
-	 * 
+	 *
 	 * @param parent
 	 * @param style
 	 * @param progressInfo
@@ -177,7 +177,7 @@ public abstract class ControlListItem extends Composite {
 
 	/**
 	 * Set the color base on the index
-	 * 
+	 *
 	 * @param index
 	 */
 	public void updateColors(int index) {
@@ -216,7 +216,7 @@ public abstract class ControlListItem extends Composite {
 
 	/**
 	 * Set the selection colors.
-	 * 
+	 *
 	 * @param select
 	 *            boolean that indicates whether or not to show selection.
 	 */
@@ -227,7 +227,7 @@ public abstract class ControlListItem extends Composite {
 
 	/**
 	 * Set the listener for index changes.
-	 * 
+	 *
 	 * @param indexListener
 	 */
 	void setIndexListener(IndexListener indexListener) {
@@ -236,7 +236,7 @@ public abstract class ControlListItem extends Composite {
 
 	/**
 	 * Return whether or not the receiver is selected.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public boolean isSelected() {
@@ -245,7 +245,7 @@ public abstract class ControlListItem extends Composite {
 
 	/**
 	 * Set whether or not the receiver is being displayed based on the top and bottom of the currently visible area.
-	 * 
+	 *
 	 * @param top
 	 * @param bottom
 	 */
@@ -258,7 +258,7 @@ public abstract class ControlListItem extends Composite {
 
 	/**
 	 * Set whether or not the receiver is being displayed
-	 * 
+	 *
 	 * @param displayed
 	 */
 	private void setDisplayed(boolean displayed) {

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2024 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Item;
 
 /**
  * Provides sorting support for column-based viewers such as tables and tree-tables.
- * 
+ *
  * @author Shawn Minto
  * @author Steffen Pingel
  * @since 3.7
@@ -35,14 +35,14 @@ public abstract class AbstractColumnViewerSorter<V extends ColumnViewer, I exten
 
 	/**
 	 * Returns the current sort column.
-	 * 
+	 *
 	 * @return the column that is being sorted; <code>null</code>, if no column is sorted
 	 */
 	abstract I getSortColumn(V viewer);
 
 	/**
 	 * Returns the current sort order.
-	 * 
+	 *
 	 * @return {@link SWT#DOWN}, if sorting descending; 0, if no sort order is specified; {@link SWT#UP}, if sorting ascending
 	 */
 	abstract int getSortDirection(V viewer);
@@ -55,7 +55,7 @@ public abstract class AbstractColumnViewerSorter<V extends ColumnViewer, I exten
 	/**
 	 * Compares <code>e1</code> and <code>e2</code> according to the current sort column and order. Delegates to
 	 * {@link #compareDefault(ColumnViewer, Object, Object)} if no sort column is selected.
-	 * 
+	 *
 	 * @see #getSortColumn(ColumnViewer)
 	 * @see #getSortDirection(ColumnViewer)
 	 * @see #compareDefault(ColumnViewer, Object, Object)
@@ -80,7 +80,7 @@ public abstract class AbstractColumnViewerSorter<V extends ColumnViewer, I exten
 	/**
 	 * Compares <code>e1</code> and <code>e2</code> following the contract of {@link ViewerComparator#compare(Viewer, Object, Object)}.
 	 * Subclasses may override.
-	 * 
+	 *
 	 * @see ViewerComparator#compare(Viewer, Object, Object)
 	 */
 	protected int compareDefault(V viewer, Object e1, Object e2) {

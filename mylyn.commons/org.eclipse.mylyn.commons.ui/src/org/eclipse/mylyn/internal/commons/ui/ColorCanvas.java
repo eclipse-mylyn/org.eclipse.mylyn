@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Willian Mitsuda and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Willian Mitsuda - initial API and implementation
@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * A tiny control just for color display
- * 
+ *
  * @author Willian Mitsuda
  * @deprecated use {@link ColorDialog} instead
  */

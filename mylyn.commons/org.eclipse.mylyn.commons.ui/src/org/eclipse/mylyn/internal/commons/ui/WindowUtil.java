@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2000, 2011 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Monitor;
 
 /**
  * Based on {@link org.eclipse.jface.window.Window#getConstrainedShellBounds(Rectangle)}.
- * 
+ *
  * @author Frank Becker
  */
 public class WindowUtil {
@@ -30,7 +30,7 @@ public class WindowUtil {
 	/**
 	 * Returns the monitor whose client area contains the given point. If no monitor contains the point, returns the monitor that is closest
 	 * to the point. If this is ever made public, it should be moved into a separate utility class.
-	 * 
+	 *
 	 * @param toSearch
 	 *            point to find (display coordinates)
 	 * @param toFind
@@ -64,7 +64,7 @@ public class WindowUtil {
 	 * Given the desired position of the window, this method returns an adjusted position such that the window is no larger than its
 	 * monitor, and does not extend beyond the edge of the monitor. This is used for computing the initial window position, and subclasses
 	 * can use this as a utility method if they want to limit the region in which the window may be moved.
-	 * 
+	 *
 	 * @param window
 	 *            the window
 	 * @param preferredSize
