@@ -181,7 +181,6 @@
    <bundle id="com.google.gerrit.prettify"/>
    <bundle id="com.google.gerrit.reviewdb"/>
    <bundle id="com.google.gson"/>
-   <bundle id="com.google.guava"/>
    <bundle id="com.google.gwt.servlet"/>
    <bundle id="com.google.gwtjsonrpc"/>
    <bundle id="com.google.gwtorm"/>

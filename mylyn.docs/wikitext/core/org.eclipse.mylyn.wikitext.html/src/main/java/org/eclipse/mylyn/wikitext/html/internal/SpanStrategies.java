@@ -29,9 +29,6 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.css.CssParser;
 import org.eclipse.mylyn.wikitext.parser.css.CssRule;
 
-import com.google.common.base.CharMatcher;
-import com.google.common.base.Splitter;
-
 public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, SpanHtmlElementStrategy> {
 
 	private static final Map<SpanType, List<SpanType>> spanTypeToAlternatives = createSpanTypeToAlternatives();
@@ -131,8 +128,9 @@ public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, Sp
 	}
 
 	private boolean isFontFamilyMonospace(CssRule rule) {
-		for (String value : Splitter.on(',').trimResults(CharMatcher.whitespace()).split(rule.value)) {
-			if ("monospace".equalsIgnoreCase(value)) { //$NON-NLS-1$
+		for (String value : rule.value.split(",")) { //$NON-NLS-1$
+			String trimmed = value.trim();
+			if ("monospace".equalsIgnoreCase(trimmed)) { //$NON-NLS-1$
 				return true;
 			}
 		}

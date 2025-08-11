@@ -21,8 +21,6 @@ import java.io.StringWriter;
 import org.eclipse.mylyn.wikitext.textile.internal.TextileDocumentBuilder;
 import org.junit.Test;
 
-import com.google.common.base.CharMatcher;
-
 @SuppressWarnings({ "nls", "restriction" })
 public class TextileDocumentBuilderEntityReferenceTest {
 
@@ -80,7 +78,7 @@ public class TextileDocumentBuilderEntityReferenceTest {
 		builder.endDocument();
 
 		String markup = out.toString();
-		String expectedSequence = CharMatcher.whitespace().trimAndCollapseFrom("a " + expected + " test", ' ');
+		String expectedSequence = collapseAndTrimWhitespace("a " + expected + " test");
 		assertEquals(expectedSequence + "\n\n", markup);
 	}
 
@@ -93,6 +91,10 @@ public class TextileDocumentBuilderEntityReferenceTest {
 
 		String markup = out.toString();
 		assertEquals(expected + "\n\n", markup);
+	}
+
+	private static String collapseAndTrimWhitespace(String input) {
+		return input.strip().replaceAll("\\s+", " ");
 	}
 
 }

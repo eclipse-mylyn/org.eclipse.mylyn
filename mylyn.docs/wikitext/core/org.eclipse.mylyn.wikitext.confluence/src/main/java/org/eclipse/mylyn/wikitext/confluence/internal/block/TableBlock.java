@@ -22,8 +22,6 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
-import com.google.common.base.CharMatcher;
-
 /**
  * Table block, matches blocks that start with <code>table. </code> or those that start with a table row.
  *
@@ -161,7 +159,7 @@ public class TableBlock extends Block {
 
 	private void emitMarkup(String text, int lineOffset) {
 		getConfluenceLanguage().emitMarkupLine(getParser(), state, lineOffset,
-				CharMatcher.whitespace().trimTrailingFrom(text), 0);
+				text.replaceAll("\\s+$", ""), 0);
 	}
 
 	private ConfluenceLanguage getConfluenceLanguage() {
