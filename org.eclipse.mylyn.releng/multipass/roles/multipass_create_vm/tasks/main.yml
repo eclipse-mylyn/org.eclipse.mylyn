@@ -37,24 +37,24 @@
 - name: debug new list
   debug: var=inst_list verbosity=3
 
-- name: build name ip map
-  ansible.builtin.set_fact:
-    ip_2_change: "{{ ip_2_change | default([]) + [ { 'aname': item.name, 'aip': item.ip4, 'mip': (inst_list | selectattr(\"inst_name\", \"equalto\", item.name) | map(attribute='ip_adr4'))[0] } ] }}"
-  when: >
-    item.name in inst_list | map(attribute='inst_name') and
-    (inst_list | selectattr("inst_name", "equalto", item.name))| map(attribute='ip_adr4') != [item.ip4 ]
-  with_items: "{{ mylyn_vm_hosts }}"
-- name: debug ip_2_change
-  debug: var=ip_2_change verbosity=3
-  when: ip_2_change is defined
-
-- name: "Replace line in file inventory.yml"
-  replace: 
-    path: inventory.yml
-    regexp: "(^\\s*ansible_host:\\s*)(\"{{ item.aip | regex_escape() }}\")(.*)$"
-    replace: "\\1\"{{item.mip}}\""
-  with_items: "{{ ip_2_change }}"
-  when: ip_2_change is defined
+# - name: build name ip map
+#   ansible.builtin.set_fact:
+#     ip_2_change: "{{ ip_2_change | default([]) + [ { 'aname': item.name, 'aip': item.ip4, 'mip': (inst_list | selectattr(\"inst_name\", \"equalto\", item.name) | map(attribute='ip_adr4'))[0] } ] }}"
+#   when: >
+#     item.name in inst_list | map(attribute='inst_name') and
+#     (inst_list | selectattr("inst_name", "equalto", item.name))| map(attribute='ip_adr4') != [item.ip4 ]
+#   with_items: "{{ mylyn_vm_hosts }}"
+# - name: debug ip_2_change
+#   debug: var=ip_2_change verbosity=3
+#   when: ip_2_change is defined
+# 
+# - name: "Replace line in file inventory.yml"
+#   replace: 
+#     path: inventory.yml
+#     regexp: "(^\\s*ansible_host:\\s*)(\"{{ item.aip | regex_escape() }}\")(.*)$"
+#     replace: "\\1\"{{item.mip}}\""
+#   with_items: "{{ ip_2_change }}"
+#   when: ip_2_change is defined
 
 - name: remove mylyn vm from etc hosts
   become: true
