@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,7 +37,7 @@ class HtmlEntities {
 	private static HtmlEntities instance = new HtmlEntities();
 
 	private static Map<String, List<String>> readHtmlEntities() {
-		Map<String, List<String>> builder = new HashMap<>();
+		final Map<String, List<String>> builder = new HashMap<>();
 
 		try (BufferedReader reader = new BufferedReader(
 				new InputStreamReader(HtmlDocumentBuilder.class.getResourceAsStream("html-entity-references.txt"), //$NON-NLS-1$
@@ -44,11 +45,15 @@ class HtmlEntities {
 
 			String line;
 			while ((line = reader.readLine()) != null) {
-				String[] lineItems = line.split("\s"); //$NON-NLS-1$
-				checkState(lineItems.length > 1);
-				for (int x = 1; x < lineItems.length; ++x) {
-					List<String> list = builder.computeIfAbsent(lineItems[0], i -> new ArrayList<>());
-					list.add(lineItems[x]);
+				final List<String> lineItems = Arrays.stream(line.split("\\s+")) //$NON-NLS-1$
+						.map(String::trim)
+						.filter(s -> !s.isEmpty())
+						.toList();
+				checkState(lineItems.size() > 1);
+				final String key = lineItems.get(0);
+				final List<String> values = builder.computeIfAbsent(key, k -> new ArrayList<>(lineItems.size()));
+				for (int x = 1; x < lineItems.size(); ++x) {
+					values.add(lineItems.get(x));
 				}
 			}
 		} catch (IOException e) {
