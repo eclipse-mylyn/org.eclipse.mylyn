@@ -57,9 +57,9 @@ Here are the following steps.
 6. delete VM's and recreate VM's 
    1. delete the running VM's
    ```
-   multipass delete mylynadm01 
-   multipass delete mylynmstr01
-   multipass delete mylynwrk01
+   multipass delete <nmae VM1> 
+   multipass delete <nmae VM2> 
+   multipass delete <nmae VM3> 
    multipass purge
    ```
    2. on macOS we need to delete the on no longer needed IP Address 
