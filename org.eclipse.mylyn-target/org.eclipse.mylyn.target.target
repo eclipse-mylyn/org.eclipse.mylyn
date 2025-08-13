@@ -88,7 +88,6 @@
 			<unit id="org.apache.tika.core" version="0.0.0"/>
 			<unit id="com.github.ben-manes.caffeine" version="0.0.0"/>
 			<unit id="com.google.gson" version="0.0.0"/>
-			<unit id="com.google.guava" version="0.0.0"/>
 			<unit id="org.hamcrest" version="0.0.0"/>
 			<unit id="org.jsoup" version="0.0.0"/>
 			<unit id="org.junit" version="0.0.0"/>

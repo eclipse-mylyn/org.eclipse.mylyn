@@ -22,8 +22,6 @@ import org.eclipse.mylyn.wikitext.parser.TableRowAttributes;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.textile.internal.Textile;
 
-import com.google.common.base.CharMatcher;
-
 /**
  * Table block, matches blocks that start with <code>table. </code> or those that start with a table row.
  *
@@ -125,7 +123,7 @@ public class TableBlock extends Block {
 			builder.beginBlock(header ? BlockType.TABLE_CELL_HEADER : BlockType.TABLE_CELL_NORMAL, attributes);
 
 			markupLanguage.emitMarkupLine(getParser(), state, textLineOffset,
-					CharMatcher.whitespace().trimTrailingFrom(text), 0);
+					text.replaceAll("\\s+$", ""), 0);
 
 			builder.endBlock(); // table cell
 		} while (rowMatcher.find());

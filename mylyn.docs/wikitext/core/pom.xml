@@ -28,9 +28,6 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<guava.osgi>33.0</guava.osgi>
-		<guava.osgi.upper>34.0</guava.osgi.upper>
-		<guava.version>33.4.8-jre</guava.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.javadoc.skip>true</maven.javadoc.skip>
 	</properties>
@@ -81,8 +78,6 @@
 						<Bundle-RequiredExecutionEnvironment>JavaSE-21</Bundle-RequiredExecutionEnvironment>
 						<Export-Package>
 							${project.artifactId}.internal*;x-internal:=true,${project.artifactId}*</Export-Package>
-						<Import-Package>!java.*, com.google.common*;
-							version="[${guava.osgi},${guava.osgi.upper})", *</Import-Package>
 						<Import-Package>!java.*, org.apache.commons.collections4*;
 							version="[4.4.0,5.0.0)", *</Import-Package>
 						<Import-Package>!java.*, org.apache.commons.lang3*;

@@ -27,8 +27,6 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.AsciiDocContentState;
 import org.eclipse.mylyn.wikitext.parser.TableCellAttributes;
 
-import com.google.common.base.Splitter;
-
 /**
  * Internal class to provide package internal support to the language
  */
@@ -38,6 +36,8 @@ public class LanguageSupport {
 	private static final Pattern ALIGN_PATTERN = Pattern.compile("((?:\\.)?)([<^>])"); //$NON-NLS-1$
 
 	private static Pattern keyValuePattern = Pattern.compile("(.*)=\"(.*)\""); //$NON-NLS-1$
+
+	private static final Pattern SPLIT_PATTERN = Pattern.compile(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"); //$NON-NLS-1$
 
 	/**
 	 * Helper method for parsing AsciiDoc format string (
@@ -63,9 +63,7 @@ public class LanguageSupport {
 			return properties;
 		}
 
-		// TODO: handle escaped strings and default sequence of parameters
-		// i.e. sunset,100,200,title="test"
-		Iterable<String> valpairs = Splitter.on(Pattern.compile(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)")).split(rawFormat); //$NON-NLS-1$
+		String[] valpairs = SPLIT_PATTERN.split(rawFormat);
 		for (String pair : valpairs) {
 			Matcher matcher = keyValuePattern.matcher(pair.trim());
 

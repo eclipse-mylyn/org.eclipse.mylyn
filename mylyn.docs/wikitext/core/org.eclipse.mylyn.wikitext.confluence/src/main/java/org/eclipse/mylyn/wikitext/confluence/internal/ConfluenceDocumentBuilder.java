@@ -35,8 +35,6 @@ import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.parser.builder.AbstractMarkupDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.EntityReferences;
 
-import com.google.common.base.CharMatcher;
-
 /**
  * a document builder that emits Confluence markup
  *
@@ -52,7 +50,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	private static final Pattern PATTERN_MULTIPLE_NEWLINES = Pattern
 			.compile("(" + NEWLINE_REGEX + "(?:\\s+" + NEWLINE_REGEX + "|" + NEWLINE_REGEX + ")+)"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-	private static final CharMatcher SPAN_MARKUP_CHARACTERS = CharMatcher.anyOf("*_+-^~{}[]?%@"); //$NON-NLS-1$
+	private static final String SPAN_MARKUP_CHARACTERS = "*_+-^~{}[]?%@"; //$NON-NLS-1$
 
 	private final Map<String, String> entityToLiteral = new HashMap<>();
 
@@ -200,7 +198,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 				emitPrefix();
 				if (trimmingNewlinesAndWhitespace) {
-					content = CharMatcher.whitespace().trimFrom(content);
+					content = content.strip();
 				}
 				if (collapsingConsecutiveNewlines) {
 					content = PATTERN_MULTIPLE_NEWLINES.matcher(content).replaceAll("\n"); //$NON-NLS-1$
@@ -464,7 +462,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	}
 
 	private boolean isSpanMarkup(char character) {
-		return SPAN_MARKUP_CHARACTERS.matches(character);
+		return SPAN_MARKUP_CHARACTERS.indexOf(character) >= 0;
 	}
 
 	@Override
