@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2006, 2010 Steffen Pingel and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Steffen Pingel - initial API and implementation
@@ -16,7 +16,7 @@ import org.apache.xmlrpc.XmlRpcException;
 
 /**
  * Indicates an authentication error during login.
- * 
+ *
  * @author Steffen Pingel
  */
 public class XmlRpcLoginException extends XmlRpcException {
