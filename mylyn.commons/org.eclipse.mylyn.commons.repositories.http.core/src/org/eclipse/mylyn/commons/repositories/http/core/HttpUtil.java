@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -80,12 +80,6 @@ public class HttpUtil {
 		CoreUtil.initializeLoggingSettings();
 	}
 
-	@SuppressWarnings("unused")
-	private static final int BUFFER_SIZE = 4096;
-
-	@SuppressWarnings("unused")
-	private static final long CLOSE_TIMEOUT = -1;
-
 	/**
 	 * @see IdleConnectionMonitorThread
 	 */
@@ -100,9 +94,6 @@ public class HttpUtil {
 	private static final int POLL_INTERVAL = 500;
 
 	private static final int SOCKET_TIMEOUT = 3 * 60 * 1000;
-
-	@SuppressWarnings("unused")
-	private static final int POLL_ATTEMPTS = SOCKET_TIMEOUT / POLL_INTERVAL;
 
 	private static SchemeSocketFactory socketFactory = new PollingProtocolSocketFactory();
 
