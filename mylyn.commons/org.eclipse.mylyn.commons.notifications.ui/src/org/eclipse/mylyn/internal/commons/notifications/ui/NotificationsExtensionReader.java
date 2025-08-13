@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -44,7 +44,7 @@ public class NotificationsExtensionReader {
 	/**
 	 * Returns a list of notification categories, each containing their belonging notification events. Once initialised the same list will
 	 * be returned upon subsequent calls of this method.
-	 * 
+	 *
 	 * @return a list of notification categories.
 	 * @see NotificationModel#save(org.eclipse.ui.IMemento)
 	 * @see NotificationModel#load(org.eclipse.ui.IMemento)
@@ -86,8 +86,7 @@ public class NotificationsExtensionReader {
 						} else {
 							result.add(new Status(IStatus.ERROR, NotificationsPlugin.ID_PLUGIN,
 									NLS.bind("Extension {0} contributed by {1} specify unknown category ''{2}''", //$NON-NLS-1$
-											new String[] { element.getNamespaceIdentifier(),
-													element.getContributor().getName(), event.getCategoryId() }))); //NON-NLS-1$
+											element.getNamespaceIdentifier(), element.getContributor().getName(), event.getCategoryId()))); //NON-NLS-1$
 						}
 					} else {
 						result.add(status);
