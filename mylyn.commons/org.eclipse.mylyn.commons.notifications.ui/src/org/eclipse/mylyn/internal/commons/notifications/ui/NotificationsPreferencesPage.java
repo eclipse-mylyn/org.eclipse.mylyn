@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2024 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -61,7 +61,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 
 	/**
 	 * We need this in order to make sure that the correct element is selected in the {@link TreeViewer} when the selection is set.
-	 * 
+	 *
 	 * @author Torkild Ulvøy Resheim
 	 */
 	public class NotificationEventComparer implements IElementComparer {
@@ -85,7 +85,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 
 	private static final Object[] EMPTY = {};
 
-	private final class EventContentProvider implements ITreeContentProvider {
+	private static final class EventContentProvider implements ITreeContentProvider {
 
 		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
@@ -132,7 +132,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 
 	}
 
-	private final class NotifiersContentProvider implements IStructuredContentProvider {
+	private static final class NotifiersContentProvider implements IStructuredContentProvider {
 
 		private NotificationHandler handler;
 

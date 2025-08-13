@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -24,7 +24,7 @@ import org.eclipse.mylyn.commons.notifications.core.NotificationSink;
 /**
  * Describes an event that is handled through a notification. The handling of event is stored in {@link NotificationAction} objects that
  * delegate to {@link NotificationSink} objects for the handling of actual events.
- * 
+ *
  * @author Steffen Pingel
  * @author Torkild U. Resheim
  */
@@ -40,7 +40,7 @@ public class NotificationEvent extends NotificationElement {
 
 	/**
 	 * Tests whether or not the event should per default be handled by the sink with the specified identifier.
-	 * 
+	 *
 	 * @param sinkId
 	 *            the sink identifier
 	 * @return <code>true</code> if the
