@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -23,7 +23,7 @@ import org.eclipse.ui.part.WorkbenchPart;
 
 /**
  * Provides a spinner animation for the tab title of an editor.
- * 
+ *
  * @author Shawn Minto
  * @author Steffen Pingel
  * @since 3.7
@@ -33,7 +33,7 @@ public class BusyAnimator {
 	/**
 	 * A callback for modifying the title image of an editor. Clients that provide busy animations should implement this interface and
 	 * delegate to the respective methods in {@link WorkbenchPart}.
-	 * 
+	 *
 	 * @author Shawn Minto
 	 * @see BusyAnimator
 	 * @since 3.7
@@ -42,7 +42,7 @@ public class BusyAnimator {
 
 		/**
 		 * Updates the title image of the editor to <code>image</code>.
-		 * 
+		 *
 		 * @param image
 		 *            the image
 		 */
@@ -109,7 +109,7 @@ public class BusyAnimator {
 
 	/**
 	 * Starts the busy indication.
-	 * 
+	 *
 	 * @see #stop()
 	 */
 	public void start() {
@@ -141,7 +141,7 @@ public class BusyAnimator {
 
 	/**
 	 * Stops the animation.
-	 * 
+	 *
 	 * @see #start()
 	 */
 	public void stop() {

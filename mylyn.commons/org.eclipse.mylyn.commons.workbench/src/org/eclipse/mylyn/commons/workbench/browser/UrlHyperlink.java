@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -18,7 +18,7 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * A link to a url that opens in a rich editor, if available, or browser, otherwise.
- * 
+ *
  * @author Steffen Pingel
  * @see BrowserUtil#openUrl(String)
  */
@@ -28,7 +28,7 @@ public class UrlHyperlink extends URLHyperlink {
 
 	/**
 	 * Constructs a hyperlink with a custom tooltip.
-	 * 
+	 *
 	 * @param region
 	 *            the region to highlight
 	 * @param url
@@ -44,7 +44,7 @@ public class UrlHyperlink extends URLHyperlink {
 
 	/**
 	 * Constructs a hyperlink
-	 * 
+	 *
 	 * @param region
 	 *            the region to highlight
 	 * @param url

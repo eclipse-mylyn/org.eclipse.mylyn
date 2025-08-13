@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -40,7 +40,7 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 /**
  * Control designed to display notification messages. These messages may contain links that can be clicked by the user.
- * 
+ *
  * @since 3.7
  * @author Robert Elves
  * @author Steffen Pingel
@@ -98,7 +98,7 @@ public abstract class MessageControl {
 
 	/**
 	 * Returns <code>true</code> if the control has closed and is currently not showing any messages.
-	 * 
+	 *
 	 * @return <code>true</code> if the control is closed
 	 */
 	protected boolean isClosed() {
@@ -112,7 +112,7 @@ public abstract class MessageControl {
 
 	/**
 	 * Returns the shell of the parent composite.
-	 * 
+	 *
 	 * @return the shell
 	 */
 	protected Shell getShell() {
@@ -121,7 +121,7 @@ public abstract class MessageControl {
 
 	/**
 	 * Creates the GUI of the service message control.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent composite
 	 * @return the control
@@ -217,7 +217,7 @@ public abstract class MessageControl {
 
 	/**
 	 * Must be implemented for custom handling of description links.
-	 * 
+	 *
 	 * @see #setDescription(String)
 	 * @return the selection listener
 	 */
@@ -230,7 +230,7 @@ public abstract class MessageControl {
 
 	/**
 	 * Sets the title of the control.
-	 * 
+	 *
 	 * @param title
 	 *            the title to set
 	 */
@@ -247,7 +247,7 @@ public abstract class MessageControl {
 	 * Sets the eventId of the message being displayed. How to handle certain kind of messages can be configured in preference settings if
 	 * this property is set to a legal value. The event identifiers are declared using the
 	 * <i>org.eclipse.mylyn.commons.notifications.notifications</i> extension point.
-	 * 
+	 *
 	 * @param eventId
 	 *            the event identifier for the displayed message
 	 */
@@ -257,7 +257,7 @@ public abstract class MessageControl {
 
 	/**
 	 * Sets the title image of the control.
-	 * 
+	 *
 	 * @param image
 	 *            the title image
 	 */
