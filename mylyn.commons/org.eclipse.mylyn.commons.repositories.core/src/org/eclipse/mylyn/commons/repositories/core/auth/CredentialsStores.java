@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -19,7 +19,7 @@ import org.eclipse.mylyn.internal.commons.repositories.core.LocationService;
 
 /**
  * Utility for accessing {@link ICredentialsStore}
- * 
+ *
  * @author David Green
  * @since 1.1
  */
@@ -38,7 +38,7 @@ public class CredentialsStores {
 
 	/**
 	 * get the default credentials store
-	 * 
+	 *
 	 * @see ILocationService#getCredentialsStore(String)
 	 */
 	public static ICredentialsStore getDefaultCredentialsStore(String id) {
