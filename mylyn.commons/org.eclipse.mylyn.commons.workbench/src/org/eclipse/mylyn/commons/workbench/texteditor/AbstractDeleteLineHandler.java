@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2007, 2011 Tasktop Technologies Inc. and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     David Green - initial API and implementation
@@ -23,7 +23,7 @@ import org.eclipse.ui.texteditor.TextViewerDeleteLineTarget;
 /**
  * Abstract command handler that uses {@link TextViewerDeleteLineTarget}. Subclasses can specify the type of delete line and
  * copyToClipboard.
- * 
+ *
  * @author David Green
  * @since 3.7
  */

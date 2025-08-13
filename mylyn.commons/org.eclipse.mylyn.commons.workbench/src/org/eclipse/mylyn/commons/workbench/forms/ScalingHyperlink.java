@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -24,7 +24,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 /**
  * Enhanced {@link ImageHyperlink} that truncates the link text at the end rather than the middle if it is wider than the available space.
  * Also provides default color and underline on hover.
- * 
+ *
  * @author Leo Dos Santos
  * @author Mik Kersten
  * @since 3.7

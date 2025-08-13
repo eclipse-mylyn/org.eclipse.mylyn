@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2024 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -43,7 +43,7 @@ import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
 
 /**
  * Provides a utilities for opening locations in a browser.
- * 
+ *
  * @author Steffen Pingel
  * @since 3.7
  */
@@ -51,7 +51,7 @@ public class BrowserUtil {
 
 	/**
 	 * Flag that indicates that a URL should be opened in browser and not in a rich editor.
-	 * 
+	 *
 	 * @see #openUrl(IWorkbenchPage, String, int)
 	 * @since 3.7
 	 */
@@ -95,7 +95,7 @@ public class BrowserUtil {
 
 	/**
 	 * Opens <code>location</code> in a rich editor if applicable or web-browser according to the workbench preferences.
-	 * 
+	 *
 	 * @param location
 	 *            the url to open
 	 * @see #openUrl(IWorkbenchPage, String, int)
@@ -107,7 +107,7 @@ public class BrowserUtil {
 
 	/**
 	 * Opens <code>location</code> in a rich editor if applicable or in a web-browser according to the workbench preferences.
-	 * 
+	 *
 	 * @param location
 	 *            the url to open
 	 * @param customFlags
@@ -126,7 +126,7 @@ public class BrowserUtil {
 
 	/**
 	 * Opens <code>location</code> in a rich editor if applicable or in a web-browser according to the workbench preferences.
-	 * 
+	 *
 	 * @param page
 	 *            the workbench page to open the editor in
 	 * @param location

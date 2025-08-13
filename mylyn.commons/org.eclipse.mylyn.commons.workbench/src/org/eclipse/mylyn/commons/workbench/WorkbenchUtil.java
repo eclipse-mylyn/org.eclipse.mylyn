@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -126,7 +126,7 @@ public class WorkbenchUtil {
 	 * Return the modal shell that is currently open. If there isn't one then return null.
 	 * <p>
 	 * <b>Note: Applied from patch on bug 99472.</b>
-	 * 
+	 *
 	 * @param shell
 	 *            A shell to exclude from the search. May be <code>null</code>.
 	 * @return Shell or <code>null</code>.
@@ -155,7 +155,7 @@ public class WorkbenchUtil {
 	 * If not then return the shell of the active workbench window. If neither can be found return null.
 	 * <p>
 	 * <b>Note: Applied from patch on bug 99472.</b>
-	 * 
+	 *
 	 * @return Shell or <code>null</code>
 	 */
 	public static Shell getShell() {
@@ -173,7 +173,7 @@ public class WorkbenchUtil {
 	 * Get the active non modal shell. If there isn't one return null.
 	 * <p>
 	 * <b>Note: Applied from patch on bug 99472.</b>
-	 * 
+	 *
 	 * @return Shell
 	 */
 	private static Shell getNonModalShell() {

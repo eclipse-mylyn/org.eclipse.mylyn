@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -26,7 +26,7 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * Provides access to the system task bar.
- * 
+ *
  * @author Shawn Minto
  * @since 3.7
  */
@@ -36,7 +36,7 @@ public class TaskBarManager {
 
 	/**
 	 * Returns a menu manger for the task bar if available.
-	 * 
+	 *
 	 * @return the system menu manager; null, if the task bar is not available
 	 */
 	public static MenuManager getTaskBarMenuManager() {
@@ -131,7 +131,7 @@ public class TaskBarManager {
 		 * Get the active non modal shell. If there isn't one return null.
 		 * <p>
 		 * <b>Note: Applied from patch on bug 99472.</b>
-		 * 
+		 *
 		 * @return Shell
 		 */
 		private static Shell getShell() {

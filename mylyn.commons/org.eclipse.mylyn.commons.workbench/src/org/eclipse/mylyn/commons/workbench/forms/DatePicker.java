@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -44,7 +44,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 /**
  * Temporary date picker from patch posted to: https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=19945 see bug# 19945 TODO: remove this
  * class when an SWT date picker is added
- * 
+ *
  * @author Bahadir Yagan
  * @author Mik Kersten
  * @since 3.7
@@ -197,7 +197,7 @@ public class DatePicker extends Composite {
 
 	/**
 	 * must check for null return value
-	 * 
+	 *
 	 * @return Calendar
 	 */
 	public Calendar getDate() {
