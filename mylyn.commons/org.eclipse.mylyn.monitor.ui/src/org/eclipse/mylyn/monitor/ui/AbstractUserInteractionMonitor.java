@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2009 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -28,7 +28,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 /**
  * Self-registering on construction. Encapsulates users' interaction with the context model.
- * 
+ *
  * @author Mik Kersten
  * @author Shawn Minto
  * @since 2.0
@@ -103,7 +103,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 
 	/**
 	 * Intended to be called back by subclasses. *
-	 * 
+	 *
 	 * @since 3.1
 	 */
 	protected void handleNavigation(String partId, Object targetElement, String kind, boolean contributeToContext) {
@@ -121,7 +121,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 
 	/**
 	 * Intended to be called back by subclasses.
-	 * 
+	 *
 	 * @since 3.1
 	 */
 	protected void handleElementEdit(String partId, Object selectedElement, boolean contributeToContext) {
@@ -140,7 +140,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 
 	/**
 	 * Intended to be called back by subclasses. *
-	 * 
+	 *
 	 * @since 3.1
 	 */
 	protected InteractionEvent handleElementSelection(String partId, Object selectedElement,

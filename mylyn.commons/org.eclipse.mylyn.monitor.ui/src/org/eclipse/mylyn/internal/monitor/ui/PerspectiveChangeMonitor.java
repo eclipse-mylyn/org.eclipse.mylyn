@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2008 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -112,17 +112,17 @@ public class PerspectiveChangeMonitor extends PerspectiveAdapter {
  * @Override public void perspectiveChanged(IWorkbenchPage page,
  * IPerspectiveDescriptor perspective, String changeId) {
  * super.perspectiveChanged(page, perspective, changeId);
- * 
+ *
  * if(changeId.startsWith("view") || changeId.startsWith("editor")) {
  * IWorkbenchPage workbenchPage =
  * PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
  * IViewReference[] viewList = workbenchPage.getViewReferences();
  * IEditorReference[] editorList = workbenchPage.getEditorReferences();
- * 
+ *
  * String delta = ""; for(int i = 0; i < viewList.length; i++) { delta = delta +
  * viewList[i].getTitle() + ","; } delta = delta + "Editor (" +
  * editorList.length + " open)";
- * 
+ *
  * String source = "perspective." + perspective.getLabel(); InteractionEvent
  * interactionEvent = new InteractionEvent( source, delta );
  * logger.interactionObserved(interactionEvent); } }
