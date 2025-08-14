@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011 Tasktop Technologies.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -27,7 +27,7 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * Read the strategies extension point
- * 
+ *
  * @author David Green
  */
 public class StrategiesExtensionPointReader {
@@ -56,8 +56,7 @@ public class StrategiesExtensionPointReader {
 						StatusHandler.log(new Status(
 								IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
 								NLS.bind("Cannot instantiate {0} from bundle {1}: {2}", //$NON-NLS-1$
-										new Object[] { element.getAttribute(ATTRIBUTE_CLASS),
-												extension.getContributor().getName(), t.getMessage() }),
+										element.getAttribute(ATTRIBUTE_CLASS), extension.getContributor().getName(), t.getMessage()),
 								t));
 					}
 				}

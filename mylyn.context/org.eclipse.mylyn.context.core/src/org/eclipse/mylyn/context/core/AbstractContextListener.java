@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -21,7 +21,7 @@ import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 
 /**
  * Override {@link #contextChanged(ContextChangeEvent)} to be notified of context change events.
- * 
+ *
  * @author Mik Kersten
  * @author Shawn Minto
  * @since 3.0
@@ -30,7 +30,7 @@ public abstract class AbstractContextListener implements IContextListener {
 
 	/**
 	 * Invoked before the context is activated.
-	 * 
+	 *
 	 * @since 3.0
 	 * @deprecated use {@link #contextChanged(ContextChangeEvent)} instead
 	 */
@@ -40,7 +40,7 @@ public abstract class AbstractContextListener implements IContextListener {
 
 	/**
 	 * Invoked after the context is activated.
-	 * 
+	 *
 	 * @since 3.0
 	 * @deprecated use {@link #contextChanged(ContextChangeEvent)} instead
 	 */
@@ -50,7 +50,7 @@ public abstract class AbstractContextListener implements IContextListener {
 
 	/**
 	 * Invoked after the context is deactivated.
-	 * 
+	 *
 	 * @since 3.0
 	 * @deprecated use {@link #contextChanged(ContextChangeEvent)} instead
 	 */
@@ -60,7 +60,7 @@ public abstract class AbstractContextListener implements IContextListener {
 
 	/**
 	 * The context has been cleared, typically done by the user.
-	 * 
+	 *
 	 * @since 3.0
 	 * @deprecated use {@link #contextChanged(ContextChangeEvent)} instead
 	 */
@@ -70,7 +70,7 @@ public abstract class AbstractContextListener implements IContextListener {
 
 	/**
 	 * The interest level of one or more elements has changed. The last element in the list is the element invoking the change.
-	 * 
+	 *
 	 * @since 3.0
 	 * @deprecated use {@link #contextChanged(ContextChangeEvent)} instead
 	 */
@@ -80,7 +80,7 @@ public abstract class AbstractContextListener implements IContextListener {
 
 	/**
 	 * An element with landmark interest has been added to the context.
-	 * 
+	 *
 	 * @since 3.0
 	 * @deprecated use {@link #contextChanged(ContextChangeEvent)} instead
 	 */
@@ -90,7 +90,7 @@ public abstract class AbstractContextListener implements IContextListener {
 
 	/**
 	 * An element with landmark interest has been removed from the task context.
-	 * 
+	 *
 	 * @since 3.0
 	 * @deprecated use {@link #contextChanged(ContextChangeEvent)} instead
 	 */
@@ -100,7 +100,7 @@ public abstract class AbstractContextListener implements IContextListener {
 
 	/**
 	 * One or more elements have been deleted from the task context.
-	 * 
+	 *
 	 * @since 3.0
 	 * @deprecated use {@link #contextChanged(ContextChangeEvent)} instead
 	 */

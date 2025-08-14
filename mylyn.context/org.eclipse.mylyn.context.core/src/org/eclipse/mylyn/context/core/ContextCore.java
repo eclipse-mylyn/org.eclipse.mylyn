@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -62,7 +62,7 @@ public final class ContextCore {
 	/**
 	 * Returns a list of all {@link IContextContributor} registered with Mylyn context. Please refer to the
 	 * org.eclipse.mylyn.context.core.contributor extension point.
-	 * 
+	 *
 	 * @since 3.9
 	 */
 	public static List<IContextContributor> getContextContributor() {

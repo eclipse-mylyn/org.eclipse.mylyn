@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -27,7 +27,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
  * Delegates to contained contexts. TODO: should info be propagated proportionally to number of taskscapes?
- * 
+ *
  * @author Mik Kersten
  * @author Shawn Minto
  * @author David Green bug 257977 isInteresting
@@ -175,7 +175,7 @@ public class CompositeInteractionContext implements IInteractionContext {
 
 	/**
 	 * Composite contexts do not have a unique handle identifier.
-	 * 
+	 *
 	 * @return null if no unique handle
 	 */
 	@Override
