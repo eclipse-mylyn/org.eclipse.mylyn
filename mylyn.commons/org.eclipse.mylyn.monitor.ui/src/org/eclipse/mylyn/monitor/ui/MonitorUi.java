@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2009 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -55,7 +55,7 @@ public class MonitorUi {
 
 	/**
 	 * This call returns the first workbench window that when Monitor UI was started. It is not guaranteed that this window still exists.
-	 * 
+	 *
 	 * @deprecated
 	 */
 	@Deprecated
