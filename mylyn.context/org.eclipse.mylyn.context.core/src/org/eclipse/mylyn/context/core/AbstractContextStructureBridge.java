@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2009 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * Maps between domain elements (e.g. Java) and interaction context model elements.
- * 
+ *
  * @author Mik Kersten
  * @since 2.0
  */
@@ -37,7 +37,7 @@ public abstract class AbstractContextStructureBridge {
 	 * A workspace-unique and robust String identifier for a structured element. For example, in Java these are the IJavaElement's handle
 	 * identifier. For XML, this could be an xpath, but due to the fact that xpaths rely on element ordering for identity they are not
 	 * robust to element order switching.
-	 * 
+	 *
 	 * @return null if the given object does not participate in the task context
 	 */
 	public abstract String getHandleIdentifier(Object object);
@@ -82,7 +82,7 @@ public abstract class AbstractContextStructureBridge {
 
 	/**
 	 * TODO 4.0: either remove of make marker coupling explicit
-	 * 
+	 *
 	 * @param resource
 	 *            can be anything that has an element accessible via an offset, e.g. a file with a character offset
 	 */
