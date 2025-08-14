@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -60,7 +60,7 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * Extending this class makes it possible to apply Mylyn management to a structured view (e.g. to provide interest-based filtering).
- * 
+ *
  * @author Mik Kersten
  * @since 2.0
  */
@@ -532,7 +532,7 @@ public abstract class AbstractFocusViewAction extends Action
 
 	/**
 	 * Subclasses can provide additional viewer filters that should not be removed when focusing.
-	 * 
+	 *
 	 * @since 3.1
 	 */
 	protected boolean isPreservedFilter(ViewerFilter filter) {

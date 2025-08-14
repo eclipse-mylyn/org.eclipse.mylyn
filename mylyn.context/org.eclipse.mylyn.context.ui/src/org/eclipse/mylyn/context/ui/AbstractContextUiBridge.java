@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2008 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -22,7 +22,7 @@ import org.eclipse.ui.IEditorPart;
 
 /**
  * Extend to bridge between a tool's UI and the generic facilities invoked by the Context UI.
- * 
+ *
  * @author Mik Kersten
  * @since 2.0
  */
@@ -38,7 +38,7 @@ public abstract class AbstractContextUiBridge {
 
 	/**
 	 * Note that a single editor part can correspond to multipe outlines (e.g. the PDE manifest editor).
-	 * 
+	 *
 	 * @return an empty list if none
 	 */
 	public abstract List<TreeViewer> getContentOutlineViewers(IEditorPart editorPart);
