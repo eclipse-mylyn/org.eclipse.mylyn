@@ -259,6 +259,7 @@ public class TaskContextStore extends AbstractTaskContextStore {
 
 	private IAdaptable asAdaptable(final IInteractionContext result) {
 		return new IAdaptable() {
+			@Override
 			public <T> T getAdapter(Class<T> adapter) {
 				if (adapter == IInteractionContext.class) {
 					return adapter.cast(result);
