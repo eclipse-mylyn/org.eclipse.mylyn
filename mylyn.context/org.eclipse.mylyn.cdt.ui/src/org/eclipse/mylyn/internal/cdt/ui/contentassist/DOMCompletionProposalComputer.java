@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -90,7 +90,7 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * Searches the DOM (both the AST and the index) for completion proposals.
- * 
+ *
  * @author Bryan Wilkinson
  */
 public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer {
@@ -155,7 +155,7 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 
 	/**
 	 * Test whether the invocation offset is inside or before the preprocessor directive keyword.
-	 * 
+	 *
 	 * @param context
 	 *            the invocation context
 	 * @return <code>true</code> if the invocation offset is inside or before the directive keyword
@@ -181,7 +181,7 @@ public class DOMCompletionProposalComputer extends ParsingBasedProposalComputer 
 
 	/**
 	 * Check if the invocation offset is inside a preprocessor directive.
-	 * 
+	 *
 	 * @param context
 	 *            the content asist invocation context
 	 * @return <code>true</code> if invocation offset is inside a preprocessor directive
