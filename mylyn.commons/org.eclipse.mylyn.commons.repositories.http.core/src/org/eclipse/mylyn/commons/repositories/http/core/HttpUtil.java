@@ -91,8 +91,6 @@ public class HttpUtil {
 
 	private static final int HTTPS_PORT = 443;
 
-	private static final int POLL_INTERVAL = 500;
-
 	private static final int SOCKET_TIMEOUT = 3 * 60 * 1000;
 
 	private static SchemeSocketFactory socketFactory = new PollingProtocolSocketFactory();
