@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.Assert;
 /**
  * Immutable. Encapsulates interaction made by the user or on behalf of the user. Also see:
  * https://wiki.eclipse.org/index.php/Mylyn_Integrator_Reference#Monitor_API
- * 
+ *
  * @author Mik Kersten
  * @since 2.0
  */
@@ -324,7 +324,7 @@ public class InteractionEvent {
 
 	/**
 	 * Can be used for extensibility, e.g. by adding an XML-encoded String.
-	 * 
+	 *
 	 * @return Additional information relevant to interaction monitoring.
 	 */
 	public String getDelta() {
