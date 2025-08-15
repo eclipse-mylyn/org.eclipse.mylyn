@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2008 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -23,7 +23,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 
 /**
  * Class to help get the handle for an xml file
- * 
+ *
  * @author Shawn Minto
  */
 public class XmlNodeHelper {
@@ -47,7 +47,7 @@ public class XmlNodeHelper {
 
 	/**
 	 * Constructor - used for pde
-	 * 
+	 *
 	 * @param filename
 	 *            The filename
 	 * @param startOffset
@@ -60,7 +60,7 @@ public class XmlNodeHelper {
 
 	/**
 	 * Constructor - used for ant
-	 * 
+	 *
 	 * @param filename
 	 *            The filename
 	 * @param startOffset
@@ -73,7 +73,7 @@ public class XmlNodeHelper {
 
 	/**
 	 * Get the handle for the node Format: filename;startOffset
-	 * 
+	 *
 	 * @return The to the node handle in String form
 	 */
 	public String getHandle() {
@@ -106,7 +106,7 @@ public class XmlNodeHelper {
 
 	/**
 	 * Get the contents of an InputStream
-	 * 
+	 *
 	 * @param is
 	 *            The InputStream to get the contents for
 	 * @return The <code>String</code> representing the contents
