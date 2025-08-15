@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -38,7 +38,7 @@ import org.eclipse.team.internal.core.subscribers.IChangeSetChangeListener;
 
 /**
  * NOTE: this class contains several work-arounds for change set limitations in the Platform/Team support.
- * 
+ *
  * @author Mik Kersten
  */
 public class ContextActiveChangeSetManager extends AbstractContextChangeSetManager {
@@ -52,7 +52,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	/**
 	 * Used to restore change sets managed with task context when platform deletes them, bug 168129
 	 */
-	private class ChangeSetChangeListener implements IChangeSetChangeListener {
+	private static class ChangeSetChangeListener implements IChangeSetChangeListener {
 
 		private final ActiveChangeSetManager manager;
 

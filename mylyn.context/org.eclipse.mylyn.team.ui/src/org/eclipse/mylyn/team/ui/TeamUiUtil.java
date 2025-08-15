@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * Provides static helper method for change sets.
- * 
+ *
  * @author Steffen Pingel
  * @since 3.5
  */
@@ -40,7 +40,7 @@ public class TeamUiUtil {
 	 * associated projects do not specify a custom commit comment template the global template is used.
 	 * <p>
 	 * This method must be invoked on the UI thread.
-	 * 
+	 *
 	 * @param checkTaskRepository
 	 *            if true, a warning dialog is displayed in case <code>task</code> is associated with a different repository than any of the
 	 *            <code>resources</code>
