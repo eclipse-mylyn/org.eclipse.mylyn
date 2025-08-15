@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -57,7 +57,7 @@ import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
  */
 public class TaskHistoryPage extends HistoryPage {
 
-	private class AddedLabelProvider extends ChangeLabelProvider {
+	private static class AddedLabelProvider extends ChangeLabelProvider {
 
 		@Override
 		public String getText(TaskRevision.Change change) {
@@ -99,7 +99,7 @@ public class TaskHistoryPage extends HistoryPage {
 
 	}
 
-	private class FieldLabelProvider extends ChangeLabelProvider {
+	private static class FieldLabelProvider extends ChangeLabelProvider {
 
 		@Override
 		public String getText(TaskRevision.Change change) {
@@ -108,7 +108,7 @@ public class TaskHistoryPage extends HistoryPage {
 
 	}
 
-	private class RemovedLabelProvider extends ChangeLabelProvider {
+	private static class RemovedLabelProvider extends ChangeLabelProvider {
 
 		@Override
 		public String getText(TaskRevision.Change change) {
