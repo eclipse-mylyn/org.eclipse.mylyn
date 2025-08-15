@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2008 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -39,15 +39,13 @@ public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 	@Override
 	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection,
 			boolean contributeToContext) {
-		if (part instanceof AntEditor) {
+		if (part instanceof AntEditor editor) {
 
 			TextSelection textSelection = null;
 			IEditorInput in = null;
 
 			// assume that we are editing an xml file due to the editor used
 			// this is the build.xml and other ant file editor
-			AntEditor editor = (AntEditor) part;
-
 			if (!(editor.getSelectionProvider().getSelection() instanceof TextSelection)) {
 				return;
 			}
