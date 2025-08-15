@@ -53,9 +53,9 @@ public class CommitHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	private static class CommitHyperlink implements IHyperlink {
 
-		private IRegion region;
+		private final IRegion region;
 
-		private String objectId;
+		private final String objectId;
 
 		private final Shell shell;
 
