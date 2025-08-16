@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2013, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -33,14 +33,14 @@ import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 /**
  * This is the item provider adapter for a {@link org.eclipse.mylyn.reviews.core.model.ICommit} object. <!-- begin-user-doc --> <!--
  * end-user-doc -->
- * 
+ *
  * @generated
  */
 public class CommitItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider,
 		IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public CommitItemProvider(AdapterFactory adapterFactory) {
@@ -49,7 +49,7 @@ public class CommitItemProvider extends ItemProviderAdapter implements IEditingD
 
 	/**
 	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -65,7 +65,7 @@ public class CommitItemProvider extends ItemProviderAdapter implements IEditingD
 
 	/**
 	 * This adds a property descriptor for the Id feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addIdPropertyDescriptor(Object object) {
@@ -79,7 +79,7 @@ public class CommitItemProvider extends ItemProviderAdapter implements IEditingD
 
 	/**
 	 * This adds a property descriptor for the Subject feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addSubjectPropertyDescriptor(Object object) {
@@ -94,7 +94,7 @@ public class CommitItemProvider extends ItemProviderAdapter implements IEditingD
 
 	/**
 	 * This returns Commit.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -104,7 +104,7 @@ public class CommitItemProvider extends ItemProviderAdapter implements IEditingD
 
 	/**
 	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -117,7 +117,7 @@ public class CommitItemProvider extends ItemProviderAdapter implements IEditingD
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating a viewer
 	 * notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -136,7 +136,7 @@ public class CommitItemProvider extends ItemProviderAdapter implements IEditingD
 	/**
 	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be created under this object. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -146,7 +146,7 @@ public class CommitItemProvider extends ItemProviderAdapter implements IEditingD
 
 	/**
 	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2013, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -35,14 +35,14 @@ import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 /**
  * This is the item provider adapter for a {@link org.eclipse.mylyn.reviews.core.model.IComment} object. <!-- begin-user-doc --> <!--
  * end-user-doc -->
- * 
+ *
  * @generated
  */
 public class CommentItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider,
 		IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public CommentItemProvider(AdapterFactory adapterFactory) {
@@ -51,7 +51,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 
 	/**
 	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -75,7 +75,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 
 	/**
 	 * This adds a property descriptor for the Index feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addIndexPropertyDescriptor(Object object) {
@@ -90,7 +90,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 
 	/**
 	 * This adds a property descriptor for the Creation Date feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addCreationDatePropertyDescriptor(Object object) {
@@ -105,7 +105,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 
 	/**
 	 * This adds a property descriptor for the Modification Date feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addModificationDatePropertyDescriptor(Object object) {
@@ -120,7 +120,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 
 	/**
 	 * This adds a property descriptor for the Author feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addAuthorPropertyDescriptor(Object object) {
@@ -134,7 +134,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 
 	/**
 	 * This adds a property descriptor for the Description feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addDescriptionPropertyDescriptor(Object object) {
@@ -149,7 +149,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 
 	/**
 	 * This adds a property descriptor for the Id feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addIdPropertyDescriptor(Object object) {
@@ -163,7 +163,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 
 	/**
 	 * This adds a property descriptor for the Draft feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addDraftPropertyDescriptor(Object object) {
@@ -178,7 +178,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 
 	/**
 	 * This adds a property descriptor for the Review feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addReviewPropertyDescriptor(Object object) {
@@ -192,7 +192,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 
 	/**
 	 * This adds a property descriptor for the Title feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addTitlePropertyDescriptor(Object object) {
@@ -207,7 +207,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 
 	/**
 	 * This adds a property descriptor for the Mine feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addMinePropertyDescriptor(Object object) {
@@ -223,7 +223,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
 	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -238,7 +238,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -251,7 +251,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 
 	/**
 	 * This returns Comment.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -261,7 +261,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 
 	/**
 	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -274,7 +274,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating a viewer
 	 * notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -303,7 +303,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 	/**
 	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be created under this object. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -319,7 +319,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 
 	/**
 	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

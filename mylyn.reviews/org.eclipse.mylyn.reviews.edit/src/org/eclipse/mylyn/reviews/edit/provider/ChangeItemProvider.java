@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -35,14 +35,14 @@ import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 /**
  * This is the item provider adapter for a {@link org.eclipse.mylyn.reviews.core.model.IChange} object. <!-- begin-user-doc --> <!--
  * end-user-doc -->
- * 
+ *
  * @generated
  */
 public class ChangeItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider,
 		IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public ChangeItemProvider(AdapterFactory adapterFactory) {
@@ -51,7 +51,7 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 
 	/**
 	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -72,7 +72,7 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 
 	/**
 	 * This adds a property descriptor for the Creation Date feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addCreationDatePropertyDescriptor(Object object) {
@@ -87,7 +87,7 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 
 	/**
 	 * This adds a property descriptor for the Modification Date feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addModificationDatePropertyDescriptor(Object object) {
@@ -102,7 +102,7 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 
 	/**
 	 * This adds a property descriptor for the Id feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addIdPropertyDescriptor(Object object) {
@@ -116,7 +116,7 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 
 	/**
 	 * This adds a property descriptor for the Key feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addKeyPropertyDescriptor(Object object) {
@@ -130,7 +130,7 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 
 	/**
 	 * This adds a property descriptor for the Subject feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addSubjectPropertyDescriptor(Object object) {
@@ -145,7 +145,7 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 
 	/**
 	 * This adds a property descriptor for the Message feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addMessagePropertyDescriptor(Object object) {
@@ -160,7 +160,7 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 
 	/**
 	 * This adds a property descriptor for the Owner feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addOwnerPropertyDescriptor(Object object) {
@@ -175,7 +175,7 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
 	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -189,7 +189,7 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -202,7 +202,7 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 
 	/**
 	 * This returns Change.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -212,7 +212,7 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 
 	/**
 	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -225,7 +225,7 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating a viewer
 	 * notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -251,7 +251,7 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 	/**
 	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be created under this object. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -263,7 +263,7 @@ public class ChangeItemProvider extends ItemProviderAdapter implements IEditingD
 
 	/**
 	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
