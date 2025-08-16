@@ -26,7 +26,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 /**
  * This class implements the initial Task Selection dialog.
- * 
+ *
  * @author Jacques Bouthillier
  */
 public class SelectionDialog extends FormDialog {

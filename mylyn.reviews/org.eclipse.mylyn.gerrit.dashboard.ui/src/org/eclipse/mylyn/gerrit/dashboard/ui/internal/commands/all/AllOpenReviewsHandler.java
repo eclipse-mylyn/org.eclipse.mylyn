@@ -1,19 +1,19 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2015 Ericsson AB and others.
- * 
+ *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
- * 
+ *
  * Description:
- * 
+ *
  * This class implements the "Add ..." a new Gerrit
  * project locations.
- * 
+ *
  * Contributors:
  *   Jacques Bouthillier - Initial implementation of the handler
- * 
+ *
  ******************************************************************************/
 package org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.all;
 
@@ -31,7 +31,7 @@ public class AllOpenReviewsHandler extends AbstractHandler {
 
 	/**
 	 * Method execute.
-	 * 
+	 *
 	 * @param aEvent
 	 *            ExecutionEvent
 	 * @return Object

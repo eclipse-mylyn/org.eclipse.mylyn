@@ -1,14 +1,14 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2014 Ericsson
- * 
+ *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
- * 
+ *
  * Description:
  * 	This class implements the implementation of the review table view information.
- * 
+ *
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the table view information
  ******************************************************************************/
@@ -40,7 +40,7 @@ public class ReviewTableData {
 
 	/**
 	 * Create a new review entry to insert to the list of reviews
-	 * 
+	 *
 	 * @param Object
 	 */
 	@SuppressWarnings("restriction")
@@ -78,7 +78,7 @@ public class ReviewTableData {
 
 	/**
 	 * Provide the list of review available for the table list
-	 * 
+	 *
 	 * @return the list of gerrit reviews
 	 */
 	public GerritTask[] getReviews() {
@@ -90,7 +90,7 @@ public class ReviewTableData {
 
 	/**
 	 * Provide the review with the specified ID
-	 * 
+	 *
 	 * @param id
 	 *            the requested ID (SHORT_CHANGE_ID)
 	 * @return the requested review (or null)
@@ -104,7 +104,7 @@ public class ReviewTableData {
 
 	/**
 	 * Get the current TaskRepo populating the table list view
-	 * 
+	 *
 	 * @return TaskRepository
 	 */
 	public TaskRepository getCurrentTaskRepo() {
@@ -113,7 +113,7 @@ public class ReviewTableData {
 
 	/**
 	 * Return the query information used to populate the review table
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getQueryInfo() {

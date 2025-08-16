@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * This class implements the implementation of the Dashboard-Gerrit UI view label provider.
- * 
+ *
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
  */
@@ -116,7 +116,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 
 	/**
 	 * Return an image representing the state of the object
-	 * 
+	 *
 	 * @param int
 	 *            aState
 	 * @return Image
@@ -141,7 +141,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 
 	/**
 	 * Return an image representing the state of the object
-	 * 
+	 *
 	 * @param int
 	 *            aState
 	 * @return Image
@@ -164,7 +164,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 
 	/**
 	 * Return an image representing the state of the ID object
-	 * 
+	 *
 	 * @param Boolean
 	 *            aState
 	 * @return Image
@@ -181,7 +181,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 
 	/**
 	 * Return the text associated to the column
-	 * 
+	 *
 	 * @param Object
 	 *            structure of the table
 	 * @param int
@@ -259,7 +259,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 
 	/**
 	 * Return the image associated to the column
-	 * 
+	 *
 	 * @param Object
 	 *            structure of the table
 	 * @param int
@@ -301,7 +301,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 
 	/**
 	 * Adjust the column color
-	 * 
+	 *
 	 * @param Object
 	 *            ReviewTableListItem
 	 * @param int
