@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -161,7 +161,7 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 
 	/**
 	 * Do anything necessary because the OK button has been pressed.
-	 * 
+	 *
 	 * @return whether it is okay to close the preference page
 	 */
 	@Override

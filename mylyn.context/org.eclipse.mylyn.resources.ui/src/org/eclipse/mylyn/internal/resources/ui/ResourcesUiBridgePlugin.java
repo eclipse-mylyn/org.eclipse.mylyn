@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -34,7 +34,7 @@ import org.osgi.framework.BundleContext;
 
 /**
  * Main entry point for the Resource Structure Bridge. Initialization order is very important.
- * 
+ *
  * @author Mik Kersten
  * @author Steffen Pingel
  * @since 3.0

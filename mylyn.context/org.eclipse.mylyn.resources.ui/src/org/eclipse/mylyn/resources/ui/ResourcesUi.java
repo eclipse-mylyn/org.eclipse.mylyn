@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -44,7 +44,7 @@ public final class ResourcesUi {
 
 	/**
 	 * Returns all projects that are referenced in <code>context</code>.
-	 * 
+	 *
 	 * @since 3.8
 	 */
 	public static Set<IProject> getProjects(IInteractionContext context) {
