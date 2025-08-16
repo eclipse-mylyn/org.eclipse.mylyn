@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2013, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -26,13 +26,13 @@ import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 /**
  * This is the item provider adapter for a {@link org.eclipse.mylyn.reviews.core.model.IReviewItem} object. <!-- begin-user-doc --> <!--
  * end-user-doc -->
- * 
+ *
  * @generated
  */
 public class ReviewItemItemProvider extends CommentContainerItemProvider {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public ReviewItemItemProvider(AdapterFactory adapterFactory) {
@@ -41,7 +41,7 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 
 	/**
 	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -61,7 +61,7 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 
 	/**
 	 * This adds a property descriptor for the Added By feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addAddedByPropertyDescriptor(Object object) {
@@ -75,7 +75,7 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 
 	/**
 	 * This adds a property descriptor for the Committed By feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addCommittedByPropertyDescriptor(Object object) {
@@ -89,7 +89,7 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 
 	/**
 	 * This adds a property descriptor for the Review feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addReviewPropertyDescriptor(Object object) {
@@ -103,7 +103,7 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 
 	/**
 	 * This adds a property descriptor for the Name feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addNamePropertyDescriptor(Object object) {
@@ -118,7 +118,7 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 
 	/**
 	 * This adds a property descriptor for the Id feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addIdPropertyDescriptor(Object object) {
@@ -133,7 +133,7 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 
 	/**
 	 * This adds a property descriptor for the Reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addReferencePropertyDescriptor(Object object) {
@@ -148,7 +148,7 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 
 	/**
 	 * This returns ReviewItem.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -158,7 +158,7 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 
 	/**
 	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -171,7 +171,7 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating a viewer
 	 * notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -191,7 +191,7 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 	/**
 	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be created under this object. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -202,7 +202,7 @@ public class ReviewItemItemProvider extends CommentContainerItemProvider {
 	/**
 	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

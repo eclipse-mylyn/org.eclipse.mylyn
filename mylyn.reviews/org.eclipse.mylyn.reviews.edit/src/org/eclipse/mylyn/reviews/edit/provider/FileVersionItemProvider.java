@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -31,14 +31,14 @@ import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 /**
  * This is the item provider adapter for a {@link org.eclipse.mylyn.reviews.core.model.IFileVersion} object. <!-- begin-user-doc --> <!--
  * end-user-doc -->
- * 
+ *
  * @generated
  */
 public class FileVersionItemProvider extends ReviewItemItemProvider implements IEditingDomainItemProvider,
 		IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public FileVersionItemProvider(AdapterFactory adapterFactory) {
@@ -47,7 +47,7 @@ public class FileVersionItemProvider extends ReviewItemItemProvider implements I
 
 	/**
 	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -66,7 +66,7 @@ public class FileVersionItemProvider extends ReviewItemItemProvider implements I
 
 	/**
 	 * This adds a property descriptor for the Path feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addPathPropertyDescriptor(Object object) {
@@ -81,7 +81,7 @@ public class FileVersionItemProvider extends ReviewItemItemProvider implements I
 
 	/**
 	 * This adds a property descriptor for the Description feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addDescriptionPropertyDescriptor(Object object) {
@@ -96,7 +96,7 @@ public class FileVersionItemProvider extends ReviewItemItemProvider implements I
 
 	/**
 	 * This adds a property descriptor for the Content feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addContentPropertyDescriptor(Object object) {
@@ -111,7 +111,7 @@ public class FileVersionItemProvider extends ReviewItemItemProvider implements I
 
 	/**
 	 * This adds a property descriptor for the File feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addFilePropertyDescriptor(Object object) {
@@ -125,7 +125,7 @@ public class FileVersionItemProvider extends ReviewItemItemProvider implements I
 
 	/**
 	 * This adds a property descriptor for the File Revision feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected void addFileRevisionPropertyDescriptor(Object object) {
@@ -140,7 +140,7 @@ public class FileVersionItemProvider extends ReviewItemItemProvider implements I
 
 	/**
 	 * This returns FileVersion.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -150,7 +150,7 @@ public class FileVersionItemProvider extends ReviewItemItemProvider implements I
 
 	/**
 	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated NOT
 	 */
 	@Override
@@ -164,7 +164,7 @@ public class FileVersionItemProvider extends ReviewItemItemProvider implements I
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating a viewer
 	 * notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -185,7 +185,7 @@ public class FileVersionItemProvider extends ReviewItemItemProvider implements I
 	/**
 	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be created under this object. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -196,7 +196,7 @@ public class FileVersionItemProvider extends ReviewItemItemProvider implements I
 	/**
 	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
