@@ -1,14 +1,14 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2014 Ericsson
- * 
+ *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
- * 
+ *
  * Description:
  * 	This class implements the implementation of the Gerrit Dashboard UI.
- * 
+ *
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the plug-in
  ******************************************************************************/
@@ -23,7 +23,7 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
- * 
+ *
  */
 
 /**
@@ -89,7 +89,7 @@ public class GerritUi extends AbstractUIPlugin {
 
 	/**
 	 * Returns the shared instance
-	 * 
+	 *
 	 * @return the shared instance
 	 */
 	public static GerritUi getDefault() {
@@ -98,7 +98,7 @@ public class GerritUi extends AbstractUIPlugin {
 
 	/**
 	 * Returns an image descriptor for the image file at the given plug-in relative path
-	 * 
+	 *
 	 * @param aPth
 	 *            the path
 	 * @return the image descriptor

@@ -1,14 +1,14 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2014 Ericsson
- * 
+ *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
- * 
+ *
  * Description:
  * 	This class implements the implementation of the Gerrit Dashboard UI utility.
- * 
+ *
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the plug-in utility
  *   See git history
@@ -33,7 +33,7 @@ public class UIUtils {
 
 	/**
 	 * Method notInplementedDialog.
-	 * 
+	 *
 	 * @param String
 	 */
 	public static void notInplementedDialog(String aSt) {
@@ -47,7 +47,7 @@ public class UIUtils {
 
 	/**
 	 * Method showErrorDialog.
-	 * 
+	 *
 	 * @param String
 	 *            message
 	 * @param String
@@ -62,7 +62,7 @@ public class UIUtils {
 
 	/**
 	 * Creates view preference frame and return the child composite.
-	 * 
+	 *
 	 * @param aParent
 	 *            the parent composite.
 	 * @return the child composite.
