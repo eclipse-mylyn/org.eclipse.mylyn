@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2008 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -302,7 +302,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 
 		/**
 		 * Constructor
-		 * 
+		 *
 		 * @param name
 		 */
 		public XMLSearchJob(String name, XMLSearchOperation op) {
@@ -362,7 +362,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 
 		/**
 		 * Constructor
-		 * 
+		 *
 		 * @param data
 		 */
 		public XMLSearchOperation(TextSearchScope scope, String searchString) {
@@ -374,7 +374,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 
 		/**
 		 * Add a listener for when the bugzilla search is completed
-		 * 
+		 *
 		 * @param l
 		 *            The listener to add
 		 */
@@ -386,7 +386,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 
 		/**
 		 * Remove a listener for when the bugzilla search is completed
-		 * 
+		 *
 		 * @param l
 		 *            The listener to remove
 		 */
@@ -398,7 +398,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 
 		/**
 		 * Notify all of the listeners that the bugzilla search is completed
-		 * 
+		 *
 		 * @param doiList
 		 *            A list of BugzillaSearchHitDoiInfo
 		 * @param member
