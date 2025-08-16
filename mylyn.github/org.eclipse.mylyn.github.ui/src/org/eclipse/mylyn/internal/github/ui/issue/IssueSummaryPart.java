@@ -43,9 +43,9 @@ public class IssueSummaryPart extends AbstractTaskEditorPart {
 
 	private AbstractAttributeEditor summaryEditor;
 
-	private String reporterAvatarId;
+	private final String reporterAvatarId;
 
-	private String assigneeAvatarId;
+	private final String assigneeAvatarId;
 
 	/**
 	 * Create issue summary part

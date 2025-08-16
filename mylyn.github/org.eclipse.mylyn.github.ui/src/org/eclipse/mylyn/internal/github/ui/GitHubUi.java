@@ -45,7 +45,7 @@ public class GitHubUi extends AbstractUIPlugin {
 	 */
 	public static final String STORE_NAME = "avatars.ser"; //$NON-NLS-1$
 
-	private PullRequestContextSynchronizer prSynchronize = new PullRequestContextSynchronizer();
+	private final PullRequestContextSynchronizer prSynchronize = new PullRequestContextSynchronizer();
 
 	/**
 	 * Create status

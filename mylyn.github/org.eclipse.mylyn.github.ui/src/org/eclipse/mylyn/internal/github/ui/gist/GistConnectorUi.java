@@ -37,7 +37,7 @@ public class GistConnectorUi extends AbstractRepositoryConnectorUi {
 
 	/**
 	 * Get core gist repository connector
-	 * 
+	 *
 	 * @return gist connector
 	 */
 	public static GistConnector getCoreConnector() {
@@ -46,7 +46,7 @@ public class GistConnectorUi extends AbstractRepositoryConnectorUi {
 
 	/**
 	 * Get Gist task repositories
-	 * 
+	 *
 	 * @return possibly empty set of Gist task repositories
 	 */
 	public static Set<TaskRepository> getRepositories() {

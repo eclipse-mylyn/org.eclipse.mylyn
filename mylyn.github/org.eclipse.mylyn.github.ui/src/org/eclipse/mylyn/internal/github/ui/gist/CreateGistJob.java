@@ -35,15 +35,15 @@ import org.eclipse.ui.PlatformUI;
 @SuppressWarnings("restriction")
 public class CreateGistJob extends Job {
 
-	private String title;
+	private final String title;
 
-	private String content;
+	private final String content;
 
-	private GistService service;
+	private final GistService service;
 
-	private boolean isPublic;
+	private final boolean isPublic;
 
-	private TaskRepository repository;
+	private final TaskRepository repository;
 
 	/**
 	 * Create job that will create a Gist with the specified parameters

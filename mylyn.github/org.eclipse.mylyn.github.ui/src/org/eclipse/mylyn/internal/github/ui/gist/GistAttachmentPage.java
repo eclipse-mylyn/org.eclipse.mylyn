@@ -24,20 +24,20 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * Gist attachment wizard page class.
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class GistAttachmentPage extends WizardPage {
 
-	private TaskAttachmentMapper mapper;
+	private final TaskAttachmentMapper mapper;
 
-	private TaskAttachmentModel model;
+	private final TaskAttachmentModel model;
 
 	private Text nameText;
 
 	/**
 	 * Create page for task attachment model
-	 * 
+	 *
 	 * @param model
 	 */
 	protected GistAttachmentPage(TaskAttachmentModel model) {
