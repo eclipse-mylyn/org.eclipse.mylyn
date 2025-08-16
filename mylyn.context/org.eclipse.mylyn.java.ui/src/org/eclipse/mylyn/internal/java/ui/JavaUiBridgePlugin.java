@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -209,7 +209,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns an image descriptor for the image file at the given plug-in relative path.
-	 * 
+	 *
 	 * @param path
 	 *            the path
 	 * @return the image descriptor
