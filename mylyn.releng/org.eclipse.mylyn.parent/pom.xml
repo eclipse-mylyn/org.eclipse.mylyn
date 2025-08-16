@@ -287,6 +287,7 @@
           <version>${tycho-version}</version>
           <configuration>
             <encoding>UTF-8</encoding>
+            <release>21</release>
           </configuration>
         </plugin>
         <plugin>
