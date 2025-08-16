@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011 Tasktop Technologies.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -21,7 +21,7 @@ import org.eclipse.mylyn.context.core.ContextComputationStrategy;
 
 /**
  * An abstract strategy that can find Java types in the workspace based on their fully qualified name.
- * 
+ *
  * @author David Green
  */
 public abstract class AbstractJavaContextComputationStrategy extends ContextComputationStrategy {
