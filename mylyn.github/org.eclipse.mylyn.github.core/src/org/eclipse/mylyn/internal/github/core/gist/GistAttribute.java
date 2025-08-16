@@ -92,7 +92,7 @@ public enum GistAttribute {
 
 	/**
 	 * Get task attribute metadata
-	 * 
+	 *
 	 * @return metadata
 	 */
 	public GitHubAttributeMetadata getMetadata() {

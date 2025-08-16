@@ -35,9 +35,9 @@ public class GitHubException extends IOException {
 	 * @return wrapped exception
 	 */
 	public static IOException wrap(IOException exception) {
-		return exception instanceof RequestException
+		return exception instanceof RequestException r
 				? new GitHubException(
-						(RequestException) exception)
+						r)
 				: exception;
 	}
 

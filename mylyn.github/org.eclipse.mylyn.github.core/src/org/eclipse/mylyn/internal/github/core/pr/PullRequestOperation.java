@@ -40,7 +40,7 @@ public enum PullRequestOperation {
 
 	/**
 	 * Get label
-	 * 
+	 *
 	 * @return label
 	 */
 	public String getLabel() {
@@ -49,7 +49,7 @@ public enum PullRequestOperation {
 
 	/**
 	 * Get id
-	 * 
+	 *
 	 * @return id
 	 */
 	public String getId() {
@@ -58,7 +58,7 @@ public enum PullRequestOperation {
 
 	/**
 	 * get the operation by its id
-	 * 
+	 *
 	 * @param opId
 	 *            the id, or null
 	 * @return the operation, or null if the id was null or did not match any operation

@@ -6,7 +6,7 @@
  *  https://www.eclipse.org/legal/epl-2.0/
  *
  *  SPDX-License-Identifier: EPL-2.0
- * 
+ *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
  *******************************************************************************/
@@ -21,7 +21,7 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 
 /**
  * Utilities for working with {@link IRepositoryQuery} objects.
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public abstract class QueryUtils {
@@ -33,7 +33,7 @@ public abstract class QueryUtils {
 
 	/**
 	 * Set attribute
-	 * 
+	 *
 	 * @param key
 	 * @param values
 	 * @param query
@@ -57,7 +57,7 @@ public abstract class QueryUtils {
 
 	/**
 	 * Get attribute
-	 * 
+	 *
 	 * @param key
 	 * @param query
 	 * @return non-null but possibly empty list
