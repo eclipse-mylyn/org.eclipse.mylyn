@@ -91,7 +91,7 @@ public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 
 	private class RemoveLabelAction extends Action {
 
-		private String label;
+		private final String label;
 
 		public RemoveLabelAction(String label) {
 			super(Messages.IssueLabelAttributeEditor_ActionRemoveLabel, IAction.AS_PUSH_BUTTON);
@@ -132,7 +132,7 @@ public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 
 	private Composite labelsArea;
 
-	private List<CLabel> labelControls = new LinkedList<>();
+	private final List<CLabel> labelControls = new LinkedList<>();
 
 	private FormToolkit toolkit;
 

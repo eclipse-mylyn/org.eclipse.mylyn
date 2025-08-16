@@ -42,7 +42,7 @@ public class PullRequestRepositoryQueryPage extends GitHubRepositoryQueryPage {
 
 	private Text titleText;
 
-	private SelectionListener completeListener = new SelectionAdapter() {
+	private final SelectionListener completeListener = new SelectionAdapter() {
 
 		@Override
 		public void widgetSelected(SelectionEvent e) {

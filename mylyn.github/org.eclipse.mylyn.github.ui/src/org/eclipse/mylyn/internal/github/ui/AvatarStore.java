@@ -73,7 +73,7 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 	 */
 	public static final int BUFFER_SIZE = 8192;
 
-	private Map<String, byte[]> avatars = new HashMap<>();
+	private final Map<String, byte[]> avatars = new HashMap<>();
 
 	/**
 	 * Get cached avatar image data

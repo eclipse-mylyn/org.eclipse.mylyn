@@ -40,15 +40,15 @@ public class AvatarLabel implements IAvatarCallback {
 
 	private Composite avatarImage;
 
-	private AvatarStore store;
+	private final AvatarStore store;
 
-	private IRepositoryPerson person;
+	private final IRepositoryPerson person;
 
-	private TaskAttribute attribute;
+	private final TaskAttribute attribute;
 
 	/**
 	 * Create avatar label
-	 * 
+	 *
 	 * @param store
 	 * @param person
 	 * @param attribute
@@ -61,7 +61,7 @@ public class AvatarLabel implements IAvatarCallback {
 
 	/**
 	 * Set visible
-	 * 
+	 *
 	 * @param visible
 	 * @return this label
 	 */
@@ -74,7 +74,7 @@ public class AvatarLabel implements IAvatarCallback {
 
 	/**
 	 * Layout label
-	 * 
+	 *
 	 * @return this label
 	 */
 	public AvatarLabel layout() {
@@ -86,7 +86,7 @@ public class AvatarLabel implements IAvatarCallback {
 
 	/**
 	 * Get main composite
-	 * 
+	 *
 	 * @return composite
 	 */
 	public Composite getControl() {
@@ -95,7 +95,7 @@ public class AvatarLabel implements IAvatarCallback {
 
 	/**
 	 * Create label
-	 * 
+	 *
 	 * @param parent
 	 * @param toolkit
 	 * @return this label

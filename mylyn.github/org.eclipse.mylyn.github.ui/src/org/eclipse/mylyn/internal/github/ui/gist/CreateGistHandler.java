@@ -79,7 +79,7 @@ public class CreateGistHandler extends AbstractHandler {
 	 */
 	private static IEditorInput getActiveEditorInput(ExecutionEvent event) {
 		Object var = HandlerUtil.getVariable(event, ISources.ACTIVE_EDITOR_INPUT_NAME);
-		return var instanceof IEditorInput ? (IEditorInput) var : null;
+		return var instanceof IEditorInput i ? i : null;
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class CreateGistHandler extends AbstractHandler {
 	 */
 	private IWorkbenchPart getActivePart(ExecutionEvent event) {
 		Object var = HandlerUtil.getVariable(event, ISources.ACTIVE_PART_NAME);
-		return var instanceof IWorkbenchPart ? (IWorkbenchPart) var : null;
+		return var instanceof IWorkbenchPart i ? i : null;
 
 	}
 

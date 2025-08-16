@@ -33,7 +33,7 @@ public class PullRequestTaskEditorPage extends AbstractTaskEditorPage {
 
 	/**
 	 * Constructor for the GitHubTaskEditorPage
-	 * 
+	 *
 	 * @param editor
 	 *            The task editor to create for GitHub
 	 */

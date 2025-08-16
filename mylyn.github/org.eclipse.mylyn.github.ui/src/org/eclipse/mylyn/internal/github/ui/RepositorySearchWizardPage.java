@@ -125,7 +125,7 @@ public class RepositorySearchWizardPage extends WizardPage implements IRepositor
 		repoListViewer.setLabelProvider(new DelegatingStyledCellLabelProvider(
 				new IStyledLabelProvider() {
 
-					private Image repoImage = UIIcons.REPOSITORY.createImage();
+					private final Image repoImage = UIIcons.REPOSITORY.createImage();
 
 					@Override
 					public void removeListener(ILabelProviderListener listener) {

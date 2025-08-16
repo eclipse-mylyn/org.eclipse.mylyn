@@ -73,7 +73,7 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 
 	// private CommandContributionItem rebasePr;
 
-	private PullRequestComposite request;
+	private final PullRequestComposite request;
 
 	/**
 	 * Create commit attribute part

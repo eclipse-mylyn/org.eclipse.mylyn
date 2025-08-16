@@ -78,7 +78,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 
 	private List<Milestone> milestones;
 
-	private SelectionListener completeListener = new SelectionAdapter() {
+	private final SelectionListener completeListener = new SelectionAdapter() {
 
 		@Override
 		public void widgetSelected(SelectionEvent e) {

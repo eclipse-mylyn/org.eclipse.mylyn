@@ -37,11 +37,11 @@ import org.eclipse.swt.widgets.Link;
 @SuppressWarnings("restriction")
 public class GistNotificationPopup extends AbstractNotificationPopup {
 
-	private Gist gist;
+	private final Gist gist;
 
-	private String title;
+	private final String title;
 
-	private TaskRepository repository;
+	private final TaskRepository repository;
 
 	/**
 	 * Create Gist notification popup
