@@ -100,16 +100,16 @@ public class GerritCompareUi {
 	}
 
 	static Predicate<CompareEditorInput> getFileComparePredicate(final IFileItem item) {
-		return existingEditorInput -> existingEditorInput instanceof FileItemCompareEditorInput
-				? ((FileItemCompareEditorInput) existingEditorInput).getFileItemId().equals(item.getId())
+		return existingEditorInput -> existingEditorInput instanceof FileItemCompareEditorInput f
+				? f.getFileItemId().equals(item.getId())
 				: false;
 	}
 
 	static Predicate<CompareEditorInput> getReviewItemSetComparePredicate(final IReviewItemSet itemSet,
 			final String taskId) {
-		return existingEditorInput -> existingEditorInput instanceof ReviewItemSetCompareEditorInput
-				? ((ReviewItemSetCompareEditorInput) existingEditorInput).getName().equals(itemSet.getName())
-						&& taskId.equals(((ReviewItemSetCompareEditorInput) existingEditorInput).getItemTaskId())
+		return existingEditorInput -> existingEditorInput instanceof ReviewItemSetCompareEditorInput r
+				? r.getName().equals(itemSet.getName())
+						&& taskId.equals(r.getItemTaskId())
 				: false;
 	}
 
