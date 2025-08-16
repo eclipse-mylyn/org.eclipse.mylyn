@@ -1,10 +1,10 @@
 /*********************************************************************
  * Copyright (c) 2010, 2013 Sony Ericsson/ST Ericsson and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *      Sony Ericsson/ST Ericsson - initial API and implementation
@@ -28,7 +28,7 @@ import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle.
- * 
+ *
  * @author Thomas Westling
  */
 public class GerritUiPlugin extends AbstractUIPlugin {
@@ -76,7 +76,7 @@ public class GerritUiPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns the shared instance.
-	 * 
+	 *
 	 * @return the shared instance
 	 */
 	public static GerritUiPlugin getDefault() {
