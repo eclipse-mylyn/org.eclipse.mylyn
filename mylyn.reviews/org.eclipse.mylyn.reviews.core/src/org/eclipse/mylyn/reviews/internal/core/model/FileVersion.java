@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2013, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -33,13 +33,13 @@ import org.eclipse.team.core.history.IFileRevision;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileVersion#getBinaryContent <em>Binary Content</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class FileVersion extends ReviewItem implements IFileVersion {
 	/**
 	 * The default value of the '{@link #getPath() <em>Path</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getPath()
 	 * @generated
 	 * @ordered
@@ -48,7 +48,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * The cached value of the '{@link #getPath() <em>Path</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getPath()
 	 * @generated
 	 * @ordered
@@ -57,7 +57,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDescription()
 	 * @generated
 	 * @ordered
@@ -66,7 +66,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDescription()
 	 * @generated
 	 * @ordered
@@ -75,7 +75,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * The default value of the '{@link #getContent() <em>Content</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getContent()
 	 * @generated
 	 * @ordered
@@ -84,7 +84,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * The cached value of the '{@link #getContent() <em>Content</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getContent()
 	 * @generated
 	 * @ordered
@@ -93,7 +93,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * The cached value of the '{@link #getFile() <em>File</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getFile()
 	 * @generated
 	 * @ordered
@@ -102,7 +102,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * The default value of the '{@link #getFileRevision() <em>File Revision</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getFileRevision()
 	 * @generated
 	 * @ordered
@@ -111,7 +111,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * The cached value of the '{@link #getFileRevision() <em>File Revision</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getFileRevision()
 	 * @generated
 	 * @ordered
@@ -121,7 +121,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	/**
 	 * The default value of the '{@link #getBinaryContent() <em>Binary Content</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @see #getBinaryContent()
 	 * @generated
 	 * @ordered
@@ -131,7 +131,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	/**
 	 * The cached value of the '{@link #getBinaryContent() <em>Binary Content</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @see #getBinaryContent()
 	 * @generated
 	 * @ordered
@@ -140,7 +140,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected FileVersion() {
@@ -148,7 +148,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -158,7 +158,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -168,7 +168,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -182,7 +182,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -192,7 +192,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -207,7 +207,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -217,7 +217,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -232,7 +232,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -252,7 +252,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated NOT
 	 */
 	@Override
@@ -262,7 +262,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IFileItem basicGetFile() {
@@ -271,7 +271,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -285,7 +285,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -295,7 +295,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -310,7 +310,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -320,7 +320,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -335,7 +335,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -362,7 +362,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -392,7 +392,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -422,7 +422,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -450,7 +450,7 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

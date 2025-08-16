@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2011, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * <li>{@link org.eclipse.mylyn.reviews.core.model.ILineRange#getEnd <em>End</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface ILineRange extends EObject {
@@ -32,7 +32,7 @@ public interface ILineRange extends EObject {
 	 * If the meaning of the '<em>Start</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Start</em>' attribute.
 	 * @see #setStart(int)
 	 * @generated
@@ -42,7 +42,7 @@ public interface ILineRange extends EObject {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.ILineRange#getStart <em>Start</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Start</em>' attribute.
 	 * @see #getStart()
@@ -56,7 +56,7 @@ public interface ILineRange extends EObject {
 	 * If the meaning of the '<em>End</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>End</em>' attribute.
 	 * @see #setEnd(int)
 	 * @generated
@@ -66,7 +66,7 @@ public interface ILineRange extends EObject {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.ILineRange#getEnd <em>End</em>}' attribute. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>End</em>' attribute.
 	 * @see #getEnd()

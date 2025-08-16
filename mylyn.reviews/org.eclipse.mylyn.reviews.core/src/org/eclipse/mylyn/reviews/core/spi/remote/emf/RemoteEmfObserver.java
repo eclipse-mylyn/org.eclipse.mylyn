@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * A concrete implementation of {@link RemoteEmfObserver}, providing a number of convenience methods for managing consumer interaction with
  * observers.
- * 
+ *
  * @author Miles Parker
  */
 public class RemoteEmfObserver<EParentObjectType extends EObject, EObjectType, LocalKeyType, ObjectCurrentType> {
@@ -26,7 +26,7 @@ public class RemoteEmfObserver<EParentObjectType extends EObject, EObjectType, L
 
 	/**
 	 * Constructs an observer that listens to the supplied consumer.
-	 * 
+	 *
 	 * @param consumer
 	 */
 	public RemoteEmfObserver(
@@ -56,7 +56,7 @@ public class RemoteEmfObserver<EParentObjectType extends EObject, EObjectType, L
 	/**
 	 * Sets the consumer for the given observer, adding itself to the supplied consumer and removing it from an existing consumer if any.
 	 * This supports reuse of an observer when the underlying model object changes.
-	 * 
+	 *
 	 * @param consumer
 	 */
 	public void setConsumer(

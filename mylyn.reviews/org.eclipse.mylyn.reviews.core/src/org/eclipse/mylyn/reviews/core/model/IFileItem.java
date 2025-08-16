@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2011, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -21,7 +21,7 @@ package org.eclipse.mylyn.reviews.core.model;
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getSet <em>Set</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface IFileItem extends IReviewItem {
@@ -31,7 +31,7 @@ public interface IFileItem extends IReviewItem {
 	 * If the meaning of the '<em>Base</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Base</em>' containment reference.
 	 * @see #setBase(IFileVersion)
 	 * @generated
@@ -41,7 +41,7 @@ public interface IFileItem extends IReviewItem {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getBase <em>Base</em>}' containment reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Base</em>' containment reference.
 	 * @see #getBase()
@@ -55,7 +55,7 @@ public interface IFileItem extends IReviewItem {
 	 * If the meaning of the '<em>Target</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Target</em>' containment reference.
 	 * @see #setTarget(IFileVersion)
 	 * @generated
@@ -65,7 +65,7 @@ public interface IFileItem extends IReviewItem {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getTarget <em>Target</em>}' containment reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Target</em>' containment reference.
 	 * @see #getTarget()
@@ -80,7 +80,7 @@ public interface IFileItem extends IReviewItem {
 	 * If the meaning of the '<em>Set</em>' container reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Set</em>' container reference.
 	 * @see #setSet(IReviewItemSet)
 	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getItems
@@ -91,7 +91,7 @@ public interface IFileItem extends IReviewItem {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getSet <em>Set</em>}' container reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Set</em>' container reference.
 	 * @see #getSet()

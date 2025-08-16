@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2011, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -55,13 +55,13 @@ import org.eclipse.mylyn.reviews.core.model.IUser;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Comment#isMine <em>Mine</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class Comment extends EObjectImpl implements IComment {
 	/**
 	 * The default value of the '{@link #getIndex() <em>Index</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getIndex()
 	 * @generated
 	 * @ordered
@@ -70,7 +70,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * The default value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getCreationDate()
 	 * @generated
 	 * @ordered
@@ -79,7 +79,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * The cached value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getCreationDate()
 	 * @generated
 	 * @ordered
@@ -89,7 +89,7 @@ public class Comment extends EObjectImpl implements IComment {
 	/**
 	 * The default value of the '{@link #getModificationDate() <em>Modification Date</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getModificationDate()
 	 * @generated
 	 * @ordered
@@ -99,7 +99,7 @@ public class Comment extends EObjectImpl implements IComment {
 	/**
 	 * The cached value of the '{@link #getModificationDate() <em>Modification Date</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getModificationDate()
 	 * @generated
 	 * @ordered
@@ -108,7 +108,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * The cached value of the '{@link #getAuthor() <em>Author</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getAuthor()
 	 * @generated
 	 * @ordered
@@ -117,7 +117,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDescription()
 	 * @generated
 	 * @ordered
@@ -126,7 +126,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDescription()
 	 * @generated
 	 * @ordered
@@ -135,7 +135,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -144,7 +144,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -153,7 +153,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * The cached value of the '{@link #getReplies() <em>Replies</em>}' reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getReplies()
 	 * @generated
 	 * @ordered
@@ -162,7 +162,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * The default value of the '{@link #isDraft() <em>Draft</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #isDraft()
 	 * @generated
 	 * @ordered
@@ -171,7 +171,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * The cached value of the '{@link #isDraft() <em>Draft</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #isDraft()
 	 * @generated
 	 * @ordered
@@ -181,7 +181,7 @@ public class Comment extends EObjectImpl implements IComment {
 	/**
 	 * The cached value of the '{@link #getLocations() <em>Locations</em>}' containment reference list. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getLocations()
 	 * @generated
 	 * @ordered
@@ -190,7 +190,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * The cached value of the '{@link #getReview() <em>Review</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getReview()
 	 * @generated
 	 * @ordered
@@ -199,7 +199,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * The default value of the '{@link #getTitle() <em>Title</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getTitle()
 	 * @generated
 	 * @ordered
@@ -208,7 +208,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * The cached value of the '{@link #getTitle() <em>Title</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getTitle()
 	 * @generated
 	 * @ordered
@@ -217,7 +217,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * The default value of the '{@link #isMine() <em>Mine</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #isMine()
 	 * @generated
 	 * @ordered
@@ -226,7 +226,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected Comment() {
@@ -234,7 +234,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -244,7 +244,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> Returns 0; base comments aren't ordered. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated NOT
 	 */
 	@Override
@@ -258,7 +258,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -268,7 +268,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -282,7 +282,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -292,7 +292,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -307,7 +307,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -317,7 +317,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated NOT
 	 */
 	@Override
@@ -333,7 +333,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -343,7 +343,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated NOT
 	 */
 	@Override
@@ -359,7 +359,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -369,7 +369,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -383,7 +383,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -396,7 +396,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -406,7 +406,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -420,7 +420,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -434,7 +434,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated NOT
 	 */
 	@Override
@@ -450,7 +450,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -460,7 +460,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -474,7 +474,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -487,7 +487,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public ICommentContainer basicGetItem() {
@@ -499,7 +499,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public NotificationChain basicSetItem(ICommentContainer newItem, NotificationChain msgs) {
@@ -509,7 +509,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -538,7 +538,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated NOT
 	 */
 	@Override
@@ -552,7 +552,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -569,7 +569,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -585,7 +585,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -600,7 +600,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -641,7 +641,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -686,7 +686,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -728,7 +728,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -770,7 +770,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -787,7 +787,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -804,7 +804,7 @@ public class Comment extends EObjectImpl implements IComment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

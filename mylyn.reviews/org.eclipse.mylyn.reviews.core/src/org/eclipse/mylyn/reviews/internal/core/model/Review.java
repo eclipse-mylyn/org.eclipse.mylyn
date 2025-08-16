@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2011, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -64,13 +64,13 @@ import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getRequirements <em>Requirements</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class Review extends CommentContainer implements IReview {
 	/**
 	 * The default value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getCreationDate()
 	 * @generated
 	 * @ordered
@@ -79,7 +79,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * The cached value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getCreationDate()
 	 * @generated
 	 * @ordered
@@ -89,7 +89,7 @@ public class Review extends CommentContainer implements IReview {
 	/**
 	 * The default value of the '{@link #getModificationDate() <em>Modification Date</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getModificationDate()
 	 * @generated
 	 * @ordered
@@ -99,7 +99,7 @@ public class Review extends CommentContainer implements IReview {
 	/**
 	 * The cached value of the '{@link #getModificationDate() <em>Modification Date</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getModificationDate()
 	 * @generated
 	 * @ordered
@@ -108,7 +108,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -117,7 +117,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -126,7 +126,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * The default value of the '{@link #getKey() <em>Key</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getKey()
 	 * @generated
 	 * @ordered
@@ -135,7 +135,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * The cached value of the '{@link #getKey() <em>Key</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getKey()
 	 * @generated
 	 * @ordered
@@ -144,7 +144,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * The default value of the '{@link #getSubject() <em>Subject</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getSubject()
 	 * @generated
 	 * @ordered
@@ -153,7 +153,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * The cached value of the '{@link #getSubject() <em>Subject</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getSubject()
 	 * @generated
 	 * @ordered
@@ -162,7 +162,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * The default value of the '{@link #getMessage() <em>Message</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getMessage()
 	 * @generated
 	 * @ordered
@@ -171,7 +171,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * The cached value of the '{@link #getMessage() <em>Message</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getMessage()
 	 * @generated
 	 * @ordered
@@ -180,7 +180,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * The cached value of the '{@link #getOwner() <em>Owner</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getOwner()
 	 * @generated
 	 * @ordered
@@ -189,7 +189,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * The default value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getState()
 	 * @generated
 	 * @ordered
@@ -198,7 +198,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * The cached value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getState()
 	 * @generated
 	 * @ordered
@@ -207,7 +207,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * The cached value of the '{@link #getSets() <em>Sets</em>}' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getSets()
 	 * @generated
 	 * @ordered
@@ -217,7 +217,7 @@ public class Review extends CommentContainer implements IReview {
 	/**
 	 * The cached value of the '{@link #getParents() <em>Parents</em>}' containment reference list. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getParents()
 	 * @generated
 	 * @ordered
@@ -227,7 +227,7 @@ public class Review extends CommentContainer implements IReview {
 	/**
 	 * The cached value of the '{@link #getChildren() <em>Children</em>}' containment reference list. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getChildren()
 	 * @generated
 	 * @ordered
@@ -237,7 +237,7 @@ public class Review extends CommentContainer implements IReview {
 	/**
 	 * The cached value of the '{@link #getReviewerApprovals() <em>Reviewer Approvals</em>}' map. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @see #getReviewerApprovals()
 	 * @generated
 	 * @ordered
@@ -246,7 +246,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * The cached value of the '{@link #getRequirements() <em>Requirements</em>}' map. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getRequirements()
 	 * @generated
 	 * @ordered
@@ -255,7 +255,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected Review() {
@@ -263,7 +263,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -273,7 +273,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -283,7 +283,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -298,7 +298,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -308,7 +308,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -323,7 +323,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -337,7 +337,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -350,7 +350,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IRepository basicGetRepository() {
@@ -362,7 +362,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public NotificationChain basicSetRepository(IRepository newRepository, NotificationChain msgs) {
@@ -372,7 +372,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -402,7 +402,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated NOT
 	 */
 	public Date getLastChangeDate() {
@@ -414,7 +414,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> Unmodifiable and not updated. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated NOT
 	 */
 	@Override
@@ -429,7 +429,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -439,7 +439,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -453,7 +453,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -463,7 +463,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -477,7 +477,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -487,7 +487,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -501,7 +501,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -511,7 +511,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -525,7 +525,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -535,7 +535,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -549,7 +549,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -569,7 +569,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IUser basicGetOwner() {
@@ -578,7 +578,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -592,7 +592,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -606,7 +606,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -620,7 +620,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -634,7 +634,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -649,7 +649,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -669,7 +669,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -695,7 +695,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -710,7 +710,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -764,7 +764,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -824,7 +824,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -878,7 +878,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -922,7 +922,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -950,7 +950,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -978,7 +978,7 @@ public class Review extends CommentContainer implements IReview {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

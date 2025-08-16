@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2011, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -37,7 +37,7 @@ public interface IReviewItemSet extends IReviewItem, IDated {
 	 * If the meaning of the '<em>Items</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Items</em>' containment reference list.
 	 * @see org.eclipse.mylyn.reviews.core.model.IFileItem#getSet
 	 * @generated
@@ -50,7 +50,7 @@ public interface IReviewItemSet extends IReviewItem, IDated {
 	 * If the meaning of the '<em>Revision</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Revision</em>' attribute.
 	 * @see #setRevision(String)
 	 * @generated
@@ -60,7 +60,7 @@ public interface IReviewItemSet extends IReviewItem, IDated {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getRevision <em>Revision</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Revision</em>' attribute.
 	 * @see #getRevision()
@@ -75,7 +75,7 @@ public interface IReviewItemSet extends IReviewItem, IDated {
 	 * If the meaning of the '<em>Parent Review</em>' container reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Parent Review</em>' container reference.
 	 * @see #setParentReview(IReview)
 	 * @see org.eclipse.mylyn.reviews.core.model.IReview#getSets
@@ -86,7 +86,7 @@ public interface IReviewItemSet extends IReviewItem, IDated {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getParentReview <em>Parent Review</em>}' container
 	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Parent Review</em>' container reference.
 	 * @see #getParentReview()
@@ -102,7 +102,7 @@ public interface IReviewItemSet extends IReviewItem, IDated {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Parent Commits</em>' containment reference list.
 	 * @generated
 	 */
@@ -115,7 +115,7 @@ public interface IReviewItemSet extends IReviewItem, IDated {
 	 * If the meaning of the '<em>In Need Of Retrieval</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>In Need Of Retrieval</em>' attribute.
 	 * @see #setInNeedOfRetrieval(boolean)
 	 * @generated
@@ -125,7 +125,7 @@ public interface IReviewItemSet extends IReviewItem, IDated {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#isInNeedOfRetrieval <em>In Need Of Retrieval</em>}'
 	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>In Need Of Retrieval</em>' attribute.
 	 * @see #isInNeedOfRetrieval()

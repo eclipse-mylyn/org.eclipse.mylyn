@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2011, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -27,7 +27,7 @@ import java.util.Map;
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getRequirements <em>Requirements</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface IReview extends ICommentContainer, IChange {
@@ -39,7 +39,7 @@ public interface IReview extends ICommentContainer, IChange {
 	 * If the meaning of the '<em>Sets</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Sets</em>' containment reference list.
 	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getParentReview
 	 * @generated
@@ -53,7 +53,7 @@ public interface IReview extends ICommentContainer, IChange {
 	 * If the meaning of the '<em>Repository</em>' container reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Repository</em>' container reference.
 	 * @see #setRepository(IRepository)
 	 * @see org.eclipse.mylyn.reviews.core.model.IRepository#getReviews
@@ -64,7 +64,7 @@ public interface IReview extends ICommentContainer, IChange {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReview#getRepository <em>Repository</em>}' container reference.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Repository</em>' container reference.
 	 * @see #getRepository()
@@ -79,7 +79,7 @@ public interface IReview extends ICommentContainer, IChange {
 	 * If the meaning of the '<em>Parents</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Parents</em>' containment reference list.
 	 * @generated
 	 */
@@ -93,7 +93,7 @@ public interface IReview extends ICommentContainer, IChange {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Children</em>' containment reference list.
 	 * @generated
 	 */
@@ -107,7 +107,7 @@ public interface IReview extends ICommentContainer, IChange {
 	 * If the meaning of the '<em>Reviewer Approvals</em>' map isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Reviewer Approvals</em>' map.
 	 * @generated
 	 */
@@ -121,7 +121,7 @@ public interface IReview extends ICommentContainer, IChange {
 	 * If the meaning of the '<em>Requirements</em>' map isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Requirements</em>' map.
 	 * @generated
 	 */

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013 Ericsson and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Miles Parker (Tasktop Technologies) - initial API and implementation
@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.Assert;
 
 /**
  * Support generic implementations of a set of remote API factories. In the base case, this just encapsulates a service.
- * 
+ *
  * @author Miles Parker
  */
 public abstract class AbstractRemoteFactoryProvider {

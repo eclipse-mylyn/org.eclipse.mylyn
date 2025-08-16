@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2011, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -33,14 +33,14 @@ import org.eclipse.mylyn.reviews.core.model.ILineRange;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.LineLocation#getRangeMax <em>Range Max</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class LineLocation extends Location implements ILineLocation {
 	/**
 	 * The cached value of the '{@link #getRanges() <em>Ranges</em>}' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @see #getRanges()
 	 * @generated
 	 * @ordered
@@ -49,7 +49,7 @@ public class LineLocation extends Location implements ILineLocation {
 
 	/**
 	 * The default value of the '{@link #getRangeMin() <em>Range Min</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getRangeMin()
 	 * @generated
 	 * @ordered
@@ -58,7 +58,7 @@ public class LineLocation extends Location implements ILineLocation {
 
 	/**
 	 * The default value of the '{@link #getRangeMax() <em>Range Max</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getRangeMax()
 	 * @generated
 	 * @ordered
@@ -67,7 +67,7 @@ public class LineLocation extends Location implements ILineLocation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected LineLocation() {
@@ -75,7 +75,7 @@ public class LineLocation extends Location implements ILineLocation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -85,7 +85,7 @@ public class LineLocation extends Location implements ILineLocation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -99,7 +99,7 @@ public class LineLocation extends Location implements ILineLocation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated NOT
 	 */
 	@Override
@@ -115,7 +115,7 @@ public class LineLocation extends Location implements ILineLocation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated NOT
 	 */
 	@Override
@@ -139,7 +139,7 @@ public class LineLocation extends Location implements ILineLocation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -153,7 +153,7 @@ public class LineLocation extends Location implements ILineLocation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -171,7 +171,7 @@ public class LineLocation extends Location implements ILineLocation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -188,7 +188,7 @@ public class LineLocation extends Location implements ILineLocation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -203,7 +203,7 @@ public class LineLocation extends Location implements ILineLocation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
