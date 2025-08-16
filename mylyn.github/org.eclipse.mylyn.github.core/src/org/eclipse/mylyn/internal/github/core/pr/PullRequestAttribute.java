@@ -102,7 +102,7 @@ public enum PullRequestAttribute {
 
 	/**
 	 * Get attribute metadata
-	 * 
+	 *
 	 * @return metadata
 	 */
 	public GitHubAttributeMetadata getMetadata() {

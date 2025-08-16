@@ -20,17 +20,17 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  */
 public class GitHubAttributeMetadata {
 
-	private String id;
+	private final String id;
 
-	private String label;
+	private final String label;
 
-	private String type;
+	private final String type;
 
-	private String kind;
+	private final String kind;
 
-	private boolean readOnly;
+	private final boolean readOnly;
 
-	private boolean initTask;
+	private final boolean initTask;
 
 	/**
 	 * Create attribute metadata

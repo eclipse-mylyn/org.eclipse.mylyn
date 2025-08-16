@@ -115,7 +115,7 @@ public enum IssueAttribute {
 
 	/**
 	 * Get task attribute metadata
-	 * 
+	 *
 	 * @return metadata
 	 */
 	public GitHubAttributeMetadata getMetadata() {

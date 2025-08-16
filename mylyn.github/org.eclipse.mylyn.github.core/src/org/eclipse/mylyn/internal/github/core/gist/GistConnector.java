@@ -65,9 +65,9 @@ public class GistConnector extends RepositoryConnector {
 		return GitHub.configureClient(client);
 	}
 
-	private GistTaskDataHandler dataHandler = new GistTaskDataHandler();
+	private final GistTaskDataHandler dataHandler = new GistTaskDataHandler();
 
-	private GistAttachmentHandler attachmentHandler = new GistAttachmentHandler();
+	private final GistAttachmentHandler attachmentHandler = new GistAttachmentHandler();
 
 	/**
 	 * @see org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector#getTaskDataHandler()
