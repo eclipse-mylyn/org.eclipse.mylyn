@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2012 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
@@ -19,7 +19,7 @@ import org.eclipse.ui.internal.wizards.NewWizardRegistry;
 
 /**
  * Based on {@link NewWizardRegistry}.
- * 
+ *
  * @author Steffen Pingel
  */
 @SuppressWarnings("restriction")
@@ -29,7 +29,7 @@ public final class NewRepositoryWizardRegistry extends AbstractExtensionWizardRe
 
 	/**
 	 * Return the singleton instance of this class.
-	 * 
+	 *
 	 * @return the singleton instance of this class
 	 */
 	public static synchronized NewRepositoryWizardRegistry getInstance() {
