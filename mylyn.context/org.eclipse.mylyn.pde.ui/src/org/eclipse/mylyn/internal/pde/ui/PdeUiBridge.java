@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2008 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -124,7 +124,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 
 	/**
 	 * Open a file in the appropriate editor
-	 * 
+	 *
 	 * @param file
 	 *            The IFile to open
 	 * @param activate
@@ -268,10 +268,10 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 
 	/**
 	 * Class to listen to the tree views to attempt to refresh them more frequently to keep the ui model consistant with the user selections
-	 * 
+	 *
 	 * @author Shawn Minto
 	 */
-	private class TreeViewerListener implements ISelectionChangedListener, ITreeViewerListener {
+	private static class TreeViewerListener implements ISelectionChangedListener, ITreeViewerListener {
 		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			Object o = event.getSource();
