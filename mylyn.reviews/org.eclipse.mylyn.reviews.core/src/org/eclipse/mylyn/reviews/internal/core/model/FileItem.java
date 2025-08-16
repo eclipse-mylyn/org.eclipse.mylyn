@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2011, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -37,13 +37,13 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileItem#getSet <em>Set</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class FileItem extends ReviewItem implements IFileItem {
 	/**
 	 * The cached value of the '{@link #getBase() <em>Base</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getBase()
 	 * @generated
 	 * @ordered
@@ -52,7 +52,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * The cached value of the '{@link #getTarget() <em>Target</em>}' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getTarget()
 	 * @generated
 	 * @ordered
@@ -61,7 +61,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected FileItem() {
@@ -69,7 +69,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -79,7 +79,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -109,7 +109,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IFileVersion basicGetBase() {
@@ -118,7 +118,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public NotificationChain basicSetBase(IFileVersion newBase, NotificationChain msgs) {
@@ -138,7 +138,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -164,7 +164,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> Unmodifiable and not updated. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated NOT
 	 */
 	@Override
@@ -182,7 +182,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -212,7 +212,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IFileVersion basicGetTarget() {
@@ -221,7 +221,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public NotificationChain basicSetTarget(IFileVersion newTarget, NotificationChain msgs) {
@@ -241,7 +241,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -268,7 +268,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -281,7 +281,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated NOT
 	 */
 	@Override
@@ -294,7 +294,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IReviewItemSet basicGetSet() {
@@ -306,7 +306,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public NotificationChain basicSetSet(IReviewItemSet newSet, NotificationChain msgs) {
@@ -316,7 +316,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -345,7 +345,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -362,7 +362,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -380,7 +380,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -395,7 +395,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -422,7 +422,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -443,7 +443,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -464,7 +464,7 @@ public class FileItem extends ReviewItem implements IFileItem {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

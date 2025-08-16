@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2011, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -39,20 +39,20 @@ import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
- * 
+ *
  * @generated
  */
 public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	/**
 	 * The singleton instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public static final ReviewsFactory eINSTANCE = init();
 
 	/**
 	 * Creates the default factory implementation. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public static ReviewsFactory init() {
@@ -70,7 +70,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public ReviewsFactory() {
@@ -78,7 +78,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -107,7 +107,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -122,7 +122,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -137,7 +137,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -148,7 +148,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -159,7 +159,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -170,7 +170,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -181,7 +181,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -192,7 +192,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -203,7 +203,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -214,7 +214,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -225,7 +225,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -236,7 +236,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -247,7 +247,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -258,7 +258,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public Map.Entry<IApprovalType, Integer> createApprovalValueMap() {
@@ -268,7 +268,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -279,7 +279,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public Map.Entry<IApprovalType, IRequirementEntry> createReviewRequirementsMap() {
@@ -289,7 +289,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -300,7 +300,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public RequirementStatus createRequirementStatusFromString(EDataType eDataType, String initialValue) {
@@ -314,7 +314,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public String convertRequirementStatusToString(EDataType eDataType, Object instanceValue) {
@@ -323,7 +323,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public ReviewStatus createReviewStatusFromString(EDataType eDataType, String initialValue) {
@@ -337,7 +337,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public String convertReviewStatusToString(EDataType eDataType, Object instanceValue) {
@@ -346,7 +346,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public Map.Entry<IUser, IReviewerEntry> createUserApprovalsMap() {
@@ -356,7 +356,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -367,7 +367,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public ReviewsPackage getReviewsPackage() {
@@ -376,7 +376,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @deprecated
 	 * @generated
 	 */

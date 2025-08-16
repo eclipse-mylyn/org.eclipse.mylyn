@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2013, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -32,13 +32,13 @@ import org.eclipse.mylyn.reviews.core.model.IRequirementEntry;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewRequirementsMap#getTypedValue <em>Value</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entry<IApprovalType, IRequirementEntry> {
 	/**
 	 * The cached value of the '{@link #getTypedKey() <em>Key</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getTypedKey()
 	 * @generated
 	 * @ordered
@@ -48,7 +48,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 	/**
 	 * The cached value of the '{@link #getTypedValue() <em>Value</em>}' containment reference. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @see #getTypedValue()
 	 * @generated
 	 * @ordered
@@ -57,7 +57,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected ReviewRequirementsMap() {
@@ -65,7 +65,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -75,7 +75,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IApprovalType getTypedKey() {
@@ -94,7 +94,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IApprovalType basicGetTypedKey() {
@@ -103,7 +103,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public void setTypedKey(IApprovalType newKey) {
@@ -117,7 +117,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IRequirementEntry getTypedValue() {
@@ -146,7 +146,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IRequirementEntry basicGetTypedValue() {
@@ -155,7 +155,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public NotificationChain basicSetTypedValue(IRequirementEntry newValue, NotificationChain msgs) {
@@ -175,7 +175,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public void setTypedValue(IRequirementEntry newValue) {
@@ -201,7 +201,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -215,7 +215,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -237,7 +237,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -255,7 +255,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -273,7 +273,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -289,14 +289,14 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected int hash = -1;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -310,7 +310,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -320,7 +320,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -330,7 +330,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -340,7 +340,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -350,7 +350,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -362,7 +362,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")

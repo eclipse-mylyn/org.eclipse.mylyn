@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2011, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -36,13 +36,13 @@ import org.eclipse.mylyn.reviews.core.model.IUser;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem#getReference <em>Reference</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public abstract class ReviewItem extends CommentContainer implements IReviewItem {
 	/**
 	 * The cached value of the '{@link #getAddedBy() <em>Added By</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getAddedBy()
 	 * @generated
 	 * @ordered
@@ -52,7 +52,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	/**
 	 * The cached value of the '{@link #getCommittedBy() <em>Committed By</em>}' containment reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getCommittedBy()
 	 * @generated
 	 * @ordered
@@ -61,7 +61,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -70,7 +70,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -79,7 +79,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -88,7 +88,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -97,7 +97,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * The default value of the '{@link #getReference() <em>Reference</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getReference()
 	 * @generated
 	 * @ordered
@@ -106,7 +106,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * The cached value of the '{@link #getReference() <em>Reference</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getReference()
 	 * @generated
 	 * @ordered
@@ -115,7 +115,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected ReviewItem() {
@@ -123,7 +123,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -133,7 +133,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> Unmodifiable and not updated. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated NOT
 	 */
 	@Override
@@ -143,7 +143,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -163,7 +163,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IUser basicGetAddedBy() {
@@ -172,7 +172,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -187,7 +187,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -207,7 +207,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IUser basicGetCommittedBy() {
@@ -216,7 +216,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -231,7 +231,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -243,7 +243,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -253,7 +253,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -267,7 +267,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -277,7 +277,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -291,7 +291,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -301,7 +301,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -316,7 +316,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated NOT
 	 */
 	@Override
@@ -330,7 +330,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -360,7 +360,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -387,7 +387,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -414,7 +414,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -438,7 +438,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

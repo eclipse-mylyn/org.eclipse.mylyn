@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2015 Ericsson and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Miles Parker (Tasktop Technologies) - initial API and implementation
@@ -29,7 +29,7 @@ import org.eclipse.mylyn.reviews.internal.core.ReviewsCoreConstants;
 /**
  * An implementation of a remote service using jobs to fulfill the remote service contract. (Future implementations will support a more
  * scalable approach to supporting multiple executions.)
- * 
+ *
  * @author Miles Parker
  */
 public class JobRemoteService extends AbstractRemoteService {
@@ -116,7 +116,7 @@ public class JobRemoteService extends AbstractRemoteService {
 
 	/**
 	 * Returns true if any jobs are currently running.
-	 * 
+	 *
 	 * @return
 	 */
 	@Override

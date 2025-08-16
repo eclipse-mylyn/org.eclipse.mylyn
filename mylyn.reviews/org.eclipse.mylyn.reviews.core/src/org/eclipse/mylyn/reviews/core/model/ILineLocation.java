@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2011, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -23,7 +23,7 @@ import java.util.List;
  * <li>{@link org.eclipse.mylyn.reviews.core.model.ILineLocation#getRangeMax <em>Range Max</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface ILineLocation extends ILocation {
@@ -34,7 +34,7 @@ public interface ILineLocation extends ILocation {
 	 * If the meaning of the '<em>Ranges</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Ranges</em>' containment reference list.
 	 * @generated
 	 */
@@ -46,7 +46,7 @@ public interface ILineLocation extends ILocation {
 	 * If the meaning of the '<em>Range Min</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Range Min</em>' attribute.
 	 * @generated
 	 */
@@ -58,7 +58,7 @@ public interface ILineLocation extends ILocation {
 	 * If the meaning of the '<em>Range Max</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Range Max</em>' attribute.
 	 * @generated
 	 */

@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2011, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -40,21 +40,21 @@ import org.eclipse.mylyn.reviews.core.model.IUser;
 /**
  * <!-- begin-user-doc --> The <b>Adapter Factory</b> for the model. It provides an adapter <code>createXXX</code> method for each class of
  * the model. <!-- end-user-doc -->
- * 
+ *
  * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage
  * @generated
  */
 public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	/**
 	 * The cached model package. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected static ReviewsPackage modelPackage;
 
 	/**
 	 * Creates an instance of the adapter factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public ReviewsAdapterFactory() {
@@ -66,7 +66,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	/**
 	 * Returns whether this factory is applicable for the type of the object. <!-- begin-user-doc --> This implementation returns
 	 * <code>true</code> if the object is either the model's package or is an instance object of the model. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return whether this factory is applicable for the type of the object.
 	 * @generated
 	 */
@@ -83,7 +83,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 
 	/**
 	 * The switch that delegates to the <code>createXXX</code> methods. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected ReviewsSwitch<Adapter> modelSwitch = new ReviewsSwitch<>() {
@@ -205,7 +205,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 
 	/**
 	 * Creates an adapter for the <code>target</code>. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param target
 	 *            the object to adapt.
 	 * @return the adapter for the <code>target</code>.
@@ -220,7 +220,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.ICommentContainer <em>Comment
 	 * Container</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to
 	 * ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.reviews.core.model.ICommentContainer
 	 * @generated
@@ -233,7 +233,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IReview <em>Review</em>}'. <!--
 	 * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when
 	 * inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.reviews.core.model.IReview
 	 * @generated
@@ -246,7 +246,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IComment <em>Comment</em>}'. <!--
 	 * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when
 	 * inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.reviews.core.model.IComment
 	 * @generated
@@ -259,7 +259,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IReviewItem <em>Review Item</em>}'. <!--
 	 * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when
 	 * inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItem
 	 * @generated
@@ -272,7 +272,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.ILocation <em>Location</em>}'. <!--
 	 * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when
 	 * inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.reviews.core.model.ILocation
 	 * @generated
@@ -285,7 +285,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IUser <em>User</em>}'. <!-- begin-user-doc
 	 * --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when inheritance will
 	 * catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.reviews.core.model.IUser
 	 * @generated
@@ -298,7 +298,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IRepository <em>Repository</em>}'. <!--
 	 * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when
 	 * inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.reviews.core.model.IRepository
 	 * @generated
@@ -311,7 +311,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IFileItem <em>File Item</em>}'. <!--
 	 * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when
 	 * inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.reviews.core.model.IFileItem
 	 * @generated
@@ -324,7 +324,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet <em>Review Item Set</em>}'.
 	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case
 	 * when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItemSet
 	 * @generated
@@ -337,7 +337,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.ILineLocation <em>Line Location</em>}'.
 	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case
 	 * when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.reviews.core.model.ILineLocation
 	 * @generated
@@ -350,7 +350,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.ILineRange <em>Line Range</em>}'. <!--
 	 * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when
 	 * inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.reviews.core.model.ILineRange
 	 * @generated
@@ -363,7 +363,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IFileVersion <em>File Version</em>}'. <!--
 	 * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when
 	 * inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.reviews.core.model.IFileVersion
 	 * @generated
@@ -376,7 +376,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IIndexed <em>Indexed</em>}'. <!--
 	 * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when
 	 * inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.reviews.core.model.IIndexed
 	 * @generated
@@ -389,7 +389,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IDated <em>Dated</em>} '. <!--
 	 * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when
 	 * inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.reviews.core.model.IDated
 	 * @generated
@@ -402,7 +402,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IReviewerEntry <em>Reviewer Entry</em>}'.
 	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case
 	 * when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.reviews.core.model.IReviewerEntry
 	 * @generated
@@ -415,7 +415,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IApprovalType <em>Approval Type</em>}'.
 	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case
 	 * when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.reviews.core.model.IApprovalType
 	 * @generated
@@ -428,7 +428,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link java.util.Map.Entry <em>Approval Value Map</em>}'. <!-- begin-user-doc --> This
 	 * default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when inheritance will catch all
 	 * the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see java.util.Map.Entry
 	 * @generated
@@ -441,7 +441,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IRequirementEntry <em>Requirement
 	 * Entry</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to
 	 * ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.reviews.core.model.IRequirementEntry
 	 * @generated
@@ -454,7 +454,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link java.util.Map.Entry <em>Review Requirements Map</em>}'. <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when inheritance will catch
 	 * all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see java.util.Map.Entry
 	 * @generated
@@ -467,7 +467,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.ICommit <em>Commit</em>}'. <!--
 	 * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when
 	 * inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.reviews.core.model.ICommit
 	 * @generated
@@ -480,7 +480,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link java.util.Map.Entry <em>User Approvals Map</em>}'. <!-- begin-user-doc --> This
 	 * default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when inheritance will catch all
 	 * the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see java.util.Map.Entry
 	 * @generated
@@ -493,7 +493,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IChange <em>Change</em>}'. <!--
 	 * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when
 	 * inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @see org.eclipse.mylyn.reviews.core.model.IChange
 	 * @generated
@@ -504,7 +504,7 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 
 	/**
 	 * Creates a new adapter for the default case. <!-- begin-user-doc --> This default implementation returns null. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the new adapter.
 	 * @generated
 	 */

@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2011, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -19,14 +19,14 @@ import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
 
 /**
  * This class contains helper methods to serialize and deserialize XML documents <!-- begin-user-doc --> <!-- end-user-doc -->
- * 
+ *
  * @generated
  */
 public class ReviewsXMLProcessor extends XMLProcessor {
 
 	/**
 	 * Public constructor to instantiate the helper. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public ReviewsXMLProcessor() {
@@ -36,7 +36,7 @@ public class ReviewsXMLProcessor extends XMLProcessor {
 
 	/**
 	 * Register for "*" and "xml" file extensions the ReviewsResourceFactory factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

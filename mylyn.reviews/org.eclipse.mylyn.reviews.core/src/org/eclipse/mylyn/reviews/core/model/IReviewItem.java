@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2011, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -24,7 +24,7 @@ package org.eclipse.mylyn.reviews.core.model;
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getReference <em>Reference</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface IReviewItem extends ICommentContainer {
@@ -34,7 +34,7 @@ public interface IReviewItem extends ICommentContainer {
 	 * If the meaning of the '<em>Added By</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Added By</em>' reference.
 	 * @see #setAddedBy(IUser)
 	 * @generated
@@ -44,7 +44,7 @@ public interface IReviewItem extends ICommentContainer {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getAddedBy <em>Added By</em>}' reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Added By</em>' reference.
 	 * @see #getAddedBy()
@@ -58,7 +58,7 @@ public interface IReviewItem extends ICommentContainer {
 	 * If the meaning of the '<em>Committed By</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Committed By</em>' reference.
 	 * @see #setCommittedBy(IUser)
 	 * @generated
@@ -68,7 +68,7 @@ public interface IReviewItem extends ICommentContainer {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getCommittedBy <em>Committed By</em>}' reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Committed By</em>' reference.
 	 * @see #getCommittedBy()
@@ -82,7 +82,7 @@ public interface IReviewItem extends ICommentContainer {
 	 * If the meaning of the '<em>Review</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Review</em>' reference.
 	 * @generated
 	 */
@@ -94,7 +94,7 @@ public interface IReviewItem extends ICommentContainer {
 	 * If the meaning of the '<em>Name</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
 	 * @generated
@@ -104,7 +104,7 @@ public interface IReviewItem extends ICommentContainer {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getName <em>Name</em>}' attribute. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Name</em>' attribute.
 	 * @see #getName()
@@ -118,7 +118,7 @@ public interface IReviewItem extends ICommentContainer {
 	 * If the meaning of the '<em>Id</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Id</em>' attribute.
 	 * @see #setId(String)
 	 * @generated
@@ -128,7 +128,7 @@ public interface IReviewItem extends ICommentContainer {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getId <em>Id</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Id</em>' attribute.
 	 * @see #getId()
@@ -142,7 +142,7 @@ public interface IReviewItem extends ICommentContainer {
 	 * If the meaning of the '<em>Reference</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Reference</em>' attribute.
 	 * @see #setReference(String)
 	 * @generated
@@ -152,7 +152,7 @@ public interface IReviewItem extends ICommentContainer {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getReference <em>Reference</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Reference</em>' attribute.
 	 * @see #getReference()

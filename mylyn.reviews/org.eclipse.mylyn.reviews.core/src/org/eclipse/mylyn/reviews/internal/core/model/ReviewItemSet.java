@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2013, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -46,13 +46,13 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItemSet#getRevision <em>Revision</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	/**
 	 * The default value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getCreationDate()
 	 * @generated
 	 * @ordered
@@ -61,7 +61,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * The cached value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getCreationDate()
 	 * @generated
 	 * @ordered
@@ -71,7 +71,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	/**
 	 * The default value of the '{@link #getModificationDate() <em>Modification Date</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getModificationDate()
 	 * @generated
 	 * @ordered
@@ -81,7 +81,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	/**
 	 * The cached value of the '{@link #getModificationDate() <em>Modification Date</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getModificationDate()
 	 * @generated
 	 * @ordered
@@ -91,7 +91,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	/**
 	 * The cached value of the '{@link #getItems() <em>Items</em>}' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @see #getItems()
 	 * @generated
 	 * @ordered
@@ -100,7 +100,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * The default value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getRevision()
 	 * @generated
 	 * @ordered
@@ -109,7 +109,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * The cached value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getRevision()
 	 * @generated
 	 * @ordered
@@ -119,7 +119,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	/**
 	 * The cached value of the '{@link #getParentCommits() <em>Parent Commits</em>}' containment reference list. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getParentCommits()
 	 * @generated
 	 * @ordered
@@ -129,7 +129,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	/**
 	 * The default value of the '{@link #isInNeedOfRetrieval() <em>In Need Of Retrieval</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #isInNeedOfRetrieval()
 	 * @generated
 	 * @ordered
@@ -139,7 +139,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	/**
 	 * The cached value of the '{@link #isInNeedOfRetrieval() <em>In Need Of Retrieval</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #isInNeedOfRetrieval()
 	 * @generated
 	 * @ordered
@@ -148,7 +148,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected ReviewItemSet() {
@@ -156,7 +156,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -166,7 +166,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -176,7 +176,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated NOT
 	 */
 	@Override
@@ -192,7 +192,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -202,7 +202,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated NOT
 	 */
 	@Override
@@ -218,7 +218,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -232,7 +232,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated NOT
 	 */
 	public Date getLastChangeDate() {
@@ -244,7 +244,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> Unmodifiable and not updated. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated NOT
 	 */
 	@Override
@@ -259,7 +259,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -269,7 +269,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -284,7 +284,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -297,7 +297,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IReview basicGetParentReview() {
@@ -309,7 +309,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public NotificationChain basicSetParentReview(IReview newParentReview, NotificationChain msgs) {
@@ -320,7 +320,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -350,7 +350,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -364,7 +364,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -374,7 +374,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -389,7 +389,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -409,7 +409,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -427,7 +427,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -441,7 +441,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -470,7 +470,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -506,7 +506,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -539,7 +539,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -569,7 +569,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -586,7 +586,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -603,7 +603,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
