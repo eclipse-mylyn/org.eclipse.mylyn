@@ -1,14 +1,14 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2014 Ericsson
- * 
+ *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
- * 
+ *
  * Description:
  * 	This class implements the implementation of the Dashboard-Gerrit.
- * 
+ *
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the plug-in
  ******************************************************************************/
@@ -81,7 +81,7 @@ public class GerritPlugin extends Plugin {
 
 	/**
 	 * Method start.
-	 * 
+	 *
 	 * @param aContext
 	 *            BundleContext
 	 * @throws Exception
@@ -134,7 +134,7 @@ public class GerritPlugin extends Plugin {
 
 	/**
 	 * Method stop.
-	 * 
+	 *
 	 * @param aContext
 	 *            BundleContext
 	 * @throws Exception
@@ -149,7 +149,7 @@ public class GerritPlugin extends Plugin {
 
 	/**
 	 * Returns the shared instance
-	 * 
+	 *
 	 * @return the shared instance
 	 */
 	public static GerritPlugin getDefault() {
@@ -158,7 +158,7 @@ public class GerritPlugin extends Plugin {
 
 	/**
 	 * Method logError.
-	 * 
+	 *
 	 * @param aMsg
 	 *            String
 	 * @param ae
@@ -170,7 +170,7 @@ public class GerritPlugin extends Plugin {
 
 	/**
 	 * Method logWarning.
-	 * 
+	 *
 	 * @param aMsg
 	 *            String
 	 * @param ae
@@ -182,7 +182,7 @@ public class GerritPlugin extends Plugin {
 
 	/**
 	 * Method logInfo.
-	 * 
+	 *
 	 * @param aMsg
 	 *            String
 	 * @param ae

@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2015 Ericsson
- * 
+ *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
- * 
+ *
  * Contributors:
  *   Francois Chouinard - Initial implementation
  *   Marc-Andre Laperle - Add Topic to dashboard
@@ -29,7 +29,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
  * A Dashboard Gerrit review task
- * 
+ *
  * @author Francois Chouinard
  * @version 0.1
  */
@@ -131,7 +131,7 @@ public class GerritTask extends AbstractTask {
 
 	/**
 	 * Construct an GerritTask from a Gerrit query result. Some fields may be missing from the task data.
-	 * 
+	 *
 	 * @param taskData
 	 *            the Gerrit task data
 	 */
@@ -167,9 +167,9 @@ public class GerritTask extends AbstractTask {
 
 	/*
 	 * Extract the first value from the specified task attributes list.
-	 * 
+	 *
 	 * @param taskAttribute
-	 * 
+	 *
 	 * @return the first value in the list (if any)
 	 */
 	private String getValue(TaskAttribute taskAttribute) {
@@ -189,7 +189,7 @@ public class GerritTask extends AbstractTask {
 	/**
 	 * Format the requested Gerrit Review attribute as a date string. As in the Gerrit web UI, the output format depends on the date
 	 * relation with 'today': Same day: 'hh:mm am/pm' Same year, different day: 'Mon DD' Different year: 'Mon DD, YYYY' (not implemented)
-	 * 
+	 *
 	 * @param key
 	 *            one of { DATE_CREATION, DATE_MODIFICATION, DATE_COMPLETION }
 	 * @return
@@ -219,7 +219,7 @@ public class GerritTask extends AbstractTask {
 
 	/**
 	 * Indicates if a date is 'today'
-	 * 
+	 *
 	 * @param date
 	 *            the date to check against 'today'
 	 * @return true if 'today'
@@ -237,7 +237,7 @@ public class GerritTask extends AbstractTask {
 
 	/**
 	 * Indicates if a date is 'this year'
-	 * 
+	 *
 	 * @param date
 	 *            the date to check
 	 * @return true if same year as today
@@ -270,7 +270,7 @@ public class GerritTask extends AbstractTask {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
