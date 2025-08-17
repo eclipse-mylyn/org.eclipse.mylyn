@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2014 Ericsson and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -37,7 +37,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
 /**
  * Support UI context and implementation neutral creation of controls for a single component that modifies the state of a model object and
  * it's related remote objects. (For convenience, the factory delegates back to the supplied UI context.)
- * 
+ *
  * @author Miles Parker
  */
 public abstract class AbstractUiFactory<EObjectType> implements IUiContext {
@@ -58,7 +58,7 @@ public abstract class AbstractUiFactory<EObjectType> implements IUiContext {
 
 	/**
 	 * Creates a control.
-	 * 
+	 *
 	 * @param context
 	 * @param parent
 	 * @param toolkit
@@ -139,7 +139,7 @@ public abstract class AbstractUiFactory<EObjectType> implements IUiContext {
 
 	/**
 	 * May return null, e.g. in the case where a factory was used outside of an editor context.
-	 * 
+	 *
 	 * @return
 	 */
 	public AbstractTaskEditorPage getTaskEditorPage() {

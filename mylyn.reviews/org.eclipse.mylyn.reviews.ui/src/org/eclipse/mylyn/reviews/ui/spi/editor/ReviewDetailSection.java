@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -250,8 +250,7 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 							String.valueOf(change.getState().getName()))
 					: " "; //$NON-NLS-1$
 			String ownerName = change.getOwner().getDisplayName();
-			link.setText(NLS.bind(Messages.ReviewDetailSection_Link_W_X_Y_by_Z, new String[] {
-					StringUtils.left(change.getKey(), 9), change.getSubject(), changeStatus, ownerName }));
+			link.setText(NLS.bind(Messages.ReviewDetailSection_Link_W_X_Y_by_Z, StringUtils.left(change.getKey(), 9), change.getSubject(), changeStatus, ownerName));
 			link.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {

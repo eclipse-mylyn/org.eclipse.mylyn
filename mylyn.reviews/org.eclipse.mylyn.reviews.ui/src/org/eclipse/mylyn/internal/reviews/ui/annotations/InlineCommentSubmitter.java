@@ -60,7 +60,7 @@ public class InlineCommentSubmitter {
 
 	/**
 	 * Creates a comment submitter
-	 * 
+	 *
 	 * @param reviewitem
 	 *            the submitted comment's review item
 	 * @param range
@@ -108,7 +108,7 @@ public class InlineCommentSubmitter {
 
 	/**
 	 * Performs a save or discard action
-	 * 
+	 *
 	 * @param comment
 	 *            the comment draft that will be added, edited or discarded from the comment thread
 	 */
@@ -162,7 +162,7 @@ public class InlineCommentSubmitter {
 
 	/**
 	 * Updates the UI with the result of the comment operation (either a new comment draft, draft comment edit or discard comment action)
-	 * 
+	 *
 	 * @param comment
 	 *            the comment that the operation was done on
 	 * @param item
@@ -210,7 +210,7 @@ public class InlineCommentSubmitter {
 
 	/**
 	 * Creates an error dialog for unsuccessful comment actions
-	 * 
+	 *
 	 * @param message
 	 *            the message that will be displayed to the user
 	 */
@@ -224,7 +224,7 @@ public class InlineCommentSubmitter {
 
 	/**
 	 * Updates the file with the new changes
-	 * 
+	 *
 	 * @param file
 	 *            the file that will be updated
 	 */

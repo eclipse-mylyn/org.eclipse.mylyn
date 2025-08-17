@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2014 Ericsson
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Miles Parker (Tasktop Technologies) - primary API and implementation
@@ -118,9 +118,8 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			}
 			if (element instanceof IReviewItem item) {
 				Image image = imageManager.getFileImage(item.getName());
-				if (element instanceof IFileItem) {
+				if (element instanceof IFileItem fileItem) {
 					ImageDescriptor baseImage = ImageDescriptor.createFromImage(image);
-					IFileItem fileItem = (IFileItem) element;
 					IFileVersion base = fileItem.getBase();
 					IFileVersion target = fileItem.getTarget();
 					if (base != null && target != null) {
@@ -273,7 +272,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 								target.getDescription());
 					} else if (target.getPath() != null && !target.getPath().equals(base.getPath())) {
 						return NLS.bind(Messages.ReviewsLabelProvider_X_renamed_from_Y_Z,
-								new Object[] { target.getPath(), base.getPath(), target.getDescription() });
+								target.getPath(), base.getPath(), target.getDescription());
 					} else {
 						return NLS.bind(Messages.ReviewsLabelProvider_X_Revision_Y,
 								target.getPath() == null ? target.getName() : target.getPath(),

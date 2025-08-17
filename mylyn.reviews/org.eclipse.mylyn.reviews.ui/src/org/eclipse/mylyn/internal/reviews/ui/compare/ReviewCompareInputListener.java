@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2009, 2016 Atlassian and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Atlassian - initial API and implementation
@@ -113,55 +113,6 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 					}
 				}
 			}
-		}
-
-		/**
-		 * Galileo hack to deal with slaveDocuments (when clicking on java structure elements). The styledText will not contain the whole
-		 * text anymore, so our line numbering is off
-		 *
-		 * @param event
-		 * @return
-		 */
-		@SuppressWarnings("unused")
-		private int getDocumentOffset(LineBackgroundEvent event) {
-			/*
-			 * there is no access to DefaultDocumentAdapter and thus the (master or slave) document.. so we have to assume
-			 * that on first call this event actually has the full text. this text, and the text of the current styled text
-			 * will be used to calculate the offset
-			 */
-			if (event.widget instanceof StyledText) {
-				String currentText = ((StyledText) event.widget).getText();
-				if (initialText == null) {
-					initialText = currentText;
-					// since it is initial call, offset should be 0 anyway
-					return 0;
-				}
-				// if text is unchanged, offset it 0
-				if (currentText.equals(initialText)) {
-					return 0;
-				}
-				// current text is different, check if it is contained in initialText
-				if (initialText.contains(currentText)) {
-					// calculate the offset
-					int charoffset = initialText.indexOf(currentText);
-					int lineOffset = 0;
-					String delimiter = ((StyledText) event.widget).getLineDelimiter();
-					for (String line : initialText.split(delimiter)) {
-						if (charoffset > 0) {
-							charoffset -= line.length() + delimiter.length();
-							lineOffset++;
-						} else {
-							break;
-						}
-					}
-					return lineOffset;
-				} else {
-					// log error since we assume the initial text contains all slaveTexts.
-					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-							"Could not find text offset for annotation highlighting - current text not contained in initial text.")); //$NON-NLS-1$
-				}
-			}
-			return 0;
 		}
 
 		private void initialize() {
