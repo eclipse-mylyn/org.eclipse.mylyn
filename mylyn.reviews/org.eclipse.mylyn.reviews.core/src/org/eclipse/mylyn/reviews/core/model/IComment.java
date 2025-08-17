@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2011, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -30,7 +30,7 @@ import java.util.List;
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#isMine <em>Mine</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface IComment extends IIndexed, IDated {
@@ -40,7 +40,7 @@ public interface IComment extends IIndexed, IDated {
 	 * If the meaning of the '<em>Author</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Author</em>' reference.
 	 * @see #setAuthor(IUser)
 	 * @generated
@@ -50,7 +50,7 @@ public interface IComment extends IIndexed, IDated {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getAuthor <em>Author</em>}' reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Author</em>' reference.
 	 * @see #getAuthor()
@@ -64,7 +64,7 @@ public interface IComment extends IIndexed, IDated {
 	 * If the meaning of the '<em>Description</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Description</em>' attribute.
 	 * @see #setDescription(String)
 	 * @generated
@@ -74,7 +74,7 @@ public interface IComment extends IIndexed, IDated {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getDescription <em>Description</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Description</em>' attribute.
 	 * @see #getDescription()
@@ -88,7 +88,7 @@ public interface IComment extends IIndexed, IDated {
 	 * If the meaning of the '<em>Id</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Id</em>' attribute.
 	 * @see #setId(String)
 	 * @generated
@@ -98,7 +98,7 @@ public interface IComment extends IIndexed, IDated {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getId <em>Id</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Id</em>' attribute.
 	 * @see #getId()
@@ -113,7 +113,7 @@ public interface IComment extends IIndexed, IDated {
 	 * If the meaning of the '<em>Replies</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Replies</em>' reference list.
 	 * @generated
 	 */
@@ -125,7 +125,7 @@ public interface IComment extends IIndexed, IDated {
 	 * If the meaning of the '<em>Draft</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Draft</em>' attribute.
 	 * @see #setDraft(boolean)
 	 * @generated
@@ -135,7 +135,7 @@ public interface IComment extends IIndexed, IDated {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#isDraft <em>Draft</em>}' attribute. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Draft</em>' attribute.
 	 * @see #isDraft()
@@ -151,7 +151,7 @@ public interface IComment extends IIndexed, IDated {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Locations</em>' containment reference list.
 	 * @generated
 	 */
@@ -163,7 +163,7 @@ public interface IComment extends IIndexed, IDated {
 	 * If the meaning of the '<em>Review</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Review</em>' reference.
 	 * @generated
 	 */
@@ -175,7 +175,7 @@ public interface IComment extends IIndexed, IDated {
 	 * If the meaning of the '<em>Title</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Title</em>' attribute.
 	 * @see #setTitle(String)
 	 * @generated
@@ -185,7 +185,7 @@ public interface IComment extends IIndexed, IDated {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getTitle <em>Title</em>}' attribute. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Title</em>' attribute.
 	 * @see #getTitle()
@@ -200,7 +200,7 @@ public interface IComment extends IIndexed, IDated {
 	 * If the meaning of the '<em>Item</em>' container reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Item</em>' container reference.
 	 * @see #setItem(ICommentContainer)
 	 * @see org.eclipse.mylyn.reviews.core.model.ICommentContainer#getComments
@@ -211,7 +211,7 @@ public interface IComment extends IIndexed, IDated {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getItem <em>Item</em>}' container reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Item</em>' container reference.
 	 * @see #getItem()
@@ -225,7 +225,7 @@ public interface IComment extends IIndexed, IDated {
 	 * If the meaning of the '<em>Mine</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Mine</em>' attribute.
 	 * @generated
 	 */

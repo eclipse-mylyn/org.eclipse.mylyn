@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013 Ericsson and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Miles Parker (Tasktop Technologies) - initial API and implementation
@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 /**
  * A general class for managing interaction between a remote API call and resulting local applications of the result. The consumer
  * life-cycle is managed by an {@link AbstractRemoteService}. A given service can have any number of consumers.
- * 
+ *
  * @author Miles Parker
  */
 public abstract class AbstractRemoteConsumer {
@@ -27,7 +27,7 @@ public abstract class AbstractRemoteConsumer {
 	/**
 	 * Override to perform the request against remote API, storing the results of that request as state (e.g. as member(s) field of an
 	 * implementing class). May be long-running and should be able to safely fail.
-	 * 
+	 *
 	 * @param force
 	 *            pull from remote even when API doesn't require
 	 * @param monitor
@@ -38,7 +38,7 @@ public abstract class AbstractRemoteConsumer {
 	/**
 	 * Override to apply the remotely obtained state to a local model object. This method is expected to execute <em>very</em> quickly, as
 	 * the typical implementation will occur on the UI thread.
-	 * 
+	 *
 	 * @param force
 	 *            apply the changes even when API doesn't require
 	 * @throws CoreException
@@ -68,7 +68,7 @@ public abstract class AbstractRemoteConsumer {
 
 	/**
 	 * Returns short description for this consumer. Must not return null.
-	 * 
+	 *
 	 * @return
 	 */
 	public abstract String getDescription();

@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -31,7 +31,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IRepository#getDescription <em>Description</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface IRepository extends EObject {
@@ -43,7 +43,7 @@ public interface IRepository extends EObject {
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Approval Types</em>' containment reference list.
 	 * @generated
 	 */
@@ -55,7 +55,7 @@ public interface IRepository extends EObject {
 	 * If the meaning of the '<em>Task Repository Url</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Task Repository Url</em>' attribute.
 	 * @see #setTaskRepositoryUrl(String)
 	 * @generated
@@ -65,7 +65,7 @@ public interface IRepository extends EObject {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepositoryUrl <em>Task Repository Url</em>}'
 	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Task Repository Url</em>' attribute.
 	 * @see #getTaskRepositoryUrl()
@@ -79,7 +79,7 @@ public interface IRepository extends EObject {
 	 * If the meaning of the '<em>Task Connector Kind</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Task Connector Kind</em>' attribute.
 	 * @see #setTaskConnectorKind(String)
 	 * @generated
@@ -89,7 +89,7 @@ public interface IRepository extends EObject {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskConnectorKind <em>Task Connector Kind</em>}'
 	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Task Connector Kind</em>' attribute.
 	 * @see #getTaskConnectorKind()
@@ -103,7 +103,7 @@ public interface IRepository extends EObject {
 	 * If the meaning of the '<em>Task Repository</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Task Repository</em>' attribute.
 	 * @see #setTaskRepository(TaskRepository)
 	 * @generated
@@ -113,7 +113,7 @@ public interface IRepository extends EObject {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepository <em>Task Repository</em>}'
 	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Task Repository</em>' attribute.
 	 * @see #getTaskRepository()
@@ -127,7 +127,7 @@ public interface IRepository extends EObject {
 	 * If the meaning of the '<em>Account</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Account</em>' reference.
 	 * @see #setAccount(IUser)
 	 * @generated
@@ -137,7 +137,7 @@ public interface IRepository extends EObject {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getAccount <em>Account</em>}' reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Account</em>' reference.
 	 * @see #getAccount()
@@ -153,7 +153,7 @@ public interface IRepository extends EObject {
 	 * If the meaning of the '<em>Reviews</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Reviews</em>' containment reference list.
 	 * @see org.eclipse.mylyn.reviews.core.model.IReview#getRepository
 	 * @generated
@@ -167,7 +167,7 @@ public interface IRepository extends EObject {
 	 * If the meaning of the '<em>Users</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Users</em>' containment reference list.
 	 * @generated
 	 */
@@ -179,7 +179,7 @@ public interface IRepository extends EObject {
 	 * If the meaning of the '<em>Description</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Description</em>' attribute.
 	 * @see #setDescription(String)
 	 * @generated
@@ -189,7 +189,7 @@ public interface IRepository extends EObject {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getDescription <em>Description</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Description</em>' attribute.
 	 * @see #getDescription()

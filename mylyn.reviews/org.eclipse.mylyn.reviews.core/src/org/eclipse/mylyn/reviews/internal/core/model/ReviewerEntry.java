@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2013, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -32,14 +32,14 @@ import org.eclipse.mylyn.reviews.core.model.IReviewerEntry;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewerEntry#getApprovals <em>Approvals</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class ReviewerEntry extends EObjectImpl implements IReviewerEntry {
 	/**
 	 * The cached value of the '{@link #getApprovals() <em>Approvals</em>}' containment reference list. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getApprovals()
 	 * @generated
 	 * @ordered
@@ -48,7 +48,7 @@ public class ReviewerEntry extends EObjectImpl implements IReviewerEntry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected ReviewerEntry() {
@@ -56,7 +56,7 @@ public class ReviewerEntry extends EObjectImpl implements IReviewerEntry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -66,7 +66,7 @@ public class ReviewerEntry extends EObjectImpl implements IReviewerEntry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -80,7 +80,7 @@ public class ReviewerEntry extends EObjectImpl implements IReviewerEntry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -95,7 +95,7 @@ public class ReviewerEntry extends EObjectImpl implements IReviewerEntry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -113,7 +113,7 @@ public class ReviewerEntry extends EObjectImpl implements IReviewerEntry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -129,7 +129,7 @@ public class ReviewerEntry extends EObjectImpl implements IReviewerEntry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -144,7 +144,7 @@ public class ReviewerEntry extends EObjectImpl implements IReviewerEntry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

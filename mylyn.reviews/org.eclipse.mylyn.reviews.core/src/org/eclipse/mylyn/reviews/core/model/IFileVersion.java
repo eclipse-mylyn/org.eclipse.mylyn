@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2013, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -26,7 +26,7 @@ import org.eclipse.team.core.history.IFileRevision;
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getBinaryContent <em>Binary Content</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public interface IFileVersion extends IReviewItem {
@@ -36,7 +36,7 @@ public interface IFileVersion extends IReviewItem {
 	 * If the meaning of the '<em>Path</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Path</em>' attribute.
 	 * @see #setPath(String)
 	 * @generated
@@ -46,7 +46,7 @@ public interface IFileVersion extends IReviewItem {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getPath <em>Path</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Path</em>' attribute.
 	 * @see #getPath()
@@ -60,7 +60,7 @@ public interface IFileVersion extends IReviewItem {
 	 * If the meaning of the '<em>Description</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Description</em>' attribute.
 	 * @see #setDescription(String)
 	 * @generated
@@ -70,7 +70,7 @@ public interface IFileVersion extends IReviewItem {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getDescription <em>Description</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Description</em>' attribute.
 	 * @see #getDescription()
@@ -84,7 +84,7 @@ public interface IFileVersion extends IReviewItem {
 	 * If the meaning of the '<em>Content</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Content</em>' attribute.
 	 * @see #setContent(String)
 	 * @generated
@@ -94,7 +94,7 @@ public interface IFileVersion extends IReviewItem {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getContent <em>Content</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Content</em>' attribute.
 	 * @see #getContent()
@@ -108,7 +108,7 @@ public interface IFileVersion extends IReviewItem {
 	 * If the meaning of the '<em>File</em>' reference isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>File</em>' reference.
 	 * @see #setFile(IFileItem)
 	 * @generated
@@ -118,7 +118,7 @@ public interface IFileVersion extends IReviewItem {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getFile <em>File</em>}' reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>File</em>' reference.
 	 * @see #getFile()
@@ -132,7 +132,7 @@ public interface IFileVersion extends IReviewItem {
 	 * If the meaning of the '<em>File Revision</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>File Revision</em>' attribute.
 	 * @see #setFileRevision(IFileRevision)
 	 * @generated
@@ -142,7 +142,7 @@ public interface IFileVersion extends IReviewItem {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getFileRevision <em>File Revision</em>}' attribute.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>File Revision</em>' attribute.
 	 * @see #getFileRevision()
@@ -156,7 +156,7 @@ public interface IFileVersion extends IReviewItem {
 	 * If the meaning of the '<em>Binary Content</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the value of the '<em>Binary Content</em>' attribute.
 	 * @see #setBinaryContent(byte[])
 	 * @generated
@@ -166,7 +166,7 @@ public interface IFileVersion extends IReviewItem {
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getBinaryContent <em>Binary Content</em>}' attribute.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param value
 	 *            the new value of the '<em>Binary Content</em>' attribute.
 	 * @see #getBinaryContent()
