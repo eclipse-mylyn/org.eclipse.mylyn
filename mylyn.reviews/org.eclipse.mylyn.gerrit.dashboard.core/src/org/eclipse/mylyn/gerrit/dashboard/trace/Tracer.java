@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2014 Ericsson AB and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Ericsson AB - initial API and implementation
@@ -25,7 +25,7 @@ import org.eclipse.mylyn.gerrit.dashboard.Messages;
 /**
  * This class implements a simple trace facility using Eclipse that can be used to send debugging output to the console and/or to file. It
  * supports various levels of tracing
- * 
+ *
  * @author Sebastien Dubois
  */
 public class Tracer {
@@ -75,7 +75,7 @@ public class Tracer {
 
 	/**
 	 * Initialize the tracer object
-	 * 
+	 *
 	 * @param aPluginId
 	 *            - the calling plugin ID (as a String object)
 	 */
@@ -196,7 +196,7 @@ public class Tracer {
 
 	/**
 	 * Output an error trace
-	 * 
+	 *
 	 * @param aMsg
 	 *            - the trace message to output
 	 */
@@ -215,7 +215,7 @@ public class Tracer {
 
 	/**
 	 * Output a warning trace
-	 * 
+	 *
 	 * @param aMsg
 	 *            - the trace message to output
 	 */
@@ -234,7 +234,7 @@ public class Tracer {
 
 	/**
 	 * Output an info trace
-	 * 
+	 *
 	 * @param aMsg
 	 *            - the trace message to output
 	 */
@@ -253,7 +253,7 @@ public class Tracer {
 
 	/**
 	 * Output a debug trace
-	 * 
+	 *
 	 * @param aMsg
 	 *            - the trace message to output
 	 */
@@ -272,7 +272,7 @@ public class Tracer {
 
 	/**
 	 * Write timestamp header
-	 * 
+	 *
 	 * @param aSb
 	 *            - the StringBuilder object (trace line) to append to
 	 */
@@ -282,7 +282,7 @@ public class Tracer {
 
 	/**
 	 * Write thread header
-	 * 
+	 *
 	 * @param aSb
 	 *            - the StringBuilder object (trace line) to append to
 	 */
@@ -292,7 +292,7 @@ public class Tracer {
 
 	/**
 	 * Write location header
-	 * 
+	 *
 	 * @param aSb
 	 *            - the StringBuilder object (trace line) to append to
 	 */
@@ -316,7 +316,7 @@ public class Tracer {
 
 	/**
 	 * Write trace to console/file
-	 * 
+	 *
 	 * @param aSb
 	 *            - the StringBuilder object (trace line) to output
 	 */
