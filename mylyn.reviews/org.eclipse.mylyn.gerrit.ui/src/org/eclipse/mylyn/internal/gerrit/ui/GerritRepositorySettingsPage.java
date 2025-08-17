@@ -1,10 +1,10 @@
 /*********************************************************************
  * Copyright (c) 2010, 2014 Sony Ericsson/ST Ericsson and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *      Sony Ericsson/ST Ericsson - initial API and implementation
@@ -73,7 +73,7 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 
 	}
 
-	private class OpenIdProvider {
+	private static class OpenIdProvider {
 
 		private final String name;
 
@@ -157,7 +157,7 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 
 			setMessage(
 					NLS.bind(Messages.GerritRepositorySettingsPage_X_Logged_in_as_Y_dot_Z,
-							new String[] { getMessage(), gerritValidator.getInfo().getFullName(), warning }),
+							getMessage(), gerritValidator.getInfo().getFullName(), warning),
 					warning.isEmpty() ? IMessageProvider.INFORMATION : IMessageProvider.WARNING);
 		}
 	}
