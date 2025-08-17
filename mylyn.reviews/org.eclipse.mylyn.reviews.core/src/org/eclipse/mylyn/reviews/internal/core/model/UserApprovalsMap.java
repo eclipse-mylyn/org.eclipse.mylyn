@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2013, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -32,13 +32,13 @@ import org.eclipse.mylyn.reviews.core.model.IUser;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.UserApprovalsMap#getTypedValue <em>Value</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUser, IReviewerEntry> {
 	/**
 	 * The cached value of the '{@link #getTypedKey() <em>Key</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getTypedKey()
 	 * @generated
 	 * @ordered
@@ -48,7 +48,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	/**
 	 * The cached value of the '{@link #getTypedValue() <em>Value</em>}' containment reference. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @see #getTypedValue()
 	 * @generated
 	 * @ordered
@@ -57,7 +57,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected UserApprovalsMap() {
@@ -65,7 +65,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -75,7 +75,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IUser getTypedKey() {
@@ -94,7 +94,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IUser basicGetTypedKey() {
@@ -103,7 +103,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public void setTypedKey(IUser newKey) {
@@ -116,7 +116,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IReviewerEntry getTypedValue() {
@@ -145,7 +145,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IReviewerEntry basicGetTypedValue() {
@@ -154,7 +154,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public NotificationChain basicSetTypedValue(IReviewerEntry newValue, NotificationChain msgs) {
@@ -174,7 +174,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public void setTypedValue(IReviewerEntry newValue) {
@@ -200,7 +200,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -214,7 +214,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -236,7 +236,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -254,7 +254,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -272,7 +272,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -288,14 +288,14 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected int hash = -1;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -309,7 +309,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -319,7 +319,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -329,7 +329,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -339,7 +339,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -349,7 +349,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -361,7 +361,7 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")

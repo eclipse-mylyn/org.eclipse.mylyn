@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2013, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -45,14 +45,14 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Repository#getDescription <em>Description</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class Repository extends EObjectImpl implements IRepository {
 	/**
 	 * The cached value of the '{@link #getApprovalTypes() <em>Approval Types</em>}' containment reference list. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getApprovalTypes()
 	 * @generated
 	 * @ordered
@@ -62,7 +62,7 @@ public class Repository extends EObjectImpl implements IRepository {
 	/**
 	 * The default value of the '{@link #getTaskRepositoryUrl() <em>Task Repository Url</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getTaskRepositoryUrl()
 	 * @generated
 	 * @ordered
@@ -72,7 +72,7 @@ public class Repository extends EObjectImpl implements IRepository {
 	/**
 	 * The cached value of the '{@link #getTaskRepositoryUrl() <em>Task Repository Url</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getTaskRepositoryUrl()
 	 * @generated
 	 * @ordered
@@ -82,7 +82,7 @@ public class Repository extends EObjectImpl implements IRepository {
 	/**
 	 * The default value of the '{@link #getTaskConnectorKind() <em>Task Connector Kind</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getTaskConnectorKind()
 	 * @generated
 	 * @ordered
@@ -92,7 +92,7 @@ public class Repository extends EObjectImpl implements IRepository {
 	/**
 	 * The cached value of the '{@link #getTaskConnectorKind() <em>Task Connector Kind</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getTaskConnectorKind()
 	 * @generated
 	 * @ordered
@@ -102,7 +102,7 @@ public class Repository extends EObjectImpl implements IRepository {
 	/**
 	 * The default value of the '{@link #getTaskRepository() <em>Task Repository</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @see #getTaskRepository()
 	 * @generated
 	 * @ordered
@@ -112,7 +112,7 @@ public class Repository extends EObjectImpl implements IRepository {
 	/**
 	 * The cached value of the '{@link #getTaskRepository() <em>Task Repository</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @see #getTaskRepository()
 	 * @generated
 	 * @ordered
@@ -121,7 +121,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * The cached value of the '{@link #getAccount() <em>Account</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getAccount()
 	 * @generated
 	 * @ordered
@@ -131,7 +131,7 @@ public class Repository extends EObjectImpl implements IRepository {
 	/**
 	 * The cached value of the '{@link #getReviews() <em>Reviews</em>}' containment reference list. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
+	 *
 	 * @see #getReviews()
 	 * @generated
 	 * @ordered
@@ -141,7 +141,7 @@ public class Repository extends EObjectImpl implements IRepository {
 	/**
 	 * The cached value of the '{@link #getUsers() <em>Users</em>}' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @see #getUsers()
 	 * @generated
 	 * @ordered
@@ -150,7 +150,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDescription()
 	 * @generated
 	 * @ordered
@@ -159,7 +159,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getDescription()
 	 * @generated
 	 * @ordered
@@ -168,7 +168,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected Repository() {
@@ -176,7 +176,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -186,7 +186,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -200,7 +200,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -210,7 +210,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -225,7 +225,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -235,7 +235,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -250,7 +250,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -260,7 +260,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -275,7 +275,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -295,7 +295,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IUser basicGetAccount() {
@@ -304,7 +304,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -319,7 +319,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -333,7 +333,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -346,7 +346,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -356,7 +356,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -371,7 +371,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -386,7 +386,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -404,7 +404,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -435,7 +435,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -475,7 +475,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -511,7 +511,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -545,7 +545,7 @@ public class Repository extends EObjectImpl implements IRepository {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

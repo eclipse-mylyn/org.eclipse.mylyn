@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2013, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -26,13 +26,13 @@ import org.eclipse.mylyn.reviews.core.model.ICommit;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Commit#getSubject <em>Subject</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class Commit extends EObjectImpl implements ICommit {
 	/**
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -41,7 +41,7 @@ public class Commit extends EObjectImpl implements ICommit {
 
 	/**
 	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -50,7 +50,7 @@ public class Commit extends EObjectImpl implements ICommit {
 
 	/**
 	 * The default value of the '{@link #getSubject() <em>Subject</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getSubject()
 	 * @generated
 	 * @ordered
@@ -59,7 +59,7 @@ public class Commit extends EObjectImpl implements ICommit {
 
 	/**
 	 * The cached value of the '{@link #getSubject() <em>Subject</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getSubject()
 	 * @generated
 	 * @ordered
@@ -68,7 +68,7 @@ public class Commit extends EObjectImpl implements ICommit {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected Commit() {
@@ -76,7 +76,7 @@ public class Commit extends EObjectImpl implements ICommit {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -86,7 +86,7 @@ public class Commit extends EObjectImpl implements ICommit {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -96,7 +96,7 @@ public class Commit extends EObjectImpl implements ICommit {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -110,7 +110,7 @@ public class Commit extends EObjectImpl implements ICommit {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -120,7 +120,7 @@ public class Commit extends EObjectImpl implements ICommit {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -134,7 +134,7 @@ public class Commit extends EObjectImpl implements ICommit {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -150,7 +150,7 @@ public class Commit extends EObjectImpl implements ICommit {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -168,7 +168,7 @@ public class Commit extends EObjectImpl implements ICommit {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -186,7 +186,7 @@ public class Commit extends EObjectImpl implements ICommit {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -202,7 +202,7 @@ public class Commit extends EObjectImpl implements ICommit {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013 Ericsson and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Miles Parker (Tasktop Technologies) - initial API and implementation
@@ -15,7 +15,7 @@ package org.eclipse.mylyn.reviews.core.spi.remote;
 /**
  * Specifies a contract for a service that supports managed execution against remote (or other asynchronous or unpredictable) APIs and/or
  * resources.
- * 
+ *
  * @author Miles Parker
  */
 public abstract class AbstractRemoteService {
@@ -36,7 +36,7 @@ public abstract class AbstractRemoteService {
 	 * <li>If both phases complete successfully, {@link AbstractRemoteConsumer#notifyDone(org.eclipse.core.runtime.IStatus)} is invoked on
 	 * the process with an OK status.</li>
 	 * </ol>
-	 * 
+	 *
 	 * @param process
 	 *            The consumer process to execute
 	 * @param force
@@ -47,7 +47,7 @@ public abstract class AbstractRemoteService {
 	/**
 	 * Supports apply and notification services executed against a specific thread. (For example, the Remote UI Service overrides this to
 	 * force all model update events to occur on the UI thread, as best EMF practices require.)
-	 * 
+	 *
 	 * @param runnable
 	 * @param block
 	 *            true if the model execution should block until complete, false if it can complete in separate thread
@@ -57,7 +57,7 @@ public abstract class AbstractRemoteService {
 	/**
 	 * Supports apply and notification services executed against a specific thread. (For example, the Remote UI Service overrides this to
 	 * force all model update events to occur on the UI thread, as best EMF practices require.)
-	 * 
+	 *
 	 * @param runnable
 	 */
 	public final void modelExec(Runnable runnable) {
@@ -66,7 +66,7 @@ public abstract class AbstractRemoteService {
 
 	/**
 	 * Returns true if any consumers are currently being managed.
-	 * 
+	 *
 	 * @return
 	 */
 	public abstract boolean isActive();

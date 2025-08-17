@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013 Ericsson and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Miles Parker (Tasktop Technologies) - initial API and implementation
@@ -43,7 +43,7 @@ import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteService;
  * also be obtained synchronously from an existing remote object using the {@link #get(EObject, Object)} method. Remote objects can be
  * obtained synchronously for appropriate remote keys using {@link #pull(EObject, Object, IProgressMonitor)}.
  * </p>
- * 
+ *
  * @author Miles Parker
  */
 public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> {
@@ -85,7 +85,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 
 	/**
 	 * Constructs the factory.
-	 * 
+	 *
 	 * @param factoryProvider
 	 *            The associated factory provider
 	 * @param parentReference
@@ -103,7 +103,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 
 	/**
 	 * Returns a unique consumer for a model object that corresponds to a given remote API key. May be called from any thread.
-	 * 
+	 *
 	 * @param parentObject
 	 *            The object that contains or will contain the remote object type
 	 * @return A key used for locating the remote object from remote API. That object does not have to exist on the remote API yet, provided
@@ -130,7 +130,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 
 	/**
 	 * Returns unique consumer for a model object that corresponds to a given remote API object. May be called from any thread.
-	 * 
+	 *
 	 * @param parentObject
 	 *            The object that contains or will contain the remote object type
 	 * @return An object containing remotely derived state
@@ -155,7 +155,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 
 	/**
 	 * Returns unique consumer for a model object that matches a given local key. <em>Must be called from EMF safe (e.g. UI) thread.</em>
-	 * 
+	 *
 	 * @param parentObject
 	 *            The object that contains or will contain the remote object type
 	 * @return A key used for locating the model object from within the model parent object (Typically an EMF id). The actual matching model
@@ -225,7 +225,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 
 	/**
 	 * Returns a unique consumer for a model object. <em>Must be called from EMF safe (e.g. UI) thread.</em>
-	 * 
+	 *
 	 * @param parentObject
 	 *            The object that contains the model object
 	 * @param modelObject
@@ -287,7 +287,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	/**
 	 * Override to infer a local key from the remote object. Should not usually need to be overridden -- by default returns the local key
 	 * matching the remote key for the supplied object.
-	 * 
+	 *
 	 * @param remoteObject
 	 *            The remote object to obtain the local key from
 	 */
@@ -298,7 +298,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	/**
 	 * Override to infer a local key from a remote key. This method must be properly implemented with a one to one mapping in order for
 	 * consumers to function correctly.
-	 * 
+	 *
 	 * @param remoteKey
 	 *            The remote key to obtain the local key from
 	 */
@@ -306,7 +306,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 
 	/**
 	 * Returns the remote object that matches a given model object within a given parent.
-	 * 
+	 *
 	 * @param object
 	 *            A model object
 	 * @return An object containing remotely derived state
@@ -316,7 +316,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	/**
 	 * Override to infer a remote key from a local key. This method is optional but should be supplied whenever it is possible to infer the
 	 * remote key.
-	 * 
+	 *
 	 * @param localKey
 	 *            The local key to discover remote key from, null if unable to infer one
 	 */
@@ -331,7 +331,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	/**
 	 * Override to find a remote object from a local obejct. This method is optional but should be supplied whenever it is possible to infer
 	 * the remote key.
-	 * 
+	 *
 	 * @param localKey
 	 *            The local key to discover remote key from, null if unable to infer one
 	 */
@@ -342,7 +342,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	/**
 	 * Returns true if the creation of an object requires a call to the remote API. If false, no request job is created. True by default
 	 * (safe case).
-	 * 
+	 *
 	 * @return true by default
 	 */
 	public boolean isAsynchronous() {
@@ -352,7 +352,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	/**
 	 * Override to perform request to remote API. This request is fully managed by remote service and could be invoked directly, but is
 	 * typically invoked through a consumer. <em>This method may block or fail, and must not be called from UI thread.</em>
-	 * 
+	 *
 	 * @param parentObject
 	 *            The object that contains the model object
 	 * @param remoteKey
@@ -369,7 +369,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	 * Override to return true if the remote object state should be requested from the remote API. Override to return true if there is no
 	 * way to check the remote model object state without retrieving the whole object. The default implementation is sufficient if the
 	 * remote state is immutable -- that is, if the update method is not implemented at all.
-	 * 
+	 *
 	 * @param parentObject
 	 *            The object that contains the model object
 	 * @param modelObject
@@ -387,7 +387,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	 * Override to create an EObject from remote object. (Consumers should use
 	 * {@link #get(EParentObjectType parent, RemoteType remoteObject)}, which ensures that any cached objects will be returned instead.)
 	 * <em>Must be called from EMF safe (e.g. UI) thread and should have very fast execution time.</em>
-	 * 
+	 *
 	 * @param parentObject
 	 *            the parent EMF object that the new child object will be referenced from
 	 * @param remoteObject
@@ -398,7 +398,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 
 	/**
 	 * Override to return true if a remote object should be created.
-	 * 
+	 *
 	 * @param parentObject
 	 *            The object that contains the model object
 	 * @param modelObject
@@ -416,7 +416,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	 * Updates the values for the supplied EMF object based on any values that have changed in the remote object since the last call to
 	 * {@link #retrieve(String, EObject, EReference, Object)} or {@link #update(Object)}. The object must have been previously retrieved
 	 * using this factory. <em>Must be called from EMF safe (e.g. UI) thread and should have very fast execution time.</em>
-	 * 
+	 *
 	 * @param parentObject
 	 *            the parent EMF object that the new child object is referenced from
 	 * @param modelObject
@@ -431,7 +431,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	 * Override to return true if a remote object to model object update should occur, e.g. when the remote object state is more recent then
 	 * the model object state. Return true by default and generally doesn't need to be overridden as most update operations should be
 	 * inexpensive.
-	 * 
+	 *
 	 * @param parentObject
 	 *            The object that contains the model object
 	 * @param modelObject
@@ -448,7 +448,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	/**
 	 * Returns the model object for the supplied key(s), assuming that model object has already been created. This method can be called from
 	 * any thread, and does not require any interaction with the remote server or local model object.
-	 * 
+	 *
 	 * @param remoteObject
 	 *            the object representing the remote API request response
 	 * @return a model object
@@ -469,7 +469,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 
 	/**
 	 * Returns the EMF reference in the parent object that refers to model objects. Returns the EMF attribute specifying the local key.
-	 * 
+	 *
 	 * @return
 	 */
 	public EReference getParentReference() {
@@ -478,7 +478,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 
 	/**
 	 * Returns the EMF attribute specifying the local key.
-	 * 
+	 *
 	 * @return
 	 */
 	public EAttribute getLocalKeyAttribute() {
@@ -487,7 +487,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 
 	/**
 	 * Returns the service used to execute model operations as supplied by the factory provider.
-	 * 
+	 *
 	 * @return
 	 */
 	public AbstractRemoteService getService() {

@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2011, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -40,21 +40,21 @@ import org.eclipse.mylyn.reviews.core.model.IUser;
  * <!-- begin-user-doc --> The <b>Switch</b> for the model's inheritance hierarchy. It supports the call {@link #doSwitch(EObject)
  * doSwitch(object)} to invoke the <code>caseXXX</code> method for each class of the model, starting with the actual class of the object and
  * proceeding up the inheritance hierarchy until a non-null result is returned, which is the result of the switch. <!-- end-user-doc -->
- * 
+ *
  * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage
  * @generated
  */
 public class ReviewsSwitch<T> {
 	/**
 	 * The cached model package <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected static ReviewsPackage modelPackage;
 
 	/**
 	 * Creates an instance of the switch. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public ReviewsSwitch() {
@@ -66,7 +66,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
@@ -77,7 +77,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
@@ -93,7 +93,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
@@ -337,7 +337,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Comment Container</em>'. <!-- begin-user-doc --> This
 	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Comment Container</em>'.
@@ -351,7 +351,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Review</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Review</em>'.
@@ -365,7 +365,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Comment</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Comment</em>'.
@@ -379,7 +379,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Review Item</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Review Item</em>'.
@@ -393,7 +393,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Location</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Location</em>'.
@@ -407,7 +407,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>User</em>'. <!-- begin-user-doc --> This implementation returns
 	 * null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>User</em>'.
@@ -421,7 +421,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Repository</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Repository</em>'.
@@ -435,7 +435,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>File Item</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>File Item</em>'.
@@ -449,7 +449,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Review Item Set</em>'. <!-- begin-user-doc --> This
 	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Review Item Set</em>'.
@@ -463,7 +463,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Line Location</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Line Location</em>'.
@@ -477,7 +477,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Line Range</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Line Range</em>'.
@@ -491,7 +491,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>File Version</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>File Version</em>'.
@@ -505,7 +505,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Indexed</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Indexed</em>'.
@@ -519,7 +519,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Dated</em>'. <!-- begin-user-doc --> This implementation returns
 	 * null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Dated</em>'.
@@ -533,7 +533,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Reviewer Entry</em>'. <!-- begin-user-doc --> This
 	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Reviewer Entry</em>'.
@@ -547,7 +547,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Approval Type</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Approval Type</em>'.
@@ -561,7 +561,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Approval Value Map</em>'. <!-- begin-user-doc --> This
 	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Approval Value Map</em>'.
@@ -575,7 +575,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Requirement Entry</em>'. <!-- begin-user-doc --> This
 	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Requirement Entry</em>'.
@@ -589,7 +589,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Review Requirements Map</em>'. <!-- begin-user-doc --> This
 	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Review Requirements Map</em>'.
@@ -603,7 +603,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Commit</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Commit</em>'.
@@ -617,7 +617,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>User Approvals Map</em>'. <!-- begin-user-doc --> This
 	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>User Approvals Map</em>'.
@@ -631,7 +631,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Change</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Change</em>'.
@@ -645,7 +645,7 @@ public class ReviewsSwitch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>EObject</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch, but this is the last case anyway. <!-- end-user-doc -->
-	 * 
+	 *
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>EObject</em>'.

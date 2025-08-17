@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2013, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -18,14 +18,14 @@ import java.util.List;
 /**
  * <!-- begin-user-doc --> A representation of the literals of the enumeration '<em><b>Requirement Status</b></em>', and utility methods for
  * working with them. <!-- end-user-doc -->
- * 
+ *
  * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getRequirementStatus()
  * @generated
  */
 public enum RequirementStatus implements InternalRequirementStatus {
 	/**
 	 * The '<em><b>Unknown</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #UNKNOWN_VALUE
 	 * @generated
 	 * @ordered
@@ -34,7 +34,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 
 	/**
 	 * The '<em><b>Satisfied</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #SATISFIED_VALUE
 	 * @generated
 	 * @ordered
@@ -43,7 +43,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 
 	/**
 	 * The '<em><b>Optional</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #OPTIONAL_VALUE
 	 * @generated
 	 * @ordered
@@ -52,7 +52,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 
 	/**
 	 * The '<em><b>Closed</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #CLOSED_VALUE
 	 * @generated
 	 * @ordered
@@ -61,7 +61,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 
 	/**
 	 * The '<em><b>Not Satisfied</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #NOT_SATISFIED_VALUE
 	 * @generated
 	 * @ordered
@@ -70,7 +70,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 
 	/**
 	 * The '<em><b>Rejected</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #REJECTED_VALUE
 	 * @generated
 	 * @ordered
@@ -79,7 +79,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 
 	/**
 	 * The '<em><b>Error</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #ERROR_VALUE
 	 * @generated
 	 * @ordered
@@ -92,7 +92,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	 * If the meaning of '<em><b>Unknown</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #UNKNOWN
 	 * @generated
 	 * @ordered
@@ -105,7 +105,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	 * If the meaning of '<em><b>Satisfied</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #SATISFIED
 	 * @generated
 	 * @ordered
@@ -118,7 +118,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	 * If the meaning of '<em><b>Optional</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #OPTIONAL
 	 * @generated
 	 * @ordered
@@ -131,7 +131,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	 * If the meaning of '<em><b>Closed</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #CLOSED
 	 * @generated
 	 * @ordered
@@ -144,7 +144,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	 * If the meaning of '<em><b>Not Satisfied</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #NOT_SATISFIED
 	 * @generated
 	 * @ordered
@@ -157,7 +157,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	 * If the meaning of '<em><b>Rejected</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #REJECTED
 	 * @generated
 	 * @ordered
@@ -170,7 +170,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	 * If the meaning of '<em><b>Error</b></em>' literal object isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #ERROR
 	 * @generated
 	 * @ordered
@@ -179,7 +179,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 
 	/**
 	 * An array of all the '<em><b>Requirement Status</b></em>' enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private static final RequirementStatus[] VALUES_ARRAY = { UNKNOWN, SATISFIED, OPTIONAL, CLOSED, NOT_SATISFIED,
@@ -187,7 +187,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 
 	/**
 	 * A public read-only list of all the '<em><b>Requirement Status</b></em>' enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public static final List<RequirementStatus> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
@@ -195,7 +195,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	/**
 	 * Returns the '<em><b>Requirement Status</b></em>' literal with the specified literal value. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public static RequirementStatus get(String literal) {
@@ -209,7 +209,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 
 	/**
 	 * Returns the '<em><b>Requirement Status</b></em>' literal with the specified name. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public static RequirementStatus getByName(String name) {
@@ -224,7 +224,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	/**
 	 * Returns the '<em><b>Requirement Status</b></em>' literal with the specified integer value. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public static RequirementStatus get(int value) {
@@ -249,28 +249,28 @@ public enum RequirementStatus implements InternalRequirementStatus {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private final int value;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private final String name;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	private final String literal;
 
 	/**
 	 * Only this class can construct instances. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	RequirementStatus(int value, String name, String literal) {
@@ -281,7 +281,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -291,7 +291,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -301,7 +301,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -311,7 +311,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 
 	/**
 	 * Returns the literal value of the enumerator, which is its string representation. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -323,7 +323,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 
 /**
  * A private implementation interface used to hide the inheritance from Enumerator. <!-- begin-user-doc --> <!-- end-user-doc -->
- * 
+ *
  * @generated
  */
 interface InternalRequirementStatus extends org.eclipse.emf.common.util.Enumerator {

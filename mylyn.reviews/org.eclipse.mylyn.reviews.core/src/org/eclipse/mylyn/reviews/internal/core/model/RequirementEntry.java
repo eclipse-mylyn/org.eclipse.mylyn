@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2013, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -30,13 +30,13 @@ import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.RequirementEntry#getValue <em>Value</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 	/**
 	 * The default value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getStatus()
 	 * @generated
 	 * @ordered
@@ -45,7 +45,7 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 
 	/**
 	 * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getStatus()
 	 * @generated
 	 * @ordered
@@ -54,7 +54,7 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 
 	/**
 	 * The cached value of the '{@link #getBy() <em>By</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getBy()
 	 * @generated
 	 * @ordered
@@ -63,7 +63,7 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected RequirementEntry() {
@@ -71,7 +71,7 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -81,7 +81,7 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -91,7 +91,7 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -106,7 +106,7 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -126,7 +126,7 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public IUser basicGetBy() {
@@ -135,7 +135,7 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -149,7 +149,7 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -168,7 +168,7 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -186,7 +186,7 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -204,7 +204,7 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -220,7 +220,7 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
