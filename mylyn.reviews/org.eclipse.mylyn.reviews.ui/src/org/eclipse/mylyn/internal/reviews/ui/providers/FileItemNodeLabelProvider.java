@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2014, Ericsson AB and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Sebastien Dubois (Ericsson) - Created for Mylyn Reviews
@@ -21,7 +21,7 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * Custom Label Provider for Review Compare Editor input
- * 
+ *
  * @author Sebastien Dubois
  */
 public class FileItemNodeLabelProvider implements ICompareInputLabelProvider {

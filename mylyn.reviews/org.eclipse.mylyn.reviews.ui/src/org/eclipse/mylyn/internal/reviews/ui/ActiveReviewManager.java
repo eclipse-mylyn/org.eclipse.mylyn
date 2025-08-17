@@ -60,9 +60,8 @@ public class ActiveReviewManager {
 		public void partActivated(IWorkbenchPart part) {
 			if (part instanceof TaskEditor editor && currentPart != part) {
 				IFormPage page = editor.getActivePageInstance();
-				if (page instanceof AbstractReviewTaskEditorPage) {
+				if (page instanceof AbstractReviewTaskEditorPage reviewPage) {
 					currentPart = editor;
-					AbstractReviewTaskEditorPage reviewPage = (AbstractReviewTaskEditorPage) page;
 					setReview(reviewPage.getReview());
 				}
 			}

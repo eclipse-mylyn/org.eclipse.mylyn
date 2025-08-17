@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2009, 2015 Atlassian and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Atlassian - initial API and implementation
@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * Dialog that can display progress
- * 
+ *
  * @author Shawn Minto
  */
 public abstract class ProgressDialog extends TitleAreaDialog {
@@ -100,7 +100,7 @@ public abstract class ProgressDialog extends TitleAreaDialog {
 	/**
 	 * About to start a long running operation triggered through the wizard. Shows the progress monitor and disables the wizard's buttons
 	 * and controls.
-	 * 
+	 *
 	 * @param enableCancelButton
 	 *            <code>true</code> if the Cancel button should be enabled, and <code>false</code> if it should be disabled
 	 * @return the saved UI state
@@ -128,7 +128,7 @@ public abstract class ProgressDialog extends TitleAreaDialog {
 	/**
 	 * A long running operation triggered through the wizard was stopped either by user input or by normal end. Hides the progress monitor
 	 * and restores the enable state wizard's buttons and controls.
-	 * 
+	 *
 	 * @param savedState
 	 *            the saved UI state as returned by <code>aboutToStart</code>
 	 * @see #aboutToStart
@@ -148,7 +148,7 @@ public abstract class ProgressDialog extends TitleAreaDialog {
 
 	/**
 	 * Create the progress monitor part in the receiver.
-	 * 
+	 *
 	 * @param composite
 	 * @param pmlayout
 	 * @return ProgressMonitorPart
@@ -230,7 +230,7 @@ public abstract class ProgressDialog extends TitleAreaDialog {
 
 	/**
 	 * Returns the progress monitor for this wizard dialog (if it has one).
-	 * 
+	 *
 	 * @return the progress monitor, or <code>null</code> if this wizard dialog does not have one
 	 */
 	protected IProgressMonitor getProgressMonitor() {
@@ -239,7 +239,7 @@ public abstract class ProgressDialog extends TitleAreaDialog {
 
 	/**
 	 * Sets the given cursor for all shells currently active for this window's display.
-	 * 
+	 *
 	 * @param c
 	 *            the cursor
 	 */

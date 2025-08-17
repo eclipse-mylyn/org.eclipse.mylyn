@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2014 Ericsson
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Miles Parker (Tasktop Technologies) - initial API and implementation
@@ -20,7 +20,7 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * Supports independent styling of individual table columns.
- * 
+ *
  * @author Miles Parker
  */
 public abstract class TableStyledLabelProvider extends LabelProvider

@@ -512,7 +512,7 @@ public class ReviewCompareAnnotationSupport {
 		while (e.hasNext()) {
 			Annotation a = e.next();
 
-			Position p = a instanceof CommentAnnotation ? ((CommentAnnotation) a).getPosition() : null;
+			Position p = a instanceof CommentAnnotation c ? c.getPosition() : null;
 			if (p == null) {
 				continue;
 			}
