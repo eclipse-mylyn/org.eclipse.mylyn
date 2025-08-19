@@ -20,7 +20,7 @@ public interface IActivityManager {
 
 	/**
 	 * Returns the activity stream for <code>scope</code>.
-	 * 
+	 *
 	 * @param scope
 	 *            the scope, must not be <code>null</code>
 	 */

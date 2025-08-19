@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * Defines a stream of {@link ActivityEvent}s that
- * 
+ *
  * @author Steffen Pingel
  * @author Timur Achmetow
  */

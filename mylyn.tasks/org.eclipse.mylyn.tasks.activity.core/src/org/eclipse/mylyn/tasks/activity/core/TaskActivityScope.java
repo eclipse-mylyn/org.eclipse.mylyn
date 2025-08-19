@@ -15,7 +15,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * Defines the scope for a single task.
- * 
+ *
  * @author Steffen Pingel
  */
 public class TaskActivityScope extends ActivityScope {
