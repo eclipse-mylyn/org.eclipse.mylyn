@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -124,7 +124,7 @@ public abstract class SubmitJob extends TaskJob {
 
 	/**
 	 * Returns the connector specific result of the submission.
-	 * 
+	 *
 	 * @return the response from the repository, null if no response was received or the submission failed
 	 * @since 3.2
 	 */

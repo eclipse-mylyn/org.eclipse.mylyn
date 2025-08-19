@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2008 Willian Mitsuda and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -27,7 +27,7 @@ package org.eclipse.mylyn.internal.tasks.core;
  * <li>If no blank space is found, the entire substring is quoted
  * <li>The remaining of substring + line are reevaluated on step 1
  * </ol>
- * 
+ *
  * @author Willian Mitsuda
  */
 public class CommentQuoter {

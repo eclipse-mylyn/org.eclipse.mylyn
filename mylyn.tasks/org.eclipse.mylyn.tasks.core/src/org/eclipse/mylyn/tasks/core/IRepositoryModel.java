@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2009 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -38,7 +38,7 @@ public interface IRepositoryModel {
 
 	/**
 	 * Gets a task by its {@link ITask#getTaskKey() key}.
-	 * 
+	 *
 	 * @return the task or null if no such task was found
 	 * @since 3.2
 	 */

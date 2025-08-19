@@ -247,7 +247,7 @@ public class ExternalizationManager {
 		}
 	}
 
-	private class ExternalizationContext implements IExternalizationContext {
+	private static class ExternalizationContext implements IExternalizationContext {
 
 		private final Kind kind;
 

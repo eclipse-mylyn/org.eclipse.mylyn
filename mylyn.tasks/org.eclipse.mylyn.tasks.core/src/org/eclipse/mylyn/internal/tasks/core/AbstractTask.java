@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -27,7 +27,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 /**
  * Encapsulates tasks that reside on a repository or local computer and participate in synchronization with the source that contains their
  * data.
- * 
+ *
  * @author Mik Kersten
  * @author Rob Elves
  * @since 2.0
@@ -115,7 +115,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	/**
 	 * True for tasks that can be modified without a round-trip to a server. For example, such a task can be marked completed via the Task
 	 * List.
-	 * 
+	 *
 	 * @deprecated use <code>task instanceof LocalTask</code> instead
 	 */
 	@Deprecated

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -28,7 +28,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * Responsible for retrieving and posting task data to a repository. Clients may subclass.
- * 
+ *
  * @author Mik Kersten
  * @author Rob Elves
  * @author Steffen Pingel
@@ -39,7 +39,7 @@ public abstract class AbstractTaskDataHandler {
 	/**
 	 * Download task data for each id provided Override {@link #canGetMultiTaskData(TaskRepository)} to return true and implement this
 	 * method if connector supports download of multiple task data in one request.
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	public void getMultiTaskData(@NonNull TaskRepository repository, @NonNull Set<String> taskIds,
@@ -49,7 +49,7 @@ public abstract class AbstractTaskDataHandler {
 
 	/**
 	 * Return a reference to the newly created report in the case of new task submission, null otherwise
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	public abstract RepositoryResponse postTaskData(@NonNull TaskRepository repository, @NonNull TaskData taskData,
@@ -57,7 +57,7 @@ public abstract class AbstractTaskDataHandler {
 
 	/**
 	 * Initialize a new task data object with default attributes and values
-	 * 
+	 *
 	 * @param repository
 	 *            The {@code TaskRepository} the taskdata belongs to.
 	 * @param data
@@ -76,7 +76,7 @@ public abstract class AbstractTaskDataHandler {
 
 	/**
 	 * Initializes <code>taskData</code> with default attributes for a subtask of <code>parentTaskData</code>.
-	 * 
+	 *
 	 * @return false if this operation is not supported by the connector, true if initialized
 	 * @since 3.0
 	 */
@@ -100,7 +100,7 @@ public abstract class AbstractTaskDataHandler {
 
 	/**
 	 * Returns a {@link TaskAttributeMapper} for <code>repository</code>.
-	 * 
+	 *
 	 * @see TaskAttributeMapper
 	 * @since 3.0
 	 */
@@ -109,7 +109,7 @@ public abstract class AbstractTaskDataHandler {
 	/**
 	 * Returns true if connector support downloading multiple task data in single request, false otherwise. If true, override and implement
 	 * {@link #getMultiTaskData(TaskRepository, Set, TaskDataCollector, IProgressMonitor)}.
-	 * 
+	 *
 	 * @param repository
 	 *            the repository for which multi task data download is supported
 	 * @since 3.0
@@ -123,7 +123,7 @@ public abstract class AbstractTaskDataHandler {
 	 * <p>
 	 * Sub classes may override to migrate attributes on <code>taskData</code>.
 	 * </p>
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	public void migrateTaskData(@NonNull TaskRepository repository, @NonNull TaskData taskData) {

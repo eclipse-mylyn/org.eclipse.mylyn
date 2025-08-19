@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -38,7 +38,7 @@ public interface ITaskList {
 	/**
 	 * Precondition: {@code container} already exists in tasklist (be it a parent task, category, or query) If the parentContainer is null
 	 * the task is considered an orphan and added to the appropriate repository's orphaned tasks container.
-	 * 
+	 *
 	 * @param task
 	 *            to be added
 	 * @param container

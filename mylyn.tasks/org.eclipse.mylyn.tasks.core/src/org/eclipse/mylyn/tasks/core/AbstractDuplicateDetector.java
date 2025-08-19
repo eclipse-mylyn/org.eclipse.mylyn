@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2008 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -18,7 +18,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
  * Extend to provide task duplicate detection facilities to the task editor (e.g. Java stack trace matching).
- * 
+ *
  * @author Gail Murphy
  * @author Robert Elves
  * @author Steffen Pingel

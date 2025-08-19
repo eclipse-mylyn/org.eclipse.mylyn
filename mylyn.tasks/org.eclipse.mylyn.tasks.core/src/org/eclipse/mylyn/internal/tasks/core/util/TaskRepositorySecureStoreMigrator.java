@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -33,7 +33,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 /**
  * Reads all data from the old "org.eclipse.mylyn.tasks.core" secure store node and writes it to the {@link ICredentialsStore} provided by
  * the {@link ILocationService}.
- * 
+ *
  * @author Sam Davis
  */
 public class TaskRepositorySecureStoreMigrator {

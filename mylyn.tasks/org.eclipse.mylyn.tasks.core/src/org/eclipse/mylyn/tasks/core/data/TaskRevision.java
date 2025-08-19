@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -22,7 +22,7 @@ import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 
 /**
  * Describes a revision of a task in its history.
- * 
+ *
  * @author Steffen Pingel
  * @since 3.6
  */
@@ -43,7 +43,7 @@ public class TaskRevision {
 
 		/**
 		 * Constructs a field change.
-		 * 
+		 *
 		 * @param attributeId
 		 *            the id of the attribute that has changed, must not be null
 		 * @param field

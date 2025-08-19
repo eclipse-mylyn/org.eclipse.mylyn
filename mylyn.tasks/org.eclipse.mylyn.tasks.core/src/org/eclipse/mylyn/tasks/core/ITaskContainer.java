@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2009 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -27,7 +27,7 @@ public interface ITaskContainer {
 	/**
 	 * Returns the children of this task, as defined by a containment hierarchy such as the Task List's categories, queries and substasks.
 	 * Never returns null.
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	Collection<ITask> getChildren();

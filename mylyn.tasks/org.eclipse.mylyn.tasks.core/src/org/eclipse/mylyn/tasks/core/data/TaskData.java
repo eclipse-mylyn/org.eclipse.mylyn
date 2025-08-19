@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2009 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -88,7 +88,7 @@ public final class TaskData {
 
 	/**
 	 * Set <code>partial</code> to true to indicate that this task data does not have all task attributes.
-	 * 
+	 *
 	 * @see #isPartial()
 	 * @see AbstractRepositoryConnector#performQuery(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.mylyn.tasks.core.IRepositoryQuery, TaskDataCollector, org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession,
