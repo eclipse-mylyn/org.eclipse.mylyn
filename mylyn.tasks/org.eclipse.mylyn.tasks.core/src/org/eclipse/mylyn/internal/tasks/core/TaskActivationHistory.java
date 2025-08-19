@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2009 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -27,7 +27,7 @@ import org.eclipse.mylyn.tasks.core.ITaskContainer;
 /**
  * Maintains a list of tasks that have been activated in the past. Each task only occurs once in the list. The list is sorted by most recent
  * activation, i.e. the task with the highest index is the task that was most recently activated.
- * 
+ *
  * @author Wesley Coelho (Added persistent tasks)
  * @author Mik Kersten (hardening)
  * @author Rob Elves

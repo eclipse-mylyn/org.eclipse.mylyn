@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -28,7 +28,7 @@ import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
 /**
  * Top-level Task List element that can contain other Task List elements.
- * 
+ *
  * @author Mik Kersten
  */
 public abstract class AbstractTaskContainer extends PlatformObject implements IRepositoryElement, ITaskContainer {
@@ -57,7 +57,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IR
 
 	/**
 	 * Use {@link TaskList} methods instead.
-	 * 
+	 *
 	 * @return
 	 * @since 3.0
 	 */
@@ -67,7 +67,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IR
 
 	/**
 	 * Removes any cyclic dependencies in children. TODO: review to make sure that this is too expensive, or move to creation.
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	@Override
@@ -177,7 +177,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IR
 
 	/**
 	 * If false, user is unable to manipulate (i.e. rename/delete), no preferences are available.
-	 * 
+	 *
 	 * @since 2.3
 	 */
 	public boolean isUserManaged() {
