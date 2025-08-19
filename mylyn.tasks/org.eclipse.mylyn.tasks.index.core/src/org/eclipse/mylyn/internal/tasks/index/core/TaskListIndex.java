@@ -708,11 +708,10 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		// relax term clauses to be prefix clauses so that we get results close
 		// to what we're expecting
 		// from previous task list search
-		if (q instanceof BooleanQuery) {
+		if (q instanceof BooleanQuery query) {
 			//Since queries and clauses are now immutable we need to rewrite q
 			BooleanQuery.Builder qb = new BooleanQuery.Builder();
 
-			BooleanQuery query = (BooleanQuery) q;
 			for (BooleanClause clause : query.clauses()) {
 				if (clause.query() instanceof TermQuery) {
 					TermQuery termQuery = (TermQuery) clause.query();
