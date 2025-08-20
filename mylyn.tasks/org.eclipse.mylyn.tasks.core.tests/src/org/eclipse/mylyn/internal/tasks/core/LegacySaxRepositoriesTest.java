@@ -34,7 +34,7 @@ import org.xml.sax.helpers.DefaultHandler;
 @SuppressWarnings("nls")
 public class LegacySaxRepositoriesTest {
 
-	private class SaxRepositoriesContentHandlerVersion1 extends DefaultHandler {
+	private static class SaxRepositoriesContentHandlerVersion1 extends DefaultHandler {
 
 		private final Set<TaskRepository> taskRepositories = new HashSet<>();
 
