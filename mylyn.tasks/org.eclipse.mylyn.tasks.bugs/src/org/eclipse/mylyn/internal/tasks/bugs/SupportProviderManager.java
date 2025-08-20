@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -323,7 +323,7 @@ public class SupportProviderManager {
 				if (product == null) {
 					StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN, NLS.bind(
 							"Mapping contributed by {0} with namespace ''{1}'' ignored, unkown product id ''{1}'' specified", //$NON-NLS-1$
-							new String[] { element.getNamespaceIdentifier(), namespace, productId })));
+							element.getNamespaceIdentifier(), namespace, productId)));
 					return null;
 				}
 			}
@@ -344,7 +344,7 @@ public class SupportProviderManager {
 		if (provider == null) {
 			StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN, NLS.bind(
 					"Product contributed by {0} with id ''{1}'' ignored, unknown provider id ''{2}'' specified", //$NON-NLS-1$
-					new String[] { element.getNamespaceIdentifier(), id, providerId })));
+					element.getNamespaceIdentifier(), id, providerId)));
 			return null;
 		}
 		boolean enabled = true;
@@ -383,7 +383,7 @@ public class SupportProviderManager {
 		if (category == null) {
 			StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN, NLS.bind(
 					"Provider contributed by {0} ignored with id ''{1}'' ignored, category id ''{2}'' is invalid", //$NON-NLS-1$
-					new String[] { element.getNamespaceIdentifier(), id, categoryId })));
+					element.getNamespaceIdentifier(), id, categoryId)));
 			return null;
 		}
 		providerById.put(id, provider);
