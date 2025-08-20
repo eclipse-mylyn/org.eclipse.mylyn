@@ -205,7 +205,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		}
 	}
 
-	private class TaskRepositoryProjectMapping extends PlatformObject {
+	private static class TaskRepositoryProjectMapping extends PlatformObject {
 
 		private final TaskRepository taskRepository;
 

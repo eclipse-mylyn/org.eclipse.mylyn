@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -119,7 +119,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 	}
 
-	private class AttachmentTableFilter extends ViewerFilter {
+	private static class AttachmentTableFilter extends ViewerFilter {
 
 		private boolean filterDeprecatedEnabled;
 
@@ -403,8 +403,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	private void updateSectionTitle() {
 		if (tableFilter.isFilterDeprecatedEnabled()) {
 			section.setText(NLS.bind(Messages.TaskEditorAttachmentPart_Attachment_Section_Title_X_of_Y,
-					new Object[] { LegacyActionTools.escapeMnemonics(getPartName()), nonDeprecatedCount,
-							attachmentAttributes.size() }));
+					LegacyActionTools.escapeMnemonics(getPartName()), nonDeprecatedCount, attachmentAttributes.size()));
 		} else {
 			section.setText(NLS.bind(Messages.TaskEditorAttachmentPart_Attachment_Section_Title_X,
 					LegacyActionTools.escapeMnemonics(getPartName()), attachmentAttributes.size()));

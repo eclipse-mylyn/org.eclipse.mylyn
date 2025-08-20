@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -32,7 +32,7 @@ import org.eclipse.ui.internal.browser.IBrowserViewerContainer;
 
 /**
  * A form page that contains a browser control.
- * 
+ *
  * @since 3.0
  * @author Mik Kersten
  * @author Steffen Pingel
@@ -101,7 +101,7 @@ public class BrowserFormPage extends TaskFormPage {
 	 * editor input.
 	 * <p>
 	 * Subclasses should override this method to display a specific URL.
-	 * 
+	 *
 	 * @return the URL to load when the page is created; null, if no URL should be loaded
 	 */
 	protected String getUrl() {

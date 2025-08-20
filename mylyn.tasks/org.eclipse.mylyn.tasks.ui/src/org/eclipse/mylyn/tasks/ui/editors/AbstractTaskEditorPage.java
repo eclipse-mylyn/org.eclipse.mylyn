@@ -335,7 +335,7 @@ implements ISelectionProvider, ISelectionChangedListener {
 
 	}
 
-	private class MenuCreator implements IMenuCreator {
+	private static class MenuCreator implements IMenuCreator {
 
 		private MenuManager menuManager;
 
@@ -1604,17 +1604,6 @@ implements ISelectionProvider, ISelectionChangedListener {
 	 */
 	private boolean needsFooter() {
 		return needsFooter;
-	}
-
-	/**
-	 * Specifies that the page should provide an always visible footer. This flag is not set by default.
-	 *
-	 * @see #createFooterContent(Composite)
-	 * @see #needsFooter()
-	 */
-	@SuppressWarnings("unused")
-	private void setNeedsFooter(boolean needsFooter) {
-		this.needsFooter = needsFooter;
 	}
 
 	private void createFooterContent(Composite parent) {

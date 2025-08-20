@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2009 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -472,7 +472,7 @@ public class AttachmentSourcePage extends WizardPage {
 	/**
 	 * Sets the source name of the import to be the supplied path. Adds the name of the path to the list of items in the source combo and
 	 * selects it.
-	 * 
+	 *
 	 * @param path
 	 *            the path to be added
 	 */
@@ -576,7 +576,7 @@ public class AttachmentSourcePage extends WizardPage {
 
 	/*
 	 * Based on .eclipse.compare.internal.Utilities
-	 * 
+	 *
 	 * Convenience method: extract all accessible <code>IResources</code> from
 	 * given selection. Never returns null.
 	 */

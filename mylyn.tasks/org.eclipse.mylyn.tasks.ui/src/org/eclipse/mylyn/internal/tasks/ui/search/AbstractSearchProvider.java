@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 Flavio Donze and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -21,7 +21,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 /**
  * Search providers should implement this class.
- * 
+ *
  * @author Flavio Donze
  * @since 3.4
  */
@@ -29,7 +29,7 @@ public abstract class AbstractSearchProvider {
 
 	/**
 	 * Opens the search dialog. Shows the task search page.
-	 * 
+	 *
 	 * @param window
 	 *            parent window
 	 */
@@ -37,7 +37,7 @@ public abstract class AbstractSearchProvider {
 
 	/**
 	 * Runs a search query.
-	 * 
+	 *
 	 * @param tasklist
 	 *            task list to receive the task from
 	 * @param repository

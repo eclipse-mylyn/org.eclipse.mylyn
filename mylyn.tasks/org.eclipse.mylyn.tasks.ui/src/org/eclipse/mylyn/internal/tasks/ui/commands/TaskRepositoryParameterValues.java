@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2010 Willian Mitsuda and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -23,7 +23,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * Compute repository connectors type/label map
- * 
+ *
  * @author Willian Mitsuda
  */
 public class TaskRepositoryParameterValues implements IParameterValues {

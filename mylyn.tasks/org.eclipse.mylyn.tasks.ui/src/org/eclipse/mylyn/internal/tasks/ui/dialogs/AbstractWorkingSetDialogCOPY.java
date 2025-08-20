@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2005, 2011 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -98,7 +98,7 @@ public abstract class AbstractWorkingSetDialogCOPY extends SelectionDialog imple
 
 	/**
 	 * Return the set of supported working set types.
-	 * 
+	 *
 	 * @return the supported working set types
 	 */
 	protected Set getSupportedWorkingSetIds() {
@@ -107,7 +107,7 @@ public abstract class AbstractWorkingSetDialogCOPY extends SelectionDialog imple
 
 	/**
 	 * Adds the modify buttons to the dialog.
-	 * 
+	 *
 	 * @param composite
 	 *            Composite to add the buttons to
 	 */
@@ -156,7 +156,7 @@ public abstract class AbstractWorkingSetDialogCOPY extends SelectionDialog imple
 
 	/**
 	 * Add the select/deselect buttons.
-	 * 
+	 *
 	 * @param composite
 	 *            Composite to add the buttons to
 	 */
@@ -200,7 +200,7 @@ public abstract class AbstractWorkingSetDialogCOPY extends SelectionDialog imple
 
 	/**
 	 * Opens a working set wizard for editing the currently selected working set.
-	 * 
+	 *
 	 * @see org.eclipse.ui.dialogs.IWorkingSetPage
 	 */
 	void editSelectedWorkingSet() {
@@ -298,7 +298,7 @@ public abstract class AbstractWorkingSetDialogCOPY extends SelectionDialog imple
 
 	/**
 	 * Overrides method in Dialog
-	 * 
+	 *
 	 * @see org.eclipse.jface.dialogs.Dialog#open()
 	 */
 	@Override
@@ -312,7 +312,7 @@ public abstract class AbstractWorkingSetDialogCOPY extends SelectionDialog imple
 
 	/**
 	 * Return the list of working sets that were added during the life of this dialog.
-	 * 
+	 *
 	 * @return the working sets
 	 */
 	protected final List getAddedWorkingSets() {
@@ -321,7 +321,7 @@ public abstract class AbstractWorkingSetDialogCOPY extends SelectionDialog imple
 
 	/**
 	 * Return the map of working sets that were edited during the life of this dialog.
-	 * 
+	 *
 	 * @return the working sets
 	 */
 	protected final Map getEditedWorkingSets() {
@@ -330,7 +330,7 @@ public abstract class AbstractWorkingSetDialogCOPY extends SelectionDialog imple
 
 	/**
 	 * Return the list of working sets that were removed from the MRU list during the life of this dialog.
-	 * 
+	 *
 	 * @return the working sets
 	 */
 	protected final List getRemovedMRUWorkingSets() {
@@ -339,7 +339,7 @@ public abstract class AbstractWorkingSetDialogCOPY extends SelectionDialog imple
 
 	/**
 	 * Return the list of working sets that were removed during the life of this dialog.
-	 * 
+	 *
 	 * @return the working sets
 	 */
 	protected final List getRemovedWorkingSets() {
@@ -385,7 +385,7 @@ public abstract class AbstractWorkingSetDialogCOPY extends SelectionDialog imple
 
 	/**
 	 * Remove the working sets contained in the provided selection from the working set manager.
-	 * 
+	 *
 	 * @param selection
 	 *            the sets
 	 */

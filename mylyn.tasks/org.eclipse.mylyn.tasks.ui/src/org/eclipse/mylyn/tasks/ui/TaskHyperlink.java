@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2010 Eugene Kuleshov and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -29,7 +29,7 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 
 /**
  * Immutable. Encapsulates information for linking to tasks from text.
- * 
+ *
  * @author Eugene Kuleshov
  * @author Steffen Pingel
  */
@@ -98,7 +98,7 @@ public final class TaskHyperlink implements IHyperlink {
 
 	/**
 	 * Returns the selection to select and reveal when opening the task.
-	 * 
+	 *
 	 * @return an object or null if not set
 	 * @see #setSelection(Object)
 	 * @see TaskEditor#selectReveal(Object)
@@ -110,7 +110,7 @@ public final class TaskHyperlink implements IHyperlink {
 
 	/**
 	 * Sets the selection to select and reveal when opening the task.
-	 * 
+	 *
 	 * @param selection
 	 *            the selection
 	 * @see #getSelection()

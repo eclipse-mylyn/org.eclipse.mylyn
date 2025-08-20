@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -95,9 +95,8 @@ public class TaskRepositoriesNavigatorContentProvider implements ITreeContentPro
 
 	@Override
 	public Object[] getChildren(Object parentElement) {
-		if (parentElement instanceof RepositoryCategory) {
+		if (parentElement instanceof RepositoryCategory category) {
 			List<TaskRepository> repositories = TasksUi.getRepositoryManager().getAllRepositories();
-			RepositoryCategory category = (RepositoryCategory) parentElement;
 			if (RepositoryCategory.ID_CATEGORY_ALL.equals(category.getId())) {
 				return repositories.toArray();
 			} else if (RepositoryCategory.ID_CATEGORY_OTHER.equals(category.getId())) {

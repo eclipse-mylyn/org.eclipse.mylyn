@@ -303,9 +303,10 @@ public class RichTextEditor {
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes" })
+	@SuppressWarnings({ })
 	private IAdaptable createHyperlinkDetectorContext() {
 		return new IAdaptable() {
+			@Override
 			public <T> T getAdapter(Class<T> adapter) {
 				if (adapter == TaskRepository.class) {
 					return adapter.cast(repository);

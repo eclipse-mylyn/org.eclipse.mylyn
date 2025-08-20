@@ -124,8 +124,8 @@ public class ConnectorMigrator {
 
 	private boolean allQueriesMigrated = true;
 
-	private class TaskStateBag {
-		private Map<TaskRepository, Map<String, OldTaskState>> bag = new HashMap<>();
+	private static class TaskStateBag {
+		private final Map<TaskRepository, Map<String, OldTaskState>> bag = new HashMap<>();
 
 		public void put(TaskRepository taskRepository, String taskKey, OldTaskState oldTaskState) {
 			bag.computeIfAbsent(taskRepository, key -> new HashMap<>()).put(taskKey, oldTaskState);

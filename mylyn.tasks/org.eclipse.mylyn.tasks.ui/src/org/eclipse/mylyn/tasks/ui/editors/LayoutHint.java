@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2008 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -15,7 +15,7 @@ package org.eclipse.mylyn.tasks.ui.editors;
 
 /**
  * A layout hint for attribute editors.
- * 
+ *
  * @author Steffen Pingel
  * @since 3.0
  */
@@ -60,7 +60,7 @@ public class LayoutHint {
 
 	/**
 	 * Clones <code>source</code>. Constructs a layout hint with a priority of {@link #DEFAULT_PRIORITY}, if <code>source</code> is null.
-	 * 
+	 *
 	 * @param source
 	 *            the layout hint to clone or <code>null</code>
 	 * @since 3.1
@@ -74,7 +74,7 @@ public class LayoutHint {
 
 	/**
 	 * Constructs a layout hint with a priority of {@link #DEFAULT_PRIORITY}.
-	 * 
+	 *
 	 * @since 3.1
 	 */
 	public LayoutHint() {
@@ -84,7 +84,7 @@ public class LayoutHint {
 	 * Returns a priority based on the size of the layout hint. The bigger the size the bigger the returned priority.
 	 * <p>
 	 * The priority is used to layout attribute editors.
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	public int getPriority() {

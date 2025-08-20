@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 Andreas Hoehmann and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -33,7 +33,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * First add another template-resolver (for detail information see <a href=
  * "http://help.eclipse.org/help32/index.jsp?topic=/org.eclipse.platform.doc.isv/reference/extension-points/org_eclipse_ui_editors_templates.html"
  * >here</a>) for the <code>org.eclipse.mylyn.internal.ide.ui.editors.templates</code>.
- * 
+ *
  * <pre>
  * &lt;extension point="org.eclipse.ui.editors.templates"
  *            id="org.eclipse.mylyn.internal.ide.ui.editors.templates"&gt;
@@ -46,7 +46,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  *   &lt;/resolver&gt;
  * &lt;/extension&gt;
  * </pre>
- * 
+ *
  * You have to define/change the:
  * <ul>
  * <li><b>contextTypeId</b> - you should define an resolver for the "java" and the "javadoc" context and maybe more contexts.</li>
@@ -67,7 +67,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * <i>Each returned variable should be trimmed to avoid avoid unnecessary spaces between the resolved variables, i.e.
  * ("${activeTaskPrefix}${activeTaskKey}" should become "task2" and not "task 2").</i>
  * </p>
- * 
+ *
  * @author Andreas Hoehmann
  * @author Steffen Pingel
  * @since 3.7

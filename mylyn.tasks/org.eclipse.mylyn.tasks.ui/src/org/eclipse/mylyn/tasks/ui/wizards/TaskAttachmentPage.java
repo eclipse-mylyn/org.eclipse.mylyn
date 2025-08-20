@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2014 Jeff Pound and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * A wizard page to enter details of a new attachment.
- * 
+ *
  * @author Jeff Pound
  * @author Mik Kersten
  * @author Steffen Pingel
@@ -295,7 +295,7 @@ public class TaskAttachmentPage extends WizardPage {
 
 	/**
 	 * Returns true if the page has a description field.
-	 * 
+	 *
 	 * @since 3.4
 	 * @see #setDescription(String)
 	 */
@@ -337,7 +337,7 @@ public class TaskAttachmentPage extends WizardPage {
 	 * <p>
 	 * This flag is set to false by default.
 	 * </p>
-	 * 
+	 *
 	 * @since 3.4
 	 * @see #needsReplaceExisting()
 	 */
@@ -347,7 +347,7 @@ public class TaskAttachmentPage extends WizardPage {
 
 	/**
 	 * Returns true, if the page has a check box to replace existing attachments.
-	 * 
+	 *
 	 * @since 3.4
 	 * @see #setNeedsReplaceExisting(boolean)
 	 */

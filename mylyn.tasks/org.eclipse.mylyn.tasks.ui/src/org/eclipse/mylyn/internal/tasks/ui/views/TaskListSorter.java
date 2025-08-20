@@ -69,7 +69,7 @@ public class TaskListSorter extends ViewerComparator {
 
 	}
 
-	private class SortElement {
+	private static class SortElement {
 
 		private int weight;
 

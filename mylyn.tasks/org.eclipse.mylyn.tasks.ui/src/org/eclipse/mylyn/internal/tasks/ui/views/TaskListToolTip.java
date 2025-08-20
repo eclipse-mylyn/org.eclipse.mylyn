@@ -304,9 +304,9 @@ public class TaskListToolTip extends GradientToolTip {
 			Date dueDate = task.getDueDate();
 			if (dueDate != null) {
 				sb.append(NLS.bind(Messages.TaskListToolTip_Due,
-						new Object[] { new SimpleDateFormat("E").format(dueDate), //$NON-NLS-1$
-								DateFormat.getDateInstance(DateFormat.LONG).format(dueDate),
-								DateFormat.getTimeInstance(DateFormat.SHORT).format(dueDate) }));
+										new SimpleDateFormat("E").format(dueDate), //$NON-NLS-1$
+												DateFormat.getDateInstance(DateFormat.LONG).format(dueDate),
+												DateFormat.getTimeInstance(DateFormat.SHORT).format(dueDate)));
 				sb.append("\n"); //$NON-NLS-1$
 			}
 
@@ -421,8 +421,7 @@ public class TaskListToolTip extends GradientToolTip {
 						completed++;
 					}
 				}
-				String text = NLS.bind(Messages.TaskListToolTip_Total_Complete_Incomplete, new Object[] { //
-						total, completed, total - completed });
+				String text = NLS.bind(Messages.TaskListToolTip_Total_Complete_Incomplete, total, completed, total - completed);
 				return new ProgressData(completed, total, text);
 			}
 		}

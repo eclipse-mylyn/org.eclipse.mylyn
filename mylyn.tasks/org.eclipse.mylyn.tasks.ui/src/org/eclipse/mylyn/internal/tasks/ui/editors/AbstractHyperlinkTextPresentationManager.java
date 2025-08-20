@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -32,7 +32,7 @@ import org.eclipse.swt.custom.StyleRange;
 /**
  * A manager that ensures that all task hyperlinks have the appropriate text presentation. Subclasses may specify logic for filtering
  * detected hyperlinks and text decoration.
- * 
+ *
  * @author David Green
  */
 public abstract class AbstractHyperlinkTextPresentationManager {
@@ -143,8 +143,8 @@ public abstract class AbstractHyperlinkTextPresentationManager {
 						if (regions == null) {
 							regions = new ArrayList<>();
 						}
-						regions.add(hyperlink instanceof IHighlightingHyperlink
-								? ((IHighlightingHyperlink) hyperlink).getHighlightingRegion()
+						regions.add(hyperlink instanceof IHighlightingHyperlink i
+								? i.getHighlightingRegion()
 								: hyperlink.getHyperlinkRegion());
 					}
 				}

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 David Green and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -53,7 +53,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  * An abstract base class for repository settings page that supports the <code>taskRepositoryPageContribution</code> extension point.
  * {@link ITaskRepositoryPage} implementations are encouraged to extend {@link AbstractRepositorySettingsPage} if possible as it provides a
  * standard UI for managing server settings.
- * 
+ *
  * @see AbstractRepositorySettingsPage
  * @author David Green
  * @author Steffen Pingel
@@ -94,7 +94,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 
 	/**
 	 * Get the kind of connector supported by this page.
-	 * 
+	 *
 	 * @return the kind of connector, never null
 	 * @since 3.1
 	 */
@@ -111,7 +111,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 
 	/**
 	 * Creates the contents of the page. Subclasses may override this method to change where the contributions are added.
-	 * 
+	 *
 	 * @since 2.0
 	 */
 	@Override
@@ -137,7 +137,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 
 	/**
 	 * Creates the controls of this page.
-	 * 
+	 *
 	 * @since 3.1
 	 */
 	protected abstract void createSettingControls(Composite parent);
@@ -172,7 +172,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 
 	/**
 	 * Subclasses should only call this method if they override {@link #createContents(Composite)}.
-	 * 
+	 *
 	 * @param parentControl
 	 *            the container into which the contributions will create their UI
 	 * @since 3.1
@@ -251,7 +251,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 	/**
 	 * Validate the settings of this page, not including contributions. This method should not be called directly by page implementations.
 	 * Always run on a UI thread.
-	 * 
+	 *
 	 * @return the status, or null if there are no messages.
 	 * @see #validatePageSettings()
 	 * @since 3.1
@@ -260,7 +260,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 
 	/**
 	 * Overriding methods should call <code>super.applyTo(repository)</code>
-	 * 
+	 *
 	 * @since 3.1
 	 */
 	@Override
@@ -278,7 +278,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 	 * {@inheritDoc}
 	 * <p>
 	 * Invokes {@link #applyTo(TaskRepository)} by default. Client may override.
-	 * 
+	 *
 	 * @since 3.6
 	 */
 	@Override
@@ -290,7 +290,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 	 * {@inheritDoc}
 	 * <p>
 	 * Invokes {@link #applyTo(TaskRepository)} by default. Client may override.
-	 * 
+	 *
 	 * @since 3.7
 	 * @return true to indicate the finish request was accepted, and false to indicate that the finish request was refused
 	 */
@@ -338,7 +338,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 	/**
 	 * Validate all settings in the page including contributions. This method should be called whenever a setting is changed on the page.
 	 * The results of validation are applied and the buttons of the page are updated.
-	 * 
+	 *
 	 * @see #validate(IProgressMonitor)
 	 * @see #applyValidationResult(IStatus[])
 	 */
@@ -351,7 +351,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 	/**
 	 * Apply the results of validation to the page. The implementation finds the most {@link IStatus#getSeverity() severe} status and
 	 * {@link #setMessage(String, int) applies the message} to the page.
-	 * 
+	 *
 	 * @param status
 	 *            the status of the validation, or null
 	 */

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -48,7 +48,7 @@ public class TaskFormPage extends FormPage {
 	 * Invoked when the task opened in the editor is opened while the editor was already open or if a synchronization completes.
 	 * <p>
 	 * Clients may override.
-	 * 
+	 *
 	 * @since 3.4
 	 */
 	protected void refresh() {
