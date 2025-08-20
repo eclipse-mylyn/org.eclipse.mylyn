@@ -147,8 +147,6 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 
 	private final ReviewAnnotationModel annotationModel;
 
-	private String initialText;
-
 	private final MergeSourceViewer mergeSourceViewer;
 
 //		private AddGeneralCommentToFileAction addGeneralCommentAction;
