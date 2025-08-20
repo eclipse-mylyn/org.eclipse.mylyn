@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -69,7 +69,7 @@ public abstract class AbstractTaskEditorPageFactory implements IPluginContributi
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @since 3.2
 	 */
 	@Override
@@ -80,7 +80,7 @@ public abstract class AbstractTaskEditorPageFactory implements IPluginContributi
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @since 3.2
 	 * @see #setPluginId(String)
 	 */
@@ -100,7 +100,7 @@ public abstract class AbstractTaskEditorPageFactory implements IPluginContributi
 
 	/**
 	 * Clients should override to provide an image for <code>page</code>. Invokes {@link #getPageImage()} for backwards compatibility.
-	 * 
+	 *
 	 * @param editor
 	 *            the task editor instance
 	 * @param page
@@ -115,7 +115,7 @@ public abstract class AbstractTaskEditorPageFactory implements IPluginContributi
 
 	/**
 	 * Clients should override to provide a label for <code>page</code>. Invokes {@link #getPageText()} for backwards compatibility.
-	 * 
+	 *
 	 * @param editor
 	 *            the task editor instance
 	 * @param page

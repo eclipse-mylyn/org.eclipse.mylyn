@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2012 Eugene Kuleshov and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -28,7 +28,7 @@ import org.eclipse.ui.IMemento;
 
 /**
  * Element factory used to restore task containers and projects for Task+Resource working sets.
- * 
+ *
  * @author Eugene Kuleshov
  * @author Mik Kersten
  */

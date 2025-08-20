@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -22,7 +22,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 /**
  * Clients can contribute an extension of this class to be notified when one task is dropped on a repository task in the task list, or when
  * a task is dropped on a task editor.
- * 
+ *
  * @author Sam Davis
  * @since 3.7
  */
@@ -71,7 +71,7 @@ public abstract class TaskDropListener {
 
 	/**
 	 * Called when a task drop event occurs.
-	 * 
+	 *
 	 * @param event
 	 */
 	public abstract void tasksDropped(TaskDropEvent event);

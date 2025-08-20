@@ -161,6 +161,7 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 
 	private IAdaptable getDefaultHyperlinkTarget() {
 		IAdaptable context = new IAdaptable() {
+			@Override
 			public <T> T getAdapter(Class<T> adapter) {
 				if (adapter == TaskRepository.class) {
 					return adapter.cast(getTaskRepository());

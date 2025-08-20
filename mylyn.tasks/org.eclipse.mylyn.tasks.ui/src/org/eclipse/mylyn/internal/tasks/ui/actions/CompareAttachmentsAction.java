@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Eugene Kuleshov and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -134,7 +134,7 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 		currentSelection = selection;
 	}
 
-	private class CompareItem implements IStreamContentAccessor, ITypedElement {
+	private static class CompareItem implements IStreamContentAccessor, ITypedElement {
 
 		private final ITaskAttachment attachment;
 

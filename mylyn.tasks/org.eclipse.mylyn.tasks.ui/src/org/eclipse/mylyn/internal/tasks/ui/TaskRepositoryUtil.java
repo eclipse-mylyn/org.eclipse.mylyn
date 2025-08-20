@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -24,7 +24,7 @@ public class TaskRepositoryUtil {
 
 	/**
 	 * Is auto add of template repository disabled for repositoryUrl
-	 * 
+	 *
 	 * @since 2.1
 	 */
 	public static boolean isAddAutomaticallyDisabled(String repositoryUrl) {
@@ -42,7 +42,7 @@ public class TaskRepositoryUtil {
 
 	/**
 	 * Disable template repository from being automatically added
-	 * 
+	 *
 	 * @since 2.1
 	 */
 	public static void disableAddAutomatically(String repositoryUrl) {

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -65,6 +65,7 @@ public class CustomTaskListDecorationDrawer implements Listener {
 
 	private final org.eclipse.jface.util.IPropertyChangeListener PROPERTY_LISTENER = new org.eclipse.jface.util.IPropertyChangeListener() {
 
+		@Override
 		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
 			if (event.getProperty().equals(ITasksUiPreferenceConstants.USE_STRIKETHROUGH_FOR_COMPLETED)) {
 				if (event.getNewValue() instanceof Boolean) {
@@ -96,6 +97,7 @@ public class CustomTaskListDecorationDrawer implements Listener {
 	 * Therefore, it is critical for performance that these methods be as
 	 * efficient as possible.
 	 */
+	@Override
 	public void handleEvent(Event event) {
 		Object data = event.item.getData();
 		Image activationImage = null;
@@ -245,8 +247,7 @@ public class CustomTaskListDecorationDrawer implements Listener {
 	}
 
 	private ImageDescriptor getSynchronizationImageDescriptor(Object element, boolean synchViewStyle) {
-		if (element instanceof ITask) {
-			ITask repositoryTask = (ITask) element;
+		if (element instanceof ITask repositoryTask) {
 			if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING_NEW) {
 				if (synchViewStyle) {
 					return CommonImages.OVERLAY_SYNC_OLD_INCOMMING_NEW;

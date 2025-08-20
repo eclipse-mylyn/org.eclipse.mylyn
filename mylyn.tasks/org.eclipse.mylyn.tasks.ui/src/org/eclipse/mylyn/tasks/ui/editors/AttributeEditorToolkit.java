@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -94,8 +94,8 @@ public class AttributeEditorToolkit {
 			}
 		} else if (editor.getControl() instanceof Text || editor.getControl() instanceof CCombo
 				|| editor instanceof PersonAttributeEditor) {
-			Control control = editor instanceof PersonAttributeEditor
-					? ((PersonAttributeEditor) editor).getText()
+			Control control = editor instanceof PersonAttributeEditor p
+					? p.getText()
 					: editor.getControl();
 			if (control == null) {
 				// fall back in case getText() returns null

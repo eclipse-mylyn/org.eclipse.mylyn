@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 David Green and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * A contribution to a {@link ITaskRepositoryPage}, which enables plug-ins to contribute UI to the task repository settings. subclasses must
  * have a default public constructor.
- * 
+ *
  * @author David Green
  * @since 3.1
  */
@@ -36,14 +36,14 @@ public abstract class AbstractTaskRepositoryPageContribution {
 
 	/**
 	 * A listener interface that should be implemented by classes wishing to be notified of changes that occur within the contribution.
-	 * 
+	 *
 	 * @since 3.1
 	 */
 	public interface Listener {
 
 		/**
 		 * Called when the state of the contribution changes such that validation should be performed
-		 * 
+		 *
 		 * @param contribution
 		 *            the contribution that changed
 		 * @see ITaskRepositoryPageContribution#validate(IProgressMonitor)
@@ -79,7 +79,7 @@ public abstract class AbstractTaskRepositoryPageContribution {
 
 	/**
 	 * Initialize the contribution
-	 * 
+	 *
 	 * @param connectorKind
 	 *            the kind of connector for which this is a contribution
 	 * @param repository
@@ -94,7 +94,7 @@ public abstract class AbstractTaskRepositoryPageContribution {
 	/**
 	 * Add a listener to this contribution. The contribution must notify the listener at the appropriate times, for example when a setting
 	 * has changed in the UI.
-	 * 
+	 *
 	 * @see #removeListener(Listener)
 	 * @since 3.1
 	 */
@@ -104,7 +104,7 @@ public abstract class AbstractTaskRepositoryPageContribution {
 
 	/**
 	 * Remove a listener from this contribution.
-	 * 
+	 *
 	 * @see #addListener(Listener)
 	 * @since 3.1
 	 */
@@ -149,7 +149,7 @@ public abstract class AbstractTaskRepositoryPageContribution {
 	/**
 	 * Validate the settings of the contribution. Contributions should expect this method to be called often and should thus return quickly.
 	 * Always called on the UI thread.
-	 * 
+	 *
 	 * @return the status (errors) on the contribution, or null if there are none. A MultiStatus should be used to return multiple error
 	 *         messages or warnings.
 	 * @since 3.1
@@ -158,7 +158,7 @@ public abstract class AbstractTaskRepositoryPageContribution {
 
 	/**
 	 * Apply the settings in the contribution to the given repository.
-	 * 
+	 *
 	 * @param repository
 	 *            the repository to which settings should be applied
 	 * @see ITaskRepositoryPage#applyTo(TaskRepository)
@@ -168,7 +168,7 @@ public abstract class AbstractTaskRepositoryPageContribution {
 
 	/**
 	 * Requests a validation.
-	 * 
+	 *
 	 * @see #validate()
 	 * @since 3.1
 	 */
@@ -180,7 +180,7 @@ public abstract class AbstractTaskRepositoryPageContribution {
 
 	/**
 	 * Returns the repository for which this contribution was created, or null if it was created for a new repository.
-	 * 
+	 *
 	 * @since 3.1
 	 */
 	protected final TaskRepository getRepository() {
@@ -189,7 +189,7 @@ public abstract class AbstractTaskRepositoryPageContribution {
 
 	/**
 	 * Returns the kind of connector for which this contribution was created.
-	 * 
+	 *
 	 * @since 3.1
 	 */
 	protected final String getConnectorKind() {

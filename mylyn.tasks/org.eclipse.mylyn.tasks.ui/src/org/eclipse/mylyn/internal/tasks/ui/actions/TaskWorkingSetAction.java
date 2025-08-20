@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2009 Mylyn project committers and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -53,7 +53,7 @@ import org.eclipse.ui.internal.dialogs.WorkingSetLabelProvider;
 
 /**
  * Derived from SelectWorkingSetsAction
- * 
+ *
  * @author Leo Dos Santos
  * @author Mik Kersten
  */
@@ -99,7 +99,6 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		return dropDownMenu;
 	}
 
-	@SuppressWarnings("unchecked")
 	private void addActionsToMenu() {
 		IWorkingSet[] workingSets = PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
 

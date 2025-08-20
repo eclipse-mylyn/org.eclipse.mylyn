@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -39,7 +39,7 @@ import org.eclipse.mylyn.tasks.core.ITaskContainer;
 /**
  * Provides custom content for the task list, e.g. guaranteed visibility of some elements, ability to suppress containers showing if nothing
  * should show under them. TODO: move to viewer filter architecture?
- * 
+ *
  * @author Mik Kersten
  * @author Rob Elves
  */
