@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -28,7 +28,7 @@ import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
 /**
  * This implementation of <code>SearchResultContentProvider</code> is used for the table view of a Bugzilla search result.
- * 
+ *
  * @author Rob Elves (moved into task.ui)
  * @author Mik Kersten
  */

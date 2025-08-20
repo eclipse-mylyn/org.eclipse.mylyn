@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -35,7 +35,7 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * Used for add the last search result to the Task List.
- * 
+ *
  * @author Balazs Brinkus (bug 172699)
  * @author Mik Kersten
  */
@@ -46,7 +46,7 @@ public class CreateQueryFromSearchAction extends Action {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param text
 	 *            The text for this action
 	 * @param resultView

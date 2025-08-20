@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -43,7 +43,7 @@ public abstract class SearchResultContentProvider implements ITreeContentProvide
 
 	/**
 	 * Initializes the content provider with the given search result.
-	 * 
+	 *
 	 * @param result
 	 *            The search result to use with this content provider
 	 */
@@ -53,7 +53,7 @@ public abstract class SearchResultContentProvider implements ITreeContentProvide
 
 	/**
 	 * This method is called whenever the set of matches for the given elements changes.
-	 * 
+	 *
 	 * @param updatedElements
 	 *            The array of objects that has to be refreshed
 	 * @see
