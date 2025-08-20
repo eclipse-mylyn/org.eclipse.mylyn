@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -23,7 +23,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
  * A command handler that opens the task search dialog.
- * 
+ *
  * @author Steffen Pingel
  */
 public class SearchTaskHandler extends AbstractHandler {

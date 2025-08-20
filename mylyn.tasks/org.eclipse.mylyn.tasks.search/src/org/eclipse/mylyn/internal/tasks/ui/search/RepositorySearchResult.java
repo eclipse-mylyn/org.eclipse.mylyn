@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -24,7 +24,7 @@ import org.eclipse.search.ui.text.IFileMatchAdapter;
 
 /**
  * Captures the results of a task repository search.
- * 
+ *
  * @author Rob Elves
  * @see org.eclipse.search.ui.text.AbstractTextSearchResult
  * @since 2.0
@@ -38,7 +38,7 @@ public class RepositorySearchResult extends AbstractTextSearchResult {
 
 	/**
 	 * Constructor for <code>RepositorySearchResult</code> class.
-	 * 
+	 *
 	 * @param query
 	 *            <code>AbstractRepositorySearchQuery</code> that is producing this result.
 	 */
@@ -54,7 +54,7 @@ public class RepositorySearchResult extends AbstractTextSearchResult {
 	/**
 	 * This function always returns <code>null</code>, as the matches for this implementation of <code>AbstractTextSearchResult</code> never
 	 * contain files.
-	 * 
+	 *
 	 * @see org.eclipse.search.ui.text.AbstractTextSearchResult#getFileMatchAdapter()
 	 */
 	@Override
@@ -69,7 +69,7 @@ public class RepositorySearchResult extends AbstractTextSearchResult {
 
 	/**
 	 * Get the singular label for the number of results
-	 * 
+	 *
 	 * @return The singular label
 	 */
 	protected String getSingularLabel() {
@@ -78,7 +78,7 @@ public class RepositorySearchResult extends AbstractTextSearchResult {
 
 	/**
 	 * Get the plural label for the number of results
-	 * 
+	 *
 	 * @return The plural label
 	 */
 	protected String getPluralLabel() {
