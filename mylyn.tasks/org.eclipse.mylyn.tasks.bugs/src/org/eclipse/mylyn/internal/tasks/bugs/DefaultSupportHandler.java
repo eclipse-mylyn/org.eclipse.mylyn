@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -213,7 +213,7 @@ public class DefaultSupportHandler extends AbstractSupportHandler {
 	}
 
 	private void appendStatus(IStatus status, StringBuilder sb, boolean includeSessionData) {
-		Date date = status instanceof ErrorLogStatus ? ((ErrorLogStatus) status).getDate() : null;
+		Date date = status instanceof ErrorLogStatus e ? e.getDate() : null;
 		appendErrorDetails(sb, status, date);
 		if (status instanceof ErrorLogStatus errorStatus) {
 			if (includeSessionData && errorStatus.getLogSessionData() != null) {
