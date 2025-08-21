@@ -39,7 +39,7 @@ import org.eclipse.mylyn.versions.ui.spi.ScmConnectorUi;
 
 /**
  * Entry class to resolve the generic versions components from a User interface.
- * 
+ *
  * @author Alvaro Sanchez-Leon
  */
 @SuppressWarnings("nls")

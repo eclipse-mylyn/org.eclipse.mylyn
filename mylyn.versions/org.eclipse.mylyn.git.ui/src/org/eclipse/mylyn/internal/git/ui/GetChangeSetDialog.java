@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2012 Ericsson Research Canada and others
- * 
- * 
+ *
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *   Ericsson - Initial API and implementation
@@ -55,7 +55,7 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * This class implements the dialog used to fill-in the Find review items details This is a modeless-like dialog.
- * 
+ *
  * @author Sebastien Dubois
  */
 @SuppressWarnings("nls")
@@ -193,7 +193,7 @@ public class GetChangeSetDialog extends FormDialog {
 
 	/**
 	 * Constructor for R4EReviewGroupInputDialog.
-	 * 
+	 *
 	 * @param aParentShell
 	 *            Shell
 	 * @param aInputProject
@@ -218,7 +218,7 @@ public class GetChangeSetDialog extends FormDialog {
 
 	/**
 	 * Configures the dialog form and creates form content. Clients should override this method.
-	 * 
+	 *
 	 * @param mform
 	 *            - the dialog form
 	 */
@@ -331,7 +331,7 @@ public class GetChangeSetDialog extends FormDialog {
 
 	/**
 	 * Creates the Currently Selected Review Items Details Expandable Composite
-	 * 
+	 *
 	 * @param aToolkit
 	 *            FormToolkit
 	 * @param aParent
@@ -419,7 +419,7 @@ public class GetChangeSetDialog extends FormDialog {
 
 	/**
 	 * Creates the Review Items Components Expandable Composite
-	 * 
+	 *
 	 * @param aToolkit
 	 *            FormToolkit
 	 * @param aParent
@@ -462,7 +462,7 @@ public class GetChangeSetDialog extends FormDialog {
 
 	/**
 	 * Fetches and updates the local ChangeSet information
-	 * 
+	 *
 	 * @param aSelectedChangeSet
 	 *            ChangeSet
 	 */
@@ -553,7 +553,7 @@ public class GetChangeSetDialog extends FormDialog {
 
 	/**
 	 * Add a little Text Decoration if the File was Added or Removed
-	 * 
+	 *
 	 * @param aChange
 	 *            Change
 	 * @return String
