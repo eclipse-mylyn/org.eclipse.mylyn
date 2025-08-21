@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2000, 2012 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
@@ -46,14 +46,14 @@ import org.w3c.dom.Element;
 
 /**
  * Provides support for importing and exporting team project sets.
- * 
+ *
  * @author Manuel Doninger
  */
 public class ProjectSetConverter {
 
 	/**
 	 * Returns a team project set for <code>projects</code>.
-	 * 
+	 *
 	 * @param projects
 	 *            the projects to include
 	 * @return an XML document
@@ -116,7 +116,7 @@ public class ProjectSetConverter {
 
 	/**
 	 * Returns a list of project names referenced in the team project set <code>input</code> for the provider <code>prooviderType</code>.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	public static List<String> readProjectReferences(InputStream input, RepositoryProviderType providerType)
