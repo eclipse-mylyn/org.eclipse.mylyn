@@ -18,7 +18,7 @@ import org.eclipse.mylyn.versions.core.ScmRepository;
 
 /**
  * Provides an interface intended to be associated with a UI, so the user can select available version control artifacts
- * 
+ *
  * @author Alvaro Sanchez-Leon
  * @author Kilian Matt
  */
@@ -27,7 +27,7 @@ public abstract class ScmConnectorUi {
 	/**
 	 * Resolves change sets for a given repository and narrow down the selection possibilities to the ones related to the given resource
 	 * provided. This method is suitable to open a UI Wizard, the selection is expected to be driven by the user.
-	 * 
+	 *
 	 * @param repository
 	 *            associated repository
 	 * @param resource
@@ -40,7 +40,7 @@ public abstract class ScmConnectorUi {
 	 * Display a changesets in a connector specific view.
 	 * <p>
 	 * Throws {@link UnsupportedOperationException} by default.
-	 * 
+	 *
 	 * @param changeSet
 	 *            the changeset to display
 	 */
