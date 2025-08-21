@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -85,7 +85,7 @@ public class ChangeSet implements ScmInfoAttributes {
 
 	/**
 	 * This object should not be mutable
-	 * 
+	 *
 	 * @param kind
 	 */
 	@Deprecated
@@ -95,7 +95,7 @@ public class ChangeSet implements ScmInfoAttributes {
 
 	/**
 	 * This object should not be mutable
-	 * 
+	 *
 	 * @param kind
 	 */
 	@Deprecated
