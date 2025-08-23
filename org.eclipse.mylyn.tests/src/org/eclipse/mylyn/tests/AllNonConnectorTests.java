@@ -12,8 +12,8 @@
 
 package org.eclipse.mylyn.tests;
 
-import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
+import org.eclipse.mylyn.commons.sdk.util.junit4.ManagedTestSuite;
 import org.eclipse.mylyn.tests.integration.AllIntegrationTests;
 import org.eclipse.mylyn.tests.misc.AllMiscTests;
 

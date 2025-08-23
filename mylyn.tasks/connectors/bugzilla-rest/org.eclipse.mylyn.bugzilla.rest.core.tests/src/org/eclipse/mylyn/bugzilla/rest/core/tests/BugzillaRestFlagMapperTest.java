@@ -24,8 +24,8 @@ import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
-import org.eclipse.mylyn.commons.sdk.util.ConditionalIgnoreRule;
-import org.eclipse.mylyn.commons.sdk.util.MustRunOnCIServerRule;
+import org.eclipse.mylyn.commons.sdk.util.junit4.ConditionalIgnoreRule;
+import org.eclipse.mylyn.commons.sdk.util.junit4.MustRunOnCIServerRule;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestFlagMapper;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.IBugzillaRestConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -176,7 +176,7 @@ public class BugzillaRestFlagMapperTest {
 		flagMapper = BugzillaRestFlagMapper.createFrom(taskAttribute);
 		assertEquals(
 				IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag1.json"), Charset.defaultCharset())
-						.replace("\r\n", "\n"),
+				.replace("\r\n", "\n"),
 				new Gson().toJson(flagMapper).replace("\r\n", "\n"));
 	}
 

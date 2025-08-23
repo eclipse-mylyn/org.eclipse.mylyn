@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024 Frank Becker and others.
+ * Copyright (c) 2016 Frank Becker and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -7,17 +7,14 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *
- * Contributors:
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.sdk.util;
+package org.eclipse.mylyn.commons.sdk.util.junit4;
 
-public class MustRunOnCIServerRule implements ConditionalIgnoreRule.IgnoreCondition {
+import org.eclipse.mylyn.commons.sdk.util.AbstractTestFixture;
 
-	@Override
-	public boolean isSatisfied(AbstractTestFixture fixture) {
-		return !CommonTestUtil.runOnCIServerTestsOnly();
-	}
-
+public interface IFixtureJUnitClass {
+	AbstractTestFixture getActualFixture();
 }

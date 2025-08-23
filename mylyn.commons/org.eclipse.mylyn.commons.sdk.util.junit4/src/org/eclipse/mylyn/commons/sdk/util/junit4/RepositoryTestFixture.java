@@ -9,11 +9,13 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.sdk.util;
+package org.eclipse.mylyn.commons.sdk.util.junit4;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.commons.sdk.util.AbstractTestFixture;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;

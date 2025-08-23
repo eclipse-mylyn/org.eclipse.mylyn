@@ -12,8 +12,8 @@
 
 package org.eclipse.mylyn.tests;
 
-import org.eclipse.mylyn.commons.sdk.util.ManagedSuite;
-import org.eclipse.mylyn.commons.sdk.util.ManagedSuite.TestConfigurationProperty;
+import org.eclipse.mylyn.commons.sdk.util.junit4.ManagedSuite;
+import org.eclipse.mylyn.commons.sdk.util.junit4.ManagedSuite.TestConfigurationProperty;
 import org.eclipse.mylyn.tests.util.TestFixture;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

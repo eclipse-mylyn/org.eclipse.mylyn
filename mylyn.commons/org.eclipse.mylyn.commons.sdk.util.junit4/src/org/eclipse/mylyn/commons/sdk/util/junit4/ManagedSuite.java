@@ -8,9 +8,10 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
- *******************************************************************************/
+ *     See git history
+*******************************************************************************/
 
-package org.eclipse.mylyn.commons.sdk.util;
+package org.eclipse.mylyn.commons.sdk.util.junit4;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Suite;
 import org.junit.runners.model.RunnerBuilder;

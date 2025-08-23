@@ -10,6 +10,7 @@
  *     Tasktop Technologies - initial API and implementation
  *     Guy Perron - add Windows support
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.sdk.util;

@@ -9,9 +9,10 @@
  *
  *     Frank Becker - initial API and implementation
  *     ArSysOp - ongoing support
- *******************************************************************************/
+  *     See git history
+*******************************************************************************/
 
-package org.eclipse.mylyn.commons.sdk.util;
+package org.eclipse.mylyn.commons.sdk.util.junit4;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.eclipse.mylyn.commons.sdk.util.DumpThreadTask;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;

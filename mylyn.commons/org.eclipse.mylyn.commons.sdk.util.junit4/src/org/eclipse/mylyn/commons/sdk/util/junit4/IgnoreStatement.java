@@ -8,10 +8,19 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.sdk.util;
+package org.eclipse.mylyn.commons.sdk.util.junit4;
 
-public interface IFixtureJUnitClass {
-	AbstractTestFixture getActualFixture();
+import org.eclipse.mylyn.commons.sdk.util.IgnoreRuleRuntimeException;
+import org.junit.runners.model.Statement;
+
+public class IgnoreStatement extends Statement {
+
+	@Override
+	public void evaluate() {
+		throw new IgnoreRuleRuntimeException();
+	}
+
 }
