@@ -39,7 +39,6 @@ import org.eclipse.osgi.util.NLS;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import junit.framework.AssertionFailedError;
 
 /**
  * @author Steffen Pingel
@@ -119,7 +118,7 @@ public class TestConfiguration {
 				File file = CommonTestUtil.getFile(clazz, "local.json");
 				fixtures = discover(file.toURI().toASCIIString(), "", clazz, fixtureType, defaultOnly, "local.json",
 						exception);
-			} catch (AssertionFailedError | IOException e) {
+			} catch (MylynResourceMissingException | IOException e) {
 				// ignore
 			}
 

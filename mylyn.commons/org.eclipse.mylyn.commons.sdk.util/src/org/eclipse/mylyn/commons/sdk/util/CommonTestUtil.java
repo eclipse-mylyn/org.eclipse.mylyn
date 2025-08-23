@@ -54,8 +54,6 @@ import org.eclipse.osgi.service.resolver.VersionRange;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
 
-import junit.framework.AssertionFailedError;
-
 /**
  * @author Steffen Pingel
  */
@@ -190,7 +188,7 @@ public class CommonTestUtil {
 			String password = CommonTestUtil.getUserCredentials().getPassword();
 			return new CertificateCredentials(keyStoreFile.getAbsolutePath(), password, null);
 		} catch (IOException cause) {
-			AssertionFailedError e = new AssertionFailedError("Failed to load keystore file");
+			MylynResourceMissingException e = new MylynResourceMissingException("Failed to load keystore file");
 			e.initCause(cause);
 			throw e;
 		}
@@ -200,7 +198,7 @@ public class CommonTestUtil {
 		try {
 			CommonTestUtil.getCredentials(level);
 			return true;
-		} catch (AssertionFailedError error) {
+		} catch (MylynResourceMissingException error) {
 			return false;
 		}
 	}
@@ -227,7 +225,7 @@ public class CommonTestUtil {
 			}
 			properties.load(new FileInputStream(file));
 		} catch (Exception e) {
-			AssertionFailedError error = new AssertionFailedError(
+			MylynResourceMissingException error = new MylynResourceMissingException(
 					"must define credentials in $HOME/.mylyn/credentials.properties");
 			error.initCause(e);
 			throw error;
@@ -262,7 +260,7 @@ public class CommonTestUtil {
 					return Objects.requireNonNull(getFileFromClassLoaderBeforeLuna(filename, classLoader));
 				}
 			} catch (Exception e) {
-				AssertionFailedError exception = new AssertionFailedError(
+				MylynResourceMissingException exception = new MylynResourceMissingException(
 						NLS.bind("Could not locate {0} using classloader for {1}", filename, clazz));
 				exception.initCause(e);
 				throw exception;
@@ -282,7 +280,7 @@ public class CommonTestUtil {
 			if (j != -1) {
 				path = path.substring(0, j) + File.separator;
 			} else {
-				throw new AssertionFailedError("Unable to determine location for '" + filename + "' at '" + path + "'");
+				throw new MylynResourceMissingException("Unable to determine location for '" + filename + "' at '" + path + "'");
 			}
 			// class file is nested in jar, use jar path as base
 			if (path.startsWith("file:")) {
@@ -410,7 +408,7 @@ public class CommonTestUtil {
 		}
 
 		if (username == null || password == null) {
-			throw new AssertionFailedError("username or password not found for " + prefix
+			throw new MylynResourceMissingException("username or password not found for " + prefix
 					+ " in <plug-in dir>/credentials.properties, make sure file is valid");
 		}
 
@@ -471,7 +469,7 @@ public class CommonTestUtil {
 		try {
 			CommonTestUtil.getCertificateCredentials();
 			return true;
-		} catch (AssertionFailedError error) {
+		} catch (MylynResourceMissingException error) {
 			return false;
 		}
 	}

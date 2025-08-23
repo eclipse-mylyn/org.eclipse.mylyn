@@ -20,11 +20,12 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.mylyn.commons.sdk.util.MylynResourceMissingException;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import junit.framework.AssertionFailedError;
+
 
 /**
  * @author Steffen Pingel
@@ -81,7 +82,7 @@ public class TestUtil {
 			}
 			properties.load(new FileInputStream(new File(filename)));
 		} catch (Exception e) {
-			throw new AssertionFailedError("must define credentials in <plug-in dir>/credentials.properties");
+			throw new MylynResourceMissingException("must define credentials in <plug-in dir>/credentials.properties");
 		}
 
 		String defaultPassword = properties.getProperty("pass");
@@ -92,7 +93,7 @@ public class TestUtil {
 			case GUEST -> createCredentials(properties, realm + "guest.", "guest@mylyn.eclipse.org", defaultPassword);
 			case USER -> createCredentials(properties, realm, "tests@mylyn.eclipse.org", defaultPassword);
 			case ADMIN -> createCredentials(properties, realm + "admin.", "admin@mylyn.eclipse.org", null);
-			default -> throw new AssertionFailedError("invalid privilege level");
+			default -> throw new MylynResourceMissingException("invalid privilege level");
 		};
 
 
@@ -112,7 +113,7 @@ public class TestUtil {
 		}
 
 		if (username == null || password == null) {
-			throw new AssertionFailedError(
+			throw new MylynResourceMissingException(
 					"username or password not found in <plug-in dir>/credentials.properties, make sure file is valid");
 		}
 
