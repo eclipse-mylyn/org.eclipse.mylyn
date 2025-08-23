@@ -20,8 +20,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.eclipse.mylyn.commons.sdk.util.MylynResourceMissingException;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.MylynResourceMissingException;
 
 
 /**
@@ -80,7 +80,7 @@ public class TestUtil {
 				try {
 					file = getFile(TestUtil.class, "credentials.properties");
 					if (!file.exists()) {
-						throw new MylynResourceMissingException();
+						throw new MylynResourceMissingException("Can't find 'credentials.properties'");
 					}
 				} catch (MylynResourceMissingException e) {
 					file = new File(new File(System.getProperty("user.home"), ".mylyn"), "credentials.properties");
