@@ -9,8 +9,9 @@
  *
  *     Frank Becker and others - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
-package org.eclipse.mylyn.commons.sdk.util;
+package org.eclipse.mylyn.commons.sdk.util.junit4;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -18,6 +19,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Modifier;
 
+import org.eclipse.mylyn.commons.sdk.util.AbstractTestFixture;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;

@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.sdk.util;
@@ -26,8 +27,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-
-import junit.framework.AssertionFailedError;
 
 /**
  * A server that listens for requests and returns preconfigured responses, used for testing HTTP clients.
@@ -191,7 +190,7 @@ public class MockServer implements Runnable {
 
 	public synchronized Message getRequest() throws InterruptedException {
 		if (requests.isEmpty()) {
-			throw new AssertionFailedError("Request list is empty");
+			throw new MylynResourceMissingException("Request list is empty");
 		}
 		return requests.remove(0);
 	}

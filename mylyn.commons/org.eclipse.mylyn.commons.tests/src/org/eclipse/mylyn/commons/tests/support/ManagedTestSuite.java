@@ -40,7 +40,7 @@ import junit.framework.TestSuite;
  * Prints the name of each test to System.err when it started and dumps a stack trace of all thread to System.err if a test takes longer
  * than 10 minutes.
  * 
- * @deprecated use {@link org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite} instead
+ * @deprecated use {@link org.eclipse.mylyn.commons.sdk.util.junit4.ManagedTestSuite} instead
  * @author Steffen Pingel
  */
 @Deprecated

@@ -12,9 +12,9 @@
 package org.eclipse.mylyn.gerrit.tests;
 
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
-import org.eclipse.mylyn.commons.sdk.util.ManagedSuite;
-import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
+import org.eclipse.mylyn.commons.sdk.util.junit4.ManagedSuite;
+import org.eclipse.mylyn.commons.sdk.util.junit4.ManagedTestSuite;
 import org.eclipse.mylyn.gerrit.tests.core.GerritConnectorTest;
 import org.eclipse.mylyn.gerrit.tests.core.GerritSynchronizationTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.GerritCapabilitiesTest;

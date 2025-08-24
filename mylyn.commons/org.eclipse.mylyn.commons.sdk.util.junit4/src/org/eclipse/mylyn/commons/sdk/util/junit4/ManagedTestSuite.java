@@ -9,14 +9,18 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
- *******************************************************************************/
+ *     See git history
+*******************************************************************************/
 
-package org.eclipse.mylyn.commons.sdk.util;
+package org.eclipse.mylyn.commons.sdk.util.junit4;
 
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.DumpThreadTask;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;

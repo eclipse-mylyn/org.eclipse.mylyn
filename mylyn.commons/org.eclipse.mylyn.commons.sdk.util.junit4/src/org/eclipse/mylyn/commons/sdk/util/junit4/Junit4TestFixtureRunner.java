@@ -9,9 +9,10 @@
  *
  *     Frank Becker - initial API and implementation
  *     ArSysOp - ongoing support
- *******************************************************************************/
+  *     See git history
+*******************************************************************************/
 
-package org.eclipse.mylyn.commons.sdk.util;
+package org.eclipse.mylyn.commons.sdk.util.junit4;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
@@ -26,6 +27,10 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.sdk.util.AbstractTestFixture;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.IgnoreRuleRuntimeException;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.osgi.util.NLS;
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.internal.runners.model.EachTestNotifier;

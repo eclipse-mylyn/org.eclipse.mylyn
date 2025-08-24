@@ -21,8 +21,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.MylynResourceMissingException;
 
-import junit.framework.AssertionFailedError;
 
 /**
  * @author Steffen Pingel
@@ -80,9 +80,9 @@ public class TestUtil {
 				try {
 					file = getFile(TestUtil.class, "credentials.properties");
 					if (!file.exists()) {
-						throw new AssertionFailedError();
+						throw new MylynResourceMissingException("Can't find 'credentials.properties'");
 					}
-				} catch (AssertionFailedError e) {
+				} catch (MylynResourceMissingException e) {
 					file = new File(new File(System.getProperty("user.home"), ".mylyn"), "credentials.properties");
 				}
 			} else {
@@ -90,7 +90,7 @@ public class TestUtil {
 			}
 			properties.load(new FileInputStream(file));
 		} catch (Exception e) {
-			AssertionFailedError error = new AssertionFailedError(
+			MylynResourceMissingException error = new MylynResourceMissingException(
 					"must define credentials in $HOME/.mylyn/credentials.properties");
 			error.initCause(e);
 			throw error;
@@ -105,7 +105,7 @@ public class TestUtil {
 			case USER -> createCredentials(properties, realm, "tests@mylyn.eclipse.org", defaultPassword);
 			case READ_ONLY -> createCredentials(properties, realm, "read-only@mylyn.eclipse.org", defaultPassword);
 			case ADMIN -> createCredentials(properties, realm + "admin.", "admin@mylyn.eclipse.org", null);
-			default -> throw new AssertionFailedError("invalid privilege level");
+			default -> throw new MylynResourceMissingException("invalid privilege level");
 		};
 	}
 
@@ -123,7 +123,7 @@ public class TestUtil {
 		}
 
 		if (username == null || password == null) {
-			throw new AssertionFailedError(
+			throw new MylynResourceMissingException(
 					"username or password not found in <plug-in dir>/credentials.properties, make sure file is valid");
 		}
 

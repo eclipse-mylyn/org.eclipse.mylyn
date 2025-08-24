@@ -28,6 +28,7 @@ import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.commons.sdk.util.MylynResourceMissingException;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.commons.sdk.util.FixtureConfiguration;
@@ -50,7 +51,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tests.util.TestFixture;
 
-import junit.framework.AssertionFailedError;
 
 /**
  * @author Steffen Pingel
@@ -153,7 +153,7 @@ public class BugzillaFixture extends TestFixture {
 				if (file != null) {
 					taskRepository.setProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE, file.getCanonicalPath());
 				}
-			} catch (AssertionFailedError | IOException e) {
+			} catch (MylynResourceMissingException | IOException e) {
 				// ignore the Exception. The BUGZILLA_DESCRIPTOR_FILE does not exist so the property is null
 			}
 		}

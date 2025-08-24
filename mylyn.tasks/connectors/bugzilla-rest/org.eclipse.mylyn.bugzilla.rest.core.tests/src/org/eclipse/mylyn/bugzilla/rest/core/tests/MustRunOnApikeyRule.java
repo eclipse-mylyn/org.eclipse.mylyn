@@ -16,7 +16,7 @@ package org.eclipse.mylyn.bugzilla.rest.core.tests;
 import org.eclipse.mylyn.bugzilla.rest.test.support.BugzillaRestTestFixture;
 import org.eclipse.mylyn.commons.sdk.util.AbstractTestFixture;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
-import org.eclipse.mylyn.commons.sdk.util.ConditionalIgnoreRule;
+import org.eclipse.mylyn.commons.sdk.util.junit4.ConditionalIgnoreRule;
 
 @SuppressWarnings("restriction")
 public class MustRunOnApikeyRule implements ConditionalIgnoreRule.IgnoreCondition {
