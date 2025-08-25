@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2000, 2012 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
@@ -45,7 +45,7 @@ class NewRepositoryWizardSelectionPage extends WorkbenchWizardSelectionPage {
 
 	/**
 	 * Create an instance of this class.
-	 * 
+	 *
 	 * @param workbench
 	 *            the workbench
 	 * @param selection
@@ -116,7 +116,7 @@ class NewRepositoryWizardSelectionPage extends WorkbenchWizardSelectionPage {
 
 	/**
 	 * Sets whether the selected wizard advertises that it does provide pages.
-	 * 
+	 *
 	 * @param newValue
 	 *            whether the selected wizard has pages
 	 * @since 3.1
@@ -127,7 +127,7 @@ class NewRepositoryWizardSelectionPage extends WorkbenchWizardSelectionPage {
 
 	/**
 	 * Sets whether the selected wizard advertises that it can finish early.
-	 * 
+	 *
 	 * @param newValue
 	 *            whether the selected wizard can finish early
 	 * @since 3.1
@@ -138,7 +138,7 @@ class NewRepositoryWizardSelectionPage extends WorkbenchWizardSelectionPage {
 
 	/**
 	 * Answers whether the currently selected page, if any, advertises that it may finish early.
-	 * 
+	 *
 	 * @return whether the page can finish early
 	 * @since 3.1
 	 */

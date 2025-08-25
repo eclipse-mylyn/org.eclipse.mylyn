@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2000, 2012 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
@@ -71,7 +71,7 @@ public class NewRepositoryWizard extends Wizard {
 	/**
 	 * Returns the id of the category of wizards to show or <code>null</code> to show all categories. If no entries can be found with this
 	 * id then all categories are shown.
-	 * 
+	 *
 	 * @return String or <code>null</code>.
 	 */
 	public String getCategoryId() {
@@ -93,7 +93,7 @@ public class NewRepositoryWizard extends Wizard {
 
 	/**
 	 * Lazily create the wizards pages
-	 * 
+	 *
 	 * @param aWorkbench
 	 *            the workbench
 	 * @param currentSelection
@@ -118,7 +118,7 @@ public class NewRepositoryWizard extends Wizard {
 
 	/**
 	 * The user has pressed Finish. Instruct self's pages to finish, and answer a boolean indicating success.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	@Override
@@ -139,7 +139,7 @@ public class NewRepositoryWizard extends Wizard {
 	/**
 	 * Sets the id of the category of wizards to show or <code>null</code> to show all categories. If no entries can be found with this id
 	 * then all categories are shown.
-	 * 
+	 *
 	 * @param id
 	 *            may be <code>null</code>.
 	 */
@@ -149,7 +149,7 @@ public class NewRepositoryWizard extends Wizard {
 
 	/**
 	 * Sets the projects only flag. If <code>true</code> only projects will be shown in this wizard.
-	 * 
+	 *
 	 * @param b
 	 *            if only projects should be shown
 	 */
