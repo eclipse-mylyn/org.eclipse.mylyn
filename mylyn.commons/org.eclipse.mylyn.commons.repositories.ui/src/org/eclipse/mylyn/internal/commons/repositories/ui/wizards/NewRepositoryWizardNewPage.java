@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2000, 2024 IBM Corporation and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     IBM Corporation - initial API and implementation
@@ -111,7 +111,7 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 
 	/**
 	 * Create an instance of this class
-	 * 
+	 *
 	 * @param mainPage
 	 * @param wizardCategories
 	 * @param primaryWizards
@@ -223,7 +223,7 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 
 	/**
 	 * Create this tab's visual components
-	 * 
+	 *
 	 * @param parent
 	 *            Composite
 	 * @return Control
@@ -267,7 +267,7 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 
 	/**
 	 * Create a new FilteredTree in the parent.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent <code>Composite</code>.
 	 * @since 3.0
@@ -355,7 +355,7 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 
 	/**
 	 * Create the Show All and help buttons at the bottom of the page.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent composite on which to create the widgets
 	 */
@@ -434,7 +434,7 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 
 	/**
 	 * Create the image controls.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent <code>Composite</code>.
 	 * @since 3.0
@@ -508,7 +508,7 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 
 	/**
 	 * The user selected either new wizard category(s) or wizard element(s). Proceed accordingly.
-	 * 
+	 *
 	 * @param selectionEvent
 	 *            ISelection
 	 */
@@ -561,7 +561,7 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 
 	/**
 	 * Set the dialog store to use for widget value storage and retrieval
-	 * 
+	 *
 	 * @param settings
 	 *            IDialogSettings
 	 */
@@ -604,7 +604,7 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 
 	/**
 	 * Update the current description controls.
-	 * 
+	 *
 	 * @param selectedObject
 	 *            the new wizard
 	 * @since 3.0
@@ -652,7 +652,7 @@ class NewRepositoryWizardNewPage implements ISelectionChangedListener {
 
 	/**
 	 * Tests whether the given wizard has an associated image.
-	 * 
+	 *
 	 * @param selectedObject
 	 *            the wizard to test
 	 * @return whether the given wizard has an associated image

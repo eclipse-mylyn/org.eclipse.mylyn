@@ -118,17 +118,6 @@ public class RepositoryLocationPart {
 			apply();
 		}
 
-		@SuppressWarnings("unused")
-		public void setEnabled(boolean enabled) {
-			if (!enabled) {
-				enabledButton.setEnabled(false);
-				setInputFieldsEnabled(false);
-			} else {
-				enabledButton.setEnabled(true);
-				updateWidgetEnablement();
-			}
-		}
-
 		@Override
 		public void widgetDefaultSelected(SelectionEvent event) {
 			apply();
