@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for hudson.model.Node complex type.
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="hudson.model.Node">
  *   &lt;complexContent>
@@ -70,7 +70,7 @@ public class HudsonModelNode {
 	 * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the assignedLabel property.
 	 * <p>
 	 * For example, to add a new item, do as follows:
-	 * 
+	 *
 	 * <pre>
 	 * getAssignedLabel().add(newItem);
 	 * </pre>
@@ -86,7 +86,7 @@ public class HudsonModelNode {
 
 	/**
 	 * Gets the value of the mode property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelNodeMode }
 	 */
 	public HudsonModelNodeMode getMode() {
@@ -95,7 +95,7 @@ public class HudsonModelNode {
 
 	/**
 	 * Sets the value of the mode property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelNodeMode }
 	 */
@@ -105,7 +105,7 @@ public class HudsonModelNode {
 
 	/**
 	 * Gets the value of the nodeDescription property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getNodeDescription() {
@@ -114,7 +114,7 @@ public class HudsonModelNode {
 
 	/**
 	 * Sets the value of the nodeDescription property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
@@ -124,7 +124,7 @@ public class HudsonModelNode {
 
 	/**
 	 * Gets the value of the nodeName property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getNodeName() {
@@ -133,7 +133,7 @@ public class HudsonModelNode {
 
 	/**
 	 * Sets the value of the nodeName property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
