@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for hudson.model.User complex type.
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="hudson.model.User">
  *   &lt;complexContent>
@@ -62,7 +62,7 @@ public class HudsonModelUser {
 
 	/**
 	 * Gets the value of the absoluteUrl property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getAbsoluteUrl() {
@@ -71,7 +71,7 @@ public class HudsonModelUser {
 
 	/**
 	 * Sets the value of the absoluteUrl property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
@@ -81,7 +81,7 @@ public class HudsonModelUser {
 
 	/**
 	 * Gets the value of the description property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getDescription() {
@@ -90,7 +90,7 @@ public class HudsonModelUser {
 
 	/**
 	 * Sets the value of the description property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
@@ -100,7 +100,7 @@ public class HudsonModelUser {
 
 	/**
 	 * Gets the value of the fullName property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getFullName() {
@@ -109,7 +109,7 @@ public class HudsonModelUser {
 
 	/**
 	 * Sets the value of the fullName property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
@@ -119,7 +119,7 @@ public class HudsonModelUser {
 
 	/**
 	 * Gets the value of the id property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getId() {
@@ -128,7 +128,7 @@ public class HudsonModelUser {
 
 	/**
 	 * Sets the value of the id property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
@@ -143,7 +143,7 @@ public class HudsonModelUser {
 	 * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the property property.
 	 * <p>
 	 * For example, to add a new item, do as follows:
-	 * 
+	 *
 	 * <pre>
 	 * getProperty().add(newItem);
 	 * </pre>
