@@ -20,11 +20,14 @@ import org.eclipse.core.runtime.Assert;
  */
 public class RestoreInput {
 
-	@SuppressWarnings("unused")
 	private final String message;
 
 	public RestoreInput(String msg) {
 		Assert.isLegal(msg != null);
 		message = msg;
+	}
+
+	public String getMessage() {
+		return message;
 	}
 }
