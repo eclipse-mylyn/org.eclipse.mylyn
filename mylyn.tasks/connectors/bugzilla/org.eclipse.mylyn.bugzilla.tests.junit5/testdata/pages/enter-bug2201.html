@@ -1,0 +1,493 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                      "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Enter Bug: Mylar</title>
+
+
+<link rel="Top" href="https://bugs.eclipse.org/bugs/">
+
+  
+
+
+  
+
+
+  
+    <link rel="Saved&nbsp;Searches" title="My Bugs"
+          href="buglist.cgi?bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&email1=relves%40cs.ubc.ca&emailtype1=exact&emailassigned_to1=1&emailreporter1=1">
+
+    <link rel="Saved&nbsp;Searches" 
+          title="AssignedToMe"
+          href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=AssignedToMe">
+
+    
+
+    <script type="text/javascript">
+  <!--
+  
+  function initHelp() {}
+  // -->
+  </script>
+
+    <link href="skins/standard/global.css" rel="stylesheet" type="text/css">
+    <link href="skins/custom/global.css" rel="stylesheet" type="text/css">
+
+
+
+    
+
+  </head>
+
+
+
+  <body onload="set_assign_to();"
+        class="bugs-eclipse-org-bugs">
+
+
+<!-- 1.0@bugzilla.org -->
+
+
+
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+	<tr style="background-image: url(/bugs/header_bg.gif);">
+		<td>
+			<a href="http://www.eclipse.org/"><img src="/bugs/header_logo.gif" width="164" height="68" border="0" /></a>
+		</td>
+		<td align="right" style="color: white; font-family: verdana,arial,helvetica; font-size: 1.25em; font-style: italic;"><b>Eclipse bugs</b></font> <br /><font style="font-size: .5em;">Bugzilla 2.20.1 &#160;</font></td>
+
+	</tr>
+</table>
+
+<div id="header">
+    <h1>Enter Bug: Mylar</h1>
+
+    <h2>This page lets you enter a new bug into Bugzilla.</h2>
+
+</div>
+
+<script type="text/javascript">
+<!--
+
+var initialowners = new Array(10);
+var last_initialowner;
+var components = new Array(10);
+    var initialqacontacts = new Array(10);
+    var last_initialqacontact;
+    components[0] = "Bugzilla";
+    initialowners[0] = "beatmik\x40acm.org";
+        initialqacontacts[0] = "";
+    components[1] = "Core";
+    initialowners[1] = "beatmik\x40acm.org";
+        initialqacontacts[1] = "";
+    components[2] = "Doc";
+    initialowners[2] = "beatmik\x40acm.org";
+        initialqacontacts[2] = "";
+    components[3] = "Java";
+    initialowners[3] = "beatmik\x40acm.org";
+        initialqacontacts[3] = "";
+    components[4] = "Jira";
+    initialowners[4] = "beatmik\x40acm.org";
+        initialqacontacts[4] = "";
+    components[5] = "Monitor";
+    initialowners[5] = "beatmik\x40acm.org";
+        initialqacontacts[5] = "";
+    components[6] = "Tasks";
+    initialowners[6] = "beatmik\x40acm.org";
+        initialqacontacts[6] = "";
+    components[7] = "UI";
+    initialowners[7] = "beatmik\x40acm.org";
+        initialqacontacts[7] = "";
+    components[8] = "XML";
+    initialowners[8] = "beatmik\x40acm.org";
+        initialqacontacts[8] = "";
+    components[9] = "Zest";
+    initialowners[9] = "irbull\x40cs.uvic.ca";
+        initialqacontacts[9] = "";
+
+function set_assign_to() {
+    // Based on the selected component, fill the "Assign To:" field
+    // with the default component owner, and the the "QA Contact:" field
+    // with the default QA Contact.
+    var form = document.Create;
+    var assigned_to = form.assigned_to.value;
+
+    var qa_contact = form.qa_contact.value;
+
+    var index = -1;
+    if (form.component.type == 'select-one') {
+        index = form.component.selectedIndex;
+    } else if (form.component.type == 'hidden') {
+        // Assume there is only one component in the list
+        index = 0;
+    }
+    if (index != -1) {
+        var owner = initialowners[index];
+        var component = components[index];
+        if (assigned_to == last_initialowner
+            || assigned_to == owner
+            || assigned_to == '') {
+            form.assigned_to.value = owner;
+            last_initialowner = owner;
+        }
+            var contact = initialqacontacts[index];
+            if (qa_contact == last_initialqacontact
+                || qa_contact == contact
+                || qa_contact == '') {
+                  form.qa_contact.value = contact;
+                  last_initialqacontact = contact;
+            }
+    }
+}
+-->
+</script>
+
+<form name="Create" id="Create" method="post" action="post_bug.cgi">
+<input type="hidden" name="product" value="Mylar">
+
+<table cellspacing="2" cellpadding="0" border="0">
+
+  <tr>
+    <td><br></td>
+  </tr>
+
+  <tr>
+    <td></td>
+
+    <td colspan="3">
+    Before reporting a bug, please read the 
+<a href="page.cgi?id=bug-writing.html">bug writing guidelines</a>, please look at the list of
+<a href="duplicates.cgi">most frequently reported bugs</a>, and please
+<a href="query.cgi">search</a> for the bug.
+    </td>
+  </tr>
+
+  <tr>
+
+    <td><br></td>
+  </tr>
+
+  <tr>
+    <td align="right" valign="top"><strong>Reporter:</strong></td>
+    <td valign="top">relves&#64;cs.ubc.ca</td>
+
+    <td align="right" valign="top"><strong>Product:</strong></td>
+
+    <td valign="top">Mylar</td>
+  </tr>
+
+  
+  <tr>
+    <td align="right" valign="top">
+      <strong>Version:</strong>
+    </td>
+    <td>
+
+      <select name="version" size="5">
+          <option value="0.2">0.2          </option>
+          <option value="0.3">0.3          </option>
+          <option value="0.4" selected="selected">0.4          </option>
+          <option value="unspecified">unspecified          </option>
+      </select>
+    </td>
+
+    <td align="right" valign="top">
+      <strong>
+        <a href="describecomponents.cgi?product=Mylar">
+          Component</a>:
+      </strong>
+    </td>
+    <td>
+      <select name="component" onchange="set_assign_to();" size="5">
+
+          <option value="Bugzilla">Bugzilla          </option>
+          <option value="Core">Core          </option>
+          <option value="Doc">Doc          </option>
+          <option value="Java">Java          </option>
+          <option value="Jira">Jira          </option>
+          <option value="Monitor">Monitor          </option>
+
+          <option value="Tasks">Tasks          </option>
+          <option value="UI">UI          </option>
+          <option value="XML">XML          </option>
+          <option value="Zest">Zest          </option>
+      </select>
+    </td>
+  </tr>
+
+  <tr>
+    <td>&nbsp;</td>
+    <td colspan="3"></td>
+  </tr>
+
+  <tr><td align="right">
+    <strong>
+      <a href="page.cgi?id=fields.html#rep_platform">Platform</a>:
+    </strong>
+
+  </td>
+
+  <td>
+    <select name="rep_platform">
+      <option value="All">All</option>
+      <option value="Macintosh">Macintosh</option>
+      <option value="Other">Other</option>
+      <option value="PC" selected="selected">PC</option>
+
+      <option value="Power PC">Power PC</option>
+      <option value="Sun">Sun</option>
+    </select>
+  </td>
+<td align="right">
+    <strong>
+      <a href="page.cgi?id=fields.html#op_sys">OS</a>:
+    </strong>
+
+  </td>
+
+  <td>
+    <select name="op_sys">
+      <option value="All">All</option>
+      <option value="AIX Motif">AIX Motif</option>
+      <option value="HP-UX">HP-UX</option>
+      <option value="Linux">Linux</option>
+
+      <option value="Linux-GTK">Linux-GTK</option>
+      <option value="Linux-Motif">Linux-Motif</option>
+      <option value="Mac OS">Mac OS</option>
+      <option value="MacOS X">MacOS X</option>
+      <option value="Neutrino">Neutrino</option>
+      <option value="other">other</option>
+
+      <option value="QNX-Photon">QNX-Photon</option>
+      <option value="Solaris">Solaris</option>
+      <option value="Solaris-GTK">Solaris-GTK</option>
+      <option value="Solaris-Motif">Solaris-Motif</option>
+      <option value="SymbianOS-Series 80">SymbianOS-Series 80</option>
+      <option value="Unix All">Unix All</option>
+
+      <option value="Windows All">Windows All</option>
+      <option value="Windows 95">Windows 95</option>
+      <option value="Windows 98">Windows 98</option>
+      <option value="Windows 2000">Windows 2000</option>
+      <option value="Windows 2003 Server">Windows 2003 Server</option>
+      <option value="Windows CE">Windows CE</option>
+
+      <option value="Windows ME">Windows ME</option>
+      <option value="Windows Mobile 2003">Windows Mobile 2003</option>
+      <option value="Windows NT">Windows NT</option>
+      <option value="Windows XP" selected="selected">Windows XP</option>
+    </select>
+  </td>
+  </tr>
+
+  <tr>
+    <input type="hidden" name="priority"
+           value="P3">
+<td align="right">
+    <strong>
+      <a href="page.cgi?id=fields.html#bug_severity">Severity</a>:
+    </strong>
+  </td>
+
+  <td>
+
+    <select name="bug_severity">
+      <option value="blocker">blocker</option>
+      <option value="critical">critical</option>
+      <option value="major">major</option>
+      <option value="normal" selected="selected">normal</option>
+      <option value="minor">minor</option>
+
+      <option value="trivial">trivial</option>
+      <option value="enhancement">enhancement</option>
+    </select>
+  </td>
+  </tr>
+
+
+  <tr>
+    <td>&nbsp;</td>
+
+    <td colspan="3"></td>
+  </tr>
+
+  <tr>
+  <input type="hidden" name="bug_status" 
+         value="NEW">
+    <td align="right" valign="top"><strong>Initial State:</strong></td>
+    <td valign="top">NEW</td>
+    <td colspan="2"></td>
+
+  </tr>
+
+  <tr>
+    <td align="right">
+      <strong>
+        <a href="page.cgi?id=fields.html#assigned_to">Assign To</a>:
+      </strong>
+    </td>
+    <td colspan="3"><input
+  name="assigned_to"
+  value="" disabled="1"  size="32" 
+>
+
+      <noscript>(Leave blank to assign to component's default assignee)</noscript>
+    </td>
+  </tr>
+
+    <tr>
+      <td align="right"><strong>QA Contact:</strong></td>
+      <td colspan="3"><input
+  name="qa_contact"
+  value="" disabled="1"  size="32" 
+>
+        <noscript>(Leave blank to assign to default qa contact)</noscript>
+
+      </td>
+    </tr>
+
+  <tr>
+    <td align="right"><strong>Cc:</strong></td>
+    <td colspan="3"><input
+  name="cc"
+  value="" size="45" 
+>
+    </td>
+  </tr>
+  
+  <tr>
+
+    <td>&nbsp;</td>
+    <td colspan="3"></td>
+  </tr>
+
+
+  <tr>
+    <td align="right"><strong>URL:</strong></td>
+    <td colspan="3">
+      <input name="bug_file_loc" size="60"
+             value="http://">
+
+    </td>
+  </tr>
+
+  <tr>
+    <td align="right"><strong>Summary:</strong></td>
+    <td colspan="3">
+      <input name="short_desc" size="60" value="">
+    </td>
+  </tr>
+
+  <tr><td align="right" valign="top"><strong>Description:</strong></td>
+    <td colspan="3">
+      <textarea name="comment" rows="10" cols="80"></textarea>
+      <br>
+    </td>
+  </tr>
+
+    <input type="hidden" name="commentprivacy" value="0">
+
+
+  <tr>
+    <td></td>
+    <td colspan="3">
+    </td>
+  </tr>
+
+  
+
+  <tr>
+    <td></td>
+
+    <td colspan="3">
+      <input type="submit" value="    Commit    "
+             onclick="if (this.form.short_desc.value == '')
+             { alert('Please enter a summary sentence for this bug.');
+               return false; } return true;">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <input type="submit" name="maketemplate"
+             value="Remember values as bookmarkable template">
+    </td>
+  </tr>
+
+  <tr>
+    <td></td>
+
+    <td colspan="3">
+      <br>
+      We've made a guess at your
+      operating system and platform. Please check them
+      and, if we got it wrong, email
+      webmaster@eclipse.org.
+    </td>
+  </tr>
+
+  </table>
+  <input type="hidden" name="form_name" value="enter_bug">
+</form>
+
+
+<div id="footer">
+  <div class="intro"></div>
+
+
+
+
+<form method="get" action="show_bug.cgi">
+<div id="useful-links">
+  <div id="links-actions">
+    <div class="label">Actions:</div>
+    <div class="links">
+        <a href="./">Home</a> | 
+        <a href="enter_bug.cgi">New</a> | 
+        <a href="query.cgi">Search</a> |
+        bug # <input class="txt" name="id" size="6">
+
+        <input class="btn" type="submit" value="Find"> | 
+        
+        <a href="report.cgi">Reports</a> 
+        
+          | <a href="request.cgi?requester=relves%40cs.ubc.ca&amp;requestee=relves%40cs.ubc.ca&amp;do_union=1&amp;group=type">My Requests</a>
+        
+          | <a href="votes.cgi?action=show_user">My&nbsp;Votes</a>      
+         
+              | <a href="relogin.cgi">Log&nbsp;out</a>&nbsp;relves&#64;cs.ubc.ca
+    </div>
+
+  </div>
+       
+  <div id="links-edit">
+    <div class="label">Edit:</div>
+    <div class="links">
+
+        <a href="userprefs.cgi">Prefs</a> 
+    </div>
+  </div>
+    
+
+    
+    
+  <div id="links-saved">
+
+    <div class="label">
+          Saved&nbsp;Searches:
+    </div>
+    <div class="links">
+          <a href="buglist.cgi?bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&email1=relves%40cs.ubc.ca&emailtype1=exact&emailassigned_to1=1&emailreporter1=1">My&nbsp;Bugs</a>
+ | 
+            <a href="buglist.cgi?cmdtype=runnamed&amp;namedcmd=AssignedToMe">AssignedToMe</a>
+    </div>
+
+  </div>
+
+  
+</div>
+</form>
+
+  <div class="outro"></div>
+</div>
+
+</body>
+</html>

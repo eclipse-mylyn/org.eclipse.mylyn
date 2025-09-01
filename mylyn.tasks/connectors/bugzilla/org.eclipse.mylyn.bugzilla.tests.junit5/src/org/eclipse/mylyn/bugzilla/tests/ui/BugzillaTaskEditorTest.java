@@ -1,0 +1,88 @@
+/*******************************************************************************
+ * Copyright (c) 2004, 2013 Jeff Pound and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     Jeff Pound - initial API and implementation
+ *     Tasktop Technologies - improvements
+ *     See git history
+ *******************************************************************************/
+
+package org.eclipse.mylyn.bugzilla.tests.ui;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
+import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.TaskMapping;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tests.util.TestFixture;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+/**
+ * @author Jeff Pound
+ * @author Steffen Pingel
+ */
+@SuppressWarnings("nls")
+public class BugzillaTaskEditorTest extends AbstractBugzillaFixtureTest {
+
+	private TaskRepository repository;
+
+	@BeforeEach
+	void setUp() throws Exception {
+		// ensure that the local repository is present
+		TestFixture.resetTaskListAndRepositories();
+		repository = fixture.repository();
+		TasksUi.getRepositoryManager().addRepository(repository);
+	}
+
+	@AfterEach
+	void tearDown() throws Exception {
+		UiTestUtil.closeAllEditors();
+		TestFixture.resetTaskListAndRepositories();
+	}
+
+	/**
+	 * Tests that a task editor opens when creating new Bugzilla tasks.
+	 */
+	@Test
+	public void testOpenNewEditor() throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+			@Override
+			public String getSummary() {
+				return "The Summary";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description";
+			}
+		};
+		final TaskMapping taskMappingSelect = new TaskMapping() {
+			@Override
+			public String getProduct() {
+				return "TestProduct";
+			}
+		};
+
+		TaskData taskData = TasksUiInternal.createTaskData(repository, taskMappingInit, taskMappingSelect, null);
+		TasksUiInternal.createAndOpenNewTask(taskData);
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
+		assertEquals("New Task", taskEditor.getTitle());
+	}
+
+}
