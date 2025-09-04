@@ -20,7 +20,10 @@ import org.eclipse.core.runtime.Assert;
  */
 public class AbandonInput {
 
-	@SuppressWarnings("unused")
+	public String getMessage() {
+		return message;
+	}
+
 	private final String message;
 
 	public AbandonInput(String msg) {
