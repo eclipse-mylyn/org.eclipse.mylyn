@@ -15,7 +15,7 @@
 <feature
       id="org.eclipse.mylyn.pde.feature"
       label="%featureName"
-      version="4.8.0.qualifier"
+      version="4.9.0.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.mylyn.context.core"
       license-feature="org.eclipse.license"
@@ -34,7 +34,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.mylyn.jdt.feature" version="4.8.0" match="equivalent"/>
+      <import feature="org.eclipse.mylyn.jdt.feature" version="4.9.0" match="equivalent"/>
       <import feature="org.eclipse.pde" version="3.6.0" match="compatible"/>
    </requires>
 

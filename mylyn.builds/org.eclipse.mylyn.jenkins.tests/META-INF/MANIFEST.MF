@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.jenkins.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Jenkins Connector
 Bundle-SymbolicName: org.eclipse.mylyn.jenkins.tests;singleton:=true
-Bundle-Version: 4.8.0.qualifier
+Bundle-Version: 4.9.0.qualifier
 Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.emf.ecore;bundle-version="0.0.0",
  org.eclipse.jface.text;bundle-version="0.0.0",
@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.mylyn.commons.core;bundle-version="4.4.0",
  org.eclipse.mylyn.commons.repositories.core;bundle-version="4.4.0",
  org.eclipse.mylyn.commons.sdk.util;bundle-version="4.4.0",
- org.eclipse.mylyn.commons.sdk.util.junit4;bundle-version="4.8.0",
+ org.eclipse.mylyn.commons.sdk.util.junit4;bundle-version="4.9.0",
  org.eclipse.mylyn.jenkins.core;bundle-version="4.4.0",
  org.eclipse.mylyn.jenkins.ui;bundle-version="4.4.0",
  org.eclipse.search;bundle-version="0.0.0",

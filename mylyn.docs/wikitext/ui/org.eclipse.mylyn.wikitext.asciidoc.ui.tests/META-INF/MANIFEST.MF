@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.asciidoc.ui.tests
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.asciidoc.ui.tests;singleton:=true
-Bundle-Version: 4.8.0.qualifier
+Bundle-Version: 4.9.0.qualifier
 Bundle-Name: %Bundle-Name.0
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-21

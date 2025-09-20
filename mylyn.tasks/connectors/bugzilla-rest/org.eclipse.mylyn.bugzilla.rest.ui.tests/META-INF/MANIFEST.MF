@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.bugzilla.rest.ui.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Bugzilla Rest Connector
 Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.rest.ui.tests;singleton:=true
-Bundle-Version: 4.8.0.qualifier
+Bundle-Version: 4.9.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.bugzilla.rest.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-21

@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.ide.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.ide.ui;singleton:=true
-Bundle-Version: 4.8.0.qualifier
+Bundle-Version: 4.9.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.internal.ide.ui.IdeUiBridgePlugin
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
