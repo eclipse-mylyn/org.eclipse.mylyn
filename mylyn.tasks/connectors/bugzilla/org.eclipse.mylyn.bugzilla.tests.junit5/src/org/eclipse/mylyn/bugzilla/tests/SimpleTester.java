@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2025 george
+ * Copyright (c) 2025 George Lindholm
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -16,18 +16,17 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.concurrent.TimeUnit;
 
-import org.eclipse.mylyn.commons.sdk.util.junit5.TestMethodWrapper;
-import org.eclipse.mylyn.commons.sdk.util.junit5.TestResultLogger;
+import org.eclipse.mylyn.commons.sdk.util.junit5.MylynTestExtension;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
- * Simple test class to demonstrate the extensions.
+ * Simple test class to test the new junit5 extensions.
  */
 @Timeout(value = 1, unit = TimeUnit.SECONDS) // overall timeout for each test
-@ExtendWith({ TestMethodWrapper.class, TestResultLogger.class })
+@MylynTestExtension
+@SuppressWarnings("nls")
 public class SimpleTester {
 	// Simple tests to demonstrate the extensions
 
@@ -51,13 +50,14 @@ public class SimpleTester {
 
 	@Test
 	public void timeout() throws InterruptedException {
-		Thread.sleep(2000);
 		System.out.println("This should timeout");
+		Thread.sleep(2000);
 		assertTrue(true);
 	}
 
 	@Test
 	public void dynamicDisabled() {
+		System.out.println("This should be disabled dynamically");
 		assumeTrue(false, "Dynamically disabled");
 	}
 
