@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.help.sdk
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.help.sdk;singleton:=true
-Bundle-Version: 4.8.0.qualifier
+Bundle-Version: 4.9.0.qualifier
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.help;bundle-version="0.0.0"

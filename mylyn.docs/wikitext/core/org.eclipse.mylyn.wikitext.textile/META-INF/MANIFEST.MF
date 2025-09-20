@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.textile
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.textile
-Bundle-Version: 4.8.0.qualifier
+Bundle-Version: 4.9.0.qualifier
 Bundle-Name: Mylyn WikiText Textile
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-21
@@ -18,7 +18,7 @@ Import-Package: org.apache.commons.collections4;version="[4.4.0,5.0.0)",
  org.eclipse.mylyn.wikitext.parser.outline;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.parser.util;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.validation;version="[4.2,5)"
-Export-Package: org.eclipse.mylyn.wikitext.textile;version="4.8.0";x-friends:="org.eclipse.mylyn.wikitext.tasks.ui",
- org.eclipse.mylyn.wikitext.textile.internal;version="4.8.0";x-internal:=true,
- org.eclipse.mylyn.wikitext.textile.internal.token;version="4.8.0";x-internal:=true,
- org.eclipse.mylyn.wikitext.textile.internal.validation;version="4.8.0";x-internal:=true
+Export-Package: org.eclipse.mylyn.wikitext.textile;version="4.9.0";x-friends:="org.eclipse.mylyn.wikitext.tasks.ui",
+ org.eclipse.mylyn.wikitext.textile.internal;version="4.9.0";x-internal:=true,
+ org.eclipse.mylyn.wikitext.textile.internal.token;version="4.9.0";x-internal:=true,
+ org.eclipse.mylyn.wikitext.textile.internal.validation;version="4.9.0";x-internal:=true
