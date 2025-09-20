@@ -20,7 +20,7 @@
 			<unit id="org.eclipse.license.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/eclipse/updates/4.36/R-4.36-202505281830"/>
+			<repository location="https://download.eclipse.org/eclipse/updates/4.37/R-4.37-202509050730"/>
 			<unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.equinox.p2.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.sdk.feature.group" version="0.0.0"/>
@@ -30,17 +30,17 @@
 			<unit id="org.eclipse.egit.github.core" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/egit/updates-7.3/"/>
+			<repository location="https://download.eclipse.org/egit/updates-7.4/"/>
 			<unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.jgit.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.jgit.lfs.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/modeling/emf/emf/builds/release/2.42.0/"/>
+			<repository location="https://download.eclipse.org/modeling/emf/emf/builds/release/2.43.0/"/>
 			<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/mylyn/updates/release/4.7.0/"/>
+			<repository location="https://download.eclipse.org/mylyn/updates/release/4.8.0/"/>
 			<unit id="org.eclipse.mylyn.bugzilla.feature.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.mylyn.builds.feature.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.mylyn.cdt.feature.feature.group" version="0.0.0"/>
@@ -70,11 +70,11 @@
 			<unit id="org.eclipse.mylyn.wikitext.feature.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/rt/ecf/3.16.1/site.p2/3.16.1.v20250520-0158/"/>
+			<repository location="https://download.eclipse.org/rt/ecf/3.16.4/site.p2/3.16.4.v20250819-0049/"/>
 			<unit id="org.eclipse.ecf.remoteservice.sdk.feature.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/tools/cdt/builds/12.1/cdt-12.1.0-rc1/"/>
+			<repository location="https://download.eclipse.org/tools/cdt/builds/12.2/cdt-12.2.0-rc2/"/>
 			<unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.cdt.sdk.feature.group" version="0.0.0"/>
 		</location>
@@ -103,7 +103,7 @@
 			<unit id="org.apache.commons.io" version="2.8.0.v20210415-0900"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/2025-06/"/>
+			<repository location="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/2025-09/"/>
 			<unit id="org.glassfish.hk2.osgi-resource-locator" version="0.0.0"/>
 			<unit id="org.apache.commons.lang3" version="0.0.0"/>
 			<unit id="org.apache.commons.logging" version="0.0.0"/>
@@ -118,7 +118,6 @@
 			<unit id="org.apache.tika.core" version="0.0.0"/>
 			<unit id="com.github.ben-manes.caffeine" version="0.0.0"/>
 			<unit id="com.google.gson" version="0.0.0"/>
-			<unit id="com.google.guava" version="0.0.0"/>
 			<unit id="org.hamcrest" version="0.0.0"/>
 			<unit id="org.jsoup" version="0.0.0"/>
 			<unit id="org.junit" version="0.0.0"/>
