@@ -15,7 +15,7 @@ package org.eclipse.mylyn.commons.sdk.util;
  * FIXME: Should really be ResourceMissingException but that could break existing code. <br/>
  * Use to be abused junit.framework.AssertionFailedError
  *
- * @Since 4.8.0
+ * @since 4.8
  */
 public class MylynResourceMissingException extends AssertionError {
 
