@@ -310,13 +310,26 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 
 	public void testAttachmentWithUnicode() throws Exception {
 		String osName = System.getProperty("os.name").toLowerCase();
-		if (osName.startsWith("mac os x")) {
-			return;
-		}
-		// macos X with APFS can not handle this
 		testAttachmentWithSpecialCharacters(
-				"\u00E7\u00F1\u00A5\u20AC\u00A3\u00BD\u00BC\u03B2\u03B8\u53F0\u5317\u3096\u3097\uFF73");
+				"\u00E7" + // LATIN SMALL LETTER C WITH CEDILLA
+						"\u00F1" + // LATIN SMALL LETTER N WITH TILDE
+						"\u00A5" + // YEN SIGN
+						"\u20AC" + // EURO SIGN
+						"\u00A3" + // POUND SIGN
+						"\u00BD" + // VULGAR FRACTION ONE HALF
+						"\u00BC" + // VULGAR FRACTION ONE QUARTER
+						"\u03B2" + // GREEK SMALL LETTER BETA
+						"\u03B8" + // GREEK SMALL LETTER THETA
+						"\u53F0" + // CJK UNIFIED IDEOGRAPH-53F0
+						"\u5317" + // CJK UNIFIED IDEOGRAPH-5317
+						"\u3096" + // HIRAGANA LETTER SMALL KE
+						"\u30A1" + // KATAKANA LETTER SMALL A
+						"\uFF73" + // HALFWIDTH KATAKANA LETTER U
+						(osName.startsWith("mac os x") ? "" : "\u3097") // Invalid APFS character
+
+				);
 	}
+
 
 	public void testAttachmentWithSpecialCharacters() throws Exception {
 		testAttachmentWithSpecialCharacters("~`!@#$%^&()_-+={[}];',");
@@ -335,10 +348,9 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		attachmentMapper.setPatch(false);
 		attachmentMapper.applyTo(attachmentAttr);
 
-		String filename = "test" + specialCharacters + System.currentTimeMillis() + ".txt";
-		File attachFile = new File(filename);
-		attachFile.createNewFile();
-		attachFile.deleteOnExit();
+		File attachFile = File.createTempFile("test" + specialCharacters, ".txt");
+		String filename = attachFile.getName();
+		System.out.println("Using attachment file: " + attachFile.getAbsolutePath() + " with name: " + filename);
 		try (BufferedWriter write = new BufferedWriter(new FileWriter(attachFile))) {
 			write.write("test file content");
 		}
