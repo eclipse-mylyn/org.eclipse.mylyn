@@ -268,6 +268,8 @@
            <version>${tycho-version}</version>
            <configuration>
               <includeAllSources>true</includeAllSources>
+              <skipArchive>true</skipArchive>
+              <xzCompress>false</xzCompress>
            </configuration>
         </plugin>
         <plugin>
