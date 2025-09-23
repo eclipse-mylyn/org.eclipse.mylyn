@@ -20,7 +20,7 @@
 			<unit id="org.eclipse.license.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/eclipse/updates/4.37/R-4.37-202509050730"/>
+			<repository location="https://download.eclipse.org/eclipse/updates/4.38-I-builds"/>
 			<unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.equinox.p2.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.sdk.feature.group" version="0.0.0"/>
@@ -40,7 +40,7 @@
 			<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/rt/ecf/3.16.4/site.p2/3.16.4.v20250819-0049/"/>
+			<repository location="https://download.eclipse.org/rt/ecf/3.16.5/site.p2/3.16.5.v20250914-0333/"/>
 			<unit id="org.eclipse.ecf.remoteservice.sdk.feature.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">

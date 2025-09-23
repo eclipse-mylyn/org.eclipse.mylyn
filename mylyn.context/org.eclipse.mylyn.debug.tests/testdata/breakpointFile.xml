@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <breakpoints>
-<breakpoint enabled="true" persistant="true" registered="true">
+<breakpoint enabled="true" persistent="true" registered="true">
 <resource path="/test/src/test.java" type="1"/>
 <marker charStart="1" lineNumber="2" type="org.eclipse.jdt.debug.javaLineBreakpointMarker">
 <attrib name="org.eclipse.debug.core.id" value="org.eclipse.jdt.debug"/>
