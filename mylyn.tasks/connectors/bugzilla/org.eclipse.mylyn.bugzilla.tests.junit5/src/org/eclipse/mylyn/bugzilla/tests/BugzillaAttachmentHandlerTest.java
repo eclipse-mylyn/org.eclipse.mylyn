@@ -56,10 +56,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
 /**
@@ -327,15 +325,31 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 	}
 
 	@Test
-	@DisabledOnOs(value = OS.MAC, disabledReason = "macos X with APFS can not handle this")
 	public void testAttachmentWithUnicode() throws Exception {
-		// Skip if running on Linux and Bugzilla version > 5.1
-		Assumptions.assumeFalse(
-				OS.LINUX.isCurrentOs() && fixture.getBugzillaVersion().compareTo(BugzillaVersion.BUGZILLA_5_1) > 0,
-				"Disabled on Linux with Bugzilla version > 5.1: Strange unicode handling"
-		); // FIXME Unicode characters in filename from Bugzilla are garbage
+		// Skip if running against Bugzilla version > 5.1
+		assumeFalse(
+				fixture.getBugzillaVersion().compareTo(BugzillaVersion.BUGZILLA_5_1) > 0,
+				"Disabled with Bugzilla version > 5.1: Strange unicode characters in returned attachement file"
+				); // FIXME Unicode characters in filename from Bugzilla are don't match
+
 		testAttachmentWithSpecialCharacters(
-				"\u00E7\u00F1\u00A5\u20AC\u00A3\u00BD\u00BC\u03B2\u03B8\u53F0\u5317\u3096\u3097\uFF73");
+				"\u00E7" + // LATIN SMALL LETTER C WITH CEDILLA
+						"\u00F1" + // LATIN SMALL LETTER N WITH TILDE
+						"\u00A5" + // YEN SIGN
+						"\u20AC" + // EURO SIGN
+						"\u00A3" + // POUND SIGN
+						"\u00BD" + // VULGAR FRACTION ONE HALF
+						"\u00BC" + // VULGAR FRACTION ONE QUARTER
+						"\u03B2" + // GREEK SMALL LETTER BETA
+						"\u03B8" + // GREEK SMALL LETTER THETA
+						"\u53F0" + // CJK UNIFIED IDEOGRAPH-53F0
+						"\u5317" + // CJK UNIFIED IDEOGRAPH-5317
+						"\u3096" + // HIRAGANA LETTER SMALL KE
+						"\u30A1" + // KATAKANA LETTER SMALL A
+						"\uFF73" + // HALFWIDTH KATAKANA LETTER U
+						(OS.MAC.isCurrentOs() ? "" : "\u3097") // Invalid APFS character
+
+				);
 	}
 
 	@Test
@@ -356,10 +370,8 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		attachmentMapper.setPatch(false);
 		attachmentMapper.applyTo(attachmentAttr);
 
-		String filename = "test" + specialCharacters + System.currentTimeMillis() + ".txt";
-		File attachFile = new File(filename);
-		attachFile.createNewFile();
-		attachFile.deleteOnExit();
+		File attachFile = File.createTempFile("test" + specialCharacters, ".txt");
+		String filename = attachFile.getName();
 		try (BufferedWriter write = new BufferedWriter(new FileWriter(attachFile))) {
 			write.write("test file content");
 		}
