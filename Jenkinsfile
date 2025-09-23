@@ -52,6 +52,7 @@ pipeline {
 						script {
 								env.BUILD_TYPE = params.BUILD_TYPE
 								if (env.BRANCH_NAME == 'main') {
+									env.MAVEN_OPTS = "-Xmx2048m"
 									if (params.PROMOTE) {
 										env.MAVEN_PROFILES = "-Psign -Ppromote"
 									} else {
