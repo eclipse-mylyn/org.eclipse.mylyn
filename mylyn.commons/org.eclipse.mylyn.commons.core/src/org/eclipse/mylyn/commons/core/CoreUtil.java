@@ -181,7 +181,11 @@ public class CoreUtil {
 	 * @return {@link Version#emptyVersion} if the version can not be determined
 	 */
 	public static Version parseRuntimeVersion(String version) {
-		return convertToOsgiVersion(java.lang.Runtime.Version.parse(version));
+		try {
+			return convertToOsgiVersion(java.lang.Runtime.Version.parse(version));
+		} catch (IllegalArgumentException e) {
+			return Version.emptyVersion;
+		}
 	}
 
 	private static Version convertToOsgiVersion(java.lang.Runtime.Version version) {

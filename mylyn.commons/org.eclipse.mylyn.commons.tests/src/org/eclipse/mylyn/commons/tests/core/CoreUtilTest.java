@@ -171,6 +171,10 @@ public class CoreUtilTest {
 		assertEquals(new Version(22, 0, 0), CoreUtil.parseRuntimeVersion("22+38"));
 	}
 
+	@Test
+	public void testGetBadRuntimeVersion() {
+		assertEquals(new Version(0, 0, 0), CoreUtil.parseRuntimeVersion("21.0.A"));
+	}
 
 	@Test
 	public void testAsFileName() {
