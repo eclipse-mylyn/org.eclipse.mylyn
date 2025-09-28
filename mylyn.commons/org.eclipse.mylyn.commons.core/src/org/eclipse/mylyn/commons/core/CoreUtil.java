@@ -170,61 +170,33 @@ public class CoreUtil {
 	 * Returns the version of the Java runtime.
 	 *
 	 * @since 3.7
-	 * @return {@link Version#emptyVersion} if the version can not be determined
+	 * @return Version
 	 */
 	public static Version getRuntimeVersion() {
-		Version result = parseRuntimeVersion(Runtime.version().toString());
-		return result;
+		return convertToOsgiVersion(Runtime.version());
 	}
 
 	/**
 	 * @since 4.3
+	 * @return {@link Version#emptyVersion} if the version can not be determined
 	 */
-	public static Version parseRuntimeVersion(String versionString) {
-		if (versionString != null) {
-			int firstSeparator = versionString.indexOf('.');
-			if (firstSeparator != -1) {
-				try {
-					int secondSeparator = versionString.indexOf('.', firstSeparator + 1);
-					if (secondSeparator != -1) {
-						int index = findLastNumberIndex(versionString, secondSeparator);
-						String qualifier = versionString.substring(index + 1);
-						if ((qualifier.startsWith("_") || qualifier.startsWith("+")) && qualifier.length() > 1) { //$NON-NLS-1$
-							versionString = versionString.substring(0, index + 1) + "." + qualifier.substring(1); //$NON-NLS-1$
-						} else {
-							versionString = versionString.substring(0, index + 1);
-						}
-						return new Version(versionString);
-					}
-					return new Version(
-							versionString.substring(0, findLastNumberIndex(versionString, firstSeparator) + 1));
-				} catch (IllegalArgumentException e) {
-					// ignore
-				}
-			} else { // Java 22 seems to have changed the format for some reason to "nn+nn"
-				int plusSeparator = versionString.indexOf('+');
-				if (plusSeparator != -1) {
-					return new Version(
-							versionString.substring(0, plusSeparator));
-				}
-			}
+	public static Version parseRuntimeVersion(String version) {
+		try {
+			return convertToOsgiVersion(java.lang.Runtime.Version.parse(version));
+		} catch (IllegalArgumentException e) {
+			return Version.emptyVersion;
 		}
-		return Version.emptyVersion;
 	}
 
-	private static int findLastNumberIndex(String versionString, int secondSeparator) {
-		int lastDigit = secondSeparator;
-		for (int i = secondSeparator + 1; i < versionString.length(); i++) {
-			if (Character.isDigit(versionString.charAt(i))) {
-				lastDigit++;
-			} else {
-				break;
-			}
+	private static Version convertToOsgiVersion(java.lang.Runtime.Version version) {
+		if (version != null) {
+			int feature = version.feature();
+			int interim = version.interim();
+			int update = version.update();
+			String pre = version.pre().orElse(""); //$NON-NLS-1$
+			return new Version(feature, interim, update, pre);
 		}
-		if (lastDigit == secondSeparator) {
-			return secondSeparator - 1;
-		}
-		return lastDigit;
+		return Version.emptyVersion;
 	}
 
 	/**

@@ -135,9 +135,10 @@ public class CoreUtilTest {
 		assertFalse(CoreUtil.areEqual("a", "b"));
 	}
 
+
 	@Test
 	public void testGetRuntimeVersion() {
-		assertEquals(new Version(1, 5, 0, "2"), CoreUtil.parseRuntimeVersion("1.5.0_2"));
+		assertEquals(new Version(1, 5, 0), CoreUtil.parseRuntimeVersion("1.5.0.2"));
 	}
 
 	@Test
@@ -147,17 +148,22 @@ public class CoreUtilTest {
 
 	@Test
 	public void testGetRuntimeVersionLetters() {
-		assertEquals(new Version(1, 7, 0), CoreUtil.parseRuntimeVersion("1.7-CUSTOM"));
+		assertEquals(new Version(1, 7, 0, "CUSTOM"), CoreUtil.parseRuntimeVersion("1.7-CUSTOM"));
 	}
 
 	@Test
 	public void testGetRuntimeVersionTrailingUnderscore() {
-		assertEquals(new Version(1, 5, 0), CoreUtil.parseRuntimeVersion("1.5.0_"));
+		assertEquals(new Version(1, 5, 0, "A"), CoreUtil.parseRuntimeVersion("1.5.0.1-A"));
 	}
 
 	@Test
-	public void testGetRuntimeVersionNoQualifier() {
-		assertEquals(new Version(1, 2, 0), CoreUtil.parseRuntimeVersion("1.2.0"));
+	public void testGetRuntimeVersionQualifier() {
+		assertEquals(new Version(1, 2, 1), CoreUtil.parseRuntimeVersion("1.2.1"));
+	}
+
+	@Test
+	public void testGetRuntimeVersionJava21Ubuntu() {
+		assertEquals(new Version(21, 0, 8), CoreUtil.parseRuntimeVersion("21.0.8+9-Ubuntu-0ubuntu124.04.1"));
 	}
 
 	@Test
@@ -165,6 +171,10 @@ public class CoreUtilTest {
 		assertEquals(new Version(22, 0, 0), CoreUtil.parseRuntimeVersion("22+38"));
 	}
 
+	@Test
+	public void testGetBadRuntimeVersion() {
+		assertEquals(new Version(0, 0, 0), CoreUtil.parseRuntimeVersion("21.0.A"));
+	}
 
 	@Test
 	public void testAsFileName() {
