@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -13,6 +13,12 @@
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests.core;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +34,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
+import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
@@ -48,27 +54,38 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests should be run against Bugzilla 3.2.4 or greater
- * 
+ *
  * @author Frank Becker
  * @author Robert Elves
  */
 @SuppressWarnings("nls")
-public class BugzillaCustomFieldsTest extends TestCase {
+public class BugzillaCustomFieldsTest extends AbstractBugzillaFixtureTest {
+
+	@BeforeEach
+	void excludeCheck() {
+		assumeFalse(fixture.isExcluded());
+	}
+
+	@BeforeEach
+	void versionCheck() {
+		assumeFalse(fixture.getBugzillaVersion().isSmallerOrEquals(BugzillaVersion.BUGZILLA_3_2));
+	}
 
 	private TaskData fruitTaskData;
 
+	@Test
 	public void testCustomAttributes() throws Exception {
 		String taskID = taskCustomFieldExists();
 		if (taskID == null) {
 			taskID = createCustomFieldTask();
 		}
 		String taskNumber = taskID;
-		TaskData taskData = BugzillaFixture.current().getTask(taskNumber, BugzillaFixture.current().client());
+		TaskData taskData = fixture.getTask(taskNumber, fixture.client());
 		assertNotNull(taskData);
 		TaskMapper mapper = new TaskMapper(taskData);
 		assertEquals(taskNumber, taskData.getTaskId());
@@ -76,18 +93,18 @@ public class BugzillaCustomFieldsTest extends TestCase {
 //		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 //		assertEquals(format1.parse("2009-09-16 14:11"), mapper.getCreationDate());
 
-		AuthenticationCredentials credentials = BugzillaFixture.current()
+		AuthenticationCredentials credentials = fixture
 				.repository()
 				.getCredentials(AuthenticationType.REPOSITORY);
-		assertNotNull("credentials are null", credentials);
-		assertNotNull("Repositor User not set", credentials.getUserName());
-		assertNotNull("no password for Repository", credentials.getPassword());
+		assertNotNull(credentials, "credentials are null");
+		assertNotNull(credentials.getUserName(), "Repositor User not set");
+		assertNotNull(credentials.getPassword(), "no password for Repository");
 
 		TaskAttribute colorAttribute = mapper.getTaskData().getRoot().getAttribute("cf_multiselect");
-		assertNotNull("TaskAttribute Color did not exists", colorAttribute);
+		assertNotNull(colorAttribute, "TaskAttribute Color did not exists");
 		List<String> theColors = colorAttribute.getValues();
 		assertNotNull(theColors);
-		assertFalse("no colors set", theColors.isEmpty());
+		assertFalse(theColors.isEmpty(), "no colors set");
 
 		boolean red = false;
 		boolean green = false;
@@ -108,15 +125,15 @@ public class BugzillaCustomFieldsTest extends TestCase {
 			}
 		}
 		changeCollorAndSubmit(taskData, colorAttribute, red, green, yellow, blue);
-		taskData = BugzillaFixture.current().getTask(taskNumber, BugzillaFixture.current().client());
+		taskData = fixture.getTask(taskNumber, fixture.client());
 		assertNotNull(taskData);
 		mapper = new TaskMapper(taskData);
 
 		colorAttribute = mapper.getTaskData().getRoot().getAttribute("cf_multiselect");
-		assertNotNull("TaskAttribute Color did not exists", colorAttribute);
+		assertNotNull(colorAttribute, "TaskAttribute Color did not exists");
 		theColors = colorAttribute.getValues();
 		assertNotNull(theColors);
-		assertFalse("no colors set", theColors.isEmpty());
+		assertFalse(theColors.isEmpty(), "no colors set");
 		boolean red_new = false;
 		boolean green_new = false;
 		boolean yellow_new = false;
@@ -135,8 +152,8 @@ public class BugzillaCustomFieldsTest extends TestCase {
 				blue_new = true;
 			}
 		}
-		assertTrue("wrong change", !red && green && !yellow && !blue && red_new && green_new && !yellow_new && !blue_new
-				|| red && green && !yellow && !blue && !red_new && green_new && !yellow_new && !blue_new);
+		assertTrue(!red && green && !yellow && !blue && red_new && green_new && !yellow_new && !blue_new
+				|| red && green && !yellow && !blue && !red_new && green_new && !yellow_new && !blue_new, "wrong change");
 		changeCollorAndSubmit(taskData, colorAttribute, red_new, green_new, yellow_new, blue_new);
 
 	}
@@ -151,7 +168,7 @@ public class BugzillaCustomFieldsTest extends TestCase {
 			Set<TaskAttribute> changed = new HashSet<>();
 			changed.add(colorAttribute);
 			// Submit changes
-			BugzillaFixture.current().submitTask(taskData, BugzillaFixture.current().client());
+			fixture.submitTask(taskData, fixture.client());
 		} else if (red && green && !yellow && !blue) {
 			List<String> newValue = new ArrayList<>(2);
 			newValue.add("Green");
@@ -159,18 +176,19 @@ public class BugzillaCustomFieldsTest extends TestCase {
 			Set<TaskAttribute> changed = new HashSet<>();
 			changed.add(colorAttribute);
 			// Submit changes
-			BugzillaFixture.current().submitTask(taskData, BugzillaFixture.current().client());
+			fixture.submitTask(taskData, fixture.client());
 		}
 	}
 
+	@Test
 	public void testCustomAttributesNewTask() throws Exception {
 
-		BugzillaVersion version = new BugzillaVersion(BugzillaFixture.current().getVersion());
+		BugzillaVersion version = new BugzillaVersion(fixture.getVersion());
 		if (version.isSmallerOrEquals(BugzillaVersion.BUGZILLA_3_2)) {
 			return;
 		}
 
-		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
+		TaskData taskData = fixture.createTask(PrivilegeLevel.USER, null, null);
 		assertNotNull(taskData);
 		assertNotNull(taskData.getRoot().getAttribute("token"));
 		TaskAttribute productAttribute = taskData.getRoot().getAttribute(BugzillaAttribute.PRODUCT.getKey());
@@ -190,11 +208,12 @@ public class BugzillaCustomFieldsTest extends TestCase {
 		assertNotNull(cfAttribute6);
 	}
 
+	@Test
 	public void testCustomFields() throws Exception {
 
 		String taskNumber = "1";
 
-		fruitTaskData = BugzillaFixture.current().getTask(taskNumber, BugzillaFixture.current().client());
+		fruitTaskData = fixture.getTask(taskNumber, fixture.client());
 		assertNotNull(fruitTaskData);
 
 		if (fruitTaskData.getRoot().getAttribute("cf_dropdown").getValue().equals("---")) {
@@ -221,15 +240,15 @@ public class BugzillaCustomFieldsTest extends TestCase {
 		cf_fruit.setValue(newValue);
 		assertEquals(newValue, fruitTaskData.getRoot().getAttribute("cf_dropdown").getValue());
 		changed.add(cf_fruit);
-		BugzillaFixture.current().submitTask(fruitTaskData, BugzillaFixture.current().client());
-		fruitTaskData = BugzillaFixture.current()
-				.getTask(fruitTaskData.getTaskId(), BugzillaFixture.current().client());
+		fixture.submitTask(fruitTaskData, fixture.client());
+		fruitTaskData = fixture
+				.getTask(fruitTaskData.getTaskId(), fixture.client());
 		assertEquals(newValue, fruitTaskData.getRoot().getAttribute("cf_dropdown").getValue());
 	}
 
 	private static TaskData createTaskData(TaskRepository taskRepository, ITaskMapping initializationData,
 			ITaskMapping selectionData, IProgressMonitor monitor) throws CoreException {
-		AbstractRepositoryConnector connector = BugzillaFixture.current().connector();
+		AbstractRepositoryConnector connector = fixture.connector();
 		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(taskRepository);
 		TaskData taskData = new TaskData(mapper, taskRepository.getConnectorKind(), taskRepository.getRepositoryUrl(),
@@ -247,10 +266,10 @@ public class BugzillaCustomFieldsTest extends TestCase {
 
 	private String taskCustomFieldExists() {
 		String taskID = null;
-		String queryUrlString = BugzillaFixture.current().repository().getRepositoryUrl() + "/buglist.cgi?"
+		String queryUrlString = fixture.repository().getRepositoryUrl() + "/buglist.cgi?"
 				+ "short_desc=test%20Bug%20with%20Custom%20Fields&resolution=---&query_format=advanced"
 				+ "&short_desc_type=casesubstring&component=ManualC2&product=ManualTest";
-		RepositoryQuery query = new RepositoryQuery(BugzillaFixture.current().repository().getConnectorKind(),
+		RepositoryQuery query = new RepositoryQuery(fixture.repository().getConnectorKind(),
 				"handle-testQueryViaConnector");
 		query.setUrl(queryUrlString);
 		final Map<Integer, TaskData> changedTaskData = new HashMap<>();
@@ -260,9 +279,9 @@ public class BugzillaCustomFieldsTest extends TestCase {
 				changedTaskData.put(Integer.valueOf(taskData.getTaskId()), taskData);
 			}
 		};
-		BugzillaFixture.current()
+		fixture
 		.connector()
-		.performQuery(BugzillaFixture.current().repository(), query, collector, null,
+		.performQuery(fixture.repository(), query, collector, null,
 				new NullProgressMonitor());
 		if (changedTaskData.size() > 0) {
 			Set<Integer> ks = changedTaskData.keySet();
@@ -298,23 +317,23 @@ public class BugzillaCustomFieldsTest extends TestCase {
 		final TaskData[] taskDataNew = new TaskData[1];
 
 		// create Task
-		taskDataNew[0] = createTaskData(BugzillaFixture.current().repository(), taskMappingInit, taskMappingSelect,
+		taskDataNew[0] = createTaskData(fixture.repository(), taskMappingInit, taskMappingSelect,
 				null);
 
-		RepositoryResponse response = BugzillaFixture.current()
-				.submitTask(taskDataNew[0], BugzillaFixture.current().client());
+		RepositoryResponse response = fixture
+				.submitTask(taskDataNew[0], fixture.client());
 
 		assertNotNull(response);
 		assertEquals(ResponseKind.TASK_CREATED.toString(), response.getReposonseKind().toString());
 		String taskId = response.getTaskId();
 
-		TaskData taskData = BugzillaFixture.current().getTask(taskId, BugzillaFixture.current().client());
+		TaskData taskData = fixture.getTask(taskId, fixture.client());
 		assertNotNull(taskData);
 
 		TaskMapper mapper = new TaskMapper(taskData);
 		TaskAttribute cf_multiselect = mapper.getTaskData().getRoot().getAttribute("cf_multiselect");
 		cf_multiselect.setValue("Green");
-		response = BugzillaFixture.current().submitTask(taskData, BugzillaFixture.current().client());
+		response = fixture.submitTask(taskData, fixture.client());
 
 		return taskId;
 	}

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2016 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -14,8 +14,9 @@
 
 package org.eclipse.mylyn.bugzilla.tests.support;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -34,6 +35,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
@@ -61,7 +63,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 @SuppressWarnings("nls")
-public class BugzillaHarness {
+public class BugzillaHarness extends AbstractBugzillaFixtureTest {
 
 	private final BugzillaFixture fixture;
 
@@ -884,7 +886,7 @@ public class BugzillaHarness {
 		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
 		Set<TaskAttribute> changed = new HashSet<>();
 		workingCopy.save(changed, null);
-		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0], priviledgedClient());
+		RepositoryResponse response = fixture.submitTask(taskDataNew[0], priviledgedClient());
 		((AbstractTask) taskNew).setSubmitting(true);
 		assertNotNull(response);
 		assertEquals(ResponseKind.TASK_CREATED.toString(), response.getReposonseKind().toString());

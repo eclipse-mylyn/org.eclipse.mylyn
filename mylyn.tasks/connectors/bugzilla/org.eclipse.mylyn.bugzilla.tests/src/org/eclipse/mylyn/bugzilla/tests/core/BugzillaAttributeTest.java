@@ -13,7 +13,10 @@
 
 package org.eclipse.mylyn.bugzilla.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.commons.io.IOUtils;
+import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeMapper;
@@ -22,15 +25,15 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class BugzillaAttributeTest extends TestCase {
+public class BugzillaAttributeTest extends AbstractBugzillaFixtureTest {
 
+	@Test
 	public void testTaskDataSchema() throws Exception {
 		BugzillaRepositoryConnector connector = new BugzillaRepositoryConnector();
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, "http://repository");

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -14,11 +14,14 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
@@ -30,15 +33,16 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Rob Elves
  * @author Mik Kersten
  */
 @SuppressWarnings("nls")
-public class RepositoryReportFactoryTest extends TestCase {
+public class RepositoryReportFactoryTest extends AbstractBugzillaFixtureTest {
 
 	TaskRepository repository;
 
@@ -46,13 +50,19 @@ public class RepositoryReportFactoryTest extends TestCase {
 
 	BugzillaRepositoryConnector connector;
 
-	@Override
-	protected void setUp() throws Exception {
-		repository = BugzillaFixture.current().repository();
-		client = BugzillaFixture.current().client();
-		connector = BugzillaFixture.current().connector();
+	@BeforeEach
+	void skipIfExcluded() {
+		Assumptions.assumeFalse(fixture.isExcluded(), "Fixture is excluded");
 	}
 
+	@BeforeEach
+	void setUp() throws Exception {
+		repository = fixture.repository();
+		client = fixture.client();
+		connector = fixture.connector();
+	}
+
+	@Test
 	public void testInvalidCredentials() throws Exception {
 		try {
 			client.logout(new NullProgressMonitor());
@@ -70,6 +80,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		repository.flushAuthenticationCredentials();
 	}
 
+	@Test
 	public void testBugNotFound() throws Exception {
 		try {
 			connector.getClientManager().repositoryAdded(repository);
@@ -82,12 +93,13 @@ public class RepositoryReportFactoryTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testPostingAndReadingAttributes() throws Exception {
 		RepositoryConfiguration repositoryConfiguration = connector
 				.getRepositoryConfiguration(repository.getRepositoryUrl());
 		List<String> priorities = repositoryConfiguration.getOptionValues(BugzillaAttribute.PRIORITY);
 		String priority = priorities.get(priorities.size() > 0 ? priorities.size() - 1 : 0);
-		TaskData data = BugzillaFixture.current()
+		TaskData data = fixture
 				.createTask(PrivilegeLevel.USER, "testPostingAndReading() summary",
 						"testPostingAndReading() description");
 		data.getRoot().getMappedAttribute(TaskAttribute.COMPONENT).setValue("ManualC2");
@@ -99,8 +111,8 @@ public class RepositoryReportFactoryTest extends TestCase {
 //		data.getRoot().getMappedAttribute(BugzillaAttribute.DEPENDSON.getKey()).setValue("6, 7");
 //		data.getRoot().getMappedAttribute(BugzillaAttribute.BLOCKED.getKey()).setValue("13, 14");
 
-		BugzillaFixture.current().submitTask(data, client);
-		data = BugzillaFixture.current().getTask(data.getTaskId(), client);
+		fixture.submitTask(data, client);
+		data = fixture.getTask(data.getTaskId(), client);
 		assertNotNull(data);
 		assertEquals("ManualC2", data.getRoot().getMappedAttribute(TaskAttribute.COMPONENT).getValue());
 		assertEquals(priority, data.getRoot().getMappedAttribute(TaskAttribute.PRIORITY).getValue());
@@ -119,6 +131,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 	}
 
 	// FIXME: Test posting and retrieval of time values
+//	@Test
 //	public void testTimeTracking222() throws Exception {
 //		assertEquals("7.50", report.getRoot().getAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey()).getValue());
 //		assertEquals("4.00", report.getRoot().getAttribute(BugzillaAttribute.ACTUAL_TIME.getKey()).getValue());
@@ -126,6 +139,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 //		assertEquals("2005-03-04", report.getRoot().getAttribute(BugzillaAttribute.DEADLINE.getKey()).getValue());
 //	}
 
+	@Test
 	public void testDeltaTsTruncation() {
 		String ts1 = "2006-07-06 03:22:08 0900";
 		String ts1_truncated = "2006-07-06 03:22:08";
