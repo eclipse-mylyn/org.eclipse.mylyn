@@ -177,7 +177,7 @@ public class CoreUtil {
 	}
 
 	/**
-	 * @since 4.9
+	 * @since 4.3
 	 * @return {@link Version#emptyVersion} if the version can not be determined
 	 */
 	public static Version parseRuntimeVersion(String version) {
