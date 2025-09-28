@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -14,15 +14,15 @@
 
 package org.eclipse.mylyn.bugzilla.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaUtil;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
-public class BugzillaUtilTest extends TestCase {
-
+public class BugzillaUtilTest {
 	@Test
 	public void testValidTimezoneRemove() throws CoreException {
 		assertEquals("2013-10-21 18:50:29", BugzillaUtil.removeTimezone("2013-10-21 18:50:29 +0000"));

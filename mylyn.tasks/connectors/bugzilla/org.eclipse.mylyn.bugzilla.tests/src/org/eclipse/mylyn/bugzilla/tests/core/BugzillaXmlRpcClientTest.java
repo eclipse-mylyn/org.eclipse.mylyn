@@ -14,6 +14,12 @@
 
 package org.eclipse.mylyn.bugzilla.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -50,6 +56,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests should be run against Bugzilla 3.6 or greater
@@ -65,7 +73,11 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 
 	private BugzillaXmlRpcClient bugzillaClient;
 
-	@SuppressWarnings("serial")
+	@BeforeEach
+	public void checkExcluded() {
+		assumeFalse(fixture.isExcluded());
+	}
+
 	private final Map<String, Map<String, ArrayList<String>>> fixtureTransitionsMap = new HashMap<>() {
 		{
 			put(BUGZILLA_LE_4_0, new HashMap<String, ArrayList<String>>() {
@@ -268,19 +280,13 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 
 	private BugzillaHarness harness;
 
-	@Override
-	public void setUp() throws Exception {
-		super.setUp();
-		harness = BugzillaFixture.current().createHarness();
-		WebLocation webLocation = new WebLocation(BugzillaFixture.current().getRepositoryUrl() + "/xmlrpc.cgi");
+	@BeforeEach
+	void setUp() throws Exception {
+		harness = fixture.createHarness();
+		WebLocation webLocation = new WebLocation(fixture.getRepositoryUrl() + "/xmlrpc.cgi");
 		webLocation.setCredentials(AuthenticationType.REPOSITORY, "tests@mylyn.eclipse.org", "mylyntest");
 		bugzillaClient = new BugzillaXmlRpcClient(webLocation, client);
 		bugzillaClient.setContentTypeCheckingEnabled(true);
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 
 	@Override
@@ -301,24 +307,26 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 		}
 	}
 
+	@Test
 	public void testGetVersion() throws Exception {
-		if (!BugzillaFixture.current().isXmlRpcEnabled()) {
+		if (!fixture.isXmlRpcEnabled()) {
 			return;
 		} else {
 			IProgressMonitor monitor = new NullProgressMonitor();
 			String version = bugzillaClient.getVersion(monitor);
-			assertEquals(0, new BugzillaVersion(BugzillaFixture.current().getVersion())
+			assertEquals(0, new BugzillaVersion(fixture.getVersion())
 					.compareMajorMinorOnly(new BugzillaVersion(version)));
 		}
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testUserInfo() throws Exception {
-		if (!BugzillaFixture.current().isXmlRpcEnabled()) {
+		if (!fixture.isXmlRpcEnabled()) {
 			return;
 		} else {
 			IProgressMonitor monitor = new NullProgressMonitor();
-			BugzillaVersion version = BugzillaFixture.current().getBugzillaVersion();
+			BugzillaVersion version = fixture.getBugzillaVersion();
 			bugzillaClient.logout(monitor);
 			int uID = bugzillaClient.login(monitor);
 			assertEquals(2, uID);
@@ -326,7 +334,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 			assertNotNull(userList0);
 			assertEquals(2, userList0.length);
 			assertEquals((Integer) 1, ((HashMap<String, Integer>) userList0[0]).get("id"));
-			if (BugzillaFixture.current().isBugzilla51OrGreater()) {
+			if (fixture.isBugzilla51OrGreater()) {
 				assertEquals("admin@mylyn.eclipse.org", ((HashMap<String, String>) userList0[0]).get("email"));
 			}
 			assertEquals("admin@mylyn.eclipse.org", ((HashMap<String, String>) userList0[0]).get("name"));
@@ -334,7 +342,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 			assertEquals((Boolean) true, ((HashMap<String, Boolean>) userList0[0]).get("can_login"));
 
 			assertEquals((Integer) 2, ((HashMap<String, Integer>) userList0[1]).get("id"));
-			if (BugzillaFixture.current().isBugzilla51OrGreater()) {
+			if (fixture.isBugzilla51OrGreater()) {
 				assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList0[1]).get("email"));
 			}
 			assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList0[1]).get("name"));
@@ -356,8 +364,9 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testProductInfo() throws Exception {
-		if (!BugzillaFixture.current().isXmlRpcEnabled()) {
+		if (!fixture.isXmlRpcEnabled()) {
 			return;
 		} else {
 			IProgressMonitor monitor = new NullProgressMonitor();
@@ -393,10 +402,11 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 		}
 	}
 
+	@Test
 	public void testXmlRpcInstalled() throws Exception {
 		int uID = -1;
 		IProgressMonitor monitor = new NullProgressMonitor();
-		if (!BugzillaFixture.current().isXmlRpcEnabled()) {
+		if (!fixture.isXmlRpcEnabled()) {
 			try {
 				uID = bugzillaClient.login(monitor);
 				fail("Never reach this! We should get an XmlRpcException");
@@ -410,9 +420,10 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 		}
 	}
 
+	@Test
 	public void testTransitionManagerWithXml() throws Exception {
 
-		if (BugzillaFixture.current().getBugzillaVersion().isSmaller(BugzillaVersion.BUGZILLA_3_6) || !BugzillaFixture.current().isXmlRpcEnabled()) {
+		if (fixture.getBugzillaVersion().isSmaller(BugzillaVersion.BUGZILLA_3_6) || !fixture.isXmlRpcEnabled()) {
 			return;
 		} else {
 			CustomTransitionManager ctm = new CustomTransitionManager();
@@ -428,11 +439,11 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 			 * way to determine (using the operation 'reopen') whether "REOPEN" or "UNCONFIRMED"
 			 * is valid.
 			 */
-			if (BugzillaFixture.current().isCustomWorkflow()) {
+			if (fixture.isCustomWorkflow()) {
 				expectTransitions = fixtureTransitionsMap.get(BugzillaFixture.CUSTOM_WF);
-			} else if (BugzillaFixture.current().isCustomWorkflowAndStatus()) {
+			} else if (fixture.isCustomWorkflowAndStatus()) {
 				expectTransitions = fixtureTransitionsMap.get(BugzillaFixture.CUSTOM_WF_AND_STATUS);
-			} else if (BugzillaFixture.current().getBugzillaVersion().isSmaller(BugzillaVersion.BUGZILLA_4_0)) {
+			} else if (fixture.getBugzillaVersion().isSmaller(BugzillaVersion.BUGZILLA_4_0)) {
 				expectTransitions = fixtureTransitionsMap.get(BUGZILLA_LE_4_0);
 			} else {
 				expectTransitions = fixtureTransitionsMap.get(BUGZILLA_GE_4_0);
@@ -448,14 +459,15 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 						fail("The status " + start + " is not expected to transition to " + end.toString());
 					}
 				}
-				assertEquals("Missing transitions for " + start + ", only found " + transitions, transitions.size(),
-						ctm.getValidTransitions(start).size());
+				assertEquals(ctm.getValidTransitions(start).size(), transitions.size(),
+						"Missing transitions for " + start + ", only found " + transitions);
 			}
 		}
 	}
 
+	@Test
 	public void testXmlRpcBugGet() throws Exception {
-		if (!BugzillaFixture.current().isXmlRpcEnabled()) {
+		if (!fixture.isXmlRpcEnabled()) {
 			return;
 		} else {
 			Set<String> taskIds = new HashSet<>();
@@ -623,8 +635,9 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 		return div;
 	}
 
+	@Test
 	public void testUpdateProductInfo() throws Exception {
-		if (!BugzillaFixture.current().isXmlRpcEnabled()) {
+		if (!fixture.isXmlRpcEnabled()) {
 			return;
 		}
 		RepositoryConfiguration repositoryConfiguration = connector

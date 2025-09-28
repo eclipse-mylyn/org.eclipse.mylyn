@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -13,6 +13,8 @@
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -25,27 +27,26 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 /**
  * @author Frank Becker
  * @author Robert Elves
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class BugzillaDateTimeTests extends TestCase {
-
+public class BugzillaDateTimeTests extends AbstractBugzillaFixtureTest {
 	private TaskRepository repository;
 
 	private BugzillaRepositoryConnector connector;
 
-	@Override
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, "http://mylyn.org");
 		connector = new BugzillaRepositoryConnector();
 	}
 
+	@Test
 	public void testDateFormatParsing() {
 		TimeZone defaultTimeZone = TimeZone.getDefault();
 		try {
@@ -134,5 +135,4 @@ public class BugzillaDateTimeTests extends TestCase {
 			TimeZone.setDefault(defaultTimeZone);
 		}
 	}
-
 }

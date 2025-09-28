@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2009, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -14,6 +14,12 @@
 
 package org.eclipse.mylyn.bugzilla.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.HashSet;
@@ -22,7 +28,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaTest;
-import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -44,6 +49,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tests.util.UrlBuilder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Robert Elves
@@ -54,19 +61,25 @@ import org.eclipse.mylyn.tests.util.UrlBuilder;
 @SuppressWarnings("nls")
 public class BugzillaClientTest extends AbstractBugzillaTest {
 
+	@BeforeEach
+	public void checkExcluded() {
+		assumeFalse(fixture.isExcluded());
+	}
+
+	@Test
 	public void testRDFProductConfig() throws Exception {
-		if (BugzillaVersion.BUGZILLA_4_4.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0
-				|| BugzillaVersion.BUGZILLA_HEAD.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0) {
+		if (BugzillaVersion.BUGZILLA_4_4.compareTo(fixture.getBugzillaVersion()) == 0
+				|| BugzillaVersion.BUGZILLA_HEAD.compareTo(fixture.getBugzillaVersion()) == 0) {
 			// FIXME: need fix of bug#372600
 			return;
 		}
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals(0, config.getInstallVersion()
-				.compareMajorMinorOnly(new BugzillaVersion(BugzillaFixture.current().getVersion())));
-		if (BugzillaFixture.current().isCustomWorkflowAndStatus()) {
+				.compareMajorMinorOnly(new BugzillaVersion(fixture.getVersion())));
+		if (fixture.isCustomWorkflowAndStatus()) {
 			assertEquals(8, config.getOptionValues(BugzillaAttribute.BUG_STATUS).size());
-		} else if (BugzillaFixture.current()
+		} else if (fixture
 				.getBugzillaVersion()
 				.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
 			assertEquals(7, config.getOptionValues(BugzillaAttribute.BUG_STATUS).size());
@@ -80,7 +93,7 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 			assertEquals(5, config.getOptionValues(BugzillaAttribute.PRIORITY).size());
 		} else {
 			if (BugzillaVersion.BUGZILLA_4_0
-					.compareMajorMinorOnly(new BugzillaVersion(BugzillaFixture.current().getVersion())) > 0) {
+					.compareMajorMinorOnly(new BugzillaVersion(fixture.getVersion())) > 0) {
 				assertEquals(6, config.getOptionValues(BugzillaAttribute.RESOLUTION).size());
 			} else {
 				assertEquals(5, config.getOptionValues(BugzillaAttribute.RESOLUTION).size());
@@ -91,10 +104,10 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 		}
 		assertEquals(7, config.getOptionValues(BugzillaAttribute.BUG_SEVERITY).size());
 		assertEquals(3, config.getOptionValues(BugzillaAttribute.PRODUCT).size());
-		if (BugzillaFixture.current().isCustomWorkflowAndStatus()) {
+		if (fixture.isCustomWorkflowAndStatus()) {
 			assertEquals(5, config.getOpenStatusValues().size());
 			assertEquals(3, config.getClosedStatusValues().size());
-		} else if (BugzillaFixture.current()
+		} else if (fixture
 				.getBugzillaVersion()
 				.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
 			assertEquals(4, config.getOpenStatusValues().size());
@@ -116,19 +129,21 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 				config.getProductOptionValues(BugzillaAttribute.TARGET_MILESTONE, "Product with Spaces").size());
 	}
 
+	@Test
 	public void testValidate() throws Exception {
-		TaskRepository repository = BugzillaFixture.current().repository();
-		AbstractWebLocation location = BugzillaFixture.current().location();
-		client = new BugzillaClient(location, repository, BugzillaFixture.current().connector());
+		TaskRepository repository = fixture.repository();
+		AbstractWebLocation location = fixture.location();
+		client = new BugzillaClient(location, repository, fixture.connector());
 		client.validate(new NullProgressMonitor());
 	}
 
+	@Test
 	public void testValidateInvalidProxy() throws Exception {
-		TaskRepository repository = BugzillaFixture.current().repository();
-		AbstractWebLocation location = BugzillaFixture.current()
+		TaskRepository repository = fixture.repository();
+		AbstractWebLocation location = fixture
 				.location(PrivilegeLevel.USER, new Proxy(Proxy.Type.HTTP, new InetSocketAddress("localhost", 12356)));
 
-		client = new BugzillaClient(location, repository, BugzillaFixture.current().connector());
+		client = new BugzillaClient(location, repository, fixture.connector());
 		try {
 			client.validate(new NullProgressMonitor());
 			fail("invalid proxy did not cause connection error");
@@ -137,48 +152,52 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 		}
 	}
 
+	@Test
 	public void testValidateAnonymous() throws Exception {
-		TaskRepository repository = BugzillaFixture.current().repository();
+		TaskRepository repository = fixture.repository();
 		AuthenticationCredentials anonymousCreds = new AuthenticationCredentials("", "");
 		repository.setCredentials(AuthenticationType.REPOSITORY, anonymousCreds, false);
 		TaskRepositoryLocation location = new TaskRepositoryLocation(repository);
 
-		client = new BugzillaClient(location, repository, BugzillaFixture.current().connector());
+		client = new BugzillaClient(location, repository, fixture.connector());
 		client.validate(new NullProgressMonitor());
 	}
 
+	@Test
 	public void testValidateAnonymousPlusHTTP() throws Exception {
-		TaskRepository repository = BugzillaFixture.current().repository();
+		TaskRepository repository = fixture.repository();
 		AuthenticationCredentials anonymousCreds = new AuthenticationCredentials("", "");
 		repository.setCredentials(AuthenticationType.REPOSITORY, anonymousCreds, false);
 		repository.setCredentials(AuthenticationType.HTTP, new AuthenticationCredentials("YYYYYYYY", "XXXXXXXX"),
 				false);
 		TaskRepositoryLocation location = new TaskRepositoryLocation(repository);
 
-		client = new BugzillaClient(location, repository, BugzillaFixture.current().connector());
+		client = new BugzillaClient(location, repository, fixture.connector());
 		try {
 			client.validate(new NullProgressMonitor());
 		} catch (CoreException e) {
-			assertEquals("Expected login error, got: " + e.getMessage(), RepositoryStatus.ERROR_REPOSITORY_LOGIN,
-					e.getStatus().getCode());
+			assertEquals(RepositoryStatus.ERROR_REPOSITORY_LOGIN, e.getStatus().getCode(),
+					"Expected login error, got: " + e.getMessage());
 		}
 	}
 
+	@Test
 	public void testValidateUser() throws Exception {
-		TaskRepository repository = BugzillaFixture.current().repository();
+		TaskRepository repository = fixture.repository();
 		TaskRepositoryLocation location = new TaskRepositoryLocation(repository);
 
-		client = new BugzillaClient(location, repository, BugzillaFixture.current().connector());
+		client = new BugzillaClient(location, repository, fixture.connector());
 		client.validate(new NullProgressMonitor());
 	}
 
+	@Test
 	public void testValidateUserPlusHTTP() throws Exception {
-		TaskRepository repository = BugzillaFixture.current().repository();
+		TaskRepository repository = fixture.repository();
 		repository.setCredentials(AuthenticationType.HTTP, new AuthenticationCredentials("YYYYYYYY", "XXXXXXXX"),
 				false);
 		TaskRepositoryLocation location = new TaskRepositoryLocation(repository);
 
-		client = new BugzillaClient(location, repository, BugzillaFixture.current().connector());
+		client = new BugzillaClient(location, repository, fixture.connector());
 		try {
 			client.validate(new NullProgressMonitor());
 		} catch (Exception e) {
@@ -188,11 +207,12 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 		}
 	}
 
+	@Test
 	public void testCommentQuery() throws Exception {
-		BugzillaRepositoryConnector connector = BugzillaFixture.current().connector();
+		BugzillaRepositoryConnector connector = fixture.connector();
 		BugzillaAttributeMapper mapper = new BugzillaAttributeMapper(repository, connector);
-		TaskData newData = new TaskData(mapper, BugzillaFixture.current().getConnectorKind(),
-				BugzillaFixture.current().getRepositoryUrl(), "");
+		TaskData newData = new TaskData(mapper, fixture.getConnectorKind(),
+				fixture.getRepositoryUrl(), "");
 
 		assertTrue(connector.getTaskDataHandler()
 				.initializeTaskData(repository, newData, null, new NullProgressMonitor()));
@@ -205,9 +225,9 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 		RepositoryResponse response = client.postTaskData(newData, new NullProgressMonitor());
 
 		String bugid = response.getTaskId();
-		RepositoryQuery query = new RepositoryQuery(BugzillaFixture.current().getConnectorKind(), "123");
-		query.setRepositoryUrl(BugzillaFixture.current().getRepositoryUrl());
-		if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
+		RepositoryQuery query = new RepositoryQuery(fixture.getConnectorKind(), "123");
+		query.setRepositoryUrl(fixture.getRepositoryUrl());
+		if (fixture.getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
 			query.setUrl("?long_desc_type=allwordssubstr&long_desc=" + timestamp + "&bug_status=NEW&");
 		} else {
 			query.setUrl("?long_desc_type=allwordssubstr&long_desc=" + timestamp + "&bug_status=CONFIRMED&");
@@ -231,14 +251,15 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 	/**
 	 * test for bug 335278: enhance search result handler to handle additional attributes
 	 */
+	@Test
 	public void testQueryRealName_Bug335278() throws Exception {
 		String taskId = harness.enhanceSearchTaskExists();
 		if (taskId == null) {
 			taskId = harness.createEnhanceSearchTask();
 		}
 
-		IRepositoryQuery query = new RepositoryQuery(BugzillaFixture.current().getConnectorKind(), "query");
-		UrlBuilder urlBuilder = UrlBuilder.build(BugzillaFixture.current().repository()).append("/buglist.cgi");
+		IRepositoryQuery query = new RepositoryQuery(fixture.getConnectorKind(), "query");
+		UrlBuilder urlBuilder = UrlBuilder.build(fixture.repository()).append("/buglist.cgi");
 
 		urlBuilder.parameter("short_desc=test%20EnhanceSearch&columnlist",
 				"bug_severity,priority,assigned_to,bug_status,resolution,short_desc,changeddate,reporter,assigned_to_realname,reporter_realname,product,component");
@@ -252,10 +273,10 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 				returnedData.add(taskData);
 			}
 		};
-		TaskAttributeMapper mapper = BugzillaFixture.current()
+		TaskAttributeMapper mapper = fixture
 				.connector()
 				.getTaskDataHandler()
-				.getAttributeMapper(BugzillaFixture.current().repository());
+				.getAttributeMapper(fixture.repository());
 
 		client.getSearchHits(query, collector, mapper, new NullProgressMonitor());
 
@@ -274,9 +295,10 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 		assertTrue(attribute.getValue().trim().length() > 0);
 	}
 
+	@Test
 	public void testLeadingZeros() throws Exception {
 		String taskNumber = "0002";
-		TaskData taskData = BugzillaFixture.current().getTask(taskNumber, client);
+		TaskData taskData = fixture.getTask(taskNumber, client);
 		assertNotNull(taskData);
 		assertNotNull(taskData);
 		TaskAttribute idAttribute = taskData.getRoot().getAttribute(BugzillaAttribute.BUG_ID.getKey());

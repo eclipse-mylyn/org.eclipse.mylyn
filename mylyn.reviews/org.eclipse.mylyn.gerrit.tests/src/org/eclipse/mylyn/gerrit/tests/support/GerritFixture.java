@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -20,14 +20,14 @@ import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritCapabilities;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion;
-import org.eclipse.mylyn.tests.util.TestFixture;
+import org.eclipse.mylyn.tests.util.junit4.TestFixtureJunit4;
 import org.osgi.framework.Version;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class GerritFixture extends TestFixture {
+public class GerritFixture extends TestFixtureJunit4 {
 
 	@Deprecated
 	public static GerritFixture GERRIT_ECLIPSE_ORG = new GerritFixture("https://git.eclipse.org/r", "2.2.2", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

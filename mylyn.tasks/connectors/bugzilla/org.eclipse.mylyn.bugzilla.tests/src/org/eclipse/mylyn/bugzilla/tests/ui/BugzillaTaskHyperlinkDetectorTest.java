@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -15,11 +15,17 @@
 
 package org.eclipse.mylyn.bugzilla.tests.ui;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylyn.commons.sdk.util.junit5.MylynTestSetup;
 import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -33,8 +39,9 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TasksUiTestUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Rob Elves
@@ -42,7 +49,8 @@ import junit.framework.TestCase;
  * @author Frank Becker
  */
 @SuppressWarnings("nls")
-public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
+@MylynTestSetup
+public class BugzillaTaskHyperlinkDetectorTest {
 
 	private static final String DUPLICATE_NUMBER = "112233";
 
@@ -152,10 +160,8 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 
 	protected ITask task;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-
+	@BeforeEach
+	void setUp() throws Exception {
 		detector = new TaskHyperlinkDetector();
 		TasksUiTestUtil.ensureTasksUiInitialization();
 
@@ -179,7 +185,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		viewer = new TextViewer(shell, SWT.NONE);
 
 		repositoryManager = TasksUiPlugin.getRepositoryManager();
-		repositoryManager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		repositoryManager.clearRepositories();
 
 		commentFormats = new String[] { COMMENT_1, COMMENT_2, COMMENT_3, COMMENT_4, COMMENT_5 };
 		bugFormats = new String[] { TASK_FORMAT_1, TASK_FORMAT_2, TASK_FORMAT_3, TASK_FORMAT_4, BUG_FORMAT_1,
@@ -197,16 +203,15 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		activeRepository = repository;
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
-		super.tearDown();
-
 		detector.dispose();
-		repositoryManager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		repositoryManager.clearRepositories();
 
 		shell.dispose();
 	}
 
+	@Test
 	public void testBeginningWithSpecialChars() {
 		for (String format : bugFormats) {
 			String testString = "First line\n:" + format + " is at the beginning";
@@ -254,6 +259,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testBeginningOfSecondLine() {
 		for (String format : bugFormats) {
 			String testString = "First line\n" + format + " is at the beginning";
@@ -301,6 +307,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testBeginningOfSecondLineWithisWhitespace() {
 		for (String format : bugFormats) {
 			String testString = "First line\n \t " + format + " is at the beginning";
@@ -328,7 +335,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 			assertEquals("123", taskLink.getTaskId());
 			assertEquals(testString.indexOf(format), taskLink.getHyperlinkRegion().getOffset());
 			Object comment = taskLink.getSelection();
-			assertNotNull(format, comment);
+			assertNotNull(comment, format);
 			assertEquals(TaskAttribute.PREFIX_COMMENT + "44556677", comment);
 		}
 		for (String format : commentFormats) {
@@ -348,6 +355,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testBeginning() {
 		for (String format : bugFormats) {
 			String testString = format + " is at the beginning";
@@ -395,6 +403,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testEnd() {
 		for (String format : bugFormats) {
 			String testString = "is ends with " + format;
@@ -444,6 +453,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testMiddle() {
 		for (String format : bugFormats) {
 			String testString = "is a " + format + " in the middle";
@@ -492,6 +502,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testTwoOnSingleLine() {
 		String testString = "is a " + BUG_FORMAT_1 + " in the middle and at the end " + BUG_FORMAT_1_2;
 		viewer.setDocument(new Document(testString));
@@ -503,6 +514,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		assertEquals(testString.indexOf(BUG_FORMAT_1_2), links[1].getHyperlinkRegion().getOffset());
 	}
 
+	@Test
 	public void testMultiLine() {
 		String testString = "is a the first line\n this is the second which ends with a bug, " + BUG_FORMAT_1_2;
 		viewer.setDocument(new Document(testString));
@@ -514,6 +526,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		assertEquals(i, links[0].getHyperlinkRegion().getOffset());
 	}
 
+	@Test
 	public void testDuplicate() {
 		String testString = "*** This bug has been marked as a " + DUPLICATE + " ***";
 		viewer.setDocument(new Document(testString));
@@ -525,6 +538,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		assertEquals(testString.indexOf(DUPLICATE), links[0].getHyperlinkRegion().getOffset());
 	}
 
+	@Test
 	public void testNoRepositoryInViewNoRepositoryInManager() {
 		String testString = "bug 123";
 		viewer.setDocument(new Document(testString));
@@ -535,6 +549,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		assertNull(links);
 	}
 
+	@Test
 	public void testRepositoryInViewNoRepositoryInManager() {
 		String testString = "bug 123";
 		viewer.setDocument(new Document(testString));
@@ -548,6 +563,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		assertEquals(((TaskHyperlink) links[0]).getRepository(), repository1);
 	}
 
+	@Test
 	public void testNoRepositoryInViewOneRepositoryInManager() {
 		String testString = "bug 123";
 		viewer.setDocument(new Document(testString));
@@ -562,6 +578,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		assertEquals(((TaskHyperlink) links[0]).getRepository(), repository1);
 	}
 
+	@Test
 	public void testRepositoryInViewOneRepositoryInManager() {
 		String testString = "bug 123";
 		viewer.setDocument(new Document(testString));
@@ -576,6 +593,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		assertEquals(((TaskHyperlink) links[0]).getRepository(), repository1);
 	}
 
+	@Test
 	public void testNoRepositoryInViewTwoRepositoryInManager() {
 		String testString = "bug 123";
 		viewer.setDocument(new Document(testString));
@@ -598,6 +616,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testRepositoryInViewTwoRepositoryInManager() {
 		String testString = "bug 123";
 		viewer.setDocument(new Document(testString));
@@ -613,6 +632,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		assertEquals(((TaskHyperlink) links[0]).getRepository(), repository1);
 	}
 
+	@Test
 	public void testMatchMultipleEmptyRegion() {
 		String testString = "bug 123 bug 345";
 		viewer.setDocument(new Document(testString));
@@ -627,6 +647,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		assertEquals("345", ((TaskHyperlink) links[0]).getTaskId());
 	}
 
+	@Test
 	public void testAttachmentOld() {
 		String testString = ATTACHMENT_OLD;
 		viewer.setDocument(new Document(testString));
@@ -643,6 +664,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testAttachmentNew() {
 		String testString = ATTACHMENT_NEW;
 		viewer.setDocument(new Document(testString));
@@ -659,6 +681,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testCommentLotsOfWhitespace() {
 		String testString = "bug 123     d bug 245 comment 1";
 		viewer.setDocument(new Document(testString));
