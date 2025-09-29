@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for hudson.model.Hudson complex type.
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="hudson.model.Hudson">
  *   &lt;complexContent>
@@ -72,7 +72,7 @@ public class HudsonModelHudson extends HudsonModelNode {
 
 	/**
 	 * Gets the value of the description property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getDescription() {
@@ -81,7 +81,7 @@ public class HudsonModelHudson extends HudsonModelNode {
 
 	/**
 	 * Sets the value of the description property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
@@ -96,7 +96,7 @@ public class HudsonModelHudson extends HudsonModelNode {
 	 * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the job property.
 	 * <p>
 	 * For example, to add a new item, do as follows:
-	 * 
+	 *
 	 * <pre>
 	 * getJob().add(newItem);
 	 * </pre>
@@ -112,7 +112,7 @@ public class HudsonModelHudson extends HudsonModelNode {
 
 	/**
 	 * Gets the value of the overallLoad property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelOverallLoadStatistics }
 	 */
 	public HudsonModelOverallLoadStatistics getOverallLoad() {
@@ -121,7 +121,7 @@ public class HudsonModelHudson extends HudsonModelNode {
 
 	/**
 	 * Sets the value of the overallLoad property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelOverallLoadStatistics }
 	 */
@@ -131,7 +131,7 @@ public class HudsonModelHudson extends HudsonModelNode {
 
 	/**
 	 * Gets the value of the primaryView property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelView }
 	 */
 	public HudsonModelView getPrimaryView() {
@@ -140,7 +140,7 @@ public class HudsonModelHudson extends HudsonModelNode {
 
 	/**
 	 * Sets the value of the primaryView property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelView }
 	 */
@@ -197,7 +197,7 @@ public class HudsonModelHudson extends HudsonModelNode {
 	 * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the view property.
 	 * <p>
 	 * For example, to add a new item, do as follows:
-	 * 
+	 *
 	 * <pre>
 	 * getView().add(newItem);
 	 * </pre>
