@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -14,28 +14,44 @@
 
 package org.eclipse.mylyn.bugzilla.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
+import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests should be run against Bugzilla 3.2.4 or greater
- * 
+ *
  * @author Frank Becker
  * @author Robert Elves
  */
 @SuppressWarnings("nls")
-public class BugzillaFlagsTest extends TestCase {
+public class BugzillaFlagsTest extends AbstractBugzillaFixtureTest {
+
+	@BeforeEach
+	void excludeCheck() {
+		assumeFalse(fixture.isExcluded());
+	}
+
+	@BeforeEach
+	void versionCheck() {
+		assumeFalse(fixture.getBugzillaVersion().isSmallerOrEquals(BugzillaVersion.BUGZILLA_3_2));
+	}
 
 	private BugzillaClient client;
 
@@ -59,25 +75,33 @@ public class BugzillaFlagsTest extends TestCase {
 
 	private TaskAttribute stateD;
 
-	@Override
-	protected void setUp() throws Exception {
-		client = BugzillaFixture.current().client();
+	@BeforeEach
+	void checkVersion() {
+		BugzillaVersion version = new BugzillaVersion(fixture.getVersion());
+		assumeTrue(!version.isSmallerOrEquals(BugzillaVersion.BUGZILLA_3_2),
+				"Custom fields not supported in this Bugzilla version");
 	}
 
+	@BeforeEach
+	void setUp() throws Exception {
+		client = fixture.client();
+	}
+
+	@Test
 	public void testFlags() throws Exception {
 		String taskNumber = "2";
-		TaskData taskData = BugzillaFixture.current().getTask(taskNumber, client);
+		TaskData taskData = fixture.getTask(taskNumber, client);
 		assertNotNull(taskData);
 
 		if (flagTests(taskData, true)) {
 			changeFromSpace(taskData);
-			taskData = BugzillaFixture.current().getTask(taskNumber, client);
+			taskData = fixture.getTask(taskNumber, client);
 			if (flagTests(taskData, false)) {
 				changeToSpace(taskData);
 			}
 		} else {
 			changeToSpace(taskData);
-			taskData = BugzillaFixture.current().getTask(taskNumber, client);
+			taskData = fixture.getTask(taskNumber, client);
 			if (flagTests(taskData, true)) {
 				changeFromSpace(taskData);
 			}
@@ -122,7 +146,7 @@ public class BugzillaFlagsTest extends TestCase {
 		changed.add(flagC);
 		changed.add(flagD);
 
-		BugzillaFixture.current().submitTask(taskData, client);
+		fixture.submitTask(taskData, client);
 	}
 
 	private void changeToSpace(TaskData taskData) throws IOException, CoreException {
@@ -156,7 +180,7 @@ public class BugzillaFlagsTest extends TestCase {
 		changed.add(flagC);
 		changed.add(flagD);
 
-		BugzillaFixture.current().submitTask(taskData, client);
+		fixture.submitTask(taskData, client);
 	}
 
 	private boolean flagTests(TaskData taskData, boolean testSpace) {

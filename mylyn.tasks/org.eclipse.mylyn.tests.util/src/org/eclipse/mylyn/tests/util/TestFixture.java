@@ -36,35 +36,12 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 /**
  * @author Steffen Pingel
  * @author Thomas Ehrnhoefer
  */
 @SuppressWarnings({ "nls", "restriction" })
 public abstract class TestFixture {
-
-	private final class Activation extends TestCase {
-
-		private final boolean activate;
-
-		private Activation(String name, boolean activate) {
-			super(name);
-			this.activate = activate;
-		}
-
-		@Override
-		protected void runTest() throws Throwable {
-			if (activate) {
-				activate();
-			} else {
-				getDefault().activate();
-			}
-		}
-
-	}
 
 	/**
 	 * Clears all tasks.
@@ -113,8 +90,6 @@ public abstract class TestFixture {
 
 	private String description;
 
-	private TestSuite suite;
-
 	public TestFixture(String connectorKind, String repositoryUrl) {
 		this.connectorKind = connectorKind;
 		this.repositoryUrl = repositoryUrl;
@@ -122,29 +97,11 @@ public abstract class TestFixture {
 
 	protected abstract TestFixture activate();
 
-	public void add(Class<? extends TestCase> clazz) {
-		Assert.isNotNull(suite, "Invoke createSuite() first");
-		suite.addTestSuite(clazz);
-	}
-
 	protected void configureRepository(TaskRepository repository) {
 	}
 
 	public AbstractRepositoryConnector connector() {
 		return TasksUi.getRepositoryConnector(connectorKind);
-	}
-
-	public TestSuite createSuite(TestSuite parentSuite) {
-		suite = new TestSuite("Testing on " + getInfo());
-		parentSuite.addTest(suite);
-		suite.addTest(new Activation("repository: " + getRepositoryUrl() + " [@" + getSimpleInfo() + "]", true));
-		return suite;
-	}
-
-	public void done() {
-		Assert.isNotNull(suite, "Invoke createSuite() first");
-		suite.addTest(new Activation("done", false));
-		suite = null;
 	}
 
 	public String getConnectorKind() {

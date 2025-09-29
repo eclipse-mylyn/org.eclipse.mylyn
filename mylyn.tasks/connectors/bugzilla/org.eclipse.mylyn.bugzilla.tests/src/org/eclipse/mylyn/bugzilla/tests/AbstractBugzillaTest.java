@@ -1,22 +1,25 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaHarness;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
@@ -34,15 +37,15 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestFixture;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * @author Mik Kersten
  * @author Rob Elves
  * @author Nathan Hapke
  */
-public abstract class AbstractBugzillaTest extends TestCase {
+public abstract class AbstractBugzillaTest extends AbstractBugzillaFixtureTest {
 
 	static final String DEFAULT_KIND = BugzillaCorePlugin.CONNECTOR_KIND;
 
@@ -58,29 +61,24 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 	protected BugzillaHarness harness;
 
-	public AbstractBugzillaTest() {
-	}
-
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void _setUp() throws Exception {
 		TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
+		.getPreferenceStore()
+		.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		manager = TasksUiPlugin.getRepositoryManager();
 		TestFixture.resetTaskListAndRepositories();
-		client = BugzillaFixture.current().client();
-		connector = BugzillaFixture.current().connector();
-		repository = BugzillaFixture.current().repository();
+		client = fixture.client();
+		connector = fixture.connector();
+		repository = fixture.repository();
 		TasksUi.getRepositoryManager().addRepository(repository);
-		harness = BugzillaFixture.current().createHarness();
+		harness = fixture.createHarness();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@AfterEach
+	void _tearDown() throws Exception {
 		TestFixture.resetTaskList();
-		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		manager.clearRepositories();
 	}
 
 	public TaskDataModel createModel(ITask task) throws CoreException {

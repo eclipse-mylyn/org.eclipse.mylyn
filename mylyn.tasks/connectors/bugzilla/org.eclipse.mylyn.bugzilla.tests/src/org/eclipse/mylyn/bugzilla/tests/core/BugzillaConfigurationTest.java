@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -14,11 +14,17 @@
 
 package org.eclipse.mylyn.bugzilla.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
@@ -26,20 +32,21 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.core.SaxConfigurationContentHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.XmlCleaner;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
-import junit.framework.TestCase;
 
 /**
  * @author Robert Elves
  */
 @SuppressWarnings("nls")
-public class BugzillaConfigurationTest extends TestCase {
+public class BugzillaConfigurationTest extends AbstractBugzillaFixtureTest {
 
+	@Test
 	public void testRepositoryConfigurationCachePersistance() throws Exception {
 		File file = File.createTempFile("bugzilla", null);
 		file.deleteOnExit();
@@ -77,6 +84,7 @@ public class BugzillaConfigurationTest extends TestCase {
 				testLoadedConfig.getOptionValues(BugzillaAttribute.PRODUCT).get(0));
 	}
 
+	@Test
 	public void testNullCacheFile() {
 		BugzillaRepositoryConnector connector = new BugzillaRepositoryConnector();
 		connector.readRepositoryConfigurationFile();
@@ -95,6 +103,7 @@ public class BugzillaConfigurationTest extends TestCase {
 
 	// FIXME re-enable?
 //	@SuppressWarnings("deprecation")
+//	@Test
 //	public void testHtmlCleaner() throws IOException, BugzillaException, GeneralSecurityException {
 //		StringBuffer incoming = new StringBuffer();
 //		incoming.append("<RDF xmlns=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#");
@@ -113,6 +122,7 @@ public class BugzillaConfigurationTest extends TestCase {
 	 * Can use this to test config data submitted by users. Be sure not to commit user's config file though. The file included
 	 * (rdfconfig218.txt) is from mylyn.eclipse.org/bugs218
 	 */
+	@Test
 	public void testRepositoryConfigurationFromFile() throws Exception {
 		File tempFile = File.createTempFile("XmlCleaner-", "tmp");
 		tempFile.deleteOnExit();

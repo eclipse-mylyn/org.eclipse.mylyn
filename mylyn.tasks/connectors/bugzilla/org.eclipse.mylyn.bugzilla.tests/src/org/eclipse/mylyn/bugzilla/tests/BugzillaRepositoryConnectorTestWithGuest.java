@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -14,11 +14,15 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
@@ -37,29 +41,33 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tests.util.TestFixture;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class BugzillaRepositoryConnectorTestWithGuest extends AbstractBugzillaTest {
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		TasksUiPlugin.getDefault()
 		.getPreferenceStore()
 		.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		manager = TasksUiPlugin.getRepositoryManager();
 		TestFixture.resetTaskListAndRepositories();
-		client = BugzillaFixture.current().client(PrivilegeLevel.GUEST);
-		connector = BugzillaFixture.current().connector();
-		repository = BugzillaFixture.current().repository();
+		client = fixture.client(PrivilegeLevel.GUEST);
+		connector = fixture.connector();
+		repository = fixture.repository();
 		TasksUi.getRepositoryManager().addRepository(repository);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		TestFixture.resetTaskList();
-		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		manager.clearRepositories();
 	}
 
+	@Test
 	public void testPrivateDescription() throws Exception {
 		final TaskMapping taskMappingInit = new TaskMapping() {
 
@@ -97,7 +105,7 @@ public class BugzillaRepositoryConnectorTestWithGuest extends AbstractBugzillaTe
 		Set<TaskAttribute> changed = new HashSet<>();
 		workingCopy.save(changed, null);
 
-		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0], client);//connector.getTaskDataHandler().postTaskData(repository, taskDataNew[0], changed,
+		RepositoryResponse response = fixture.submitTask(taskDataNew[0], client);//connector.getTaskDataHandler().postTaskData(repository, taskDataNew[0], changed,
 		//new NullProgressMonitor());
 		((AbstractTask) taskNew).setSubmitting(true);
 
@@ -136,7 +144,7 @@ public class BugzillaRepositoryConnectorTestWithGuest extends AbstractBugzillaTe
 		workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
 		workingCopy.save(changed, null);
 		try {
-			BugzillaFixture.current().submitTask(taskData, client);
+			fixture.submitTask(taskData, client);
 
 		} catch (CoreException e) {
 			assertTrue(e.getStatus()

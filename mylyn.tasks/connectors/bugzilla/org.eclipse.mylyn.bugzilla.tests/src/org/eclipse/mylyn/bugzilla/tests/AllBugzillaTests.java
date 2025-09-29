@@ -15,84 +15,38 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
-import java.util.List;
-
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaXmlRpcClientTest;
-import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaHyperlinkDetectorTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaRepositorySettingsPageTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaSearchPageTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskEditorTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskHyperlinkDetectorTest;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
-import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
-import org.eclipse.mylyn.commons.sdk.util.junit4.ManagedSuite;
-import org.eclipse.mylyn.commons.sdk.util.junit4.ManagedTestSuite;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.platform.suite.api.BeforeSuite;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Mik Kersten
  * @author Steffen Pingel
  * @author Frank Becker
  */
-@SuppressWarnings("nls")
+@Suite
+@SelectClasses({ BugzillaTaskHyperlinkDetectorTest.class, BugzillaHyperlinkDetectorTest.class,
+	AllBugzillaHeadlessStandaloneTests.class,
+	// not local
+	BugzillaTaskEditorTest.class, BugzillaSearchPageTest.class, BugzillaRepositorySettingsPageTest.class,
+	// needs fixture
+	RepositoryReportFactoryTest.class, BugzillaTaskDataHandlerTest.class, BugzillaSearchTest.class,
+	EncodingTest.class, BugzillaXmlRpcClientTest.class, BugzillaRepositoryConnectorTest.class,
+	BugzillaAttachmentHandlerTest.class })
+
 public class AllBugzillaTests {
 
-	public static Test suite() {
+	@BeforeSuite
+	static void dumpSystemInfo() {
 		if (CommonTestUtil.fixProxyConfiguration()) {
 			CommonTestUtil.dumpSystemInfo(System.err);
 		}
-
-		TestSuite suite = new ManagedTestSuite(AllBugzillaTests.class.getName());
-		TestConfiguration testConfiguration = ManagedSuite.getTestConfigurationOrCreateDefault();
-		testConfiguration.setLocalOnly(CommonTestUtil.runNonCIServerTestsOnly());
-		addTests(suite, testConfiguration);
-		return suite;
 	}
-
-	public static Test suite(TestConfiguration configuration) {
-		TestSuite suite = new TestSuite(AllBugzillaTests.class.getName());
-		addTests(suite, configuration);
-		return suite;
-	}
-
-	public static void addTests(TestSuite suite, TestConfiguration configuration) {
-		// Standalone tests (Don't require an instance of Eclipse)
-		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite(configuration));
-
-		// Tests that only need to run once (i.e. no network io so doesn't matter which repository)
-		suite.addTestSuite(BugzillaTaskHyperlinkDetectorTest.class);
-		suite.addTestSuite(BugzillaHyperlinkDetectorTest.class);
-
-		// network tests
-		if (!configuration.isLocalOnly()) {
-			suite.addTestSuite(BugzillaTaskEditorTest.class);
-			suite.addTestSuite(BugzillaSearchPageTest.class);
-			suite.addTestSuite(BugzillaRepositorySettingsPageTest.class);
-			List<BugzillaFixture> fixtures = configuration.discover(BugzillaFixture.class, "bugzilla");
-			for (BugzillaFixture fixture : fixtures) {
-				addTests(suite, fixture);
-			}
-		}
-	}
-
-	private static void addTests(TestSuite suite, BugzillaFixture fixture) {
-		if (fixture.isExcluded()) {
-			return;
-		}
-
-		fixture.createSuite(suite);
-		fixture.add(RepositoryReportFactoryTest.class);
-		fixture.add(BugzillaTaskDataHandlerTest.class);
-		fixture.add(BugzillaSearchTest.class);
-		fixture.add(EncodingTest.class);
-		fixture.add(BugzillaXmlRpcClientTest.class);
-		fixture.add(BugzillaRepositoryConnectorTest.class);
-		fixture.add(BugzillaAttachmentHandlerTest.class);
-
-		fixture.done();
-	}
-
 }

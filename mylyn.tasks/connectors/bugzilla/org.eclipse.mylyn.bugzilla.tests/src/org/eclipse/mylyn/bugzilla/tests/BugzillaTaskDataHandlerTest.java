@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Frank Becker and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -14,7 +14,12 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
-import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
@@ -27,28 +32,34 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Frank Becker
  * @author Rob Elves
  */
 @SuppressWarnings("nls")
-public class BugzillaTaskDataHandlerTest extends TestCase {
+public class BugzillaTaskDataHandlerTest extends AbstractBugzillaFixtureTest {
+
+	@BeforeEach
+	public void checkExcluded() {
+		assumeFalse(fixture.isExcluded());
+	}
 
 	private TaskRepository repository;
 
 	private BugzillaRepositoryConnector connector;
 
-	@Override
-	public void setUp() throws Exception {
-		repository = BugzillaFixture.current().repository();
-		connector = BugzillaFixture.current().connector();
+	@BeforeEach
+	void setUp() throws Exception {
+		repository = fixture.repository();
+		connector = fixture.connector();
 	}
 
+	@Test
 	public void testCloneTaskData() throws Exception {
-		TaskData taskData = BugzillaFixture.current()
+		TaskData taskData = fixture
 				.createTask(PrivilegeLevel.USER, "test summary for clone", "test description for clone");
 		taskData.getRoot().getMappedAttribute(TaskAttribute.PRIORITY).setValue("P5");
 		ITaskMapping mapping = connector.getTaskMapping(taskData);
@@ -66,12 +77,14 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 
 	}
 
+	@Test
 	public void testCharacterEscaping() throws Exception {
-		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, "Testing! \"&@ $\" &amp;", null);
+		TaskData taskData = fixture.createTask(PrivilegeLevel.USER, "Testing! \"&@ $\" &amp;", null);
 		assertEquals("Testing! \"&@ $\" &amp;",
 				taskData.getRoot().getAttribute(BugzillaAttribute.SHORT_DESC.getKey()).getValue());
 	}
 
+	@Test
 	public void testinitializeTaskData() throws Exception {
 		final TaskMapping taskMappingInit = new TaskMapping() {
 			@Override
@@ -99,6 +112,7 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 		assertTrue(taskDataHandler.initializeTaskData(repository, taskData, taskMappingSelect, null));
 	}
 
+	@Test
 	public void testPropertyTargetMilestoneUndefined() throws Exception {
 		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		repository.removeProperty(IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE);
@@ -108,6 +122,7 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 		assertNotNull(taskData.getRoot().getAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey()));
 	}
 
+	@Test
 	public void testPropertyTargetMilestoneTrue() throws Exception {
 		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE, Boolean.TRUE.toString());
@@ -117,6 +132,7 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 		assertNotNull(taskData.getRoot().getAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey()));
 	}
 
+	@Test
 	public void testPropertyTargetMilestoneFalse() throws Exception {
 		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE, Boolean.FALSE.toString());

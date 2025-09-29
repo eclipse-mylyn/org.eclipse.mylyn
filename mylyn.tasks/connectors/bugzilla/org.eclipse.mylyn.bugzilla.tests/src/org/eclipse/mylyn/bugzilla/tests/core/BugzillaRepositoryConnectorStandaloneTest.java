@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Nathan Hapke and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -16,6 +16,12 @@
 
 package org.eclipse.mylyn.bugzilla.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,7 +30,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
+import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
@@ -45,8 +51,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Nathan Hapke
@@ -56,7 +62,12 @@ import junit.framework.TestCase;
  * @author Frank Becker
  */
 @SuppressWarnings("nls")
-public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
+public class BugzillaRepositoryConnectorStandaloneTest extends AbstractBugzillaFixtureTest {
+
+	@BeforeEach
+	public void checkExcluded() {
+		assumeFalse(fixture.isExcluded());
+	}
 
 	private TaskRepository repository;
 
@@ -64,13 +75,14 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 
 	private BugzillaClient client;
 
-	@Override
-	public void setUp() throws Exception {
-		client = BugzillaFixture.current().client(PrivilegeLevel.USER);
-		repository = BugzillaFixture.current().repository();
-		connector = BugzillaFixture.current().connector();
+	@BeforeEach
+	void setUp() throws Exception {
+		client = fixture.client(PrivilegeLevel.USER);
+		repository = fixture.repository();
+		connector = fixture.connector();
 	}
 
+	@Test
 	public void testHasTaskChanged() {
 		AbstractTask task = new TaskTask(repository.getConnectorKind(), repository.getRepositoryUrl(), "1");
 		task.setAttribute(BugzillaAttribute.DELTA_TS.getKey(), "2008-02-02 12:01:12");
@@ -149,14 +161,16 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 	/**
 	 * This is the first test so that the repository credentials are correctly set for the other tests
 	 */
+	@Test
 	public void testAddCredentials() {
 		AuthenticationCredentials auth = repository.getCredentials(AuthenticationType.REPOSITORY);
 		assertTrue(auth != null && auth.getPassword() != null && !auth.getPassword().equals("")
 				&& auth.getUserName() != null && !auth.getUserName().equals(""));
 	}
 
+	@Test
 	public void testGetTaskData() throws Exception {
-		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
+		TaskData taskData = fixture.createTask(PrivilegeLevel.USER, null, null);
 		Set<String> taskIds = new HashSet<>();
 		taskIds.add(taskData.getTaskId());
 		final Set<TaskData> results = new HashSet<>();
@@ -179,10 +193,11 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 				updatedTaskData.getRoot().getAttribute(BugzillaAttribute.PRIORITY.getKey()).getValue());
 	}
 
+	@Test
 	public void testGetMultiTaskData() throws Exception {
-		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
-		TaskData taskData2 = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
-		TaskData taskData3 = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
+		TaskData taskData = fixture.createTask(PrivilegeLevel.USER, null, null);
+		TaskData taskData2 = fixture.createTask(PrivilegeLevel.USER, null, null);
+		TaskData taskData3 = fixture.createTask(PrivilegeLevel.USER, null, null);
 		Set<String> taskIds = new HashSet<>();
 		taskIds.add(taskData.getTaskId());
 		taskIds.add(taskData2.getTaskId());
@@ -218,6 +233,7 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 				updatedTaskData.getRoot().getAttribute(BugzillaAttribute.LONG_DESC.getKey()).getValue());
 	}
 
+	@Test
 	public void testPerformQuery() throws Exception {
 		RepositoryConfiguration repositoryConfiguration = connector
 				.getRepositoryConfiguration(repository.getRepositoryUrl());
@@ -229,7 +245,7 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 		final String summaryNotNull = "Summary for testPerformQuery " + new Date();
 		final String descriptionNotNull = "Description for testPerformQuery " + new Date();
 		// create a Task so we not have on for the query
-		BugzillaFixture.current().createTask(PrivilegeLevel.USER, new HashMap<String, String>() {
+		fixture.createTask(PrivilegeLevel.USER, new HashMap<String, String>() {
 			private static final long serialVersionUID = 1L;
 			{
 				put(TaskAttribute.SUMMARY, summaryNotNull);
@@ -242,7 +258,7 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 			}
 		});
 		// create the test Task
-		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, new HashMap<String, String>() {
+		TaskData taskData = fixture.createTask(PrivilegeLevel.USER, new HashMap<String, String>() {
 			private static final long serialVersionUID = 1L;
 			{
 				put(TaskAttribute.SUMMARY, summaryNotNull);
@@ -253,7 +269,7 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 			}
 		});
 
-		String bug_status = BugzillaFixture.current()
+		String bug_status = fixture
 				.getBugzillaVersion()
 				.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0
 				? "&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED"
@@ -292,9 +308,9 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 		taskData.getRoot().getMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue(priority);
 		taskData.getRoot().getMappedAttribute(BugzillaAttribute.BUG_SEVERITY.getKey()).setValue(severity);
 		taskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION).setValue(descriptionNotNull);
-		RepositoryResponse response = BugzillaFixture.current().submitTask(taskData, client);
+		RepositoryResponse response = fixture.submitTask(taskData, client);
 		assertFalse(response.getTaskId().equals(""));
-		TaskData taskDataNew = BugzillaFixture.current().getTask(response.getTaskId(), client);
+		TaskData taskDataNew = fixture.getTask(response.getTaskId(), client);
 
 		// run query again
 		final Map<String, TaskData> changedTaskData2 = new HashMap<>();
@@ -317,8 +333,9 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 				.equals(taskDataNew.getRoot().getAttribute(BugzillaAttribute.SHORT_DESC.getKey()).getValue()));
 	}
 
+	@Test
 	public void testGetTaskMappingPriority() throws Exception {
-		BugzillaVersion version = new BugzillaVersion(BugzillaFixture.current().getVersion());
+		BugzillaVersion version = new BugzillaVersion(fixture.getVersion());
 
 		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository);
@@ -353,14 +370,15 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 			assertEquals(PriorityLevel.P5, mapping.getPriorityLevel());
 			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("---");
 			PriorityLevel pl = mapping.getPriorityLevel();
-			assertTrue("P3 or P5 expected! but got " + pl.toString(), pl == PriorityLevel.P3 || pl == PriorityLevel.P5);
+			assertTrue(pl == PriorityLevel.P3 || pl == PriorityLevel.P5, "P3 or P5 expected! but got " + pl.toString());
 			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("abc");
 			assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
 		}
 	}
 
+	@Test
 	public void testGetTaskMappingPriorityNoConfiguration() throws Exception {
-		BugzillaVersion version = new BugzillaVersion(BugzillaFixture.current().getVersion());
+		BugzillaVersion version = new BugzillaVersion(fixture.getVersion());
 
 		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository);
@@ -397,14 +415,15 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 			assertEquals(PriorityLevel.P5, mapping.getPriorityLevel());
 			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("---");
 			PriorityLevel pl = mapping.getPriorityLevel();
-			assertTrue("P3 or P5 expected! but got " + pl.toString(), pl == PriorityLevel.P3 || pl == PriorityLevel.P5);
+			assertTrue(pl == PriorityLevel.P3 || pl == PriorityLevel.P5, "P3 or P5 expected! but got " + pl.toString());
 			taskData.getRoot().createMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue("abc");
 			assertEquals(PriorityLevel.P3, mapping.getPriorityLevel());
 		}
 	}
 
+	@Test
 	public void testGetTaskMappingPriorityCustom() throws Exception {
-		BugzillaVersion version = new BugzillaVersion(BugzillaFixture.current().getVersion());
+		BugzillaVersion version = new BugzillaVersion(fixture.getVersion());
 
 		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository);
@@ -467,8 +486,9 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetTaskMappingPriorityCustomWithNoConfig() throws Exception {
-		BugzillaVersion version = new BugzillaVersion(BugzillaFixture.current().getVersion());
+		BugzillaVersion version = new BugzillaVersion(fixture.getVersion());
 
 		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository);

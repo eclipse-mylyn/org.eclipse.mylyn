@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.mylyn.tests.util.junit5
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylyn Tasks SDK JUnit 5 Utilities
+Bundle-SymbolicName: org.eclipse.mylyn.tests.util.junit5
+Bundle-Version: 4.9.0.qualifier
+Bundle-Vendor: Eclipse Mylyn
+Bundle-ClassPath: .
+Export-Package: org.eclipse.mylyn.tests.util.junit5;x-internal:=true
+Require-Bundle: org.eclipse.mylyn.tests.util;bundle-version="4.9.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-21

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -14,21 +14,24 @@
 
 package org.eclipse.mylyn.bugzilla.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeMapper;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class BugzillaAttributeMapperTest extends TestCase {
+public class BugzillaAttributeMapperTest extends AbstractBugzillaFixtureTest {
 
 	private BugzillaAttributeMapper mapper;
 
@@ -36,8 +39,8 @@ public class BugzillaAttributeMapperTest extends TestCase {
 
 	private TaskData newTaskData;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, "http://repository");
 		mapper = new BugzillaAttributeMapper(repository, null);
 		oldTaskData = new TaskData(mapper, BugzillaCorePlugin.CONNECTOR_KIND, "http://repository", "id");

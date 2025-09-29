@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -14,11 +14,15 @@
 
 package org.eclipse.mylyn.bugzilla.tests.ui;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.net.MalformedURLException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
+import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
@@ -37,14 +41,14 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TasksUiTestUtil;
 import org.eclipse.ui.PlatformUI;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Rob Elves
  */
 @SuppressWarnings("nls")
-public class BugzillaRepositorySettingsPageTest extends TestCase {
+public class BugzillaRepositorySettingsPageTest extends AbstractBugzillaFixtureTest {
 
 	private TaskRepositoryManager manager;
 
@@ -52,13 +56,12 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 
 	private EditRepositoryWizard wizard;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		manager = TasksUiPlugin.getRepositoryManager();
-		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		manager.clearRepositories();
 		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
-				BugzillaFixture.current().getRepositoryUrl());
+				fixture.getRepositoryUrl());
 		UserCredentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
 		repository.setCredentials(AuthenticationType.REPOSITORY,
 				new AuthenticationCredentials(credentials.getUserName(), credentials.getPassword()), false);
@@ -84,6 +87,7 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 		return BugzillaClientFactory.createClient(taskRepository, connector);
 	}
 
+	@Test
 	public void testValidationInvalidPassword() throws Exception {
 
 		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
@@ -104,6 +108,7 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 		fail("LoginException didn't occur!");
 	}
 
+	@Test
 	public void testValidationInvalidUserid() throws Exception {
 		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
 		dialog.create();
@@ -119,6 +124,7 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 		fail("LoginException didn't occur!");
 	}
 
+	@Test
 	public void testValidationInvalidUrl() throws Exception {
 		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
 		dialog.create();
@@ -151,6 +157,7 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 	// assertEquals("2.22", page.getVersion());
 	// }
 
+	@Test
 	public void testPersistChangeOfUrl() throws Exception {
 		assertEquals(1, manager.getAllRepositories().size());
 		String tempUid = repository.getUserName();
@@ -161,11 +168,11 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 		BugzillaClient client = createClient(page.getRepositoryUrl(), page.getUserName(), page.getPassword(),
 				page.getHttpAuthUserId(), page.getHttpAuthPassword(), page.getCharacterEncoding());
 		client.validate(null);
-		page.setUrl(BugzillaFixture.current().getRepositoryUrl());
+		page.setUrl(fixture.getRepositoryUrl());
 		wizard.performFinish();
 		assertEquals(1, manager.getAllRepositories().size());
 		TaskRepository repositoryTest = manager.getRepository(BugzillaCorePlugin.CONNECTOR_KIND,
-				BugzillaFixture.current().getRepositoryUrl());
+				fixture.getRepositoryUrl());
 		assertNotNull(repositoryTest);
 		assertEquals(tempUid, repositoryTest.getUserName());
 		assertEquals(tempPass, repositoryTest.getPassword());

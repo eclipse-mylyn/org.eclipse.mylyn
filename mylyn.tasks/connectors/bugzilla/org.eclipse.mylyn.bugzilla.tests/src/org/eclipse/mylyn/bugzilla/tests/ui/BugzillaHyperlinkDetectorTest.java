@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -14,10 +14,15 @@
 
 package org.eclipse.mylyn.bugzilla.tests.ui;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.util.Arrays;
 
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylyn.commons.sdk.util.junit5.MylynTestSetup;
 import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.ui.TaskAttachmentHyperlink;
@@ -27,14 +32,15 @@ import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class BugzillaHyperlinkDetectorTest extends TestCase {
+@MylynTestSetup
+public class BugzillaHyperlinkDetectorTest {
 
 	private BugzillaConnectorUi connector;
 
@@ -45,11 +51,11 @@ public class BugzillaHyperlinkDetectorTest extends TestCase {
 	private void assertHyperlinks(String string, IHyperlink... expected) {
 		IHyperlink[] links = connector.findHyperlinks(repository, task, string, -1, 0);
 		if (expected.length == 0) {
-			assertNull("Expected no hyperlinks, but got: " + (links != null ? Arrays.asList(links).toString() : ""),
-					links);
+			assertNull(links,
+					"Expected no hyperlinks, but got: " + (links != null ? Arrays.asList(links).toString() : ""));
 			return;
 		}
-		assertNotNull("Expected hyperlinks in " + string, links);
+		assertNotNull(links, "Expected hyperlinks in " + string);
 		assertEquals(expected.length, links.length);
 		for (int i = 0; i < links.length; i++) {
 			assertEquals(expected[i], links[i]);
@@ -68,13 +74,14 @@ public class BugzillaHyperlinkDetectorTest extends TestCase {
 		return link;
 	}
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, "http://localhost");
 		task = new TaskTask(BugzillaCorePlugin.CONNECTOR_KIND, "http://localhost", "123");
 		connector = new BugzillaConnectorUi();
 	}
 
+	@Test
 	public void testFindHyperlinksAttachment() {
 		if (PlatformUiUtil.supportsMultipleHyperlinkPresenter()) {
 			assertHyperlinks("attachment 123", new TaskAttachmentHyperlink(new Region(0, 14), repository, "123"),
@@ -112,6 +119,7 @@ public class BugzillaHyperlinkDetectorTest extends TestCase {
 
 	}
 
+	@Test
 	public void testFindHyperlinksBug() {
 		assertHyperlinks("bug123", link(0, 6, "123"));
 		assertHyperlinks("bug 123", link(0, 7, "123"));
@@ -122,14 +130,17 @@ public class BugzillaHyperlinkDetectorTest extends TestCase {
 		assertHyperlinks("bug: 123", link(0, 8, "123"));
 	}
 
+	@Test
 	public void testFindHyperlinksTask() {
 		assertHyperlinks("task123", link(0, 7, "123"));
 	}
 
+	@Test
 	public void testFindHyperlinksDuplicateOf() {
 		assertHyperlinks("duplicate of 123", link(0, 16, "123"));
 	}
 
+	@Test
 	public void testFindHyperlinksBugComment() {
 		assertHyperlinks("bug 123 comment 12", link(0, 18, "123", "12"));
 		assertHyperlinks("bug#123 comment 12", link(0, 18, "123", "12"));
@@ -139,6 +150,7 @@ public class BugzillaHyperlinkDetectorTest extends TestCase {
 		assertHyperlinks("bug456comment#1", link(0, 15, "456", "1"));
 	}
 
+	@Test
 	public void testFindHyperlinksBugNoComment() {
 		assertHyperlinks("bug 123#c1", link(0, 7, "123"));
 		assertHyperlinks("bug 123#1", link(0, 7, "123"));
@@ -146,26 +158,31 @@ public class BugzillaHyperlinkDetectorTest extends TestCase {
 		assertHyperlinks("bug#123#1", link(0, 7, "123"));
 	}
 
+	@Test
 	public void testFindHyperlinksComment() {
 		assertHyperlinks("comment#12", link(0, 10, "123", "12"));
 		assertHyperlinks("comment  #12", link(0, 12, "123", "12"));
 		assertHyperlinks("comment 1", link(0, 9, "123", "1"));
 	}
 
+	@Test
 	public void testFindHyperlinksInline() {
 		assertHyperlinks("abc bug 123 def", link(4, 7, "123"));
 	}
 
+	@Test
 	public void testFindHyperlinksMultiple() {
 		assertHyperlinks("bug 456#comment#12", link(0, 7, "456"), link(8, 10, "123", "12"));
 		assertHyperlinks("bug 123             bug 456", link(0, 7, "123"), link(20, 7, "456"));
 		assertHyperlinks("bug: 123             bug: 456", link(0, 8, "123"), link(21, 8, "456"));
 	}
 
+	@Test
 	public void testFindHyperlinksLinebreak() {
 		assertHyperlinks("bug\n456");
 	}
 
+	@Test
 	public void testFindHyperlinksNoAttachment() {
 		assertHyperlinks("attachment");
 		assertHyperlinks("attachmen 123");
@@ -173,6 +190,7 @@ public class BugzillaHyperlinkDetectorTest extends TestCase {
 		assertHyperlinks("attachment id");
 	}
 
+	@Test
 	public void testFindHyperlinksNoBug() {
 		assertHyperlinks("bu 123");
 		assertHyperlinks("bu# 123");
@@ -181,6 +199,7 @@ public class BugzillaHyperlinkDetectorTest extends TestCase {
 		assertHyperlinks("bug#comment");
 	}
 
+	@Test
 	public void testFindHyperlinksNoComment() {
 		assertHyperlinks("c 12");
 		assertHyperlinks("#c12");

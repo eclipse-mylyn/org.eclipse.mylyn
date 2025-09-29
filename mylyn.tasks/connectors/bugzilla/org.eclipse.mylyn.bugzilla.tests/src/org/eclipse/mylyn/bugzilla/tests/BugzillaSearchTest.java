@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -14,12 +14,15 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -27,14 +30,14 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Rob Elves
  */
 @SuppressWarnings("nls")
-public class BugzillaSearchTest extends TestCase {
+public class BugzillaSearchTest extends AbstractBugzillaFixtureTest {
 
 	private static final String QUERY_NAME = "Query Page Name";
 
@@ -46,24 +49,30 @@ public class BugzillaSearchTest extends TestCase {
 
 	private BugzillaRepositoryConnector connector;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		BugzillaFixture.current().client();
-		connector = BugzillaFixture.current().connector();
-		repository = BugzillaFixture.current().repository();
+	@BeforeEach
+	public void checkExcluded() {
+		assumeFalse(fixture.isExcluded());
 	}
 
+	@BeforeEach
+	void setUp() throws Exception {
+		fixture.client();
+		connector = fixture.connector();
+		repository = fixture.repository();
+	}
+
+	@Test
 	public void testSummarySearching() throws Exception {
 		long now = System.currentTimeMillis();
-		TaskData newTaskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, now + "", null);
+		TaskData newTaskData = fixture.createTask(PrivilegeLevel.USER, now + "", null);
 		assertNotNull(newTaskData);
 		assertEquals(1, runQuery(BUG_SUMMARY_SUBSTRING_SEARCH, now + "").size());
 	}
 
+	@Test
 	public void testCommentSearching() throws Exception {
 		long now = System.currentTimeMillis();
-		TaskData newTaskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, now + "");
+		TaskData newTaskData = fixture.createTask(PrivilegeLevel.USER, null, now + "");
 		assertNotNull(newTaskData);
 		assertEquals(1, runQuery(BUG_COMMENT_SUBSTRING_SEARCH, now + "").size());
 	}

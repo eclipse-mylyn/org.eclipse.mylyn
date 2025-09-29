@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2009, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -28,7 +28,6 @@ import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
-import org.eclipse.mylyn.commons.sdk.util.MylynResourceMissingException;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.commons.sdk.util.FixtureConfiguration;
@@ -49,7 +48,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.eclipse.mylyn.tests.util.TestFixture;
+import org.eclipse.mylyn.tests.util.junit5.TestFixtureJunit5;
+import org.opentest4j.AssertionFailedError;
 
 
 /**
@@ -58,7 +58,7 @@ import org.eclipse.mylyn.tests.util.TestFixture;
  * @author Frank Becker
  */
 @SuppressWarnings("nls")
-public class BugzillaFixture extends TestFixture {
+public class BugzillaFixture extends TestFixtureJunit5 {
 
 	public static final String CUSTOM_WF = "Custom Workflow";
 
@@ -121,7 +121,7 @@ public class BugzillaFixture extends TestFixture {
 	}
 
 	@Override
-	protected TestFixture getDefault() {
+	protected TestFixtureJunit5 getDefault() {
 		return TestConfiguration.getDefault().discoverDefault(BugzillaFixture.class, "bugzilla");
 	}
 
@@ -153,7 +153,7 @@ public class BugzillaFixture extends TestFixture {
 				if (file != null) {
 					taskRepository.setProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE, file.getCanonicalPath());
 				}
-			} catch (MylynResourceMissingException | IOException e) {
+			} catch (AssertionFailedError | IOException e) {
 				// ignore the Exception. The BUGZILLA_DESCRIPTOR_FILE does not exist so the property is null
 			}
 		}

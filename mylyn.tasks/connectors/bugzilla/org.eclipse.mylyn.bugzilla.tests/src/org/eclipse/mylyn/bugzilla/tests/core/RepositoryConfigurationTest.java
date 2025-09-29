@@ -12,8 +12,13 @@
 
 package org.eclipse.mylyn.bugzilla.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 
+import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeMapper;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
@@ -21,45 +26,51 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
-public class RepositoryConfigurationTest extends TestCase {
+public class RepositoryConfigurationTest extends AbstractBugzillaFixtureTest {
 
 	private final static String PRODUCT = "product";
 
 	RepositoryConfiguration cfg;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		cfg = new RepositoryConfiguration();
 		cfg.addProduct(PRODUCT);
 	}
 
+	@Test
 	public void testGetUnconfirmedAllowed_product() throws Exception {
 		assertFalse(cfg.getUnconfirmedAllowed(PRODUCT));
 	}
 
+	@Test
 	public void testGetUnconfirmedAllowed_productFalse() throws Exception {
 		cfg.addUnconfirmedAllowed(PRODUCT, Boolean.FALSE);
 		assertFalse(cfg.getUnconfirmedAllowed(PRODUCT));
 	}
 
+	@Test
 	public void testGetUnconfirmedAllowed_productNull() throws Exception {
 		cfg.addUnconfirmedAllowed(PRODUCT, null);
 		assertFalse(cfg.getUnconfirmedAllowed(PRODUCT));
 	}
 
+	@Test
 	public void testGetUnconfirmedAllowed_productTrue() throws Exception {
 		cfg.addUnconfirmedAllowed(PRODUCT, Boolean.TRUE);
 		assertTrue(cfg.getUnconfirmedAllowed(PRODUCT));
 	}
 
+	@Test
 	public void testGetUnconfirmedAllowed_noProduct() throws Exception {
 		assertFalse(cfg.getUnconfirmedAllowed("no-product"));
 	}
 
+	@Test
 	public void testGetAttributeOptions() throws Exception {
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, "http://repository");
 		BugzillaAttributeMapper mapper = new BugzillaAttributeMapper(repository, new BugzillaRepositoryConnector());
