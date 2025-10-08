@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2024 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 @SuppressWarnings("nls")
 public class CommonListenerListTest extends TestCase {
 
-	private class Listener {
+	private static class Listener {
 
 		private boolean notified;
 

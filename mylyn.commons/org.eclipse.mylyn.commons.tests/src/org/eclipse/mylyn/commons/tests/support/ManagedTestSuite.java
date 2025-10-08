@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2024 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -39,7 +39,7 @@ import junit.framework.TestSuite;
 /**
  * Prints the name of each test to System.err when it started and dumps a stack trace of all thread to System.err if a test takes longer
  * than 10 minutes.
- * 
+ *
  * @deprecated use {@link org.eclipse.mylyn.commons.sdk.util.junit4.ManagedTestSuite} instead
  * @author Steffen Pingel
  */
@@ -47,7 +47,7 @@ import junit.framework.TestSuite;
 @SuppressWarnings("nls")
 public class ManagedTestSuite extends TestSuite {
 
-	private class DumpThreadTask extends TimerTask {
+	private static class DumpThreadTask extends TimerTask {
 
 		private final Test test;
 
