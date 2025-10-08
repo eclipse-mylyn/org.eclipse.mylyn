@@ -43,7 +43,7 @@ import org.osgi.framework.Version;
 @SuppressWarnings("nls")
 public class NotificationEnvironmentTest {
 
-	private class StubEntry extends FeedEntry implements IAdaptable, IFilterable {
+	private static class StubEntry extends FeedEntry implements IAdaptable, IFilterable {
 
 		private final Map<String, String> map;
 
