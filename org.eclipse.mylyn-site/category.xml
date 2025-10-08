@@ -133,6 +133,7 @@
    <bundle id="org.apache.xmlrpc.common"/>
    <bundle id="org.apache.xmlrpc.server"/>
    <bundle id="org.apache.ws.commons.util"/>
+   <bundle id="org.apiguardian.api"/>
    <bundle id="org.glassfish.hk2.osgi-resource-locator"/>
    <bundle id="org.jsoup"/>
    <bundle id="org.eclipse.ecf.discovery"/>

@@ -45,6 +45,22 @@
          unpack="false"/>
 
    <plugin
+         id="org.eclipse.mylyn.context.sdk.java"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.context.sdk.util"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.tasks.tests"
+         version="0.0.0"
+         unpack="false"/>
+
+
+   <plugin
          id="org.eclipse.mylyn.tests.util"
          version="0.0.0"
          unpack="false"/>
