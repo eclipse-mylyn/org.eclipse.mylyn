@@ -41,6 +41,7 @@
     <module>mylyn.egit</module>
     <module>mylyn.github</module>
     <module>org.eclipse.mylyn.tests</module>
+    <module>org.eclipse.mylyn.tests.feature</module>
     <module>org.eclipse.mylyn-site</module>
   </modules>
 </project>
