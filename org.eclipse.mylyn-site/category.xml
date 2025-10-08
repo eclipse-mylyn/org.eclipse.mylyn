@@ -95,6 +95,9 @@
    <feature id="org.eclipse.mylyn.gitlab.feature">
       <category name="org.eclipse.mylyn.tasks.connector"/>
    </feature>
+   <feature id="org.eclipse.mylyn.tests.feature">
+      <category name="org.eclipse.mylyn.tests.category"/>
+   </feature>
    <bundle id="com.github.ben-manes.caffeine"/>
    <bundle id="com.google.gerrit.common"/>
    <bundle id="com.google.gerrit.prettify"/>
@@ -157,6 +160,11 @@
    <category-def name="org.eclipse.mylyn.framework.category" label="Mylyn Framework">
       <description>
          Source code and documentation for integrators building on Mylyn.
+      </description>
+   </category-def>
+   <category-def name="org.eclipse.mylyn.tests.category" label="Mylyn Tests (not an API)">
+      <description>
+         Not an API. Internal category for Mylyn itself
       </description>
    </category-def>
 </site>
