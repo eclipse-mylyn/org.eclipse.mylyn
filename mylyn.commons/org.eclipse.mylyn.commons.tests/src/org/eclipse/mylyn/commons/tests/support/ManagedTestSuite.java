@@ -81,7 +81,7 @@ public class ManagedTestSuite extends TestSuite {
 
 	}
 
-	private class Listener implements TestListener {
+	private static class Listener implements TestListener {
 
 		private DumpThreadTask task;
 
