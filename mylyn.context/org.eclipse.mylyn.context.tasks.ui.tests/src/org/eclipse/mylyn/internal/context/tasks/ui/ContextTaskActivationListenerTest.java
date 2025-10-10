@@ -13,10 +13,6 @@
 
 package org.eclipse.mylyn.internal.context.tasks.ui;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doReturn;
@@ -35,7 +31,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
-import org.eclipse.mylyn.internal.context.tasks.ui.ContextTaskActivationListenerTest.ContainsEqualElementsInArbitraryOrder;
 import org.eclipse.mylyn.internal.context.tasks.ui.TaskActivityMonitor.ContextTaskActivationListener;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
