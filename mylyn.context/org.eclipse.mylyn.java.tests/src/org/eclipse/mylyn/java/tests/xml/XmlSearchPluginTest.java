@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2011 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -40,7 +40,7 @@ import junit.framework.TestCase;
  * TEST CASES TO HANDLE 1. all dos - with and without results TODO - in both the plugin.xml and the build.xml 2. different type of xml file
  * with and without reference - shouldn't have result DEGREE OF SEPARATIONS 1 xml landmark files 2 projects of any landmark 3 workspace 4
  * workspace 5 NONE
- * 
+ *
  * @author Shawn Minto
  */
 @SuppressWarnings("nls")
