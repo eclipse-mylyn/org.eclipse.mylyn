@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -43,7 +43,7 @@ public class RepositoryClientManagerTest extends TestCase {
 		private static final long serialVersionUID = -8730054324154087433L;
 	}
 
-	private class MockRepositoryClientManager extends RepositoryClientManager<Object, MyConfig> {
+	private static class MockRepositoryClientManager extends RepositoryClientManager<Object, MyConfig> {
 
 		private Throwable throwable;
 

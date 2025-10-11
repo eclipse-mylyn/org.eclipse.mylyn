@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -43,7 +43,7 @@ import junit.framework.TestCase;
 @SuppressWarnings("nls")
 public class XmlExternalizationTest extends TestCase {
 
-	private class SimpleCharacterReader extends DefaultHandler {
+	private static class SimpleCharacterReader extends DefaultHandler {
 
 		private char ch;
 
@@ -63,7 +63,7 @@ public class XmlExternalizationTest extends TestCase {
 
 	}
 
-	private final class SimpleCharacterWriter {
+	private static final class SimpleCharacterWriter {
 		private final TransformerHandler handler;
 
 		public SimpleCharacterWriter(TransformerHandler handler) {
