@@ -95,7 +95,7 @@ public class TaskActivityManagerTest extends TestCase {
 
 	}
 
-	private class MockTaskActivationListener extends TaskActivationAdapter {
+	private static class MockTaskActivationListener extends TaskActivationAdapter {
 
 		private boolean hasActivated = false;
 

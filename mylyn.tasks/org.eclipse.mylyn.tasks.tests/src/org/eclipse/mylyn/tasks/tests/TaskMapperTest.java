@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -204,7 +204,7 @@ public class TaskMapperTest extends TestCase {
 		assertEquals(0, target.getTaskData().getRoot().getAttributes().size());
 	}
 
-	private class StubTaskAttributeMapper extends TaskAttributeMapper {
+	private static class StubTaskAttributeMapper extends TaskAttributeMapper {
 
 		public StubTaskAttributeMapper(TaskRepository taskRepository) {
 			super(taskRepository);
