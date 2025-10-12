@@ -17,7 +17,6 @@ package org.eclipse.mylyn.bugzilla.tests.core;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeMapper;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
@@ -31,7 +30,7 @@ import org.junit.jupiter.api.Test;
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class BugzillaAttributeMapperTest extends AbstractBugzillaFixtureTest {
+public class BugzillaAttributeMapperTest {
 
 	private BugzillaAttributeMapper mapper;
 

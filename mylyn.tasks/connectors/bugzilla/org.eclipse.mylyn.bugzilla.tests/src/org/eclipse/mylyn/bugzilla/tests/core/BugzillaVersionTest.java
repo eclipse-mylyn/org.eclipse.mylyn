@@ -16,7 +16,6 @@ package org.eclipse.mylyn.bugzilla.tests.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +23,7 @@ import org.junit.jupiter.api.Test;
  * @author Frank Becker
  */
 @SuppressWarnings("nls")
-public class BugzillaVersionTest extends AbstractBugzillaFixtureTest {
+public class BugzillaVersionTest {
 
 	public final static BugzillaVersion BUGZILLA_2_18_1 = new BugzillaVersion("2.18.1");
 
