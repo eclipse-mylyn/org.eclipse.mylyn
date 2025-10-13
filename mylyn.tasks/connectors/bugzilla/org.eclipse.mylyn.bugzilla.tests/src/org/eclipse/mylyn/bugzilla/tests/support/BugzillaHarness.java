@@ -35,7 +35,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
+import org.eclipse.mylyn.bugzilla.tests.AllBugzillaFixtureTest;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
@@ -63,7 +63,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 @SuppressWarnings("nls")
-public class BugzillaHarness extends AbstractBugzillaFixtureTest {
+public class BugzillaHarness extends AllBugzillaFixtureTest {
 
 	private final BugzillaFixture fixture;
 

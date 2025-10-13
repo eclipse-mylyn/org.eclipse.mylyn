@@ -17,7 +17,7 @@ package org.eclipse.mylyn.bugzilla.tests.ui;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
+import org.eclipse.mylyn.bugzilla.tests.DefaultBugzillaFixtureTest;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
  * @author Jeff Pound
  * @author Steffen Pingel
  */
-public class BugzillaSearchPageTest extends AbstractBugzillaFixtureTest {
+public class BugzillaSearchPageTest extends DefaultBugzillaFixtureTest {
 
 	private TaskRepository repository;
 

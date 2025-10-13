@@ -40,7 +40,7 @@ import org.junit.jupiter.api.Test;
  * @author Rob Elves
  */
 @SuppressWarnings("nls")
-public class BugzillaTaskDataHandlerTest extends AbstractBugzillaFixtureTest {
+public class BugzillaTaskDataHandlerTest extends AllBugzillaFixtureTest {
 
 	@BeforeEach
 	public void checkExcluded() {
