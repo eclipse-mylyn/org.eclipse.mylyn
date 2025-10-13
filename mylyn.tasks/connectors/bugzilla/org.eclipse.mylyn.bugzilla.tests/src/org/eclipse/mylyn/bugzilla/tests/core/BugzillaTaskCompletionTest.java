@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
+import org.eclipse.mylyn.bugzilla.tests.AllBugzillaFixtureTest;
 import org.eclipse.mylyn.commons.sdk.util.junit5.EnabledIfCI;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
@@ -41,7 +41,7 @@ import org.junit.jupiter.api.Test;
  */
 @SuppressWarnings("nls")
 @EnabledIfCI
-public class BugzillaTaskCompletionTest extends AbstractBugzillaFixtureTest {
+public class BugzillaTaskCompletionTest extends AllBugzillaFixtureTest {
 
 	private TaskRepository repository;
 

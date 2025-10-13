@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
+import org.eclipse.mylyn.bugzilla.tests.AllBugzillaFixtureTest;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
@@ -41,7 +41,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Elves
  */
 @SuppressWarnings("nls")
-public class BugzillaFlagsTest extends AbstractBugzillaFixtureTest {
+public class BugzillaFlagsTest extends AllBugzillaFixtureTest {
 
 	@BeforeEach
 	void excludeCheck() {

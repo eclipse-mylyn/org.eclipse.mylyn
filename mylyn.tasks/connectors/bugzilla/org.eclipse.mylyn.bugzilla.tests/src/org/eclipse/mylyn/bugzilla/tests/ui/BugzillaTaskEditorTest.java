@@ -17,7 +17,7 @@ package org.eclipse.mylyn.bugzilla.tests.ui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
+import org.eclipse.mylyn.bugzilla.tests.DefaultBugzillaFixtureTest;
 import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class BugzillaTaskEditorTest extends AbstractBugzillaFixtureTest {
+public class BugzillaTaskEditorTest extends DefaultBugzillaFixtureTest {
 
 	private TaskRepository repository;
 

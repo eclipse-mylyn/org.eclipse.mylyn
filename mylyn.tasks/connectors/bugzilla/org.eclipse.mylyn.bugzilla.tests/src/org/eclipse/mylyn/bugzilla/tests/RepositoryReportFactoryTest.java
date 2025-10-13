@@ -42,7 +42,7 @@ import org.junit.jupiter.api.Test;
  * @author Mik Kersten
  */
 @SuppressWarnings("nls")
-public class RepositoryReportFactoryTest extends AbstractBugzillaFixtureTest {
+public class RepositoryReportFactoryTest extends AllBugzillaFixtureTest {
 
 	TaskRepository repository;
 

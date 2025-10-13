@@ -49,7 +49,6 @@ import org.junit.jupiter.api.Test;
  * @author Frank Becker
  */
 @SuppressWarnings("nls")
-@MylynTestSetup
 public class BugzillaTaskHyperlinkDetectorTest {
 
 	private static final String DUPLICATE_NUMBER = "112233";

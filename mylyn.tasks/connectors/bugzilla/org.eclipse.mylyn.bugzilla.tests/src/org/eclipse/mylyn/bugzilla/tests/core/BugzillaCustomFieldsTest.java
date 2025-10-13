@@ -34,7 +34,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
+import org.eclipse.mylyn.bugzilla.tests.AllBugzillaFixtureTest;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
@@ -64,7 +64,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Elves
  */
 @SuppressWarnings("nls")
-public class BugzillaCustomFieldsTest extends AbstractBugzillaFixtureTest {
+public class BugzillaCustomFieldsTest extends AllBugzillaFixtureTest {
 
 	@BeforeEach
 	void excludeCheck() {
