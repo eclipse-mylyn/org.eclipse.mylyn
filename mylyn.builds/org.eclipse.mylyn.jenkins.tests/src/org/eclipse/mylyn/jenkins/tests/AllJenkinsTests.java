@@ -41,13 +41,15 @@ public class AllJenkinsTests {
 		TestConfiguration testConfiguration = ManagedSuite.getTestConfigurationOrCreateDefault();
 		testConfiguration.setLocalOnly(CommonTestUtil.runNonCIServerTestsOnly());
 		TestSuite suite = new ManagedTestSuite(AllJenkinsTests.class.getName());
-		addTests(suite, testConfiguration);
+		//FIXME: see https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/936
+//		addTests(suite, testConfiguration);
 		return suite;
 	}
 
 	public static Test suite(TestConfiguration configuration) {
 		TestSuite suite = new TestSuite(AllJenkinsTests.class.getName());
-		addTests(suite, configuration);
+		//FIXME: see https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/936
+//		addTests(suite, configuration);
 		return suite;
 	}
 
