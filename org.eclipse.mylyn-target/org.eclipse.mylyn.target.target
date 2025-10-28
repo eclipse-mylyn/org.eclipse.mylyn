@@ -83,6 +83,7 @@
 			<unit id="junit-platform-launcher" version="1.14.0"/>
 			<unit id="junit-platform-runner" version="1.14.0"/>
 			<unit id="junit-platform-suite-api" version="1.14.0"/>
+			<unit id="junit-platform-suite-engine" version="1.14.0"/>
 			<unit id="junit-platform-suite-commons" version="1.14.0"/>
 			<unit id="junit-vintage-engine" version="5.14.0"/>
 			<unit id="org.glassfish.hk2.osgi-resource-locator" version="0.0.0"/>
