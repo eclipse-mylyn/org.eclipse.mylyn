@@ -11,19 +11,12 @@
 
 package org.eclipse.mylyn.jenkins.tests;
 
-import java.util.List;
-
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.commons.sdk.util.junit4.ManagedSuite;
 import org.eclipse.mylyn.commons.sdk.util.junit4.ManagedTestSuite;
-import org.eclipse.mylyn.jenkins.tests.client.JenkinsClientTest;
-import org.eclipse.mylyn.jenkins.tests.client.JenkinsUrlTest;
-import org.eclipse.mylyn.jenkins.tests.client.JenkinsValidationTest;
 import org.eclipse.mylyn.jenkins.tests.core.JenkinsConnectorTest;
 import org.eclipse.mylyn.jenkins.tests.core.JenkinsServerBehaviourTest;
-import org.eclipse.mylyn.jenkins.tests.integration.JenkinsIntegrationTest;
-import org.eclipse.mylyn.jenkins.tests.support.JenkinsFixture;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -41,21 +34,21 @@ public class AllJenkinsTests {
 		TestConfiguration testConfiguration = ManagedSuite.getTestConfigurationOrCreateDefault();
 		testConfiguration.setLocalOnly(CommonTestUtil.runNonCIServerTestsOnly());
 		TestSuite suite = new ManagedTestSuite(AllJenkinsTests.class.getName());
-		//FIXME: see https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/936
-//		addTests(suite, testConfiguration);
+		addTests(suite, testConfiguration);
 		return suite;
 	}
 
 	public static Test suite(TestConfiguration configuration) {
 		TestSuite suite = new TestSuite(AllJenkinsTests.class.getName());
-		//FIXME: see https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/936
-//		addTests(suite, configuration);
+		addTests(suite, configuration);
 		return suite;
 	}
 
 	private static void addTests(TestSuite suite, TestConfiguration configuration) {
 		suite.addTestSuite(JenkinsConnectorTest.class);
 		suite.addTestSuite(JenkinsServerBehaviourTest.class);
+		//FIXME: see https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/936
+/*
 		suite.addTestSuite(JenkinsUrlTest.class);
 
 		if (!configuration.isLocalOnly()) {
@@ -75,6 +68,7 @@ public class AllJenkinsTests {
 				fixture.done();
 			}
 		}
+ */
 	}
 
 }
