@@ -24,7 +24,6 @@ import junit.framework.TestSuite;
 /**
  * @author Steffen Pingel
  */
-@SuppressWarnings("nls")
 public class AllJenkinsTests {
 
 	public static Test suite() {
