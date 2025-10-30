@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
  * @author Rob Elves
  */
 @SuppressWarnings("nls")
-public class BugzillaSearchTest extends AbstractBugzillaFixtureTest {
+public class BugzillaSearchTest extends AllBugzillaFixtureTest {
 
 	private static final String QUERY_NAME = "Query Page Name";
 

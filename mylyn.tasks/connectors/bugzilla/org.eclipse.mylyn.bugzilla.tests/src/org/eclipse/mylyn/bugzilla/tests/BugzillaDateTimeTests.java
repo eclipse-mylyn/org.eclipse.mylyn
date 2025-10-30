@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class BugzillaDateTimeTests extends AbstractBugzillaFixtureTest {
+public class BugzillaDateTimeTests {
 	private TaskRepository repository;
 
 	private BugzillaRepositoryConnector connector;
