@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
-import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
+import org.eclipse.mylyn.bugzilla.tests.AllBugzillaFixtureTest;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
  */
 // TODO 3.5 merge into BugzillaRepositoryConnectorStandaloneTest when Bugzilla 3.6 is released
 @SuppressWarnings("nls")
-public class BugzillaRepositoryConnectorConfigurationTest extends AbstractBugzillaFixtureTest {
+public class BugzillaRepositoryConnectorConfigurationTest extends AllBugzillaFixtureTest {
 
 	@BeforeEach
 	public void checkExcluded() {

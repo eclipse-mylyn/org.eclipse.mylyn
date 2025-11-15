@@ -45,7 +45,7 @@ import org.junit.jupiter.api.BeforeEach;
  * @author Rob Elves
  * @author Nathan Hapke
  */
-public abstract class AbstractBugzillaTest extends AbstractBugzillaFixtureTest {
+public abstract class AbstractBugzillaTest extends AllBugzillaFixtureTest {
 
 	static final String DEFAULT_KIND = BugzillaCorePlugin.CONNECTOR_KIND;
 

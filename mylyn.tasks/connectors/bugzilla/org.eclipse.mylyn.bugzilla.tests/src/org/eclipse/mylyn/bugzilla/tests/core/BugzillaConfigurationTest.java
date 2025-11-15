@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
@@ -44,7 +43,7 @@ import org.xml.sax.XMLReader;
  * @author Robert Elves
  */
 @SuppressWarnings("nls")
-public class BugzillaConfigurationTest extends AbstractBugzillaFixtureTest {
+public class BugzillaConfigurationTest {
 
 	@Test
 	public void testRepositoryConfigurationCachePersistance() throws Exception {

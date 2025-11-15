@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
+import org.eclipse.mylyn.bugzilla.tests.AllBugzillaFixtureTest;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
@@ -62,7 +62,7 @@ import org.junit.jupiter.api.Test;
  * @author Frank Becker
  */
 @SuppressWarnings("nls")
-public class BugzillaRepositoryConnectorStandaloneTest extends AbstractBugzillaFixtureTest {
+public class BugzillaRepositoryConnectorStandaloneTest extends AllBugzillaFixtureTest {
 
 	@BeforeEach
 	public void checkExcluded() {
