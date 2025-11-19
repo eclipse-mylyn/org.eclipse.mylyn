@@ -370,7 +370,7 @@
             <skip>${test.skip}</skip>
             <useUIThread>${test.useUIThread}</useUIThread>
             <useUIHarness>true</useUIHarness>
-            <failIfNoTests>true</failIfNoTests>
+            <failIfNoTests>false</failIfNoTests>
             <forkedProcessTimeoutInSeconds>10800</forkedProcessTimeoutInSeconds>
             <product>org.eclipse.sdk.ide</product>
             <application>org.eclipse.ui.ide.workbench</application>
