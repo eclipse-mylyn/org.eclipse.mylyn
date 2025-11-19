@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2024 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2025 Tasktop Technologies and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -38,8 +38,8 @@ public class CheckActivityJobTest extends TestCase {
 	}
 
 	public void testInactivityTimeout() throws Exception {
-		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
-			System.err.println("Skipping CheckActivityJobTest.testInactivityTimeout() on Intel Macs");
+		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
+			System.err.println("Skipping CheckActivityJobTest.testInactivityTimeout() on Macs");
 			return;
 		}
 		callback.lastEventTime = System.currentTimeMillis() - 201;
@@ -61,8 +61,8 @@ public class CheckActivityJobTest extends TestCase {
 	}
 
 	public void testResumeFromSleepNoTimeout() throws Exception {
-		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
-			System.err.println("Skipping CheckActivityJobTest.testResumeFromSleepNoTimeout() on Intel Macs");
+		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
+			System.err.println("Skipping CheckActivityJobTest.testResumeFromSleepNoTimeout() on Macs");
 			return;
 		}
 		job.setInactivityTimeout(0);
@@ -82,8 +82,8 @@ public class CheckActivityJobTest extends TestCase {
 	}
 
 	public void testResumeFromSleepTimeoutNoEvent() throws Exception {
-		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
-			System.err.println("Skipping CheckActivityJobTest.testResumeFromSleepTimeoutNoEvent() on Intel Macs");
+		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
+			System.err.println("Skipping CheckActivityJobTest.testResumeFromSleepTimeoutNoEvent() on Macs");
 			return;
 		}
 		callback.lastEventTime = System.currentTimeMillis();
@@ -106,8 +106,8 @@ public class CheckActivityJobTest extends TestCase {
 	}
 
 	public void testResumeFromSleepTimeoutEvent() throws Exception {
-		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
-			System.err.println("Skipping CheckActivityJobTest.testResumeFromSleepTimeoutEvent() on Intel Macs");
+		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
+			System.err.println("Skipping CheckActivityJobTest.testResumeFromSleepTimeoutEvent() on Macs");
 			return;
 		}
 		callback.lastEventTime = System.currentTimeMillis();
@@ -142,9 +142,8 @@ public class CheckActivityJobTest extends TestCase {
 	}
 
 	public void testResumeFromSleepTimeoutEventDiscarded() throws Exception {
-		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
-			System.err
-					.println("Skipping CheckActivityJobTest.testResumeFromSleepTimeoutEventDiscarded() on Intel Macs");
+		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
+			System.err.println("Skipping CheckActivityJobTest.testResumeFromSleepTimeoutEventDiscarded() on Macs");
 			return;
 		}
 		// record one tick

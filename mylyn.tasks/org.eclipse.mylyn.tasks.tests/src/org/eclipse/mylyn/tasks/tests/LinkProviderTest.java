@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2025 Tasktop Technologies and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -86,8 +86,8 @@ public class LinkProviderTest extends TestCase {
 	}
 
 	public void testTimeoutInfinite() {
-		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
-			System.err.println("Skipping LinkProviderTest.testTimeoutInfinite() on Intel Macs");
+		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
+			System.err.println("Skipping LinkProviderTest.testTimeoutInfinite() on Macs");
 			return;
 		}
 		System.setProperty(ITasksCoreConstants.PROPERTY_LINK_PROVIDER_TIMEOUT, "50");
