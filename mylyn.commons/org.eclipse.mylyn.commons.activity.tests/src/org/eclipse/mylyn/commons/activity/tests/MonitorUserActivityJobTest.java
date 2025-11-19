@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2024 Tasktop Technologies and others.
+ * Copyright (c) 2010, 2025 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,8 +37,8 @@ public class MonitorUserActivityJobTest extends TestCase {
 	}
 
 	public void testInactivityTimeout() throws Exception {
-		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
-			System.err.println("Skipping MonitorUserActivityJobTest.testInactivityTimeout() on Intel Macs");
+		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
+			System.err.println("Skipping MonitorUserActivityJobTest.testInactivityTimeout() on Macs");
 			return;
 		}
 		callback.lastEventTime = System.currentTimeMillis() - 201;
@@ -60,8 +60,8 @@ public class MonitorUserActivityJobTest extends TestCase {
 	}
 
 	public void testResumeFromSleepNoTimeout() throws Exception {
-		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
-			System.err.println("Skipping MonitorUserActivityJobTest.testInactivityTimeout() on Intel Macs");
+		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
+			System.err.println("Skipping MonitorUserActivityJobTest.testInactivityTimeout() on Macs");
 			return;
 		}
 		job.setInactivityTimeout(0);
@@ -81,8 +81,8 @@ public class MonitorUserActivityJobTest extends TestCase {
 	}
 
 	public void testResumeFromSleepTimeoutNoEvent() throws Exception {
-		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
-			System.err.println("Skipping MonitorUserActivityJobTest.testInactivityTimeout() on Intel Macs");
+		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
+			System.err.println("Skipping MonitorUserActivityJobTest.testInactivityTimeout() on Macs");
 			return;
 		}
 		callback.lastEventTime = System.currentTimeMillis();
@@ -105,8 +105,8 @@ public class MonitorUserActivityJobTest extends TestCase {
 	}
 
 	public void testResumeFromSleepTimeoutEvent() throws Exception {
-		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
-			System.err.println("Skipping MonitorUserActivityJobTest.testInactivityTimeout() on Intel Macs");
+		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
+			System.err.println("Skipping MonitorUserActivityJobTest.testInactivityTimeout() on Macs");
 			return;
 		}
 		callback.lastEventTime = System.currentTimeMillis();
@@ -141,8 +141,8 @@ public class MonitorUserActivityJobTest extends TestCase {
 	}
 
 	public void testResumeFromSleepTimeoutEventDiscarded() throws Exception {
-		if (Platform.ARCH_X86_64.equals(Platform.getOSArch()) && Platform.OS_MACOSX.equals(Platform.getOS())) {
-			System.err.println("Skipping MonitorUserActivityJobTest.testInactivityTimeout() on Intel Macs");
+		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
+			System.err.println("Skipping MonitorUserActivityJobTest.testInactivityTimeout() on Macs");
 			return;
 		}
 		// record one tick
