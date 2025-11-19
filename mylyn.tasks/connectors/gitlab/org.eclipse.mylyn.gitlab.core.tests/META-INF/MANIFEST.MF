@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Gitlab Connector Test
-Bundle-SymbolicName: org.eclipse.mylyn.gitlab.core.test;singleton:=true
+Bundle-SymbolicName: org.eclipse.mylyn.gitlab.core.tests;singleton:=true
 Bundle-Version: 4.2.0.qualifier
 Import-Package: org.apache.commons.io;version="2.8.0"
 Require-Bundle: org.eclipse.ui,
@@ -23,4 +23,4 @@ Require-Bundle: org.eclipse.ui,
  org.apache.httpcomponents.httpclient,
  org.apache.httpcomponents.httpcore
 Bundle-RequiredExecutionEnvironment: JavaSE-21
-Automatic-Module-Name: org.eclipse.mylyn.gitlab.core.test
+Automatic-Module-Name: org.eclipse.mylyn.gitlab.core.tests
