@@ -90,11 +90,6 @@
       <url>https://repo.eclipse.org/content/repositories/mylyn-releases/</url>
       <layout>default</layout>
     </repository>
-    <repository>
-      <id>cbi-license</id>
-      <layout>p2</layout>
-      <url>https://download.eclipse.org/cbi/updates/license/</url>
-    </repository>
   </repositories>
   <licenses>
     <license>
