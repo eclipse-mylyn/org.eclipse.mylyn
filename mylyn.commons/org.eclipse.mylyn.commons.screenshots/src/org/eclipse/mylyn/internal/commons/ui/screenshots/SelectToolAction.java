@@ -675,7 +675,7 @@ public class SelectToolAction extends Action implements IMenuCreator {
 				if (selectedItemID == CAPTURE_FILE) {
 					FileDialog dialog = new FileDialog(parent.getShell());
 					dialog.setFileName(stringCustom);
-					dialog.setFilterExtensions(new String[] { "*.bmp;*.jpg;*.png", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$
+					dialog.setFilterExtensions("*.bmp;*.jpg;*.png", "*.*"); //$NON-NLS-1$ //$NON-NLS-2$
 					String result = dialog.open();
 					if (result != null && result.length() > 0) {
 						stringCustom = result;
