@@ -30,12 +30,16 @@ import org.eclipse.swt.widgets.TreeItem;
 @Deprecated
 public class SwtUtil {
 
+	@Deprecated
 	public static final long FADE_RESCHEDULE_DELAY = 80;
 
+	@Deprecated
 	public static final int FADE_IN_INCREMENT = 15;
 
+	@Deprecated
 	public static final int FADE_OUT_INCREMENT = -20;
 
+	@Deprecated
 	public static void collectItemData(TreeItem[] items, Set<Object> allVisible) {
 		for (TreeItem item : items) {
 			allVisible.add(item.getData());
@@ -43,18 +47,22 @@ public class SwtUtil {
 		}
 	}
 
+	@Deprecated
 	public static FadeJob fastFadeIn(Shell shell, IFadeListener listener) {
 		return new FadeJob(shell, 2 * FADE_IN_INCREMENT, FADE_RESCHEDULE_DELAY, listener);
 	}
 
+	@Deprecated
 	public static FadeJob fadeIn(Shell shell, IFadeListener listener) {
 		return new FadeJob(shell, FADE_IN_INCREMENT, FADE_RESCHEDULE_DELAY, listener);
 	}
 
+	@Deprecated
 	public static FadeJob fadeOut(Shell shell, IFadeListener listener) {
 		return new FadeJob(shell, FADE_OUT_INCREMENT, FADE_RESCHEDULE_DELAY, listener);
 	}
 
+	@Deprecated
 	public static class FadeJob extends Job {
 
 		private final Shell shell;
@@ -155,6 +163,7 @@ public class SwtUtil {
 
 	}
 
+	@Deprecated
 	public interface IFadeListener {
 
 		void faded(Shell shell, int alpha);

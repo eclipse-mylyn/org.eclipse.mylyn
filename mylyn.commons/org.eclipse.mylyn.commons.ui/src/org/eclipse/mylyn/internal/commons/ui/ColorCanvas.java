@@ -30,6 +30,7 @@ public class ColorCanvas extends Canvas {
 
 	private final Color color;
 
+	@Deprecated
 	public ColorCanvas(Composite parent, int style, RGB rgb) {
 		super(parent, style);
 		color = new Color(parent.getDisplay(), rgb);
@@ -40,6 +41,7 @@ public class ColorCanvas extends Canvas {
 		addDisposeListener(e -> color.dispose());
 	}
 
+	@Deprecated
 	public RGB getRGB() {
 		return color.getRGB();
 	}
