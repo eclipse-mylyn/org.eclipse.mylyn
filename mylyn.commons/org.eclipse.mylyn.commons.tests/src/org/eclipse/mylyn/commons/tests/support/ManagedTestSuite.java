@@ -135,17 +135,21 @@ public class ManagedTestSuite extends TestSuite {
 
 	}
 
+	@Deprecated
 	public final static long DELAY = 10 * 60 * 1000;
 
 	private final Listener listener = new Listener();
 
+	@Deprecated
 	public ManagedTestSuite() {
 	}
 
+	@Deprecated
 	public ManagedTestSuite(String name) {
 		super(name);
 	}
 
+	@Deprecated
 	@Override
 	public void run(TestResult result) {
 		result.addListener(listener);
