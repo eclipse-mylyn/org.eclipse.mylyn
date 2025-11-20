@@ -45,36 +45,43 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 		return node;
 	}
 
+	@Deprecated
 	@Override
 	public void addListener(ILabelProviderListener listener) {
 		// don't care about listeners
 	}
 
+	@Deprecated
 	@Override
 	public void dispose() {
 		// don't care when we are disposed
 	}
 
+	@Deprecated
 	@Override
 	public boolean isLabelProperty(Object element, String property) {
 		return false;
 	}
 
+	@Deprecated
 	@Override
 	public void removeListener(ILabelProviderListener listener) {
 		// don't care about listeners
 	}
 
+	@Deprecated
 	@Override
 	public Image decorateImage(Image image, Object element) {
 		return null;
 	}
 
+	@Deprecated
 	@Override
 	public String decorateText(String text, Object element) {
 		return null;
 	}
 
+	@Deprecated
 	@Override
 	public Font decorateFont(Object element) {
 		IInteractionElement node = getNode(element);
@@ -86,6 +93,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 		return null;
 	}
 
+	@Deprecated
 	@Override
 	public Color decorateForeground(Object element) {
 		IInteractionElement node = getNode(element);
@@ -97,6 +105,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 		return null;
 	}
 
+	@Deprecated
 	@Override
 	public Color decorateBackground(Object element) {
 		return null;
