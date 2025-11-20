@@ -24,5 +24,6 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
  */
 @Deprecated
 public interface ISearchPluginTest {
+	@Deprecated
 	List<?> search(int dos, IInteractionElement node) throws IOException, CoreException;
 }

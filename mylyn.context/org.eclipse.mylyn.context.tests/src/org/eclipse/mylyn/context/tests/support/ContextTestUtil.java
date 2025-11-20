@@ -50,6 +50,7 @@ public class ContextTestUtil {
 
 	private final static IProgressMonitor NULL_MONITOR = new NullProgressMonitor();
 
+	@Deprecated
 	public static IJavaProject createJavaPluginProjectFromZip(String projectName, String zipFileName)
 			throws CoreException, ZipException, IOException {
 		IProject project = ContextTestUtil.createProject(projectName);
@@ -110,6 +111,7 @@ public class ContextTestUtil {
 		return project;
 	}
 
+	@Deprecated
 	public static void delete(final IResource resource) throws CoreException {
 		IWorkspaceRunnable runnable = monitor -> {
 			for (int i = 0; i < MAX_RETRY; i++) {
@@ -134,6 +136,7 @@ public class ContextTestUtil {
 
 	}
 
+	@Deprecated
 	public static void deleteProject(String projectName) throws CoreException {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject project = root.getProject(projectName);
@@ -145,6 +148,7 @@ public class ContextTestUtil {
 	/**
 	 * Test cases that rely on lazy startup of Context Ui (e.g. context bridges) need to invoke this method prior to running the test.
 	 */
+	@Deprecated
 	public static void triggerContextUiLazyStart() {
 		if (contextUiLazyStarted) {
 			return;
