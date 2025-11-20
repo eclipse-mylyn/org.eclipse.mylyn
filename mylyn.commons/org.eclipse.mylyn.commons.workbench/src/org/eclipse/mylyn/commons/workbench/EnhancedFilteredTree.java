@@ -40,22 +40,27 @@ import org.eclipse.ui.dialogs.PatternFilter;
 @Deprecated
 public class EnhancedFilteredTree extends FilteredTree {
 
+	@Deprecated
 	protected boolean useNewLook;
 
 	private TextSearchControl searchControl;
 
+	@Deprecated
 	public EnhancedFilteredTree(Composite parent, int treeStyle, PatternFilter filter, boolean useNewLook) {
 		super(parent, treeStyle, filter);
 	}
 
+	@Deprecated
 	public EnhancedFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 		super(parent, treeStyle, filter);
 	}
 
+	@Deprecated
 	public EnhancedFilteredTree(Composite parent) {
 		super(parent);
 	}
 
+	@Deprecated
 	@Override
 	protected void createControl(Composite parent, int treeStyle) {
 		super.createControl(parent, treeStyle);
@@ -64,12 +69,14 @@ public class EnhancedFilteredTree extends FilteredTree {
 		useNewLook = setNewLook(this);
 	}
 
+	@Deprecated
 	@Override
 	protected Composite createFilterControls(Composite parent) {
 		createFilterText(parent);
 		return parent;
 	}
 
+	@Deprecated
 	public static boolean setNewLook(FilteredTree tree) {
 		try {
 			Field newStyleField = FilteredTree.class.getDeclaredField("useNewLook"); //$NON-NLS-1$
@@ -82,6 +89,7 @@ public class EnhancedFilteredTree extends FilteredTree {
 		return false;
 	}
 
+	@Deprecated
 	@Override
 	protected void createFilterText(Composite parent) {
 		super.createFilterText(parent);
@@ -129,6 +137,7 @@ public class EnhancedFilteredTree extends FilteredTree {
 
 	}
 
+	@Deprecated
 	@Override
 	protected Text doCreateFilterText(Composite parent) {
 		searchControl = new TextSearchControl(parent, true, getHistoryPopupDialog());
@@ -149,10 +158,12 @@ public class EnhancedFilteredTree extends FilteredTree {
 		return searchControl.getTextControl();
 	}
 
+	@Deprecated
 	public TextSearchControl getTextSearchControl() {
 		return searchControl;
 	}
 
+	@Deprecated
 	protected SearchHistoryPopupDialog getHistoryPopupDialog() {
 		return new SearchHistoryPopupDialog(getShell(), SWT.TOP);
 	}
