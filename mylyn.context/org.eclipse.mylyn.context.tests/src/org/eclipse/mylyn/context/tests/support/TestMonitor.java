@@ -28,35 +28,44 @@ import org.eclipse.ui.IWorkbenchPart;
 @Deprecated
 public class TestMonitor extends AbstractUserInteractionMonitor {
 
+	@Deprecated
 	List<IJavaElement> selections = new ArrayList<>();
 
+	@Deprecated
 	public TestMonitor() {
 	}
 
+	@Deprecated
 	public void handleElementSelection(IJavaElement selected) {
 		selections.add(selected);
 	}
 
+	@Deprecated
 	protected void handleUnknownSelection(Object selectedObject) {
 		// don't need to do anything here
 	}
 
+	@Deprecated
 	protected void handleSelection(File file) {
 		// don't need to do anything here
 	}
 
+	@Deprecated
 	public List<IJavaElement> getSelections() {
 		return selections;
 	}
 
+	@Deprecated
 	public void handleReferenceNavigation(IJavaElement from, IJavaElement to) {
 		// don't need to do anything here
 	}
 
+	@Deprecated
 	public void handleImplementorNavigation(IJavaElement from, IJavaElement to) {
 		// don't need to do anything here
 	}
 
+	@Deprecated
 	@Override
 	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection,
 			boolean contributeToContext) {

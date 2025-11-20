@@ -29,12 +29,14 @@ public class TestActiveSearchListener implements IActiveSearchListener {
 
 	private List<?> results = null;
 
+	@Deprecated
 	public TestActiveSearchListener(AbstractRelationProvider prov) {
 		this.prov = prov;
 	}
 
 	private boolean gathered = false;
 
+	@Deprecated
 	@Override
 	public void searchCompleted(List<?> l) {
 		List<Object> accepted = new ArrayList<>(l.size());
@@ -51,11 +53,13 @@ public class TestActiveSearchListener implements IActiveSearchListener {
 		gathered = true;
 	}
 
+	@Deprecated
 	@Override
 	public boolean resultsGathered() {
 		return gathered;
 	}
 
+	@Deprecated
 	public List<?> getResults() {
 		return results;
 	}

@@ -28,14 +28,18 @@ import junit.framework.TestCase;
 @SuppressWarnings("nls")
 public abstract class AbstractContextTest extends TestCase {
 
+	@Deprecated
 	protected static final String MOCK_HANDLE = "<mock-handle>";
 
 	private static final String MOCK_PROVIDER = "<mock-provider>";
 
+	@Deprecated
 	protected static final String MOCK_ORIGIN = "<mock-origin>";
 
+	@Deprecated
 	protected static final String MOCK_KIND = "java";
 
+	@Deprecated
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -47,6 +51,7 @@ public abstract class AbstractContextTest extends TestCase {
 		}
 	}
 
+	@Deprecated
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
@@ -56,36 +61,44 @@ public abstract class AbstractContextTest extends TestCase {
 		}
 	}
 
+	@Deprecated
 	protected InteractionEvent mockSelection(String handle) {
 		return new InteractionEvent(InteractionEvent.Kind.SELECTION, MOCK_KIND, handle, MOCK_ORIGIN);
 	}
 
+	@Deprecated
 	protected InteractionEvent mockPropagation(String handle) {
 		return new InteractionEvent(InteractionEvent.Kind.PROPAGATION, MOCK_KIND, handle, MOCK_ORIGIN);
 	}
 
+	@Deprecated
 	protected InteractionEvent mockSelection() {
 		return mockSelection(MOCK_HANDLE);
 	}
 
+	@Deprecated
 	protected InteractionEvent mockNavigation(String toHandle) {
 		return new InteractionEvent(InteractionEvent.Kind.SELECTION, MOCK_KIND, toHandle, MOCK_ORIGIN, MOCK_PROVIDER);
 	}
 
+	@Deprecated
 	protected InteractionEvent mockInterestContribution(String handle, String kind, float value) {
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, kind, handle, MOCK_ORIGIN,
 				value);
 		return event;
 	}
 
+	@Deprecated
 	protected InteractionEvent mockInterestContribution(String handle, float value) {
 		return mockInterestContribution(handle, MOCK_KIND, value);
 	}
 
+	@Deprecated
 	protected InteractionEvent mockPreferenceChange(String handle) {
 		return new InteractionEvent(InteractionEvent.Kind.PREFERENCE, MOCK_KIND, handle, MOCK_ORIGIN);
 	}
 
+	@Deprecated
 	protected boolean compareTaskscapeEquality(IInteractionContext t1, IInteractionContext t2) {
 		return false;
 	}
