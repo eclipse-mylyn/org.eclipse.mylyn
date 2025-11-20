@@ -33,8 +33,10 @@ import org.eclipse.swt.widgets.Display;
 @Deprecated
 public abstract class ControlListItem extends Composite {
 
+	@Deprecated
 	static String DARK_COLOR_KEY = "org.eclipse.mylyn.commons.ui.ControlListItem.DARK_COLOR"; //$NON-NLS-1$
 
+	@Deprecated
 	interface IndexListener {
 
 		/**
@@ -56,6 +58,7 @@ public abstract class ControlListItem extends Composite {
 
 	}
 
+	@Deprecated
 	IndexListener indexListener;
 
 	private int currentIndex;
@@ -89,6 +92,7 @@ public abstract class ControlListItem extends Composite {
 	 * @param style
 	 * @param progressInfo
 	 */
+	@Deprecated
 	public ControlListItem(Composite parent, int style, Object element) {
 		super(parent, style | SWT.NO_FOCUS);
 		setData(element);
@@ -155,16 +159,20 @@ public abstract class ControlListItem extends Composite {
 	/**
 	 * Create the child widgets of the receiver.
 	 */
+	@Deprecated
 	protected abstract void createContent();
 
+	@Deprecated
 	public boolean isHot() {
 		return hot;
 	}
 
+	@Deprecated
 	public void setHot(boolean hot) {
 		this.hot = hot;
 	}
 
+	@Deprecated
 	protected void registerChild(Control child) {
 		child.addMouseListener(mouseListener);
 		child.addMouseTrackListener(mouseTrackListener);
@@ -174,6 +182,7 @@ public abstract class ControlListItem extends Composite {
 	/**
 	 * Refresh the contents of the receiver.
 	 */
+	@Deprecated
 	protected abstract void refresh();
 
 	/**
@@ -181,6 +190,7 @@ public abstract class ControlListItem extends Composite {
 	 *
 	 * @param index
 	 */
+	@Deprecated
 	public void updateColors(int index) {
 		currentIndex = index;
 
@@ -197,6 +207,7 @@ public abstract class ControlListItem extends Composite {
 		}
 	}
 
+	@Deprecated
 	@Override
 	public void setForeground(Color color) {
 		super.setForeground(color);
@@ -206,6 +217,7 @@ public abstract class ControlListItem extends Composite {
 		}
 	}
 
+	@Deprecated
 	@Override
 	public void setBackground(Color color) {
 		super.setBackground(color);
@@ -221,6 +233,7 @@ public abstract class ControlListItem extends Composite {
 	 * @param select
 	 *            boolean that indicates whether or not to show selection.
 	 */
+	@Deprecated
 	public void setSelected(boolean select) {
 		selected = select;
 		updateColors(currentIndex);
@@ -231,6 +244,7 @@ public abstract class ControlListItem extends Composite {
 	 *
 	 * @param indexListener
 	 */
+	@Deprecated
 	void setIndexListener(IndexListener indexListener) {
 		this.indexListener = indexListener;
 	}
@@ -240,6 +254,7 @@ public abstract class ControlListItem extends Composite {
 	 *
 	 * @return boolean
 	 */
+	@Deprecated
 	public boolean isSelected() {
 		return selected;
 	}
@@ -250,6 +265,7 @@ public abstract class ControlListItem extends Composite {
 	 * @param top
 	 * @param bottom
 	 */
+	@Deprecated
 	void setDisplayed(int top, int bottom) {
 		int itemTop = getLocation().y;
 		int itemBottom = itemTop + getBounds().height;

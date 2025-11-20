@@ -43,6 +43,7 @@ public class NotificationPopupColors {
 
 	private final ResourceManager resourceManager;
 
+	@Deprecated
 	public NotificationPopupColors(Display display, ResourceManager resourceManager) {
 		this.display = display;
 		this.resourceManager = resourceManager;
@@ -57,18 +58,22 @@ public class NotificationPopupColors {
 		titleText = getColor(resourceManager, getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
 	}
 
+	@Deprecated
 	public Color getGradientBegin() {
 		return gradientBegin;
 	}
 
+	@Deprecated
 	public Color getGradientEnd() {
 		return gradientEnd;
 	}
 
+	@Deprecated
 	public Color getBorder() {
 		return border;
 	}
 
+	@Deprecated
 	public Color getTitleText() {
 		return titleText;
 	}

@@ -48,12 +48,14 @@ import org.eclipse.swt.widgets.Widget;
 @SuppressWarnings("restriction")
 public abstract class ControlListViewer extends StructuredViewer {
 
+	@Deprecated
 	Composite control;
 
 	private final ScrolledComposite scrolled;
 
 	private final Composite noEntryArea;
 
+	@Deprecated
 	protected boolean hasFocus;
 
 	/**
@@ -62,6 +64,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 	 * @param parent
 	 * @param style
 	 */
+	@Deprecated
 	public ControlListViewer(Composite parent, int style) {
 		scrolled = new ScrolledComposite(parent, style);
 		int height = JFaceResources.getDefaultFont().getFontData()[0].getHeight();
@@ -186,9 +189,11 @@ public abstract class ControlListViewer extends StructuredViewer {
 		});
 	}
 
+	@Deprecated
 	protected void doCreateNoEntryArea(Composite parent) {
 	}
 
+	@Deprecated
 	public void add(Object[] elements) {
 		ViewerComparator sorter = getComparator();
 
@@ -239,6 +244,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 		scrolled.setMinSize(size);
 	}
 
+	@Deprecated
 	protected void doUpdateContent() {
 		if (control.getChildren().length > 0) {
 			updateSize(control);
@@ -311,13 +317,16 @@ public abstract class ControlListViewer extends StructuredViewer {
 		return item;
 	}
 
+	@Deprecated
 	protected abstract ControlListItem doCreateItem(Composite parent, Object element);
 
+	@Deprecated
 	@Override
 	protected ControlListItem doFindInputItem(Object element) {
 		return null;
 	}
 
+	@Deprecated
 	@Override
 	protected ControlListItem doFindItem(Object element) {
 		Control[] children = control.getChildren();
@@ -332,6 +341,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 		return null;
 	}
 
+	@Deprecated
 	@Override
 	protected void doUpdateItem(Widget item, Object element, boolean fullMap) {
 		if (usingElementMap()) {
@@ -341,11 +351,13 @@ public abstract class ControlListViewer extends StructuredViewer {
 		add(new Object[] { element });
 	}
 
+	@Deprecated
 	@Override
 	public ScrolledComposite getControl() {
 		return scrolled;
 	}
 
+	@Deprecated
 	@Override
 	protected List<?> getSelectionFromWidget() {
 		Control[] children = control.getChildren();
@@ -359,6 +371,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 		return selection;
 	}
 
+	@Deprecated
 	protected void handleOpen() {
 		Control control = getControl();
 		if (control != null && !control.isDisposed()) {
@@ -367,6 +380,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 		}
 	}
 
+	@Deprecated
 	@Override
 	protected void inputChanged(Object input, Object oldInput) {
 		super.inputChanged(input, oldInput);
@@ -374,6 +388,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 		doUpdateContent();
 	}
 
+	@Deprecated
 	@Override
 	protected void internalRefresh(Object element) {
 		if (element == null) {
@@ -394,6 +409,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 		updateSize(control);
 	}
 
+	@Deprecated
 	public void remove(Object[] elements) {
 		for (Object element : elements) {
 			Widget item = doFindItem(element);
@@ -412,6 +428,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 		doUpdateContent();
 	}
 
+	@Deprecated
 	@Override
 	public void reveal(Object element) {
 		Control control = doFindItem(element);
@@ -433,6 +450,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 		}
 	}
 
+	@Deprecated
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	protected void setSelectionToWidget(List list, boolean reveal) {
@@ -454,6 +472,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 	/**
 	 * Set focus on the current selection.
 	 */
+	@Deprecated
 	public void setFocus() {
 		Control[] children = control.getChildren();
 		if (children.length > 0) {

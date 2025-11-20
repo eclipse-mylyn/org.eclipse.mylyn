@@ -39,6 +39,7 @@ public class SectionComposite extends SharedScrolledComposite {
 
 	private final Composite content;
 
+	@Deprecated
 	public SectionComposite(Composite parent, int style) {
 		super(parent, style | SWT.V_SCROLL);
 		addDisposeListener(e -> {
@@ -55,19 +56,23 @@ public class SectionComposite extends SharedScrolledComposite {
 		setExpandHorizontal(true);
 	}
 
+	@Deprecated
 	@Override
 	public Composite getContent() {
 		return content;
 	}
 
+	@Deprecated
 	public ExpandableComposite createSection(String title) {
 		return createSection(title, SWT.NONE, false);
 	}
 
+	@Deprecated
 	public ExpandableComposite createSection(String title, int expansionStyle) {
 		return createSection(title, SWT.NONE, false);
 	}
 
+	@Deprecated
 	public ExpandableComposite createSection(String title, int expansionStyle, final boolean grabExcessVerticalSpace) {
 		final ExpandableComposite section = getToolkit().createExpandableComposite(getContent(),
 				ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.COMPACT
@@ -115,6 +120,7 @@ public class SectionComposite extends SharedScrolledComposite {
 		return section;
 	}
 
+	@Deprecated
 	public FormToolkit getToolkit() {
 		checkWidget();
 		if (toolkit == null) {

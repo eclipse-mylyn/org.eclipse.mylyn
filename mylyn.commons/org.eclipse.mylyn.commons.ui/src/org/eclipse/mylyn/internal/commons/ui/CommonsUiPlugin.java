@@ -25,6 +25,7 @@ import org.osgi.framework.BundleContext;
 @Deprecated
 public class CommonsUiPlugin extends AbstractUIPlugin {
 
+	@Deprecated
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.commons.ui"; //$NON-NLS-1$
 
 	private static CommonsUiPlugin plugin;
@@ -32,12 +33,14 @@ public class CommonsUiPlugin extends AbstractUIPlugin {
 	// shared colors for all forms
 	private FormColors formColors;
 
+	@Deprecated
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
 	}
 
+	@Deprecated
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		if (formColors != null) {
@@ -48,10 +51,12 @@ public class CommonsUiPlugin extends AbstractUIPlugin {
 		super.stop(context);
 	}
 
+	@Deprecated
 	public static CommonsUiPlugin getDefault() {
 		return plugin;
 	}
 
+	@Deprecated
 	public FormColors getFormColors(Display display) {
 		if (formColors == null) {
 			formColors = new FormColors(display);

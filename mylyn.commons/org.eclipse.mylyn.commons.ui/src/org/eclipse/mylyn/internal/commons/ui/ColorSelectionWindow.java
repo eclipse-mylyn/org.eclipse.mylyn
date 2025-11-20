@@ -41,11 +41,13 @@ public class ColorSelectionWindow extends Window {
 
 	private ColorCanvas[] colors;
 
+	@Deprecated
 	public ColorSelectionWindow(Shell shell) {
 		super(shell);
 		setShellStyle(SWT.BORDER);
 	}
 
+	@Deprecated
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -59,6 +61,7 @@ public class ColorSelectionWindow extends Window {
 		});
 	}
 
+	@Deprecated
 	@Override
 	protected Control createContents(Composite parent) {
 		Composite colorComposite = new Composite(parent, SWT.NONE);
@@ -117,6 +120,7 @@ public class ColorSelectionWindow extends Window {
 
 	private RGB selectedRGB;
 
+	@Deprecated
 	public RGB getSelectedRGB() {
 		return selectedRGB;
 	}

@@ -33,6 +33,7 @@ public class TaskBarManager {
 
 	private static final String TASK_BAR_MENU_MANAGER_KEY = "org.eclipse.mylyn.commons.TaskBarMenuManager.instance"; //$NON-NLS-1$
 
+	@Deprecated
 	public static MenuManager getTaskBarMenuManager() {
 		Widget /* TaskItem */ taskItem = getApplicationTaskItem();
 		if (taskItem != null) {

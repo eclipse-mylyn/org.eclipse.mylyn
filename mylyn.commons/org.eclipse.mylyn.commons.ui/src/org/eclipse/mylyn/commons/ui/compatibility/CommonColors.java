@@ -28,13 +28,16 @@ import org.eclipse.swt.widgets.Display;
 @Deprecated
 public class CommonColors {
 
+	@Deprecated
 	public static final Color HYPERLINK_WIDGET = new Color(Display.getDefault(), 12, 81, 172);
 
+	@Deprecated
 	public static final Color TEXT_QUOTED = new Color(Display.getDefault(), 38, 86, 145);
 
 	/**
 	 * NOTE: disposal of JFaceResources fonts handled by registry.
 	 */
+	@Deprecated
 	public static void dispose() {
 		HYPERLINK_WIDGET.dispose();
 		TEXT_QUOTED.dispose();
