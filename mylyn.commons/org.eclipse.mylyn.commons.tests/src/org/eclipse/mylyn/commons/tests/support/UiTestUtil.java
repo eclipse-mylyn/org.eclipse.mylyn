@@ -34,12 +34,14 @@ import org.eclipse.ui.PlatformUI;
 @SuppressWarnings("nls")
 public class UiTestUtil {
 
+	@Deprecated
 	public static int countItemsInTree(Tree tree) {
 		List<TreeItem> collectedItems = new ArrayList<>();
 		collectTreeItemsInView(tree.getItems(), collectedItems);
 		return collectedItems.size();
 	}
 
+	@Deprecated
 	public static void collectTreeItemsInView(TreeItem[] items, List<TreeItem> collectedItems) {
 		if (items.length > 0) {
 			for (TreeItem childItem : Arrays.asList(items)) {
@@ -49,6 +51,7 @@ public class UiTestUtil {
 		}
 	}
 
+	@Deprecated
 	public static List<Object> getAllData(Tree tree) {
 		List<TreeItem> items = new ArrayList<>();
 		collectTreeItemsInView(tree.getItems(), items);
@@ -62,6 +65,7 @@ public class UiTestUtil {
 	/**
 	 * Ensures that the editor area is visible.
 	 */
+	@Deprecated
 	public static void closeWelcomeView() {
 		IViewReference[] views = PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow()
@@ -76,10 +80,12 @@ public class UiTestUtil {
 		}
 	}
 
+	@Deprecated
 	public static IViewPart openView(String id) throws PartInitException {
 		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(id);
 	}
 
+	@Deprecated
 	public static void closeAllEditors() {
 		for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
 			IWorkbenchPage page = window.getActivePage();

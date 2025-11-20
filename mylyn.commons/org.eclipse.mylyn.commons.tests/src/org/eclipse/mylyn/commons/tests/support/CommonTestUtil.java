@@ -50,6 +50,7 @@ public class CommonTestUtil {
 	 *            a path separator character
 	 * @return the file path with its separator character changed from the given old separator to the given new separator
 	 */
+	@Deprecated
 	public static String changeSeparator(String path, char oldSeparator, char newSeparator) {
 		return path.replace(oldSeparator, newSeparator);
 	}
@@ -57,6 +58,7 @@ public class CommonTestUtil {
 	/**
 	 * Copies the given source file to the given destination file.
 	 */
+	@Deprecated
 	public static void copy(File source, File dest) throws IOException {
 		try (InputStream in = new FileInputStream(source);
 				OutputStream out = new BufferedOutputStream(new FileOutputStream(dest))) {
@@ -67,6 +69,7 @@ public class CommonTestUtil {
 	/**
 	 * Copies all files in the current data directory to the specified folder. Will overwrite.
 	 */
+	@Deprecated
 	public static void copyFolder(File sourceFolder, File targetFolder) throws IOException {
 		for (File currFile : sourceFolder.listFiles()) {
 			if (currFile.isFile()) {
@@ -91,12 +94,14 @@ public class CommonTestUtil {
 		}
 	}
 
+	@Deprecated
 	public static File createTempFileInPlugin(Plugin plugin, IPath path) {
 		IPath stateLocation = plugin.getStateLocation();
 		stateLocation = stateLocation.append(path);
 		return stateLocation.toFile();
 	}
 
+	@Deprecated
 	public static void delete(File file) {
 		if (file.exists()) {
 			for (int i = 0; i < MAX_RETRY; i++) {
@@ -113,6 +118,7 @@ public class CommonTestUtil {
 		}
 	}
 
+	@Deprecated
 	public static void deleteFolder(File path) {
 		if (path.isDirectory()) {
 			for (File file : path.listFiles()) {
@@ -122,6 +128,7 @@ public class CommonTestUtil {
 		}
 	}
 
+	@Deprecated
 	public static void deleteFolderRecursively(File path) {
 		File[] files = path.listFiles();
 		if (files != null) {
@@ -135,6 +142,7 @@ public class CommonTestUtil {
 		}
 	}
 
+	@Deprecated
 	public static InputStream getResource(Object source, String filename) throws IOException {
 		Class<?> clazz = source instanceof Class<?> ? (Class<?>) source : source.getClass();
 		ClassLoader classLoader = clazz.getClassLoader();
@@ -156,6 +164,7 @@ public class CommonTestUtil {
 		return org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.getFile(source, filename);
 	}
 
+	@Deprecated
 	public static String read(File source) throws IOException {
 		InputStream in = new FileInputStream(source);
 		try (in) {
@@ -197,6 +206,7 @@ public class CommonTestUtil {
 	 * @throws IOException
 	 *             in case of problem
 	 */
+	@Deprecated
 	public static void unzip(ZipFile zipFile, File dstDir) throws IOException {
 		unzip(zipFile, dstDir, dstDir, 0);
 	}
@@ -228,6 +238,7 @@ public class CommonTestUtil {
 		}
 	}
 
+	@Deprecated
 	public static void write(String fileName, StringBuffer content) throws IOException {
 		try (Writer writer = new FileWriter(fileName)) {
 			writer.write(content.toString());
