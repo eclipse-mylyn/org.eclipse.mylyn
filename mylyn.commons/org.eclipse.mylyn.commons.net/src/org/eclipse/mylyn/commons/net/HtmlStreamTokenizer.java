@@ -71,6 +71,7 @@ public class HtmlStreamTokenizer {
 	 * @param base
 	 *            URL for resolving relative URLs
 	 */
+	@Deprecated
 	public HtmlStreamTokenizer(Reader in, URL base) {
 		textBuffer = new StringBuffer();
 		whitespaceBuffer = new StringBuffer();
@@ -81,6 +82,7 @@ public class HtmlStreamTokenizer {
 		escapeTagValues = true;
 	}
 
+	@Deprecated
 	public void escapeTagAttributes(boolean value) {
 		escapeTagValues = value;
 	}
@@ -88,6 +90,7 @@ public class HtmlStreamTokenizer {
 	/**
 	 * Returns the next token from the stream.
 	 */
+	@Deprecated
 	public Token nextToken() throws IOException, ParseException {
 		if (pushbackToken != null) {
 			Token token = pushbackToken;
@@ -189,6 +192,7 @@ public class HtmlStreamTokenizer {
 	/**
 	 * Pushes the token back into the queue, to be returned by the subsequent call to <code>nextToken</code>
 	 */
+	@Deprecated
 	public void pushback(Token token) {
 		pushbackToken = token;
 	}
@@ -332,6 +336,7 @@ public class HtmlStreamTokenizer {
 	/**
 	 * Class for current token.
 	 */
+	@Deprecated
 	public static class Token {
 		public static final Type EOF = new Type();
 

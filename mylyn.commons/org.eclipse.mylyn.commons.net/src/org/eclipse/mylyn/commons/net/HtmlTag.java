@@ -50,6 +50,7 @@ public class HtmlTag {
 	/**
 	 * Basic constructor. The tag is uninitialized.
 	 */
+	@Deprecated
 	public HtmlTag() {
 		tagName = null;
 		tagType = Type.UNKNOWN;
@@ -61,6 +62,7 @@ public class HtmlTag {
 	/**
 	 * Copy constructor.
 	 */
+	@Deprecated
 	@SuppressWarnings("unchecked")
 	public HtmlTag(HtmlTag htmltag) {
 		tagName = null;
@@ -77,6 +79,7 @@ public class HtmlTag {
 	/**
 	 * Constructor.
 	 */
+	@Deprecated
 	public HtmlTag(String s) throws ParseException {
 		attributes = new HashMap<>();
 		setTagName(s);
@@ -86,6 +89,7 @@ public class HtmlTag {
 	/**
 	 * Constructor creating an otherwise empty tag, but with a given base url.
 	 */
+	@Deprecated
 	public HtmlTag(URL url) {
 		tagName = null;
 		tagType = Type.UNKNOWN;
@@ -97,6 +101,7 @@ public class HtmlTag {
 	/**
 	 * Returns the tag's type (linked to the tag's name).
 	 */
+	@Deprecated
 	public Tag getTagType() {
 		return tagType;
 	}
@@ -104,6 +109,7 @@ public class HtmlTag {
 	/**
 	 * Returns the tag's name (e.g., "HEAD", "P", etc.).
 	 */
+	@Deprecated
 	public String getTagName() {
 		return tagName;
 	}
@@ -114,6 +120,7 @@ public class HtmlTag {
 	 * @throws IllegalArgumentException
 	 *             if the argument is <code>null</code> or empty string
 	 */
+	@Deprecated
 	public void setTagName(String s) throws IllegalArgumentException {
 		if (s == null || s.length() == 0) {
 			throw new IllegalArgumentException("Empty tag name"); //$NON-NLS-1$
@@ -135,6 +142,7 @@ public class HtmlTag {
 	/**
 	 * Returns <code>true</code> if the tag is a closing tag.
 	 */
+	@Deprecated
 	public boolean isEndTag() {
 		return isEndTag;
 	}
@@ -142,6 +150,7 @@ public class HtmlTag {
 	/**
 	 * Returns the value of a tag's attribute as an integer.
 	 */
+	@Deprecated
 	public int getIntAttribute(String s) throws NumberFormatException {
 		return Integer.parseInt(getAttribute(s));
 	}
@@ -149,6 +158,7 @@ public class HtmlTag {
 	/**
 	 * Returns the value of a tag's attribute, or NULL if it doesn't exist.
 	 */
+	@Deprecated
 	public String getAttribute(String s) {
 		return attributes.get(s);
 	}
@@ -156,6 +166,7 @@ public class HtmlTag {
 	/**
 	 * Returns <code>true</code> if the tag contains attribute with the given name.
 	 */
+	@Deprecated
 	public boolean hasAttribute(String s) {
 		return getAttribute(s) != null;
 	}
@@ -163,10 +174,12 @@ public class HtmlTag {
 	/**
 	 * Sets the value of a tag's attribute.
 	 */
+	@Deprecated
 	public void setAttribute(String name, String value) {
 		attributes.put(name.toLowerCase(Locale.ENGLISH), value);
 	}
 
+	@Deprecated
 	public StringBuffer getURLs() {
 		StringBuffer sb = new StringBuffer();
 
@@ -238,6 +251,7 @@ public class HtmlTag {
 		return sb;
 	}
 
+	@Deprecated
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -268,6 +282,7 @@ public class HtmlTag {
 	/**
 	 * Enum class for tag types.
 	 */
+	@Deprecated
 	public static class Type extends Tag {
 		public static final Tag UNKNOWN = new Tag();
 
@@ -362,11 +377,13 @@ public class HtmlTag {
 		tags.put("VAR", Tag.VAR); //$NON-NLS-1$
 	}
 
+	@Deprecated
 	public void setSelfTerminating(boolean terminating) {
 		selfTerminating = terminating;
 
 	}
 
+	@Deprecated
 	public boolean isSelfTerminating() {
 		return selfTerminating;
 	}
