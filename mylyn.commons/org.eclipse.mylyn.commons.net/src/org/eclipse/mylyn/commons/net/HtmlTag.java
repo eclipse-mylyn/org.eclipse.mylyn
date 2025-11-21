@@ -284,12 +284,16 @@ public class HtmlTag {
 	 */
 	@Deprecated
 	public static class Type extends Tag {
+		@Deprecated
 		public static final Tag UNKNOWN = new Tag();
 
+		@Deprecated
 		public static final Tag THEAD = new Type("THEAD"); //$NON-NLS-1$
 
+		@Deprecated
 		public static final Tag DOCTYPE = new Type("!DOCTYPE"); //$NON-NLS-1$
 
+		@Deprecated
 		public static final Tag LABEL = new Type("LABEL"); //$NON-NLS-1$
 
 		private Type(String name) {
