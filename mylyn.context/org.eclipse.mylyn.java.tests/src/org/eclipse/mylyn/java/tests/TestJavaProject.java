@@ -57,12 +57,15 @@ import org.eclipse.ui.progress.IProgressService;
 @Deprecated
 @SuppressWarnings("nls")
 public class TestJavaProject {
+	@Deprecated
 	public IProject project;
 
+	@Deprecated
 	public IJavaProject javaProject;
 
 	private IPackageFragmentRoot sourceFolder;
 
+	@Deprecated
 	public TestJavaProject(final String name) throws CoreException, InvocationTargetException, InterruptedException {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		project = root.getProject(name);
@@ -77,14 +80,17 @@ public class TestJavaProject {
 		addSystemLibraries();
 	}
 
+	@Deprecated
 	public IProject getProject() {
 		return project;
 	}
 
+	@Deprecated
 	public IJavaProject getJavaProject() {
 		return javaProject;
 	}
 
+	@Deprecated
 	public void build() throws CoreException, InvocationTargetException, InterruptedException {
 		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 			@Override
@@ -96,6 +102,7 @@ public class TestJavaProject {
 		service.run(true, true, op);
 	}
 
+	@Deprecated
 	public IPackageFragment createPackage(String name) throws CoreException {
 		if (sourceFolder == null) {
 			sourceFolder = createSourceFolder();
@@ -103,6 +110,7 @@ public class TestJavaProject {
 		return sourceFolder.createPackageFragment(name, false, null);
 	}
 
+	@Deprecated
 	public IType createType(IPackageFragment pack, String cuName, String source) throws JavaModelException {
 		StringBuilder buf = new StringBuilder();
 		buf.append("package " + pack.getElementName() + ";\n");
@@ -150,6 +158,7 @@ public class TestJavaProject {
 		javaProject.setRawClasspath(newEntries, null);
 	}
 
+	@Deprecated
 	public void addJar(Plugin plugin, String jar) throws MalformedURLException, IOException, JavaModelException {
 		Path result = findFileInPlugin(plugin, jar);
 		IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
@@ -167,6 +176,7 @@ public class TestJavaProject {
 		return new Path(localJarURL.getPath());
 	}
 
+	@Deprecated
 	public void waitForIndexer() throws JavaModelException {
 		new SearchEngine().searchAllTypeNames(null, null, SearchPattern.R_EXACT_MATCH, IJavaSearchConstants.CLASS,
 				SearchEngine.createJavaSearchScope(new IJavaElement[0]), new TypeNameRequestor() {
