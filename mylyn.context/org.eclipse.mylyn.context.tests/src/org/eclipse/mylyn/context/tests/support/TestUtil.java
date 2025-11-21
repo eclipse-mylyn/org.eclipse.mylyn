@@ -45,15 +45,19 @@ public class TestUtil {
 	@Deprecated
 	public static class Credentials {
 
+		@Deprecated
 		public final String username;
 
+		@Deprecated
 		public final String password;
 
+		@Deprecated
 		public Credentials(String username, String password) {
 			this.username = username;
 			this.password = password;
 		}
 
+		@Deprecated
 		@Override
 		public String toString() {
 			return getClass().getName() + " [username=" + username + ",password=" + password + "]";
