@@ -338,12 +338,16 @@ public class HtmlStreamTokenizer {
 	 */
 	@Deprecated
 	public static class Token {
+		@Deprecated
 		public static final Type EOF = new Type();
 
+		@Deprecated
 		public static final Type TEXT = new Type();
 
+		@Deprecated
 		public static final Type TAG = new Type();
 
+		@Deprecated
 		public static final Type COMMENT = new Type();
 
 		/** token's type */
@@ -358,6 +362,7 @@ public class HtmlStreamTokenizer {
 		/**
 		 * Constructor for the EOF token.
 		 */
+		@Deprecated
 		protected Token() {
 			type = EOF;
 			value = null;
@@ -367,6 +372,7 @@ public class HtmlStreamTokenizer {
 		/**
 		 * Constructor for the HTML tag tokens.
 		 */
+		@Deprecated
 		protected Token(HtmlTag tag, StringBuffer whitespace) {
 			type = TAG;
 			value = tag;
@@ -376,6 +382,7 @@ public class HtmlStreamTokenizer {
 		/**
 		 * Constructor for regular text and comments.
 		 */
+		@Deprecated
 		protected Token(StringBuffer text, StringBuffer whitespace, boolean comment) {
 			if (comment) {
 				type = COMMENT;
@@ -389,6 +396,7 @@ public class HtmlStreamTokenizer {
 		/**
 		 * Returns the token's type.
 		 */
+		@Deprecated
 		public Type getType() {
 			return type;
 		}
@@ -396,6 +404,7 @@ public class HtmlStreamTokenizer {
 		/**
 		 * Returns the whitespace preceding the token.
 		 */
+		@Deprecated
 		public StringBuffer getWhitespace() {
 			return whitespace;
 		}
@@ -404,6 +413,7 @@ public class HtmlStreamTokenizer {
 		 * Returns the token's value. This is an HtmlTag for tokens of type <code>TAG</code> and a StringBuffer for tokens of type
 		 * <code>TEXT</code> and <code>COMMENT</code>. For tokens of type <code>EOF</code>, the value is <code>null</code>.
 		 */
+		@Deprecated
 		public Object getValue() {
 			return value;
 		}
@@ -411,6 +421,7 @@ public class HtmlStreamTokenizer {
 		/**
 		 * Returns the string representation of the token, including the preceding whitespace.
 		 */
+		@Deprecated
 		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
