@@ -24,20 +24,28 @@ import org.w3c.dom.Element;
 @Deprecated
 public abstract class AbstractTaskListMigrator {
 
+	@Deprecated
 	public static final String KEY_QUERY = "Query"; //$NON-NLS-1$
 
+	@Deprecated
 	public static final String KEY_TASK = "Task"; //$NON-NLS-1$
 
+	@Deprecated
 	public static final String KEY_LAST_MOD_DATE = "LastModified"; //$NON-NLS-1$
 
+	@Deprecated
 	public abstract String getTaskElementName();
 
+	@Deprecated
 	public abstract Set<String> getQueryElementNames();
 
+	@Deprecated
 	public abstract void migrateQuery(IRepositoryQuery query, Element element);
 
+	@Deprecated
 	public abstract void migrateTask(ITask task, Element element);
 
+	@Deprecated
 	public abstract String getConnectorKind();
 
 }
