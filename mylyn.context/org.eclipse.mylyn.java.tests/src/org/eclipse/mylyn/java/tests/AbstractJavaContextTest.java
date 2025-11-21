@@ -132,55 +132,65 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 	@Deprecated
 	class TestProgressMonitor implements IProgressMonitor {
 
+		@Deprecated
 		boolean done = false;
 
+		@Deprecated
 		@Override
 		public void beginTask(String name, int totalWork) {
 			// TODO Auto-generated method stub
 
 		}
 
+		@Deprecated
 		@Override
 		public void done() {
 			done = true;
 		}
 
+		@Deprecated
 		@Override
 		public void internalWorked(double work) {
 			// TODO Auto-generated method stub
 
 		}
 
+		@Deprecated
 		@Override
 		public boolean isCanceled() {
 			// TODO Auto-generated method stub
 			return false;
 		}
 
+		@Deprecated
 		@Override
 		public void setCanceled(boolean value) {
 			// TODO Auto-generated method stub
 
 		}
 
+		@Deprecated
 		@Override
 		public void setTaskName(String name) {
 			// TODO Auto-generated method stub
 
 		}
 
+		@Deprecated
 		@Override
 		public void subTask(String name) {
 			// TODO Auto-generated method stub
 
 		}
 
+		@Deprecated
 		@Override
 		public void worked(int work) {
 			// TODO Auto-generated method stub
 
 		}
 
+		@Deprecated
 		public boolean isDone() {
 			return done;
 		}
