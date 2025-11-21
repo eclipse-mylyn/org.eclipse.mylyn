@@ -27,8 +27,10 @@ import org.eclipse.core.runtime.CoreException;
 @Deprecated
 public class TestProject {
 
+	@Deprecated
 	public IProject project;
 
+	@Deprecated
 	public TestProject(final String name) throws CoreException, InvocationTargetException, InterruptedException {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		project = root.getProject(name);
@@ -36,10 +38,12 @@ public class TestProject {
 		project.open(null);
 	}
 
+	@Deprecated
 	public IProject getProject() {
 		return project;
 	}
 
+	@Deprecated
 	public IFolder createFolder(String name) throws CoreException {
 		IFolder folder = project.getFolder(name);
 		folder.create(false, true, null);

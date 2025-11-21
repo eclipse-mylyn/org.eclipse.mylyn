@@ -33,22 +33,31 @@ import org.eclipse.ui.navigator.resources.ProjectExplorer;
 @Deprecated
 public abstract class AbstractResourceContextTest extends AbstractContextTest {
 
+	@Deprecated
 	protected InteractionContextManager manager = ContextCorePlugin.getContextManager();
 
+	@Deprecated
 	protected ResourceInteractionMonitor monitor;
 
+	@Deprecated
 	protected ResourceStructureBridge structureBridge = new ResourceStructureBridge();
 
+	@Deprecated
 	protected TestProject project;
 
+	@Deprecated
 	protected InteractionContext context;
 
+	@Deprecated
 	protected InteractionContextScaling scaling = new InteractionContextScaling();
 
+	@Deprecated
 	protected String taskId = this.getClass().getName();
 
+	@Deprecated
 	protected ProjectExplorer navigator;
 
+	@Deprecated
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -63,6 +72,7 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 		assertNotNull(navigator);
 	}
 
+	@Deprecated
 	@Override
 	protected void tearDown() throws Exception {
 		context.reset();
