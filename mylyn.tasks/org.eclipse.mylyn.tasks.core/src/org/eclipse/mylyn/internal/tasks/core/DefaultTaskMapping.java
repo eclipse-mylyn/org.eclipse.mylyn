@@ -27,22 +27,27 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 @Deprecated
 public class DefaultTaskMapping extends TaskMapping {
 
+	@Deprecated
 	public Map<String, String> values = new HashMap<>();
 
+	@Deprecated
 	@Override
 	public String getDescription() {
 		return values.get(TaskAttribute.DESCRIPTION);
 	}
 
+	@Deprecated
 	@Override
 	public String getSummary() {
 		return values.get(TaskAttribute.SUMMARY);
 	}
 
+	@Deprecated
 	public void setDescription(String value) {
 		values.put(TaskAttribute.DESCRIPTION, value);
 	}
 
+	@Deprecated
 	public void setSummary(String value) {
 		values.put(TaskAttribute.SUMMARY, value);
 	}
