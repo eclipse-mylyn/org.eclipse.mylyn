@@ -77,6 +77,7 @@ public class SwtUtil {
 
 		private final IFadeListener fadeListener;
 
+		@Deprecated
 		public FadeJob(Shell shell, int increment, long delay, IFadeListener fadeListener) {
 			super(Messages.SwtUtil_Fading);
 			if (increment < -255 || increment == 0 || increment > 255) {
@@ -95,6 +96,7 @@ public class SwtUtil {
 			schedule(delay);
 		}
 
+		@Deprecated
 		@Override
 		protected void canceling() {
 			stopped = true;
@@ -107,6 +109,7 @@ public class SwtUtil {
 			schedule(delay);
 		}
 
+		@Deprecated
 		public void cancelAndWait(final boolean setAlpha) {
 			if (stopped) {
 				return;
@@ -119,6 +122,7 @@ public class SwtUtil {
 			});
 		}
 
+		@Deprecated
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			if (stopped) {
@@ -166,6 +170,7 @@ public class SwtUtil {
 	@Deprecated
 	public interface IFadeListener {
 
+		@Deprecated
 		void faded(Shell shell, int alpha);
 
 	}
