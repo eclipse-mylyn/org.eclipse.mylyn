@@ -37,6 +37,7 @@ public class ShowFilteredChildrenAction extends Action implements IObjectActionD
 
 	private IStructuredSelection selection;
 
+	@Deprecated
 	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		if (targetPart instanceof PackageExplorerPart) {
@@ -45,6 +46,7 @@ public class ShowFilteredChildrenAction extends Action implements IObjectActionD
 		}
 	}
 
+	@Deprecated
 	@Override
 	public void init(IViewPart targetPart) {
 		if (targetPart instanceof PackageExplorerPart) {
@@ -53,6 +55,7 @@ public class ShowFilteredChildrenAction extends Action implements IObjectActionD
 		}
 	}
 
+	@Deprecated
 	@Override
 	public void run(IAction action) {
 		if (selection != null) {
@@ -60,6 +63,7 @@ public class ShowFilteredChildrenAction extends Action implements IObjectActionD
 		}
 	}
 
+	@Deprecated
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
