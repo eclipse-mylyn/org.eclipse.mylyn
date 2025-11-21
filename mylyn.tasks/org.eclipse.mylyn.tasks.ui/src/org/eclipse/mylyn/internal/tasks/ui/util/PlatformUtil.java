@@ -43,6 +43,7 @@ public class PlatformUtil {
 	/**
 	 * bug 247182: file import dialog doesn't work on Mac OS X if the file extension has more than one dot.
 	 */
+	@Deprecated
 	public static String[] getFilterExtensions(String... extensions) {
 		for (int i = 0; i < extensions.length; i++) {
 			String extension = extensions[i];
@@ -57,6 +58,7 @@ public class PlatformUtil {
 		return extensions;
 	}
 
+	@Deprecated
 	public static int getToolTipXShift() {
 		if ("gtk".equals(SWT.getPlatform()) || "carbon".equals(SWT.getPlatform()) //$NON-NLS-1$//$NON-NLS-2$
 				|| "cocoa".equals(SWT.getPlatform())) { //$NON-NLS-1$
@@ -66,6 +68,7 @@ public class PlatformUtil {
 		}
 	}
 
+	@Deprecated
 	public static int getTreeImageOffset() {
 		if ("carbon".equals(SWT.getPlatform())) { //$NON-NLS-1$
 			return 16;
@@ -76,6 +79,7 @@ public class PlatformUtil {
 		}
 	}
 
+	@Deprecated
 	public static int getIncomingImageOffset() {
 		if ("carbon".equals(SWT.getPlatform())) { //$NON-NLS-1$
 			return 5;
@@ -86,6 +90,7 @@ public class PlatformUtil {
 		}
 	}
 
+	@Deprecated
 	public static int getTreeItemSquish() {
 		if ("gtk".equals(SWT.getPlatform())) { //$NON-NLS-1$
 			return 8;
@@ -100,10 +105,12 @@ public class PlatformUtil {
 		return "carbon".equals(SWT.getPlatform()) || "cocoa".equals(SWT.getPlatform()); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
+	@Deprecated
 	public static boolean isPaintItemClippingRequired() {
 		return "gtk".equals(SWT.getPlatform()); //$NON-NLS-1$
 	}
 
+	@Deprecated
 	public static boolean spinnerHasNativeBorder() {
 		return isMac() && !isEclipse36orLater();
 	}
@@ -112,6 +119,7 @@ public class PlatformUtil {
 		return Eclipse36Checker.result;
 	}
 
+	@Deprecated
 	public static boolean hasNarrowToolBar() {
 		return Platform.WS_WIN32.equals(SWT.getPlatform());
 	}
@@ -119,6 +127,7 @@ public class PlatformUtil {
 	/**
 	 * Returns the width of the view menu drop-down button.
 	 */
+	@Deprecated
 	public static int getViewMenuWidth() {
 		return 32;
 	}

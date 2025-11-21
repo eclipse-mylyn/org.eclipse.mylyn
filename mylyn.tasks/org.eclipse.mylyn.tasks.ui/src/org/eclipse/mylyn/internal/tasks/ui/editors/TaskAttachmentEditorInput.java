@@ -32,31 +32,37 @@ public class TaskAttachmentEditorInput extends PlatformObject implements IStorag
 
 	private final ITaskAttachment attachment;
 
+	@Deprecated
 	public TaskAttachmentEditorInput(ITaskAttachment attachment) {
 		this.attachment = attachment;
 	}
 
+	@Deprecated
 	@Override
 	public boolean exists() {
 		return true;
 	}
 
+	@Deprecated
 	@Override
 	public ImageDescriptor getImageDescriptor() {
 		// ignore
 		return null;
 	}
 
+	@Deprecated
 	@Override
 	public String getName() {
 		return attachment.getFileName();
 	}
 
+	@Deprecated
 	@Override
 	public IPersistableElement getPersistable() {
 		return null;
 	}
 
+	@Deprecated
 	@Override
 	public String getToolTipText() {
 		if (attachment.getUrl() != null) {
@@ -66,6 +72,7 @@ public class TaskAttachmentEditorInput extends PlatformObject implements IStorag
 		}
 	}
 
+	@Deprecated
 	@Override
 	public IStorage getStorage() throws CoreException {
 		return TaskAttachmentStorage.create(attachment);

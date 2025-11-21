@@ -59,6 +59,7 @@ public class TaskAttachmentStorage extends PlatformObject implements IStorage {
 
 	private final String name;
 
+	@Deprecated
 	public TaskAttachmentStorage(TaskRepository taskRepository, ITask task, TaskAttribute attachmentAttribute,
 			String name) {
 		this.taskRepository = taskRepository;
@@ -67,6 +68,7 @@ public class TaskAttachmentStorage extends PlatformObject implements IStorage {
 		this.name = name;
 	}
 
+	@Deprecated
 	public static IStorage create(ITaskAttachment attachment) throws CoreException {
 		Assert.isNotNull(attachment);
 		TaskAttribute taskAttribute = attachment.getTaskAttribute();
@@ -103,6 +105,7 @@ public class TaskAttachmentStorage extends PlatformObject implements IStorage {
 		return name;
 	}
 
+	@Deprecated
 	@Override
 	public InputStream getContents() throws CoreException {
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
@@ -111,17 +114,20 @@ public class TaskAttachmentStorage extends PlatformObject implements IStorage {
 		return handler.getContent(taskRepository, task, attachmentAttribute, new NullProgressMonitor());
 	}
 
+	@Deprecated
 	@Override
 	public IPath getFullPath() {
 		// ignore
 		return null;
 	}
 
+	@Deprecated
 	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Deprecated
 	@Override
 	public boolean isReadOnly() {
 		return true;

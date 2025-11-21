@@ -28,20 +28,24 @@ public class TaskUrlHyperlink extends URLHyperlink {
 
 	private final String hyperlinkText;
 
+	@Deprecated
 	public TaskUrlHyperlink(IRegion region, String urlString, String hyperlinkText) {
 		super(region, urlString);
 		this.hyperlinkText = hyperlinkText;
 	}
 
+	@Deprecated
 	public TaskUrlHyperlink(IRegion region, String urlString) {
 		this(region, urlString, null);
 	}
 
+	@Deprecated
 	@Override
 	public void open() {
 		TasksUiUtil.openTask(getURLString());
 	}
 
+	@Deprecated
 	@Override
 	public String getHyperlinkText() {
 		if (hyperlinkText != null) {

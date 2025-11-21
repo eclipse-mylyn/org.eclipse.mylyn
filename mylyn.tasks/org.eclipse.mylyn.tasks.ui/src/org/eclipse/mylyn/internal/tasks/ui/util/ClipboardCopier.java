@@ -28,6 +28,7 @@ import org.eclipse.ui.PlatformUI;
 @Deprecated
 public class ClipboardCopier {
 
+	@Deprecated
 	public interface TextProvider {
 
 		String getTextForElement(Object element);
@@ -36,17 +37,21 @@ public class ClipboardCopier {
 
 	private static ClipboardCopier instance = new ClipboardCopier();
 
+	@Deprecated
 	public static ClipboardCopier getDefault() {
 		return instance;
 	}
 
 	private Clipboard clipboard;
 
+	@Deprecated
 	public static String LINE_SEPARATOR = System.getProperty("line.separator", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
+	@Deprecated
 	public ClipboardCopier() {
 	}
 
+	@Deprecated
 	public void copy(IStructuredSelection selection, TextProvider provider) {
 		if (!selection.isEmpty()) {
 			StringBuilder sb = new StringBuilder();
@@ -64,6 +69,7 @@ public class ClipboardCopier {
 		}
 	}
 
+	@Deprecated
 	public void copy(String text) {
 		Assert.isNotNull(text);
 
@@ -81,6 +87,7 @@ public class ClipboardCopier {
 		clipboard.setContents(new Object[] { text }, new Transfer[] { textTransfer });
 	}
 
+	@Deprecated
 	public void dispose() {
 		if (clipboard != null) {
 			clipboard.dispose();

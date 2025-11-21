@@ -37,8 +37,7 @@ public class ImportExportUtil {
 	public static void configureFilter(FileDialog dialog) {
 		dialog.setFilterExtensions(
 				PlatformUiUtil.getFilterExtensions("*" + ITasksCoreConstants.FILE_EXTENSION)); //$NON-NLS-1$
-		dialog.setFilterNames(new String[] {
-				NLS.bind(Messages.ImportExportUtil_Tasks_and_queries_Filter0, ITasksCoreConstants.FILE_EXTENSION) });
+		dialog.setFilterNames(NLS.bind(Messages.ImportExportUtil_Tasks_and_queries_Filter0, ITasksCoreConstants.FILE_EXTENSION));
 	}
 
 	public static void export(File file, IStructuredSelection selection) throws CoreException {
