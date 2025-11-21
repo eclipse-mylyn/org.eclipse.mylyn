@@ -32,12 +32,14 @@ import org.eclipse.mylyn.commons.sdk.util.MylynResourceMissingException;
 @SuppressWarnings({ "nls", "restriction" })
 public class TestUtil {
 
+	@Deprecated
 	public static final String KEY_CREDENTIALS_FILE = "mylyn.credentials";
 
 	public enum PrivilegeLevel {
 		ANONYMOUS, GUEST, USER, ADMIN, READ_ONLY
 	}
 
+	@Deprecated
 	public static class Credentials {
 
 		public final String username;
@@ -63,14 +65,17 @@ public class TestUtil {
 
 	}
 
+	@Deprecated
 	public static Credentials readCredentials() {
 		return readCredentials(PrivilegeLevel.USER, null);
 	}
 
+	@Deprecated
 	public static Credentials readCredentials(PrivilegeLevel level) {
 		return readCredentials(level, null);
 	}
 
+	@Deprecated
 	public static Credentials readCredentials(PrivilegeLevel level, String realm) {
 		Properties properties = new Properties();
 		try {
@@ -130,6 +135,7 @@ public class TestUtil {
 		return new Credentials(username, password);
 	}
 
+	@Deprecated
 	public static File getFile(Object source, String filename) throws IOException {
 		return CommonTestUtil.getFile(source, filename);
 	}
