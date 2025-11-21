@@ -64,6 +64,7 @@ public class EditorBusyIndicator {
 		}
 	}
 
+	@Deprecated
 	public static final int DELAY = 90;
 
 	private Animator animator;
@@ -74,6 +75,7 @@ public class EditorBusyIndicator {
 
 	private Image oldImage;
 
+	@Deprecated
 	public EditorBusyIndicator(IBusyEditor editor) {
 		this.editor = editor;
 	}
@@ -83,6 +85,7 @@ public class EditorBusyIndicator {
 	 *
 	 * @see #stop()
 	 */
+	@Deprecated
 	public void start() {
 		if (animator != null) {
 			stop();
@@ -113,6 +116,7 @@ public class EditorBusyIndicator {
 	 *
 	 * @see #start()
 	 */
+	@Deprecated
 	public void stop() {
 		if (animator != null) {
 			animator.stop();

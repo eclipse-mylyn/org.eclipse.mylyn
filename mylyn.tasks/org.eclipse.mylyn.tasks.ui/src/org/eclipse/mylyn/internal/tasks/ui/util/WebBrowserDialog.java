@@ -50,6 +50,7 @@ public class WebBrowserDialog extends MessageDialog {
 
 	private static Boolean browserAvailable;
 
+	@Deprecated
 	public WebBrowserDialog(Shell parentShell, String dialogTitle, Image dialogTitleImage, String dialogMessage,
 			int dialogImageType, String[] dialogButtonLabels, int defaultIndex, String data) {
 		super(parentShell, dialogTitle, dialogTitleImage, dialogMessage, dialogImageType, dialogButtonLabels,
@@ -58,6 +59,7 @@ public class WebBrowserDialog extends MessageDialog {
 		setShellStyle(SWT.SHELL_TRIM | SWT.RESIZE);
 	}
 
+	@Deprecated
 	public static int openAcceptAgreement(Shell parent, String title, String message, String data) {
 		if (isInternalBrowserAvailable(parent)) {
 			WebBrowserDialog dialog = new WebBrowserDialog(parent, title, null, // accept
@@ -85,6 +87,7 @@ public class WebBrowserDialog extends MessageDialog {
 		}
 	}
 
+	@Deprecated
 	@Override
 	public Control createCustomArea(Composite parent) {
 		GridLayout layout = new GridLayout();
