@@ -86,6 +86,7 @@
 			<unit id="junit-platform-suite-engine" version="[1.14.0,2.0.0)"/>
 			<unit id="junit-platform-suite-commons" version="[1.14.0,2.0.0)"/>
 			<unit id="junit-vintage-engine" version="[5.14.0,6.0.0)"/>
+			<unit id="org.apiguardian.api" version="0.0.0"/>
 			<unit id="org.glassfish.hk2.osgi-resource-locator" version="0.0.0"/>
 			<unit id="org.apache.commons.lang3" version="0.0.0"/>
 			<unit id="org.apache.commons.logging" version="0.0.0"/>
