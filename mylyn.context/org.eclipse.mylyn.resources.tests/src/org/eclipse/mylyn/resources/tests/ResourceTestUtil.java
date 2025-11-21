@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.CoreException;
 @Deprecated
 public class ResourceTestUtil {
 
+	@Deprecated
 	public static void deleteProject(IProject project) throws CoreException {
 		if (project.exists() && !project.isOpen()) { // force opening so that
 			// project can be
@@ -34,6 +35,7 @@ public class ResourceTestUtil {
 		deleteResource(project);
 	}
 
+	@Deprecated
 	public static void deleteResource(IResource resource) throws CoreException {
 		CoreException lastException = null;
 		try {
