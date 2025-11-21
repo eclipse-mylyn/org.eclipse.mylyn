@@ -40,24 +40,34 @@ import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 @SuppressWarnings("nls")
 public abstract class AbstractJavaContextTest extends AbstractContextTest {
 
+	@Deprecated
 	protected InteractionContextManager manager = ContextCorePlugin.getContextManager();
 
+	@Deprecated
 	protected JavaEditingMonitor monitor;
 
+	@Deprecated
 	protected TestJavaProject project;
 
+	@Deprecated
 	protected TestProject nonJavaProject;
 
+	@Deprecated
 	protected IPackageFragment p1;
 
+	@Deprecated
 	protected IType type1;
 
+	@Deprecated
 	protected String contextId = this.getClass().getSimpleName();
 
+	@Deprecated
 	protected InteractionContext context;
 
+	@Deprecated
 	protected InteractionContextScaling scaling = new InteractionContextScaling();
 
+	@Deprecated
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -82,6 +92,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(false);
 	}
 
+	@Deprecated
 	@Override
 	protected void tearDown() throws Exception {
 		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(true);
@@ -103,6 +114,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 		super.tearDown();
 	}
 
+	@Deprecated
 	public static void waitForAutoBuild() {
 		boolean wasInterrupted = false;
 		do {
@@ -117,6 +129,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 		} while (wasInterrupted);
 	}
 
+	@Deprecated
 	class TestProgressMonitor implements IProgressMonitor {
 
 		boolean done = false;
