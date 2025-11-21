@@ -30,6 +30,7 @@ public class AbstractCommitWorkflowProvider {
 	 * @param resources
 	 * @return <code>true</code> if the team provider manages at least one of the resources or <code>false</code> otherwise.
 	 */
+	@Deprecated
 	public boolean hasOutgoingChanges(IResource[] resources) {
 		return false;
 	}
@@ -42,6 +43,7 @@ public class AbstractCommitWorkflowProvider {
 	 * @param resources
 	 *            Set of resources that need to be committed
 	 */
+	@Deprecated
 	public void commit(IResource[] resources) {
 	}
 
