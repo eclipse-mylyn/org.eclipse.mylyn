@@ -46,7 +46,6 @@ public class AdjustMyStarredHandler extends AbstractHandler {
 	 * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
 	 * ExecutionEvent)
 	 */
-	@SuppressWarnings("restriction")
 	@Override
 	public Object execute(ExecutionEvent aEvent) throws ExecutionException {
 		final GerritTableView reviewTableView = GerritTableView.getActiveView(true);

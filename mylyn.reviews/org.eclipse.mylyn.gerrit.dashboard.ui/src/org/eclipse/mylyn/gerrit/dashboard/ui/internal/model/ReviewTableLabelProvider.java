@@ -189,7 +189,6 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 	 * @return String text associated to the column
 	 */
 	@Override
-	@SuppressWarnings("restriction")
 	public String getColumnText(Object aObj, int aIndex) {
 		// GerritPlugin.Ftracer.traceWarning("getColumnText object: " + aObj
 		// + "\tcolumn: " + aIndex);
@@ -267,7 +266,6 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 	 * @return Image Image according to the selected column
 	 */
 	@Override
-	@SuppressWarnings("restriction")
 	public Image getColumnImage(Object aObj, int aIndex) {
 		String value = null;
 		if (aObj instanceof GerritTask reviewSummary) {
@@ -348,7 +346,6 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 	}
 
 	@Override
-	@SuppressWarnings("restriction")
 	public Color getBackground(Object aElement, int aColumnIndex) {
 		// GerritUi.Ftracer.traceInfo("getBackground column : " +
 		// aColumnIndex +
