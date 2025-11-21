@@ -26,14 +26,17 @@ public abstract class AbstractEditorHyperlinkDetector implements IHyperlinkDetec
 
 	private ITextEditor editor;
 
+	@Deprecated
 	@Override
 	public abstract IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region,
 			boolean canShowMultipleHyperlinks);
 
+	@Deprecated
 	public ITextEditor getEditor() {
 		return editor;
 	}
 
+	@Deprecated
 	public void setEditor(ITextEditor editor) {
 		this.editor = editor;
 	}
