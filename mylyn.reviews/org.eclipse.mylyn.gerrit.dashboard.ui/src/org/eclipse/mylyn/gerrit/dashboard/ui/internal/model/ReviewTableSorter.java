@@ -58,7 +58,6 @@ public class ReviewTableSorter extends ViewerComparator {
 	 * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	@SuppressWarnings("restriction")
 	public int compare(Viewer viewer, Object item1, Object item2) {
 
 		int sortDirection = SWT.NONE;

@@ -43,7 +43,6 @@ public class ReviewTableData {
 	 *
 	 * @param Object
 	 */
-	@SuppressWarnings("restriction")
 	public void createReviewItem(GerritTask[] aList, String aQuery, TaskRepository aTaskRepo) {
 
 		// Create the new object
@@ -67,7 +66,6 @@ public class ReviewTableData {
 		fQuery = query;
 	}
 
-	@SuppressWarnings("restriction")
 	public void updateReviewItem(GerritTask task) {
 		fReviewList.put(task.getTaskId(), task);
 	}
@@ -120,7 +118,6 @@ public class ReviewTableData {
 		return fQuery;
 	}
 
-	@SuppressWarnings("restriction")
 	public void init(GerritTask[] reviews) {
 		for (GerritTask review : reviews) {
 			fReviewList.put(review.getTaskId(), review);
