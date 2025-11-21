@@ -29,10 +29,8 @@ import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.Parameter;
 import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
 @ParameterizedClass(name = "{1}")
-@MethodSource("fixtureProvider")
 @EnabledIfCI
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class) // so that the dummy "done" test is always last
 @MylynTestSetup
@@ -40,7 +38,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 @SuppressWarnings("nls")
 public abstract class AbstractBugzillaFixtureTest {
 
-	private static List<BugzillaFixture> discoveredFixtures;
+	private static List<BugzillaFixture>[] discoveredFixtures = new List[2];
 
 	@Parameter(0)
 	protected static BugzillaFixture fixture;
@@ -48,17 +46,17 @@ public abstract class AbstractBugzillaFixtureTest {
 	@Parameter(1)
 	protected String info;
 
-	static Stream<Arguments> fixtureProvider() {
-		if (discoveredFixtures == null) {
+	static Stream<Arguments> fixtureProvider(boolean defaultOnly) {
+		if (discoveredFixtures[defaultOnly ? 1 : 0] == null) {
 			TestConfiguration defFixture = TestConfiguration.getDefault();
-			discoveredFixtures = (List<BugzillaFixture>) defFixture.discover(BugzillaFixture.class,
-					"bugzilla", false);
-			assertTrue(discoveredFixtures.size() > 0, "No fixtures discovered");
-			for (BugzillaFixture fixture : discoveredFixtures) {
+			discoveredFixtures[defaultOnly ? 1 : 0] = (List<BugzillaFixture>) defFixture.discover(BugzillaFixture.class,
+					"bugzilla", defaultOnly);
+			assertTrue(discoveredFixtures[defaultOnly ? 1 : 0].size() > 0, "No fixtures discovered");
+			for (BugzillaFixture fixture : discoveredFixtures[defaultOnly ? 1 : 0]) {
 				System.out.println("Discovered fixture: " + fixture.getInfo());
 			}
 		}
-		return discoveredFixtures.stream()
+		return discoveredFixtures[defaultOnly ? 1 : 0].stream()
 				.map(fixture -> Arguments.of(fixture, fixture.getInfo()));
 	}
 

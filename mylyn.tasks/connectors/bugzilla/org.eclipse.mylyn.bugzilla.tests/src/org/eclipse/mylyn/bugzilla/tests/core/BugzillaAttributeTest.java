@@ -16,7 +16,6 @@ package org.eclipse.mylyn.bugzilla.tests.core;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeMapper;
@@ -31,7 +30,7 @@ import org.junit.jupiter.api.Test;
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class BugzillaAttributeTest extends AbstractBugzillaFixtureTest {
+public class BugzillaAttributeTest {
 
 	@Test
 	public void testTaskDataSchema() throws Exception {

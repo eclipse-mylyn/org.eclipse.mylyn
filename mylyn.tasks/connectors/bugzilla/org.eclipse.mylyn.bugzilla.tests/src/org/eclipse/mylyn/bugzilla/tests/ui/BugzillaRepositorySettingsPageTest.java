@@ -22,7 +22,7 @@ import java.net.MalformedURLException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaFixtureTest;
+import org.eclipse.mylyn.bugzilla.tests.DefaultBugzillaFixtureTest;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
@@ -48,7 +48,7 @@ import org.junit.jupiter.api.Test;
  * @author Rob Elves
  */
 @SuppressWarnings("nls")
-public class BugzillaRepositorySettingsPageTest extends AbstractBugzillaFixtureTest {
+public class BugzillaRepositorySettingsPageTest extends DefaultBugzillaFixtureTest {
 
 	private TaskRepositoryManager manager;
 
