@@ -42,18 +42,22 @@ public abstract class ControlListItem extends Composite {
 		/**
 		 * Select the item previous to the receiver.
 		 */
+		@Deprecated
 		void selectPrevious();
 
 		/**
 		 * Select the next previous to the receiver.
 		 */
+		@Deprecated
 		void selectNext();
 
 		/**
 		 * Select the receiver.
 		 */
+		@Deprecated
 		void select();
 
+		@Deprecated
 		void open();
 
 	}
