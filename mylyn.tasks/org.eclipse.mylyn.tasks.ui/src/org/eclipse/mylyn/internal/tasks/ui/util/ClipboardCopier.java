@@ -31,6 +31,7 @@ public class ClipboardCopier {
 	@Deprecated
 	public interface TextProvider {
 
+		@Deprecated
 		String getTextForElement(Object element);
 
 	}
