@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Chris Aniszczyk and others.
+ * Copyright (c) 2011, 2025 Chris Aniszczyk and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -12,11 +12,12 @@
  *     Manuel Doninger <manuel@doninger.net>
  *     Benjamin Muskalla <benjamin.muskalla@tasktop.com>
  *     Thorsten Kamann <thorsten@kamann.info>
+ *     Alexander Fedorov <alexander.fedorov@arsysyop.ru> - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.egit.internal.ui.commit;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.egit.ui.ICommitMessageProvider;
+import org.eclipse.egit.ui.api.ICommitMessageProvider;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.tasks.core.ITask;
