@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2014 Chris Aniszczyk and others.
+ * Copyright (c) 2011, 2025 Chris Aniszczyk and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -13,10 +13,11 @@
  *     Benjamin Muskalla <benjamin.muskalla@tasktop.com>
  *     Thorsten Kamann <thorsten@kamann.info>
  *     Steffen Pingel <steffen.pingel@tasktop.com>
+ *     Alexander Fedorov <alexander.fedorov@arsysyop.ru> - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.egit.internal.ui.commit;
 
-import org.eclipse.egit.ui.IBranchNameProvider;
+import org.eclipse.egit.ui.api.IBranchNameProvider;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
