@@ -7,14 +7,13 @@
   "web_url": "https://gitlab.mylyn.local/mylynTest",
   "bio": "",
   "location": "",
-  "skype": "",
   "linkedin": "",
   "twitter": "",
   "discord": "",
   "website_url": "",
   "github": "",
-  "organization": "",
   "job_title": "",
+  "organization": "",
   "bot": false,
   "email": "mylyntest@eclipse.org",
   "theme_id": 3,
@@ -27,6 +26,7 @@
   "external": false,
   "private_profile": false,
   "commit_email": "mylyntest@eclipse.org",
+  "preferred_language": "en",
   "is_admin": true,
   "namespace_id": 3
 }

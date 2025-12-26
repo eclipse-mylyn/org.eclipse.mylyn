@@ -54,7 +54,6 @@
       path: /mylyn-config-dir/{{ role_name }}
     source: build
 
-
 - name: Deploy Container
   community.docker.docker_container:
     name: "grafana"
@@ -67,9 +66,6 @@
       GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana
       GF_SERVER_DOMAIN="{{ common_domain_name }}"
       GF_SERVER_SERVE_FROM_SUB_PATH=true
-      GF_PATHS_CONFIG=/usr/share/grafana/conf/mylyn/custom.ini
-#      GF_SECURITY_ADMIN_USER=“mylyn”
-#      GF_SECURITY_ADMIN_PASSWORD=“mylyntest”
     ports:
       - "3000:3000"
     restart_policy: "unless-stopped"

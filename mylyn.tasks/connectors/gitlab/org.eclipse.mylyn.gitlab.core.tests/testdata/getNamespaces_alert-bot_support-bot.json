@@ -33,7 +33,7 @@
     "kind": "group",
     "full_path": "eclipse-mylyn",
     "web_url": "https://gitlab.mylyn.local/groups/eclipse-mylyn",
-    "members_count_with_descendants": 1,
+    "members_count_with_descendants": 0,
     "root_repository_size": 1924,
     "projects_count": 1
   },
@@ -45,7 +45,7 @@
     "full_path": "eclipse-mylyn/ci-test",
     "parent_id": 4,
     "web_url": "https://gitlab.mylyn.local/groups/eclipse-mylyn/ci-test",
-    "members_count_with_descendants": 1,
+    "members_count_with_descendants": 0,
     "projects_count": 1
   },
   {

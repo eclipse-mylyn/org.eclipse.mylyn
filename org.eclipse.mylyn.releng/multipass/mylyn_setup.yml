@@ -126,7 +126,7 @@
         - gitlab
       vars:
         common_domain_name: "{{ hostvars['localhost'].mylyn_service_domain }}"
-        gitlabImageVersion: "18.1.2-ce.0"
+        gitlabImageVersion: "18.7.0-ce.0"
         gitlabHostURL: "gitlab.{{ hostvars['localhost'].mylyn_service_domain }}"
     - role: jenkins
       tags:
@@ -134,7 +134,7 @@
       vars:
         common_domain_name: "{{ hostvars['localhost'].mylyn_service_domain }}"
         jenkins_instances:
-          - {  servmame: "jenkins-latest", port1: 8084, port2: 50004, data_dir: "jenkins-2.303.3", image_tag: "jenkins/jenkins:latest", extra_info: '' }
+          - {  servmame: "jenkins-latest", port1: 8084, port2: 50004, data_dir: "jenkins-2.303.3", image_tag: "jenkins/jenkins:latest", extra_info: '"default": "true"' }
     - role: bugzilla
       tags:
         - bugzilla

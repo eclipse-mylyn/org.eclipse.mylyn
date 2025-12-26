@@ -49,7 +49,7 @@ public class TestConfiguration {
 
 	static final String URL_SERVICES_LOCALHOST = System.getProperty("localhost.test.server", "https://mylyn.local");
 
-	static final String URL_SERVICES_DEFAULT = System.getProperty("mylyn.test.server", "http://mylyn.frank-becker.de");
+	static final String URL_SERVICES_DEFAULT = System.getProperty("mylyn.test.server", "https://mylyn.frank-becker.de");
 
 	static final String URL_SERVICES_CI_DEFAULT = System.getProperty("mylyn.test.server.ci",
 			"https://mylyn.frank-becker.de");
