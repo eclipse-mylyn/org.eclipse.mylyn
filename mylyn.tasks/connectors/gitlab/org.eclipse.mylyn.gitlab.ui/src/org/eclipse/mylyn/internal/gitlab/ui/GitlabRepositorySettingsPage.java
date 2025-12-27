@@ -68,8 +68,6 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 
 	private Button usePersonalAccessTokenButton;
 
-	private Text personalAccessTokenText;
-
 	public GitlabRepositorySettingsPage(String title, String description, TaskRepository taskRepository) {
 		super(title, description, taskRepository);
 		setNeedsEncoding(false);
@@ -258,47 +256,6 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 			String value = getRepository().getProperty(GitlabCoreActivator.SHOW_ACTIVITY_ICONS);
 			showActivityIconsButton.setSelection(value == null ? true : Boolean.parseBoolean(value));
 		}
-
-		/*
-		gd = new GridData(GridData.FILL_BOTH);
-		gd.horizontalSpan = 3;
-		gd.verticalSpan = 1;
-		gd.grabExcessHorizontalSpace = true;
-		showActivityIconsButton.setLayoutData(gd);
-
-		usePersonalAccessTokenButton = new Button(aditionalContainer, SWT.CHECK);
-		usePersonalAccessTokenButton.setText("use personal access token"); //$NON-NLS-1$
-		usePersonalAccessTokenButton.setSelection(getRepository() != null
-				&& Boolean.parseBoolean(getRepository().getProperty(GitlabCoreActivator.USE_PERSONAL_ACCESS_TOKEN)));
-
-		gd = new GridData(GridData.BEGINNING);
-		gd.horizontalSpan = 1;
-		gd.verticalSpan = 1;
-		gd.grabExcessHorizontalSpace = false;
-		usePersonalAccessTokenButton.setLayoutData(gd);
-		usePersonalAccessTokenButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				updateUIEnablement();
-			}
-		});
-
-		personalAccessTokenText = new Text(aditionalContainer, SWT.None);
-
-		String accessTokenValue = getRepository() != null
-				? getRepository().getProperty(GitlabCoreActivator.PERSONAL_ACCESS_TOKEN)
-						: null;
-		if (accessTokenValue == null) {
-			accessTokenValue = ""; //$NON-NLS-1$
-		}
-		personalAccessTokenText.setText(accessTokenValue);
-		gd = new GridData(GridData.FILL_BOTH);
-		gd.horizontalSpan = 2;
-		gd.verticalSpan = 1;
-		gd.grabExcessHorizontalSpace = true;
-		personalAccessTokenText.setLayoutData(gd);
-
-		 */
 		updateUIEnablement();
 	}
 
@@ -310,7 +267,6 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 		selection = (IStructuredSelection) projects.getSelection();
 		projectRemoveButton.setEnabled(selection.size() > 0);
 		projectAddButton.setEnabled(!projectInput.getText().isEmpty());
-		personalAccessTokenText.setEnabled(usePersonalAccessTokenButton.getSelection());
 	}
 
 	@Override
@@ -321,11 +277,6 @@ public class GitlabRepositorySettingsPage extends AbstractRepositorySettingsPage
 		repository.setProperty(GitlabCoreActivator.AVANTAR, Boolean.toString(avatarSupportButton.getSelection()));
 		repository.setProperty(GitlabCoreActivator.SHOW_ACTIVITY_ICONS,
 				Boolean.toString(showActivityIconsButton.getSelection()));
-		/*
-		repository.setProperty(GitlabCoreActivator.USE_PERSONAL_ACCESS_TOKEN,
-				Boolean.toString(usePersonalAccessTokenButton.getSelection()));
-		repository.setProperty(GitlabCoreActivator.PERSONAL_ACCESS_TOKEN, personalAccessTokenText.getText());
-		 */
 		super.applyTo(repository);
 	}
 
