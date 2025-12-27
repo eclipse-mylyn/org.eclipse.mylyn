@@ -1,0 +1,60 @@
+[
+  {
+    "id": 1,
+    "name": "Administrator",
+    "path": "root",
+    "kind": "user",
+    "full_path": "root",
+    "avatar_url": "https://secure.gravatar.com/avatar/42?s\u003d80\u0026d\u003didenticon",
+    "web_url": "https://gitlab.mylyn.local/root"
+  },
+  {
+    "id": 2,
+    "name": "Mylyn Admin User",
+    "path": "mylynAdmin",
+    "kind": "user",
+    "full_path": "mylynAdmin",
+    "avatar_url": "https://secure.gravatar.com/avatar/42?s\u003d80\u0026d\u003didenticon",
+    "web_url": "https://gitlab.mylyn.local/mylynAdmin"
+  },
+  {
+    "id": 3,
+    "name": "Mylyn Test User",
+    "path": "mylynTest",
+    "kind": "user",
+    "full_path": "mylynTest",
+    "avatar_url": "https://secure.gravatar.com/avatar/42?s\u003d80\u0026d\u003didenticon",
+    "web_url": "https://gitlab.mylyn.local/mylynTest"
+  },
+  {
+    "id": 4,
+    "name": "eclipse-mylyn",
+    "path": "eclipse-mylyn",
+    "kind": "group",
+    "full_path": "eclipse-mylyn",
+    "web_url": "https://gitlab.mylyn.local/groups/eclipse-mylyn",
+    "members_count_with_descendants": 0,
+    "root_repository_size": 1924,
+    "projects_count": 1
+  },
+  {
+    "id": 5,
+    "name": "ci-test",
+    "path": "ci-test",
+    "kind": "group",
+    "full_path": "eclipse-mylyn/ci-test",
+    "parent_id": 4,
+    "web_url": "https://gitlab.mylyn.local/groups/eclipse-mylyn/ci-test",
+    "members_count_with_descendants": 0,
+    "projects_count": 1
+  },
+  {
+    "id": 7,
+    "name": "GitLab Alert Bot",
+    "path": "alert-bot",
+    "kind": "user",
+    "full_path": "alert-bot",
+    "avatar_url": "https://secure.gravatar.com/avatar/42?s\u003d80\u0026d\u003didenticon",
+    "web_url": "https://gitlab.mylyn.local/alert-bot"
+  }
+]
