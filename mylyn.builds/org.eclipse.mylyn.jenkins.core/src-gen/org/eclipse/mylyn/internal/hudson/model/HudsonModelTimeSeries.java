@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for hudson.model.TimeSeries complex type.
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="hudson.model.TimeSeries">
  *   &lt;complexContent>
@@ -60,7 +60,7 @@ public class HudsonModelTimeSeries {
 	 * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the history property.
 	 * <p>
 	 * For example, to add a new item, do as follows:
-	 * 
+	 *
 	 * <pre>
 	 * getHistory().add(newItem);
 	 * </pre>
@@ -76,7 +76,7 @@ public class HudsonModelTimeSeries {
 
 	/**
 	 * Gets the value of the latest property.
-	 * 
+	 *
 	 * @return possible object is {@link Object }
 	 */
 	public Object getLatest() {
@@ -85,7 +85,7 @@ public class HudsonModelTimeSeries {
 
 	/**
 	 * Sets the value of the latest property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link Object }
 	 */
