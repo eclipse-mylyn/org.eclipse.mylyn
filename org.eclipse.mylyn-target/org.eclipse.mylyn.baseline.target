@@ -2,7 +2,7 @@
 <?pde version="3.8"?>
 <!--
  *******************************************************************************
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -20,7 +20,7 @@
 			<unit id="org.eclipse.license.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/eclipse/updates/4.37/R-4.37-202509050730"/>
+			<repository location="https://download.eclipse.org/eclipse/updates/4.38/R-4.38-202512010920/"/>
 			<unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.equinox.p2.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.sdk.feature.group" version="0.0.0"/>
@@ -30,17 +30,17 @@
 			<unit id="org.eclipse.egit.github.core" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/egit/updates-7.4/"/>
+			<repository location="https://download.eclipse.org/egit/updates-7.5/"/>
 			<unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.jgit.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.jgit.lfs.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/modeling/emf/emf/builds/release/2.43.0/"/>
+			<repository location="https://download.eclipse.org/modeling/emf/emf/builds/release/2.44.0/"/>
 			<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/mylyn/updates/release/4.8.0/"/>
+			<repository location="https://download.eclipse.org/mylyn/updates/release/4.9.0/"/>
 			<unit id="org.eclipse.mylyn.bugzilla.feature.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.mylyn.builds.feature.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.mylyn.cdt.feature.feature.group" version="0.0.0"/>
@@ -70,11 +70,11 @@
 			<unit id="org.eclipse.mylyn.wikitext.feature.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/rt/ecf/3.16.4/site.p2/3.16.4.v20250819-0049/"/>
+			<repository location="https://download.eclipse.org/rt/ecf/3.16.5/site.p2/3.16.5.v20250914-0333/"/>
 			<unit id="org.eclipse.ecf.remoteservice.sdk.feature.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/tools/cdt/builds/12.2/cdt-12.2.0-rc2/"/>
+			<repository location="https://download.eclipse.org/tools/cdt/releases/12.3/cdt-12.3.0/"/>
 			<unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.cdt.sdk.feature.group" version="0.0.0"/>
 		</location>
@@ -103,7 +103,20 @@
 			<unit id="org.apache.commons.io" version="2.8.0.v20210415-0900"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/2025-09/"/>
+			<repository location="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/2025-12/"/>
+			<unit id="junit-jupiter-api" version="[5.14.0,6.0.0)"/>
+			<unit id="junit-jupiter-engine" version="[5.14.0,6.0.0)"/>
+			<unit id="junit-jupiter-migrationsupport" version="[5.14.0,6.0.0)"/>
+			<unit id="junit-jupiter-params" version="[5.14.0,6.0.0)"/>
+			<unit id="junit-platform-commons" version="[1.14.0,2.0.0)"/>
+			<unit id="junit-platform-engine" version="[1.14.0,2.0.0)"/>
+			<unit id="junit-platform-launcher" version="[1.14.0,2.0.0)"/>
+			<unit id="junit-platform-runner" version="[1.14.0,2.0.0)"/>
+			<unit id="junit-platform-suite-api" version="[1.14.0,2.0.0)"/>
+			<unit id="junit-platform-suite-engine" version="[1.14.0,2.0.0)"/>
+			<unit id="junit-platform-suite-commons" version="[1.14.0,2.0.0)"/>
+			<unit id="junit-vintage-engine" version="[5.14.0,6.0.0)"/>
+			<unit id="org.apiguardian.api" version="0.0.0"/>
 			<unit id="org.glassfish.hk2.osgi-resource-locator" version="0.0.0"/>
 			<unit id="org.apache.commons.lang3" version="0.0.0"/>
 			<unit id="org.apache.commons.logging" version="0.0.0"/>

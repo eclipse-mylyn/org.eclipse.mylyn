@@ -61,7 +61,7 @@
     <timestampProvider>jgit</timestampProvider>
     <test.vmargs>-ea ${test.osvmargs} ${test.uservmargs}</test.vmargs>
     <previous-nightly.baseline>https://download.eclipse.org/mylyn/updates/nightly/latest/</previous-nightly.baseline>
-    <previous-release.baseline>https://download.eclipse.org/mylyn/updates/release/4.8.0/</previous-release.baseline>
+    <previous-release.baseline>https://download.eclipse.org/mylyn/updates/release/4.9.0/</previous-release.baseline>
   </properties>
   <mailingLists>
     <mailingList>
