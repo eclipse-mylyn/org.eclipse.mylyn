@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  *******************************************************************************
- * Copyright (c) 2011, 2025 Contributors to Eclipse Foundation
+ * Copyright (c) 2011, 2026 Contributors to Eclipse Foundation
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -16,7 +16,7 @@
 <feature
       id="org.eclipse.mylyn.github.feature"
       label="%featureName"
-      version="6.10.0.qualifier"
+      version="6.11.0.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.mylyn.tasks.core"
       license-feature="org.eclipse.license"
@@ -36,7 +36,7 @@
 
    <requires>
       <import feature="org.eclipse.egit" version="6.2.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.mylyn.tasks.feature" version="4.9.0" match="equivalent"/>
+      <import feature="org.eclipse.mylyn.tasks.feature" version="4.10.0" match="equivalent"/>
    </requires>
 
    <plugin

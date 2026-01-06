@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.creole
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.creole
-Bundle-Version: 4.9.0.qualifier
+Bundle-Version: 4.10.0.qualifier
 Bundle-Name: Mylyn WikiText Creole
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-21
@@ -14,9 +14,9 @@ Import-Package: org.apache.commons.lang3;version="[3.14.0,4.0.0)",
  org.eclipse.mylyn.wikitext.parser.markup.phrase;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.parser.markup.token;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.validation;version="[4.2,5)"
-Export-Package: org.eclipse.mylyn.wikitext.creole;version="4.9.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser,org.eclipse.mylyn.wikitext.parser.markup",
- org.eclipse.mylyn.wikitext.creole.internal;version="4.9.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser,org.eclipse.mylyn.wikitext.parser.builder",
- org.eclipse.mylyn.wikitext.creole.internal.block;version="4.9.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser.markup",
- org.eclipse.mylyn.wikitext.creole.internal.phrase;version="4.9.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser,org.eclipse.mylyn.wikitext.parser.markup",
- org.eclipse.mylyn.wikitext.creole.internal.token;version="4.9.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser.markup",
- org.eclipse.mylyn.wikitext.creole.internal.validation;version="4.9.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser.markup,org.eclipse.mylyn.wikitext.validation"
+Export-Package: org.eclipse.mylyn.wikitext.creole;version="4.10.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser,org.eclipse.mylyn.wikitext.parser.markup",
+ org.eclipse.mylyn.wikitext.creole.internal;version="4.10.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser,org.eclipse.mylyn.wikitext.parser.builder",
+ org.eclipse.mylyn.wikitext.creole.internal.block;version="4.10.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser.markup",
+ org.eclipse.mylyn.wikitext.creole.internal.phrase;version="4.10.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser,org.eclipse.mylyn.wikitext.parser.markup",
+ org.eclipse.mylyn.wikitext.creole.internal.token;version="4.10.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser.markup",
+ org.eclipse.mylyn.wikitext.creole.internal.validation;version="4.10.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser.markup,org.eclipse.mylyn.wikitext.validation"

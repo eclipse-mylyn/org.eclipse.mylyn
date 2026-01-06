@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Gitlab Connector UI
 Bundle-SymbolicName: org.eclipse.mylyn.gitlab.ui;singleton:=true
-Bundle-Version: 4.9.0.qualifier
+Bundle-Version: 4.10.0.qualifier
 Export-Package: org.eclipse.mylyn.gitlab.ui,
  org.eclipse.mylyn.internal.gitlab.ui;x-internal:=true
 Import-Package: org.apache.commons.lang3
