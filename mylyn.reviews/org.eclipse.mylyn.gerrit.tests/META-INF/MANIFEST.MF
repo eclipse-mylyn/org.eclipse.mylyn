@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.gerrit.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Gerrit Connector
 Bundle-SymbolicName: org.eclipse.mylyn.gerrit.tests;singleton:=true
-Bundle-Version: 4.9.0.qualifier
+Bundle-Version: 4.10.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: net.bytebuddy.byte-buddy;bundle-version="1.12.18",
@@ -14,7 +14,7 @@ Require-Bundle: net.bytebuddy.byte-buddy;bundle-version="1.12.18",
  org.eclipse.mylyn.commons.net;bundle-version="4.4.0",
  org.eclipse.mylyn.commons.repositories.core;bundle-version="4.4.0",
  org.eclipse.mylyn.commons.sdk.util;bundle-version="4.4.0",
- org.eclipse.mylyn.commons.sdk.util.junit4;bundle-version="4.9.0",
+ org.eclipse.mylyn.commons.sdk.util.junit4;bundle-version="4.10.0",
  org.eclipse.mylyn.commons.ui;bundle-version="4.4.0",
  org.eclipse.mylyn.commons.workbench;bundle-version="4.4.0",
  org.eclipse.mylyn.gerrit.core;bundle-version="4.4.0",
@@ -25,7 +25,7 @@ Require-Bundle: net.bytebuddy.byte-buddy;bundle-version="1.12.18",
  org.eclipse.mylyn.tasks.core;bundle-version="4.4.0",
  org.eclipse.mylyn.tasks.ui;bundle-version="4.4.0",
  org.eclipse.mylyn.tests.util;bundle-version="4.4.0",
- org.eclipse.mylyn.tests.util.junit4;bundle-version="4.9.0",
+ org.eclipse.mylyn.tests.util.junit4;bundle-version="4.10.0",
  org.eclipse.ui;bundle-version="0.0.0",
  org.junit;bundle-version="4.13.2",
  org.mockito.mockito-core;bundle-version="4.8.1",

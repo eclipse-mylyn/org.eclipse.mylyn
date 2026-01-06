@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.tests
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.tests
-Bundle-Version: 4.9.0.qualifier
+Bundle-Version: 4.10.0.qualifier
 Bundle-Name: Mylyn WikiText Integration Tests
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-21
@@ -12,14 +12,14 @@ Import-Package: org.apache.commons.io;version="[2.16.0,3.0.0)",
  org.eclipse.mylyn.wikitext.internal.parser.html,
  org.eclipse.mylyn.wikitext.mediawiki;version="[4.3.0,5.0.0)",
  org.eclipse.mylyn.wikitext.parser;version="[4.3.0,5.0.0)",
- org.eclipse.mylyn.wikitext.parser.builder;version="4.9.0",
- org.eclipse.mylyn.wikitext.parser.builder.event;version="4.9.0",
- org.eclipse.mylyn.wikitext.parser.css;version="4.9.0",
- org.eclipse.mylyn.wikitext.parser.markup;version="4.9.0",
- org.eclipse.mylyn.wikitext.parser.outline;version="4.9.0",
- org.eclipse.mylyn.wikitext.splitter;version="4.9.0",
- org.eclipse.mylyn.wikitext.util;version="4.9.0",
- org.eclipse.mylyn.wikitext.validation;version="4.9.0",
+ org.eclipse.mylyn.wikitext.parser.builder;version="4.10.0",
+ org.eclipse.mylyn.wikitext.parser.builder.event;version="4.10.0",
+ org.eclipse.mylyn.wikitext.parser.css;version="4.10.0",
+ org.eclipse.mylyn.wikitext.parser.markup;version="4.10.0",
+ org.eclipse.mylyn.wikitext.parser.outline;version="4.10.0",
+ org.eclipse.mylyn.wikitext.splitter;version="4.10.0",
+ org.eclipse.mylyn.wikitext.util;version="4.10.0",
+ org.eclipse.mylyn.wikitext.validation;version="4.10.0",
  org.jsoup;version="1.17.2",
  org.jsoup.nodes;version="1.17.2",
  org.junit;version="4.13.2",

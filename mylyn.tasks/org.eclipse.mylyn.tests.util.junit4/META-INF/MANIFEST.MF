@@ -3,18 +3,18 @@ Automatic-Module-Name: org.eclipse.mylyn.tests.util.junit4
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Tasks SDK JUnit 4 Utilities
 Bundle-SymbolicName: org.eclipse.mylyn.tests.util.junit4
-Bundle-Version: 4.9.0.qualifier
+Bundle-Version: 4.10.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
  org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.equinox.event;bundle-version="0.0.0",
- org.eclipse.mylyn.commons.core;bundle-version="4.9.0",
- org.eclipse.mylyn.commons.net;bundle-version="4.9.0",
- org.eclipse.mylyn.commons.repositories.core;bundle-version="4.9.0",
- org.eclipse.mylyn.commons.sdk.util;bundle-version="4.9.0",
- org.eclipse.mylyn.tasks.core;bundle-version="4.9.0",
- org.eclipse.mylyn.tasks.ui;bundle-version="4.9.0",
- org.eclipse.mylyn.tests.util;bundle-version="4.9.0",
+ org.eclipse.mylyn.commons.core;bundle-version="4.10.0",
+ org.eclipse.mylyn.commons.net;bundle-version="4.10.0",
+ org.eclipse.mylyn.commons.repositories.core;bundle-version="4.10.0",
+ org.eclipse.mylyn.commons.sdk.util;bundle-version="4.10.0",
+ org.eclipse.mylyn.tasks.core;bundle-version="4.10.0",
+ org.eclipse.mylyn.tasks.ui;bundle-version="4.10.0",
+ org.eclipse.mylyn.tests.util;bundle-version="4.10.0",
  org.eclipse.ui;bundle-version="0.0.0",
  org.junit;bundle-version="4.8.2"
 Bundle-ClassPath: .

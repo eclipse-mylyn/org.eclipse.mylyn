@@ -4,7 +4,7 @@ Bundle-Name: Mylyn WikiText Core Tests
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.osgi.tests
 Fragment-Host: org.eclipse.mylyn.wikitext.osgi;bundle-version="4.4.0"
 Import-Package: org.apache.commons.lang3;version="3.14.0"
-Bundle-Version: 4.9.0.qualifier
+Bundle-Version: 4.10.0.qualifier
 Bundle-Vendor: Eclipse.org
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="4.4.0",
