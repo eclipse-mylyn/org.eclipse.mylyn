@@ -31,8 +31,10 @@ public class HudsonConfiguration implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	@Deprecated
 	public Map<String, String> jobNameById = new HashMap<>();
 
+	@Deprecated
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
