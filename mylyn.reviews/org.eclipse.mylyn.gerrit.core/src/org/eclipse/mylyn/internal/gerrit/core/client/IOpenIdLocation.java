@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2012 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -19,7 +19,7 @@ import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
 
 /**
  * Mix-in interface to {@link AbstractWebLocation}s that support OpenID authentication.
- * 
+ *
  * @author Steffen Pingel
  */
 public interface IOpenIdLocation {
@@ -31,7 +31,7 @@ public interface IOpenIdLocation {
 
 	/**
 	 * Handles OpenID authentication in a blocking way.
-	 * 
+	 *
 	 * @param monitor
 	 * @param providerUrl
 	 *            the Open ID provider URL
