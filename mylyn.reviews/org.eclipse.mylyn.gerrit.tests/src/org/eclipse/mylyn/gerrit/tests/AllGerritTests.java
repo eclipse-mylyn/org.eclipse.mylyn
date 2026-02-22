@@ -97,21 +97,4 @@ public class AllGerritTests {
 		}
 	}
 
-	//FIXME: AF: enable tests
-	//https://github.com/eclipse-mylyn/org.eclipse.mylyn.reviews/issues/5
-	@SuppressWarnings("unused")
-	private static void addTests(TestSuite suite, GerritFixture fixture) {
-		fixture.createSuite(suite);
-		fixture.add(GerritClientTest.class);
-		fixture.add(GerritConnectorTest.class);
-		fixture.add(GerritSynchronizationTest.class);
-		fixture.add(GerritDataLocatorTest.class);
-		fixture.add(GerritReviewRemoteFactoryJUnit3Test.class);
-		fixture.add(PatchSetRemoteFactoryTest.class);
-		fixture.add(PatchSetDetailRemoteFactoryTest.class);
-		fixture.add(GerritUrlHandlerTest.class);
-		fixture.add(GerritCapabilitiesTest.class);
-		fixture.done();
-	}
-
 }

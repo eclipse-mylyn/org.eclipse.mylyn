@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -139,7 +139,7 @@ public class ChangeDetailXTest extends TestCase {
 		return new JSonSupport().parseResponse(content, ChangeDetailXAsResult.class);
 	}
 
-	private class ChangeDetailXAsResult {
+	private static class ChangeDetailXAsResult {
 		private String jsonrpc;
 
 		private int id;
