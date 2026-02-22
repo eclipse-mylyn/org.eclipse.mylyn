@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -82,10 +82,6 @@ public class ChangeInfo {
 	private Map<String/*commit ID*/, RevisionInfo> revisions;
 
 	private Map<String/*Label*/, String[]> permitted_labels;
-
-	// e.g. "0023412400000f7d"
-	@SuppressWarnings("unused")
-	private String _sortkey;
 
 	// e.g. 3965
 	private int _number;

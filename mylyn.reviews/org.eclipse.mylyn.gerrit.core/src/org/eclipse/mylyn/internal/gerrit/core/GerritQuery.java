@@ -1,23 +1,23 @@
 /*********************************************************************
  * Copyright (c) 2010, 2013 Sony Ericsson/ST Ericsson and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Sascha Scholz (SAP) - improvements
  *      Francois Chouinard - Bug 414253 Add some definitions
  *      Jacques Bouthillier - Bug 414253 Add support for Gerrit Dashboard
- 
+
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core;
 
 /**
  * Constants for the query type.
- * 
+ *
  * @author Mikael Kober
  * @author Thomas Westling
  * @author Francois Chouinard
