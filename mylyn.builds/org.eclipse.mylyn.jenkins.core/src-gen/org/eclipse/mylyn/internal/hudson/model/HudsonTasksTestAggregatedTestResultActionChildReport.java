@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for hudson.tasks.test.AggregatedTestResultAction-ChildReport complex type.
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="hudson.tasks.test.AggregatedTestResultAction-ChildReport">
  *   &lt;complexContent>
@@ -50,7 +50,7 @@ public class HudsonTasksTestAggregatedTestResultActionChildReport {
 
 	/**
 	 * Gets the value of the child property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelAbstractBuild }
 	 */
 	public HudsonModelAbstractBuild getChild() {
@@ -59,7 +59,7 @@ public class HudsonTasksTestAggregatedTestResultActionChildReport {
 
 	/**
 	 * Sets the value of the child property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelAbstractBuild }
 	 */
@@ -69,7 +69,7 @@ public class HudsonTasksTestAggregatedTestResultActionChildReport {
 
 	/**
 	 * Gets the value of the result property.
-	 * 
+	 *
 	 * @return possible object is {@link Object }
 	 */
 	public Object getResult() {
@@ -78,7 +78,7 @@ public class HudsonTasksTestAggregatedTestResultActionChildReport {
 
 	/**
 	 * Sets the value of the result property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link Object }
 	 */

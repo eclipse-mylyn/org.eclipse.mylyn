@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for hudson.model.Label complex type.
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="hudson.model.Label">
  *   &lt;complexContent>
@@ -97,7 +97,7 @@ public class HudsonModelLabel {
 	 * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the cloud property.
 	 * <p>
 	 * For example, to add a new item, do as follows:
-	 * 
+	 *
 	 * <pre>
 	 * getCloud().add(newItem);
 	 * </pre>
@@ -113,7 +113,7 @@ public class HudsonModelLabel {
 
 	/**
 	 * Gets the value of the description property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getDescription() {
@@ -122,7 +122,7 @@ public class HudsonModelLabel {
 
 	/**
 	 * Sets the value of the description property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
@@ -146,7 +146,7 @@ public class HudsonModelLabel {
 
 	/**
 	 * Gets the value of the loadStatistics property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelLoadStatistics }
 	 */
 	public HudsonModelLoadStatistics getLoadStatistics() {
@@ -155,7 +155,7 @@ public class HudsonModelLabel {
 
 	/**
 	 * Sets the value of the loadStatistics property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelLoadStatistics }
 	 */
@@ -165,7 +165,7 @@ public class HudsonModelLabel {
 
 	/**
 	 * Gets the value of the name property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getName() {
@@ -174,7 +174,7 @@ public class HudsonModelLabel {
 
 	/**
 	 * Sets the value of the name property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
@@ -189,7 +189,7 @@ public class HudsonModelLabel {
 	 * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the node property.
 	 * <p>
 	 * For example, to add a new item, do as follows:
-	 * 
+	 *
 	 * <pre>
 	 * getNode().add(newItem);
 	 * </pre>
@@ -224,7 +224,7 @@ public class HudsonModelLabel {
 	 * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the tiedJob property.
 	 * <p>
 	 * For example, to add a new item, do as follows:
-	 * 
+	 *
 	 * <pre>
 	 * getTiedJob().add(newItem);
 	 * </pre>

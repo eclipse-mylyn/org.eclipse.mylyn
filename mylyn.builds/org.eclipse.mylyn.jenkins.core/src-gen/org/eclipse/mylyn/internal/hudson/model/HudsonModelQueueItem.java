@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for hudson.model.Queue-Item complex type.
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="hudson.model.Queue-Item">
  *   &lt;complexContent>
@@ -90,7 +90,7 @@ public class HudsonModelQueueItem extends HudsonModelActionable {
 
 	/**
 	 * Gets the value of the params property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getParams() {
@@ -99,7 +99,7 @@ public class HudsonModelQueueItem extends HudsonModelActionable {
 
 	/**
 	 * Sets the value of the params property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
@@ -123,7 +123,7 @@ public class HudsonModelQueueItem extends HudsonModelActionable {
 
 	/**
 	 * Gets the value of the task property.
-	 * 
+	 *
 	 * @return possible object is {@link Object }
 	 */
 	public Object getTask() {
@@ -132,7 +132,7 @@ public class HudsonModelQueueItem extends HudsonModelActionable {
 
 	/**
 	 * Sets the value of the task property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link Object }
 	 */
@@ -142,7 +142,7 @@ public class HudsonModelQueueItem extends HudsonModelActionable {
 
 	/**
 	 * Gets the value of the why property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getWhy() {
@@ -151,7 +151,7 @@ public class HudsonModelQueueItem extends HudsonModelActionable {
 
 	/**
 	 * Sets the value of the why property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
