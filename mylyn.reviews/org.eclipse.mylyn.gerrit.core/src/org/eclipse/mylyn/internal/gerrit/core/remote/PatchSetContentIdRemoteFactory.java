@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2014 Ericsson and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Miles Parker, Tasktop Technologies - initial API and implementation
@@ -25,7 +25,7 @@ import com.google.gerrit.common.data.PatchSetDetail;
 /**
  * Manages retrieval of patch set contents, including file revisions and associated comments, from Gerrit API, supporting key based
  * retrieval of single patch sets.
- * 
+ *
  * @author Miles Parker
  */
 public class PatchSetContentIdRemoteFactory extends PatchSetContentRemoteFactory<String> {
