@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for hudson.scm.ChangeLogSet complex type.
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="hudson.scm.ChangeLogSet">
  *   &lt;complexContent>
@@ -58,7 +58,7 @@ public class HudsonScmChangeLogSet {
 	 * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the item property.
 	 * <p>
 	 * For example, to add a new item, do as follows:
-	 * 
+	 *
 	 * <pre>
 	 * getItem().add(newItem);
 	 * </pre>
@@ -74,7 +74,7 @@ public class HudsonScmChangeLogSet {
 
 	/**
 	 * Gets the value of the kind property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getKind() {
@@ -83,7 +83,7 @@ public class HudsonScmChangeLogSet {
 
 	/**
 	 * Sets the value of the kind property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */

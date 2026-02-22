@@ -76,7 +76,7 @@ public class RestfulJenkinsClient {
 	public enum BuildId {
 		LAST(-1), LAST_FAILED(-5), LAST_STABLE(-2), LAST_SUCCESSFUL(-3), LAST_UNSTABLE(-4);
 
-		private HudsonModelBuild build;
+		private final HudsonModelBuild build;
 
 		BuildId(int id) {
 			build = new HudsonModelBuild();
