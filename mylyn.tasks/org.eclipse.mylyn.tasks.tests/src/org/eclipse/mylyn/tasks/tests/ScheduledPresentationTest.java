@@ -14,6 +14,11 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,16 +41,17 @@ import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Rob Elves
  */
 @SuppressWarnings("nls")
-public class ScheduledPresentationTest extends TestCase {
+public class ScheduledPresentationTest {
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 //		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 //		ContextCorePlugin.getContextManager().saveActivityMetaContext();
@@ -53,12 +59,13 @@ public class ScheduledPresentationTest extends TestCase {
 		TasksUiPlugin.getExternalizationManager().requestSave();
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		TaskTestUtil.resetTaskList();
 		TasksUiPlugin.getExternalizationManager().requestSave();
 	}
 
+	@Test
 	public void testWeekStartChange() {
 		TaskListInterestFilter filter = new TaskListInterestFilter();
 		TasksUiPlugin.getTaskActivityManager().setWeekStartDay(Calendar.MONDAY);
@@ -73,6 +80,7 @@ public class ScheduledPresentationTest extends TestCase {
 
 	}
 
+	@Test
 	public void testScheduledDisplayed() {
 		DateRange lastDay = TaskActivityUtil.getDayOf(TaskActivityUtil.getEndOfCurrentWeek().getTime());
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
@@ -98,7 +106,7 @@ public class ScheduledPresentationTest extends TestCase {
 		results.put(task1, null);
 
 		populateResults(results, false);
-		assertNotNull("Task scheduled but not visible in scheduled presentation", results.get(mockTask));
+		assertNotNull(results.get(mockTask), "Task scheduled but not visible in scheduled presentation");
 		assertEquals("This Week", results.get(mockTask).getSummary());
 		assertNotNull(results.get(task1));
 
@@ -110,7 +118,7 @@ public class ScheduledPresentationTest extends TestCase {
 
 		// Should be revealed in Next Week since tasklist NOT in FOCUSED MODE
 		populateResults(results, false);
-		assertNotNull("Task scheduled but not visible in scheduled presentation", results.get(mockTask));
+		assertNotNull(results.get(mockTask), "Task scheduled but not visible in scheduled presentation");
 		assertEquals("Next Week", results.get(mockTask).getSummary());
 		assertNotNull(results.get(task1));
 
@@ -119,7 +127,7 @@ public class ScheduledPresentationTest extends TestCase {
 
 		// Should be revealed in INCOMING since tasklist in FOCUSED MODE
 		populateResults(results, true);
-		assertNotNull("Task scheduled but not visible in scheduled presentation", results.get(mockTask));
+		assertNotNull(results.get(mockTask), "Task scheduled but not visible in scheduled presentation");
 		assertEquals("Incoming", results.get(mockTask).getSummary());
 		assertNotNull(results.get(task1));
 
@@ -129,9 +137,9 @@ public class ScheduledPresentationTest extends TestCase {
 		// Scheduled and Due for a day next week
 		mockTask.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 		TasksUiPlugin.getTaskActivityManager()
-				.setDueDate(mockTask, TaskActivityUtil.getNextWeek().getDayOfWeek(3).getStartDate().getTime());
+		.setDueDate(mockTask, TaskActivityUtil.getNextWeek().getDayOfWeek(3).getStartDate().getTime());
 		populateResults(results, false);
-		assertNotNull("Task scheduled but not visible in scheduled presentation", results.get(mockTask));
+		assertNotNull(results.get(mockTask), "Task scheduled but not visible in scheduled presentation");
 		assertEquals("Next Week", results.get(mockTask).getSummary());
 
 		results.put(mockTask, null);
@@ -143,29 +151,29 @@ public class ScheduledPresentationTest extends TestCase {
 		mockTask.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 		results.put(mockTask, null);
 		populateResults(results, false);
-		assertNotNull("Task scheduled but not visible in scheduled presentation", results.get(mockTask));
+		assertNotNull(results.get(mockTask), "Task scheduled but not visible in scheduled presentation");
 		assertTrue(results.get(mockTask).getSummary().contains("Today"));
 
 		// Scheduled for a specific DAY next week
 		results.put(mockTask, null);
 		TasksUiPlugin.getTaskActivityManager()
-				.setScheduledFor(mockTask, TaskActivityUtil.getNextWeek().getDayOfWeek(3));
+		.setScheduledFor(mockTask, TaskActivityUtil.getNextWeek().getDayOfWeek(3));
 		mockTask.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 		populateResults(results, false);
-		assertNotNull("Task scheduled but not visible in scheduled presentation", results.get(mockTask));
+		assertNotNull(results.get(mockTask), "Task scheduled but not visible in scheduled presentation");
 		assertEquals(TaskActivityUtil.getNextWeek().getDayOfWeek(3), results.get(mockTask).getDateRange());
 
 		// Scheduled for a specific DAY next week with INCOMING_NEW
 		results.put(mockTask, null);
 		mockTask.setSynchronizationState(SynchronizationState.INCOMING_NEW);
 		populateResults(results, true);
-		assertNotNull("Task scheduled but not visible in scheduled presentation", results.get(mockTask));
+		assertNotNull(results.get(mockTask), "Task scheduled but not visible in scheduled presentation");
 		assertEquals("Incoming", results.get(mockTask).getSummary());
 
 		// Scheduled for NEXT WEEK AND DUE on date next week
 		mockTask.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 		TasksUiPlugin.getTaskActivityManager()
-				.setDueDate(mockTask, TaskActivityUtil.getNextWeek().getDayOfWeek(3).getStartDate().getTime());
+		.setDueDate(mockTask, TaskActivityUtil.getNextWeek().getDayOfWeek(3).getStartDate().getTime());
 		TasksUiPlugin.getTaskActivityManager().setScheduledFor(mockTask, TaskActivityUtil.getNextWeek());
 		mockTask.setOwner("testuser");
 		results.put(mockTask, null);
@@ -173,7 +181,7 @@ public class ScheduledPresentationTest extends TestCase {
 
 		// Should be revealed in date bin NOT Next Week day bin
 		populateResults(results, false);
-		assertNotNull("Task scheduled but not visible in scheduled presentation", results.get(mockTask));
+		assertNotNull(results.get(mockTask), "Task scheduled but not visible in scheduled presentation");
 		assertFalse("Next Week".equals(results.get(mockTask).getSummary()));
 	}
 
@@ -244,7 +252,7 @@ public class ScheduledPresentationTest extends TestCase {
 //
 //		TasksUiPlugin.getTaskActivityManager().setScheduledFor(task1, thisWeek.getStart().getTime());
 //
-////		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
+	////		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
 //		assertEquals(1, TasksUiPlugin.getTaskActivityManager()
 //				.getScheduledTasks(thisWeek.getStart(), thisWeek.getEnd())
 //				.size());

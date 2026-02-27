@@ -15,6 +15,11 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -36,28 +41,30 @@ import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Frank Becker
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class PersonProposalProviderTest extends TestCase {
+public class PersonProposalProviderTest {
 
 	final private static Comparator<IContentProposal> CONTENT_COMPARATOR = Comparator.comparing(IContentProposal::getContent);
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		TaskTestUtil.resetTaskListAndRepositories();
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		TaskTestUtil.resetTaskListAndRepositories();
 	}
 
+	@Test
 	public void testGetProposalsNullParameters() {
 		PersonProposalProvider provider = new PersonProposalProvider((AbstractTask) null, (TaskData) null);
 		IContentProposal[] result = provider.getProposals("", 0);
@@ -69,6 +76,7 @@ public class PersonProposalProviderTest extends TestCase {
 		assertEquals(0, result.length);
 	}
 
+	@Test
 	public void testGetProposalsNullContents() throws Exception {
 		PersonProposalProvider provider = new PersonProposalProvider(MockRepositoryConnector.REPOSITORY_URL,
 				MockRepositoryConnector.CONNECTOR_KIND);
@@ -81,6 +89,7 @@ public class PersonProposalProviderTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testInvalidPosition() throws Exception {
 		PersonProposalProvider provider = new PersonProposalProvider(MockRepositoryConnector.REPOSITORY_URL,
 				MockRepositoryConnector.CONNECTOR_KIND);
@@ -93,6 +102,7 @@ public class PersonProposalProviderTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetProposalsTask() {
 		MockTask task = new MockTask(null, "1", null);
 		task.setOwner("foo");
@@ -101,6 +111,7 @@ public class PersonProposalProviderTest extends TestCase {
 		assertProposalsForFoo(provider);
 	}
 
+	@Test
 	public void testGetProposalsTaskDataWithReporter() {
 		MockTask task = new MockTask(null, "1", null);
 		TaskData taskData = createMockTaskData();
@@ -111,15 +122,16 @@ public class PersonProposalProviderTest extends TestCase {
 		assertProposalsForFoo(provider);
 	}
 
+	@Test
 	public void testGetProposalsTaskDataWithReporterPerson() {
 		MockTask task = new MockTask(null, "1", null);
 		TaskData taskData = createMockTaskData();
 		taskData.getRoot().createMappedAttribute(TaskAttribute.USER_REPORTER).setValue("foo");
 		taskData.getRoot().getMappedAttribute(TaskAttribute.USER_REPORTER).getMetaData().setReadOnly(true);
 		taskData.getRoot()
-				.getMappedAttribute(TaskAttribute.USER_REPORTER)
-				.getMetaData()
-				.setType(TaskAttribute.TYPE_PERSON);
+		.getMappedAttribute(TaskAttribute.USER_REPORTER)
+		.getMetaData()
+		.setType(TaskAttribute.TYPE_PERSON);
 		PersonProposalProvider provider = new PersonProposalProvider(task, taskData);
 
 		assertProposalsForFoo(provider);

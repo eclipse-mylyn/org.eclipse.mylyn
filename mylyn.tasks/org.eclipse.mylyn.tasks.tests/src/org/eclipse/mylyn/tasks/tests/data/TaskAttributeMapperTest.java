@@ -14,6 +14,10 @@
 
 package org.eclipse.mylyn.tasks.tests.data;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 import java.util.Map;
 
@@ -22,14 +26,13 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskAttributeMapperTest extends TestCase {
+public class TaskAttributeMapperTest {
 
 	TaskRepository taskRepository = new TaskRepository("kind", "repository");
 
@@ -37,6 +40,7 @@ public class TaskAttributeMapperTest extends TestCase {
 
 	TaskData data = new TaskData(mapper, "kind", "repository", "id");
 
+	@Test
 	public void testEqualsCommentId() {
 		TaskCommentMapper comment = new TaskCommentMapper();
 		comment.setCommentId("commentid");
@@ -51,10 +55,11 @@ public class TaskAttributeMapperTest extends TestCase {
 
 		comment.setCommentId("commentid2");
 		comment.applyTo(attributeOld);
-		assertFalse("Expected not equals:\n" + attributeOld + "\n" + attributeNew,
-				mapper.equals(attributeNew, attributeOld));
+		assertFalse(mapper.equals(attributeNew, attributeOld),
+				"Expected not equals:\n" + attributeOld + "\n" + attributeNew);
 	}
 
+	@Test
 	public void testEqualsCommentMylyn37() {
 		TaskCommentMapper comment = new TaskCommentMapper();
 		comment.setNumber(1);
@@ -69,12 +74,13 @@ public class TaskAttributeMapperTest extends TestCase {
 		comment.applyTo(attributeNew);
 		assertEquals("", attributeNew.getValue());
 
-		assertTrue("Expected equals:\n" + attributeOld + "\n" + attributeNew,
-				mapper.equals(attributeNew, attributeOld));
-		assertFalse("Expected not equals:\n" + attributeOld + "\n" + attributeNew,
-				mapper.equals(attributeOld, attributeNew));
+		assertTrue(mapper.equals(attributeNew, attributeOld),
+				"Expected equals:\n" + attributeOld + "\n" + attributeNew);
+		assertFalse(mapper.equals(attributeOld, attributeNew),
+				"Expected not equals:\n" + attributeOld + "\n" + attributeNew);
 	}
 
+	@Test
 	public void testEqualsCommentMylyn37CommentId() {
 		TaskCommentMapper comment = new TaskCommentMapper();
 		comment.setNumber(1);
@@ -90,21 +96,22 @@ public class TaskAttributeMapperTest extends TestCase {
 		comment.applyTo(attributeNew);
 		assertEquals("2", attributeNew.getValue());
 
-		assertFalse("Expected not equals:\n" + attributeOld + "\n" + attributeNew,
-				mapper.equals(attributeNew, attributeOld));
+		assertFalse(mapper.equals(attributeNew, attributeOld),
+				"Expected not equals:\n" + attributeOld + "\n" + attributeNew);
 
 		// Mylyn 3.7 before release with ID sub-attribute
 		TaskAttribute idAttribute = attributeOld.createAttribute("task.common.comment.id");
 		idAttribute.setValue("2");
-		assertTrue("Expected equals:\n" + attributeOld + "\n" + attributeNew,
-				mapper.equals(attributeNew, attributeOld));
+		assertTrue(mapper.equals(attributeNew, attributeOld),
+				"Expected equals:\n" + attributeOld + "\n" + attributeNew);
 
 		// IDs should now be unequal
 		idAttribute.setValue("3");
-		assertFalse("Expected not equals:\n" + attributeOld + "\n" + attributeNew,
-				mapper.equals(attributeNew, attributeOld));
+		assertFalse(mapper.equals(attributeNew, attributeOld),
+				"Expected not equals:\n" + attributeOld + "\n" + attributeNew);
 	}
 
+	@Test
 	public void testGetValueLabels() throws Exception {
 		TaskAttributeMapper mapper = mapperWith2Options();
 		TaskAttribute attribute = data.getRoot().createAttribute("id");
@@ -128,6 +135,7 @@ public class TaskAttributeMapperTest extends TestCase {
 		assertEquals(List.of("b", "a"), mapper.getValueLabels(attribute));
 	}
 
+	@Test
 	public void testGetValueLabelsUnmappedOption() throws Exception {
 		TaskAttributeMapper mapper = mapperWith2Options();
 		TaskAttribute attribute = attributeWithUnmappedOption();

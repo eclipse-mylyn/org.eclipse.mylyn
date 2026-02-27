@@ -13,20 +13,23 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryFilter;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Shawn Minto
  */
-public class TaskRepositoryFilterTests extends TestCase {
+public class TaskRepositoryFilterTests {
 
+	@Test
 	public void testCanCreateTaskFilter() {
 		ITaskRepositoryFilter canCreateTaskFilter = ITaskRepositoryFilter.CAN_CREATE_NEW_TASK;
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
@@ -44,6 +47,7 @@ public class TaskRepositoryFilterTests extends TestCase {
 		connector.resetDefaults();
 	}
 
+	@Test
 	public void testCanQueryTaskFilter() {
 		ITaskRepositoryFilter canQueryFilter = ITaskRepositoryFilter.CAN_QUERY;
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
@@ -68,6 +72,7 @@ public class TaskRepositoryFilterTests extends TestCase {
 		connector.resetDefaults();
 	}
 
+	@Test
 	public void testCanCreateTaskFromKeyTaskFilter() {
 		ITaskRepositoryFilter canCreateTaskFromKeyFilter = ITaskRepositoryFilter.CAN_CREATE_TASK_FROM_KEY;
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,

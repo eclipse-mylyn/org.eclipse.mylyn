@@ -15,6 +15,13 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.File;
 import java.util.Date;
 
@@ -33,15 +40,16 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Robert Elves
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskDataStoreTest extends TestCase {
+public class TaskDataStoreTest {
 
 	private static final String MOCK_ID = "1";
 
@@ -55,7 +63,7 @@ public class TaskDataStoreTest extends TestCase {
 
 	private TaskDataState state;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		TaskRepositoryManager taskRepositoryManager = new TaskRepositoryManager();
 		storage = new TaskDataStore(taskRepositoryManager);
@@ -68,11 +76,12 @@ public class TaskDataStoreTest extends TestCase {
 		taskRepositoryManager.addRepository(taskRepository);
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		file.delete();
 	}
 
+	@Test
 	public void testPutAndGet() throws Exception {
 		TaskDataState state = new TaskDataState(MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL, MOCK_ID);
@@ -105,6 +114,7 @@ public class TaskDataStoreTest extends TestCase {
 		assertEquals("task kind", mapper.getTaskKind());
 	}
 
+	@Test
 	public void testDelete() throws Exception {
 		TaskData data = new TaskData(new TaskAttributeMapper(taskRepository), MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL, MOCK_ID);
@@ -125,6 +135,7 @@ public class TaskDataStoreTest extends TestCase {
 		state.setRepositoryData(data);
 	}
 
+	@Test
 	public void testAttributes() throws Exception {
 		setupData();
 
@@ -153,6 +164,7 @@ public class TaskDataStoreTest extends TestCase {
 		assertEquals(attributeCount, state.getRepositoryData().getRoot().getAttributes().size());
 	}
 
+	@Test
 	public void testOperations() throws Exception {
 		setupData();
 
@@ -162,6 +174,7 @@ public class TaskDataStoreTest extends TestCase {
 		assertData(2);
 	}
 
+	@Test
 	public void testComments() throws Exception {
 		setupData();
 
@@ -180,6 +193,7 @@ public class TaskDataStoreTest extends TestCase {
 		assertData(2);
 	}
 
+	@Test
 	public void testAttachments() throws Exception {
 		setupData();
 
@@ -201,6 +215,7 @@ public class TaskDataStoreTest extends TestCase {
 		assertData(2);
 	}
 
+	@Test
 	public void testReadWriteInvalidCharacters() throws Exception {
 		setupData();
 		data.getRoot().createAttribute("attribute").setValue("\u0000");
@@ -214,6 +229,7 @@ public class TaskDataStoreTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testReadWriteC0Characters() throws Exception {
 		setupData();
 		data.getRoot().createAttribute("attribute").setValue("\u0001\u001F");
@@ -224,6 +240,7 @@ public class TaskDataStoreTest extends TestCase {
 		assertEquals(state.getRepositoryData().getRoot().toString(), state2.getRepositoryData().getRoot().toString());
 	}
 
+	@Test
 	public void testReadWriteC1Characters() throws Exception {
 		setupData();
 		data.getRoot().createAttribute("attribute").setValue("\u007F\u0080");
@@ -234,6 +251,7 @@ public class TaskDataStoreTest extends TestCase {
 		assertEquals(state.getRepositoryData().getRoot().toString(), state2.getRepositoryData().getRoot().toString());
 	}
 
+	@Test
 	public void testReadWriteC0C1Characters() throws Exception {
 		setupData();
 		data.getRoot().createAttribute("attribute").setValue("\u0001\u001F\u007F\u0080");
@@ -255,6 +273,7 @@ public class TaskDataStoreTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testReadWriteSetValue() throws Exception {
 		setupData();
 		TaskAttribute attribute = data.getRoot().createAttribute("attribute");
@@ -270,6 +289,7 @@ public class TaskDataStoreTest extends TestCase {
 		assertTrue(state2.getRepositoryData().getRoot().getAttribute("attribute").hasValue());
 	}
 
+	@Test
 	public void testReadWriteUnsetValue() throws Exception {
 		setupData();
 		TaskAttribute attribute = data.getRoot().createAttribute("attribute");
@@ -287,6 +307,7 @@ public class TaskDataStoreTest extends TestCase {
 		assertFalse(state2.getRepositoryData().getRoot().getAttribute("attribute").hasValue());
 	}
 
+	@Test
 	public void testCorruptedData() throws Exception {
 		if (!hasXerces()) {
 			System.err.println("Skipping testCorruptedData() due to Xerces missing");
@@ -299,7 +320,7 @@ public class TaskDataStoreTest extends TestCase {
 		assertFalse(state.getRepositoryData().getRoot().toString().contains("al>"));
 	}
 
-	private boolean hasXerces() {
+	private static boolean hasXerces() {
 		try {
 			Class.forName("org.apache.xerces.parsers.SAXParser");
 			return true;
@@ -312,6 +333,7 @@ public class TaskDataStoreTest extends TestCase {
 		randomData(32, Integer.MAX_VALUE);
 	}
 
+	@Test
 	public void testRandomDataXml_1_1() throws Exception {
 		if (!hasXerces()) {
 			System.err.println("Skipping testRandomDataXml_1_1 due to Xerces missing");
@@ -347,8 +369,8 @@ public class TaskDataStoreTest extends TestCase {
 	/**
 	 * Returns a random string that doesn't contain "key" or "val".
 	 */
-	private String generateString(int start, int end) {
-		return RandomStringUtils.random(1000, start, end, true, true);
+	private static String generateString(int start, int end) {
+		return RandomStringUtils.secure().next(1000, start, end, true, true);
 	}
 
 }

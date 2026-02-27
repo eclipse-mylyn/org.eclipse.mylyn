@@ -17,6 +17,8 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Date;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -36,8 +38,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.swt.widgets.Control;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
@@ -46,8 +47,9 @@ import junit.framework.TestCase;
  * @author Julio Gesser
  */
 @SuppressWarnings("nls")
-public class TaskListSorterTest extends TestCase {
+public class TaskListSorterTest {
 
+	@Test
 	public void testSortWithError() {
 		final TaskListSorter sorter = new TaskListSorter();
 		ITask task1 = new LocalTask("1", null);
@@ -82,6 +84,7 @@ public class TaskListSorterTest extends TestCase {
 
 	}
 
+	@Test
 	public void testRootTaskSorting() {
 		TaskListSorter sorter = new TaskListSorter();
 		sorter.getTaskComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.SUMMARY);
@@ -123,7 +126,7 @@ public class TaskListSorterTest extends TestCase {
 		checkToRootElements(sorter, task, unmatchedTaskContainer);
 	}
 
-	private void checkToRootElements(TaskListSorter sorter, AbstractTaskContainer e1, AbstractTaskContainer e2) {
+	private static void checkToRootElements(TaskListSorter sorter, AbstractTaskContainer e1, AbstractTaskContainer e2) {
 		assertEquals(-1, sorter.compare(null, e1, e2));
 		assertEquals(1, sorter.compare(null, e2, e1));
 	}
@@ -160,6 +163,7 @@ public class TaskListSorterTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testSummaryOrderSorting() {
 		MockTask[] tasks = new MockTask[6];
 		tasks[0] = new MockTask("local", "4", "c");
@@ -191,6 +195,7 @@ public class TaskListSorterTest extends TestCase {
 		assertEquals("d", tasks[5].getSummary());
 	}
 
+	@Test
 	public void testRankOrderSorting() {
 		MockTask[] tasks = new MockTask[6];
 		tasks[0] = new MockTask("local", "4", "c");
@@ -229,6 +234,7 @@ public class TaskListSorterTest extends TestCase {
 		assertEquals("5", tasks[5].getTaskKey());
 	}
 
+	@Test
 	public void testRankOrderSortingWithNullRank() {
 		MockTask[] tasks = new MockTask[6];
 		tasks[0] = new MockTask("local", "1", "a");
@@ -266,6 +272,7 @@ public class TaskListSorterTest extends TestCase {
 		assertEquals("1", tasks[5].getTaskKey());
 	}
 
+	@Test
 	public void testModuleSummaryOrderSorting() {
 		MockTask[] tasks = new MockTask[5];
 		tasks[0] = new MockTask("local", "MYLN:4", "c");
@@ -294,6 +301,7 @@ public class TaskListSorterTest extends TestCase {
 		assertEquals("MYLN:4", tasks[4].getTaskKey());
 	}
 
+	@Test
 	public void testLocalTaskSort() {
 		final TaskListSorter sorter = new TaskListSorter();
 		ITask task1 = new LocalTask("1", "task1");

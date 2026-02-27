@@ -14,6 +14,10 @@
 
 package org.eclipse.mylyn.tasks.tests.ui;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -23,20 +27,20 @@ import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskHyperlinkDetector;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskHyperlinkDetectorTest extends TestCase {
+public class TaskHyperlinkDetectorTest {
 
 	protected MockRepositoryConnectorUi connectorUi;
 
 	protected TaskRepository repository;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		repository = TaskTestUtil.createMockRepository();
 		connectorUi = new MockRepositoryConnectorUi();
@@ -62,6 +66,7 @@ public class TaskHyperlinkDetectorTest extends TestCase {
 		return detector;
 	}
 
+	@Test
 	public void testMultiple() {
 		IHyperlink[] links = detect("123 456 789", 4, 5);
 		assertNotNull(links);
@@ -70,6 +75,7 @@ public class TaskHyperlinkDetectorTest extends TestCase {
 		assertEquals(new Region(8, 1), links[1].getHyperlinkRegion());
 	}
 
+	@Test
 	public void testMultipleFullRegion() {
 		IHyperlink[] links = detect("123 456 789", 0, 11);
 		assertEquals(3, links.length);
@@ -78,11 +84,13 @@ public class TaskHyperlinkDetectorTest extends TestCase {
 		assertEquals(new Region(8, 3), links[2].getHyperlinkRegion());
 	}
 
+	@Test
 	public void testSingleZeroLenghtRegion() {
 		IHyperlink[] links = detect("123 456 789", 5, 0);
 		assertEquals(1, links.length);
 	}
 
+	@Test
 	public void testSpaceZeroLengthRegion() {
 		IHyperlink[] links = detect("1234  789", 5, 0);
 		assertNull(links);

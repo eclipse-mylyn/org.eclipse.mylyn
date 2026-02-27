@@ -14,6 +14,10 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -33,15 +37,16 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Frank Becker
  * @author Wesley Coelho
  */
 @SuppressWarnings("nls")
-public class TaskActivationHistoryTest extends TestCase {
+public class TaskActivationHistoryTest {
 
 	private TaskActivationHistory history;
 
@@ -61,7 +66,7 @@ public class TaskActivationHistoryTest extends TestCase {
 
 	private TaskActivityManager taskActivityManager;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		taskActivityManager = TasksUiPlugin.getTaskActivityManager();
 		history = taskActivityManager.getTaskActivationHistory();
@@ -87,12 +92,13 @@ public class TaskActivationHistoryTest extends TestCase {
 		previousTaskAction = new ActivateTaskHistoryDropDownAction();
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		TaskTestUtil.resetTaskList();
 		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(new HashSet<>(0));
 	}
 
+	@Test
 	public void testWithWorkingSet() {
 		MockRepositoryQuery query1 = new MockRepositoryQuery("Query 1");
 		MockRepositoryQuery query2 = new MockRepositoryQuery("Query 2");
@@ -160,6 +166,7 @@ public class TaskActivationHistoryTest extends TestCase {
 	/**
 	 * Tests the next task and previous task navigation.
 	 */
+	@Test
 	public void testBasicHistoryNavigation() {
 		// NOTE: legacy test
 		TasksUi.getTaskActivityManager().activateTask(task1);
@@ -229,6 +236,7 @@ public class TaskActivationHistoryTest extends TestCase {
 	/**
 	 * Tests navigation to previous/next tasks that are chosen from a list rather than being sequentially navigated
 	 */
+	@Test
 	public void testArbitraryHistoryNavigation() {
 		// Simulate activating the tasks by clicking rather than
 		// navigating previous/next

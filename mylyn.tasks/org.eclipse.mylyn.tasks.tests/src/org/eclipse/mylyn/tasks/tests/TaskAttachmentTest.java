@@ -14,6 +14,9 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import java.io.File;
 import java.io.RandomAccessFile;
 
@@ -34,8 +37,9 @@ import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.ui.PlatformUI;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test task attachment jobs.
@@ -43,7 +47,7 @@ import junit.framework.TestCase;
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskAttachmentTest extends TestCase {
+public class TaskAttachmentTest {
 
 	private TaskRepositoryManager manager;
 
@@ -55,10 +59,8 @@ public class TaskAttachmentTest extends TestCase {
 
 	private ITaskAttachment attachment;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
-		super.setUp();
-
 		manager = TasksUiPlugin.getRepositoryManager();
 
 		repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, MockRepositoryConnector.REPOSITORY_URL);
@@ -76,11 +78,12 @@ public class TaskAttachmentTest extends TestCase {
 				taskData.getRoot().createAttribute("attachment"));
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		manager.removeRepository(repository);
 	}
 
+	@Test
 	public void testCopyToClipboardAction() throws Exception {
 		String expected = "attachment content";
 		attachmentHandler.setAttachmentData(expected.getBytes());
@@ -93,6 +96,7 @@ public class TaskAttachmentTest extends TestCase {
 		assertEquals(expected, clipboard.getContents(TextTransfer.getInstance()));
 	}
 
+	@Test
 	public void testDownloadAttachmentJob() throws Exception {
 		File file = File.createTempFile("mylyn", null);
 		file.deleteOnExit();
@@ -113,6 +117,7 @@ public class TaskAttachmentTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testDownloadAttachmentJobExceptionThrown() throws Exception {
 		File file = File.createTempFile("mylyn", null);
 		file.delete();

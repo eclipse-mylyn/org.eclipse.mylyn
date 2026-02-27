@@ -15,19 +15,22 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Arrays;
 
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Eugene Kuleshov - bug 129511
  * @author Mik Kersten
  */
 @SuppressWarnings("nls")
-public class TaskKeyComparatorTest extends TestCase {
+public class TaskKeyComparatorTest {
 
+	@Test
 	public void testPatterns() {
 		comparisonCheck("", new String[] { null, null, "" });
 		comparisonCheck(" ", new String[] { null, null, " " });
@@ -57,14 +60,14 @@ public class TaskKeyComparatorTest extends TestCase {
 		comparisonCheck("aa1 bbb", "aa11 aaa", -1);
 	}
 
-	private void comparisonCheck(String s, String[] exptecation) {
+	private static void comparisonCheck(String s, String[] exptecation) {
 		String[] res = new TaskKeyComparator().split(s);
-		assertTrue("Invalid " + Arrays.asList(res) + " " + Arrays.asList(exptecation), Arrays.equals(res, exptecation));
+		assertTrue(Arrays.equals(res, exptecation), "Invalid " + Arrays.asList(res) + " " + Arrays.asList(exptecation));
 	}
 
 	private static final TaskKeyComparator tkc = new TaskKeyComparator();
 
-	public void comparisonCheck(String s1, String s2, int n) {
+	public static void comparisonCheck(String s1, String s2, int n) {
 		final String[] c1 = { null, null, s1 };
 		final String[] c2 = { null, null, s2 };
 		assertEquals(n, tkc.compare(c1, c2));

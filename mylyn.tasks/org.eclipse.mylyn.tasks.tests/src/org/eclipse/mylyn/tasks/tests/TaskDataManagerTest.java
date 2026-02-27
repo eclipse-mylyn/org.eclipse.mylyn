@@ -14,6 +14,9 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -28,15 +31,16 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Rob Elves
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskDataManagerTest extends TestCase {
+public class TaskDataManagerTest {
 
 	private TaskDataManager taskDataManger;
 
@@ -44,7 +48,7 @@ public class TaskDataManagerTest extends TestCase {
 
 	private TaskRepositoryManager taskRepositoryManager;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		taskDataManger = TasksUiPlugin.getTaskDataManager();
 		taskRepository = TaskTestUtil.createMockRepository();
@@ -52,11 +56,12 @@ public class TaskDataManagerTest extends TestCase {
 		TasksUi.getRepositoryManager().addRepository(taskRepository);
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		taskRepositoryManager.clearRepositories();
 	}
 
+	@Test
 	public void testPutUpdatedTaskData() throws Exception {
 		TaskTask task = TaskTestUtil.createMockTask("1");
 		task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
@@ -65,6 +70,7 @@ public class TaskDataManagerTest extends TestCase {
 		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
 	}
 
+	@Test
 	public void testIncoming() throws Exception {
 		TaskTask task = TaskTestUtil.createMockTask("1");
 		task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
@@ -75,6 +81,7 @@ public class TaskDataManagerTest extends TestCase {
 		assertEquals(SynchronizationState.INCOMING, task.getSynchronizationState());
 	}
 
+	@Test
 	public void testIncomingSupressed() throws Exception {
 		TaskTask task = TaskTestUtil.createMockTask("testIncomingSupressed");
 		task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
@@ -89,6 +96,7 @@ public class TaskDataManagerTest extends TestCase {
 		assertEquals("true", task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING));
 	}
 
+	@Test
 	public void testIncomingSupressedWithSave() throws Exception {
 		TasksUi.getRepositoryManager().addRepository(taskRepository);
 		TaskTask task = TaskTestUtil.createMockTask("1");
@@ -111,6 +119,7 @@ public class TaskDataManagerTest extends TestCase {
 		assertNull(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING));
 	}
 
+	@Test
 	public void testIncomingSupressedWithRead() throws Exception {
 		TasksUi.getRepositoryManager().addRepository(taskRepository);
 		TaskTask task = TaskTestUtil.createMockTask("1");
@@ -147,6 +156,7 @@ public class TaskDataManagerTest extends TestCase {
 
 	}
 
+//	@Test
 //	public void testHasIncomingDateComparison() {
 //		final Stack<Date> dates = new Stack<Date>();
 //		MockTask task = new MockTask(MOCCK_ID);

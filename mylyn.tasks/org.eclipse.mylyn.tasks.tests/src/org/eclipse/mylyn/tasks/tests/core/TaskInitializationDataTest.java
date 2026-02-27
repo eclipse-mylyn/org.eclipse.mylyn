@@ -15,24 +15,29 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.eclipse.mylyn.tasks.core.TaskInitializationData;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Benjamin Muskalla
  */
 @SuppressWarnings("nls")
-public class TaskInitializationDataTest extends TestCase {
+public class TaskInitializationDataTest {
 
 	private TaskInitializationData data;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		data = new TaskInitializationData();
 	}
 
+	@Test
 	public void testNotSupported() {
 		try {
 			data.merge(null);
@@ -51,30 +56,35 @@ public class TaskInitializationDataTest extends TestCase {
 		assertNull(data.getCc());
 	}
 
+	@Test
 	public void testTaskKind() throws Exception {
 		data.setTaskKind("foo");
 		assertEquals("foo", data.getTaskKind());
 		assertEquals("foo", data.getAttribute(TaskAttribute.TASK_KIND));
 	}
 
+	@Test
 	public void testProduct() throws Exception {
 		data.setProduct("product");
 		assertEquals("product", data.getProduct());
 		assertEquals("product", data.getAttribute(TaskAttribute.PRODUCT));
 	}
 
+	@Test
 	public void testComponent() throws Exception {
 		data.setComponent("component");
 		assertEquals("component", data.getComponent());
 		assertEquals("component", data.getAttribute(TaskAttribute.COMPONENT));
 	}
 
+	@Test
 	public void testSetAttributeComponent() throws Exception {
 		data.setAttribute(TaskAttribute.COMPONENT, "component");
 		assertEquals("component", data.getComponent());
 		assertEquals("component", data.getAttribute(TaskAttribute.COMPONENT));
 	}
 
+	@Test
 	public void testGetAttribute() throws Exception {
 		assertNull(data.getAttribute("custom"));
 		data.setAttribute("custom", "value");

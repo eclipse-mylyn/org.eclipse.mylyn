@@ -14,6 +14,10 @@
 
 package org.eclipse.mylyn.tasks.tests.data;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Collections;
 import java.util.Set;
 
@@ -31,12 +35,11 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
-public class SynchronizationMangerTest extends TestCase {
+public class SynchronizationMangerTest {
 
 	private SynchronizationManger manager;
 
@@ -50,7 +53,7 @@ public class SynchronizationMangerTest extends TestCase {
 
 	private TaskData oldData;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		ITask task = new TaskTask("kind", "url", "1");
 		repository = new TaskRepository(task.getConnectorKind(), task.getRepositoryUrl());

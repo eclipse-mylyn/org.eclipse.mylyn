@@ -15,8 +15,8 @@
 package org.eclipse.mylyn.internal.tasks.core;
 
 import static org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertToXmlString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -77,10 +77,10 @@ public class SaxRepositoriesTest {
 	 */
 	private final String version1RepositoryXmlSpecialCharacters = String.format(
 			"""
-					<?xml version="1.0" encoding="UTF-8"?>\
-					<TaskRepositories OutputVersion="1">\
-					<TaskRepository url="%s" kind="%s" %s="%s"/>\
-					</TaskRepositories>""", escapeXml(escapeXml(urlCharacters)), escapeXml(escapeXml(kindCharacters)),
+			<?xml version="1.0" encoding="UTF-8"?>\
+			<TaskRepositories OutputVersion="1">\
+			<TaskRepository url="%s" kind="%s" %s="%s"/>\
+			</TaskRepositories>""", escapeXml(escapeXml(urlCharacters)), escapeXml(escapeXml(kindCharacters)),
 			labelPropertyKey, escapeXml(escapeXml(labelPropertyCharacters)));
 
 	private final String version2RepositoryXml = String.format("""
@@ -99,23 +99,23 @@ public class SaxRepositoriesTest {
 
 	private final String version2RepositoryXmlSpecialCharacters = String.format(
 			"""
-					<?xml version="1.0" encoding="UTF-8"?>\
-					<TaskRepositories OutputVersion="2">\
-					<TaskRepository url="%s" kind="%s"><Property key="%s" value="%s"/></TaskRepository>\
-					</TaskRepositories>""", escapeXml(escapeXml(urlCharacters)), escapeXml(escapeXml(kindCharacters)),
+			<?xml version="1.0" encoding="UTF-8"?>\
+			<TaskRepositories OutputVersion="2">\
+			<TaskRepository url="%s" kind="%s"><Property key="%s" value="%s"/></TaskRepository>\
+			</TaskRepositories>""", escapeXml(escapeXml(urlCharacters)), escapeXml(escapeXml(kindCharacters)),
 			escapeXml(labelPropertyKeyCharacters), escapeXml(labelPropertyCharacters));
 
 	private final String version1AndVersion2RepositoryXmlMultiple = String.format(
 			"""
-					<?xml version="1.0" encoding="UTF-8"?>\
-					<TaskRepositories OutputVersion="2">\
-					<TaskRepository url="%s" kind="%s" %s="%s"><Property key="%s" value="%s"/></TaskRepository>\
-					<TaskRepository url="%s" kind="%s" %s="%s"><Property key="%s" value="%s"/></TaskRepository>\
-					</TaskRepositories>""", //
+			<?xml version="1.0" encoding="UTF-8"?>\
+			<TaskRepositories OutputVersion="2">\
+			<TaskRepository url="%s" kind="%s" %s="%s"><Property key="%s" value="%s"/></TaskRepository>\
+			<TaskRepository url="%s" kind="%s" %s="%s"><Property key="%s" value="%s"/></TaskRepository>\
+			</TaskRepositories>""", //
 			firstUrl, kind, labelPropertyKey, labelPropertyValueAlternate, labelPropertyKey, labelPropertyValue,
 			secondUrl, kind, labelPropertyKey, labelPropertyValueAlternate, labelPropertyKey, labelPropertyValue);
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		handler = new SaxRepositoriesContentHandler();
 	}

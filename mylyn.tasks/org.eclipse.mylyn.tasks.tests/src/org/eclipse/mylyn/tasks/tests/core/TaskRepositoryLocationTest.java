@@ -14,6 +14,13 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 
@@ -25,15 +32,15 @@ import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.commons.net.AuthenticatedProxy;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskRepositoryLocationTest extends TestCase {
+public class TaskRepositoryLocationTest {
 
+	@Test
 	public void testGetCredentials() {
 		TaskRepository taskRepository = new TaskRepository("kind", "http://url");
 		taskRepository.flushAuthenticationCredentials();
@@ -55,6 +62,7 @@ public class TaskRepositoryLocationTest extends TestCase {
 		assertEquals("pwd2", credentials.getPassword());
 	}
 
+	@Test
 	public void testGetProxyForHost() {
 		Proxy defaultProxy = WebUtil.getProxy("localhost", IProxyData.HTTP_PROXY_TYPE);
 
@@ -84,6 +92,7 @@ public class TaskRepositoryLocationTest extends TestCase {
 		assertEquals("pwd", ((AuthenticatedProxy) proxy).getPassword());
 	}
 
+	@Test
 	public void testGetProxyForHostEmptyProxy() {
 		Proxy defaultProxy = WebUtil.getProxy("localhost", IProxyData.HTTP_PROXY_TYPE);
 
@@ -100,6 +109,7 @@ public class TaskRepositoryLocationTest extends TestCase {
 		assertEquals(defaultProxy, location.getProxyForHost("localhost", IProxyData.HTTP_PROXY_TYPE));
 	}
 
+	@Test
 	public void testRequestCredentials() {
 		TaskRepository taskRepository = new TaskRepository("kind", "http://url");
 		TaskRepositoryLocation location = new TaskRepositoryLocation(taskRepository);

@@ -14,6 +14,11 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -29,17 +34,17 @@ import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
 import org.eclipse.mylyn.tasks.core.ITask;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Rob Elves
  */
 @SuppressWarnings("nls")
-public class DateRangeTest extends TestCase {
+public class DateRangeTest {
 
 	private static final int HOUR = 60 * 60 * 1000;
 
+	@Test
 	public void testCompareInstant() {
 		DateRange range1 = new DateRange(TaskActivityUtil.getCurrentWeek().getToday().previous().getStartDate());
 		DateRange range2 = new DateRange(TaskActivityUtil.getCurrentWeek().getToday().getStartDate());
@@ -47,6 +52,7 @@ public class DateRangeTest extends TestCase {
 		assertEquals(1, range2.compareTo(range1));
 	}
 
+	@Test
 	public void testCompareRanges() {
 		DateRange range1 = TaskActivityUtil.getCurrentWeek().getToday().previous();
 		DateRange range2 = TaskActivityUtil.getCurrentWeek().getToday();
@@ -54,6 +60,7 @@ public class DateRangeTest extends TestCase {
 		assertEquals(1, range2.compareTo(range1));
 	}
 
+	@Test
 	public void testQueryDateRange() {
 		SortedMap<DateRange, Set<ITask>> scheduledTasks = Collections
 				.synchronizedSortedMap(new TreeMap<DateRange, Set<ITask>>());
@@ -81,6 +88,7 @@ public class DateRangeTest extends TestCase {
 		assertEquals(2, result.size());
 	}
 
+	@Test
 	public void testOverScheduled() {
 		SortedMap<DateRange, Set<ITask>> scheduledTasks = Collections
 				.synchronizedSortedMap(new TreeMap<DateRange, Set<ITask>>());
@@ -106,6 +114,7 @@ public class DateRangeTest extends TestCase {
 		assertEquals(1, result.size());
 	}
 
+	@Test
 	public void testIsWeekRange() {
 		TimeZone defaultTimeZone = TimeZone.getDefault();
 		try {
@@ -116,10 +125,10 @@ public class DateRangeTest extends TestCase {
 			DateRange range = TaskActivityUtil.getWeekOf(time.getTime());
 			assertTrue(WeekDateRange.isWeekRange(range.getStartDate(), range.getEndDate()));
 			range.getStartDate().setTimeInMillis(range.getStartDate().getTimeInMillis() + 1);
-			assertTrue("1 ms longer than a week, expected to be within legal interval",
-					WeekDateRange.isWeekRange(range.getStartDate(), range.getEndDate()));
+			assertTrue(WeekDateRange.isWeekRange(range.getStartDate(), range.getEndDate()),
+					"1 ms longer than a week, expected to be within legal interval");
 			range = TaskActivityUtil.getDayOf(time.getTime());
-			assertFalse("only a day", WeekDateRange.isWeekRange(range.getStartDate(), range.getEndDate()));
+			assertFalse(WeekDateRange.isWeekRange(range.getStartDate(), range.getEndDate()), "only a day");
 
 			// PST changes to PDT on Mar 9th 2008
 			time.set(2008, 2, 9);
@@ -128,7 +137,7 @@ public class DateRangeTest extends TestCase {
 			assertEquals(HOUR, range.getEndDate().get(Calendar.DST_OFFSET));
 			assertTrue(WeekDateRange.isWeekRange(range.getStartDate(), range.getEndDate()));
 			range.getStartDate().setTimeInMillis(range.getStartDate().getTimeInMillis() + 1);
-			assertFalse("1 ms too long", WeekDateRange.isWeekRange(range.getStartDate(), range.getEndDate()));
+			assertFalse(WeekDateRange.isWeekRange(range.getStartDate(), range.getEndDate()), "1 ms too long");
 			range = TaskActivityUtil.getDayOf(time.getTime());
 			assertFalse(WeekDateRange.isWeekRange(range.getStartDate(), range.getEndDate()));
 
@@ -139,12 +148,13 @@ public class DateRangeTest extends TestCase {
 			assertEquals(0, range.getEndDate().get(Calendar.DST_OFFSET));
 			assertTrue(WeekDateRange.isWeekRange(range.getStartDate(), range.getEndDate()));
 			range.getStartDate().setTimeInMillis(range.getStartDate().getTimeInMillis() - 1);
-			assertFalse("1 ms too short", WeekDateRange.isWeekRange(range.getStartDate(), range.getEndDate()));
+			assertFalse(WeekDateRange.isWeekRange(range.getStartDate(), range.getEndDate()), "1 ms too short");
 		} finally {
 			TimeZone.setDefault(defaultTimeZone);
 		}
 	}
 
+	@Test
 	public void testIsDayRange() {
 		TimeZone defaultTimeZone = TimeZone.getDefault();
 		try {
@@ -154,16 +164,16 @@ public class DateRangeTest extends TestCase {
 			DateRange range = TaskActivityUtil.getDayOf(time.getTime());
 			assertTrue(DayDateRange.isDayRange(range.getStartDate(), range.getEndDate()));
 			range.getStartDate().setTimeInMillis(range.getStartDate().getTimeInMillis() + 1);
-			assertTrue("1 ms longer than a day, expected to be within legal interval",
-					DayDateRange.isDayRange(range.getStartDate(), range.getEndDate()));
+			assertTrue(DayDateRange.isDayRange(range.getStartDate(), range.getEndDate()),
+					"1 ms longer than a day, expected to be within legal interval");
 			range.getStartDate().setTimeInMillis(range.getStartDate().getTimeInMillis() + HOUR);
-			assertFalse("1 hour + 1 ms longer than a day",
-					DayDateRange.isDayRange(range.getStartDate(), range.getEndDate()));
+			assertFalse(DayDateRange.isDayRange(range.getStartDate(), range.getEndDate()),
+					"1 hour + 1 ms longer than a day");
 			range.getStartDate().setTimeInMillis(range.getStartDate().getTimeInMillis() - 2 * HOUR - 2);
-			assertFalse("1 hour + 1 ms shorter than a day",
-					DayDateRange.isDayRange(range.getStartDate(), range.getEndDate()));
+			assertFalse(DayDateRange.isDayRange(range.getStartDate(), range.getEndDate()),
+					"1 hour + 1 ms shorter than a day");
 			range = TaskActivityUtil.getDayOf(time.getTime());
-			assertTrue("a week", DayDateRange.isDayRange(range.getStartDate(), range.getEndDate()));
+			assertTrue(DayDateRange.isDayRange(range.getStartDate(), range.getEndDate()), "a week");
 
 			// PDT changes to PST on Mar 9th 2008
 			time.set(2008, 2, 9);
@@ -172,7 +182,7 @@ public class DateRangeTest extends TestCase {
 			assertEquals(HOUR, range.getEndDate().get(Calendar.DST_OFFSET));
 			assertTrue(DayDateRange.isDayRange(range.getStartDate(), range.getEndDate()));
 			range.getStartDate().setTimeInMillis(range.getStartDate().getTimeInMillis() + 1);
-			assertFalse("1 ms too long", DayDateRange.isDayRange(range.getStartDate(), range.getEndDate()));
+			assertFalse(DayDateRange.isDayRange(range.getStartDate(), range.getEndDate()), "1 ms too long");
 
 			// PST changes to PDT on Nov 2nd 2008
 			time.set(2008, 10, 2);
@@ -181,12 +191,13 @@ public class DateRangeTest extends TestCase {
 			assertEquals(0, range.getEndDate().get(Calendar.DST_OFFSET));
 			assertTrue(DayDateRange.isDayRange(range.getStartDate(), range.getEndDate()));
 			range.getStartDate().setTimeInMillis(range.getStartDate().getTimeInMillis() - 1);
-			assertFalse("1 ms too short", DayDateRange.isDayRange(range.getStartDate(), range.getEndDate()));
+			assertFalse(DayDateRange.isDayRange(range.getStartDate(), range.getEndDate()), "1 ms too short");
 		} finally {
 			TimeZone.setDefault(defaultTimeZone);
 		}
 	}
 
+	@Test
 	public void testNext() {
 		Calendar time = TaskActivityUtil.getCalendar();
 		time.set(2008, 11, 31);

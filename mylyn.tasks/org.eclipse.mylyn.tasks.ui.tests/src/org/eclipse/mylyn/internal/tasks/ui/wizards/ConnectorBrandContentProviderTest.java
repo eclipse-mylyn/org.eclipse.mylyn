@@ -14,7 +14,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -27,7 +27,7 @@ import org.eclipse.mylyn.internal.tasks.ui.BrandManager;
 import org.eclipse.mylyn.internal.tasks.ui.ConnectorBrand;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.SelectRepositoryConnectorPage.ConnectorBrandContentProvider;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class ConnectorBrandContentProviderTest {

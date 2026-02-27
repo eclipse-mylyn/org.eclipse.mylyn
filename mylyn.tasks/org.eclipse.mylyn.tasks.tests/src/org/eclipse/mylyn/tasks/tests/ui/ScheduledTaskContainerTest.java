@@ -14,6 +14,8 @@
 
 package org.eclipse.mylyn.tasks.tests.ui;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -30,14 +32,15 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Sam Davis
  */
 @SuppressWarnings("nls")
-public class ScheduledTaskContainerTest extends TestCase {
+public class ScheduledTaskContainerTest {
 	private TaskActivityManager taskActivityManager;
 
 	private long taskID;
@@ -46,7 +49,7 @@ public class ScheduledTaskContainerTest extends TestCase {
 
 	private final long instant = 1334355143000L;// arbitrary fixed point in time
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		taskActivityManager = TasksUiPlugin.getTaskActivityManager();
 		TaskTestUtil.resetTaskListAndRepositories();
@@ -54,124 +57,153 @@ public class ScheduledTaskContainerTest extends TestCase {
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		taskActivityManager.clear();
 	}
 
+	@Test
 	public void testUSHawaiiDay() {
 		runDayTest("US/Hawaii");
 	}
 
+	@Test
 	public void testCanadaPacificDay() {
 		runDayTest("Canada/Pacific");
 	}
 
+	@Test
 	public void testBrazilWestDay() {
 		runDayTest("Brazil/West");
 	}
 
+	@Test
 	public void testEuropeDublinDay() {
 		runDayTest("Europe/Dublin");
 	}
 
+	@Test
 	public void testGreenwichDay() {
 		runDayTest("Greenwich");
 	}
 
+	@Test
 	public void testPortugalDay() {
 		runDayTest("Portugal");
 	}
 
+	@Test
 	public void testUniversalDay() {
 		runDayTest("Universal");
 	}
 
+	@Test
 	public void testEuropeViennaDay() {
 		runDayTest("Europe/Vienna");
 	}
 
+	@Test
 	public void testAsiaIstanbulDay() {
 		runDayTest("Asia/Istanbul");
 	}
 
+	@Test
 	public void testAsiaDubaiDay() {
 		runDayTest("Asia/Dubai");
 	}
 
+	@Test
 	public void testIndianComoroDay() {
 		runDayTest("Indian/Comoro");
 	}
 
+	@Test
 	public void testAsiaMacauDay() {
 		runDayTest("Asia/Macau");
 	}
 
+	@Test
 	public void testAustraliaSouthDay() {
 		runDayTest("Australia/South");
 	}
 
+	@Test
 	public void testAsiaTokyoDay() {
 		runDayTest("Asia/Tokyo");
 	}
 
+//	@Test
 //	public void testPacificFijiDay() {
 //		// Fails because we cannot distinguish UTC+12 to UTC+14 from UTC-12 to -10
 //		runDayTest("Pacific/Fiji");
 //	}
 
+	@Test
 	public void testUSHawaiiWeek() {
 		runWeekTest("US/Hawaii");
 	}
 
+	@Test
 	public void testCanadaPacificWeek() {
 		runWeekTest("Canada/Pacific");
 	}
 
+	@Test
 	public void testBrazilWestWeek() {
 		runWeekTest("Brazil/West");
 	}
 
+	@Test
 	public void testEuropeDublinWeek() {
 		runWeekTest("Europe/Dublin");
 	}
 
+	@Test
 	public void testGreenwichWeek() {
 		runWeekTest("Greenwich");
 	}
 
+	@Test
 	public void testPortugalWeek() {
 		runWeekTest("Portugal");
 	}
 
+	@Test
 	public void testUniversalWeek() {
 		runWeekTest("Universal");
 	}
 
+	@Test
 	public void testEuropeViennaWeek() {
 		runWeekTest("Europe/Vienna");
 	}
 
+	@Test
 	public void testAsiaIstanbulWeek() {
 		runWeekTest("Asia/Istanbul");
 	}
 
+	@Test
 	public void testAsiaDubaiWeek() {
 		runWeekTest("Asia/Dubai");
 	}
 
+	@Test
 	public void testIndianComoroWeek() {
 		runWeekTest("Indian/Comoro");
 	}
 
+	@Test
 	public void testAsiaMacauWeek() {
 		runWeekTest("Asia/Macau");
 	}
 
+	@Test
 	public void testAustraliaSouthWeek() {
 		runWeekTest("Australia/South");
 	}
 
+	@Test
 	public void testAsiaTokyoWeek() {
 		runWeekTest("Asia/Tokyo");
 	}

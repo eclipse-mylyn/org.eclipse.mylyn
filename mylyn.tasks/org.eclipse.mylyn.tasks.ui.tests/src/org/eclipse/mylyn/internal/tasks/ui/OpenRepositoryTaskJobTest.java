@@ -14,10 +14,10 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class OpenRepositoryTaskJobTest {
@@ -32,7 +32,7 @@ public class OpenRepositoryTaskJobTest {
 	public void setsNameFromTaskKey() {
 		assertEquals("Opening repository task 123",
 				new OpenRepositoryTaskJob(new TaskRepository("kind", "http://mock"), "123", "http://mock/123", null)
-						.getName());
+				.getName());
 	}
 
 }

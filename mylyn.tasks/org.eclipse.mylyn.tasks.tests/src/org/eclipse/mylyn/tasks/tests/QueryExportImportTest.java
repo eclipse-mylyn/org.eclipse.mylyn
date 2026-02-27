@@ -13,13 +13,14 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Disabled;
 
 /**
  * @author Jevgeni Holodkov
  */
 // FIXME fix test
-public class QueryExportImportTest extends TestCase {
+@Disabled
+public class QueryExportImportTest {
 
 	public void testRewriteTestCases() {
 	}

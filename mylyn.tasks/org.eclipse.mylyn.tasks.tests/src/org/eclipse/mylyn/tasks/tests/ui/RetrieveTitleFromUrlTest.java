@@ -14,23 +14,27 @@
 
 package org.eclipse.mylyn.tasks.tests.ui;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.mylyn.internal.tasks.ui.util.AbstractRetrieveTitleFromUrlJob;
 import org.eclipse.ui.PlatformUI;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class RetrieveTitleFromUrlTest extends TestCase {
+public class RetrieveTitleFromUrlTest {
 
 	private final AtomicReference<String> retrievedTitle = new AtomicReference<>();
 
+	@Test
+	@Disabled("Fix url")
 	public void testRetrieve() throws InterruptedException, InvocationTargetException {
 		final String url = "http://eclipse.org/mylyn";
 		final String knownTitle = "Eclipse Mylyn Open Source Project";

@@ -14,21 +14,24 @@
 
 package org.eclipse.mylyn.tasks.tests.data;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.InputStreamReader;
 
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataExternalizer.Xml11InputStream;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class Xml11InputStreamTest extends TestCase {
+public class Xml11InputStreamTest {
 
+	@Test
 	public void testShortStream() throws Exception {
 		ByteArrayInputStream source = new ByteArrayInputStream("foo bar".getBytes());
 		Xml11InputStream in = new Xml11InputStream(source);
@@ -40,6 +43,7 @@ public class Xml11InputStreamTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testXml10Stream() throws Exception {
 		ByteArrayInputStream source = new ByteArrayInputStream("<?xml version=\"1.0\" encoding=\"UTF-8\"?>".getBytes());
 		Xml11InputStream in = new Xml11InputStream(source);
@@ -48,6 +52,7 @@ public class Xml11InputStreamTest extends TestCase {
 		assertEquals(-1, in.read());
 	}
 
+	@Test
 	public void testXml10StreamMultiLines() throws Exception {
 		ByteArrayInputStream source = new ByteArrayInputStream(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<abc>\n<def>".getBytes());
@@ -59,6 +64,7 @@ public class Xml11InputStreamTest extends TestCase {
 		assertEquals(null, reader.readLine());
 	}
 
+	@Test
 	public void testSkipRead() throws Exception {
 		ByteArrayInputStream source = new ByteArrayInputStream(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".getBytes());
@@ -69,6 +75,7 @@ public class Xml11InputStreamTest extends TestCase {
 		assertEquals('v', in.read());
 	}
 
+	@Test
 	public void testSkipReadLine() throws Exception {
 		ByteArrayInputStream source = new ByteArrayInputStream(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".getBytes());
@@ -79,6 +86,7 @@ public class Xml11InputStreamTest extends TestCase {
 		assertEquals(null, reader.readLine());
 	}
 
+	@Test
 	public void testSkipHeader() throws Exception {
 		ByteArrayInputStream source = new ByteArrayInputStream(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>abc".getBytes());

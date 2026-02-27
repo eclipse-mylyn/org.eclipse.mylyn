@@ -15,26 +15,32 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
-import org.eclipse.mylyn.internal.tasks.ui.search.StackTraceDuplicateDetector;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-import junit.framework.TestCase;
+import org.eclipse.mylyn.internal.tasks.ui.search.StackTraceDuplicateDetector;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Jeff Pound
  */
 @SuppressWarnings("nls")
-public class StackTraceDuplicateDetectorTest extends TestCase {
+public class StackTraceDuplicateDetectorTest {
 
+	@Test
 	public void testStackTrace() throws Exception {
 		String stackTrace = "java.lang.NullPointerException\nat jeff.testing.stack.trace.functionality(jeff.java:481)";
 		assertNotNull(StackTraceDuplicateDetector.getStackTraceFromDescription(stackTrace));
 	}
 
+	@Test
 	public void testNoStackTrace() throws Exception {
 		String stackTrace = "this is not really a stacktrace";
 		assertNull(StackTraceDuplicateDetector.getStackTraceFromDescription(stackTrace));
 	}
 
+	@Test
 	public void testStackTraceWithAppendedText() throws Exception {
 		String stackTrace = "java.lang.NullPointerException\nat jeff.testing.stack.trace.functionality(jeff.java:481)";
 		String extraText = "\nExtra text that isnt' part of the stack trace java:";
@@ -42,6 +48,7 @@ public class StackTraceDuplicateDetectorTest extends TestCase {
 				StackTraceDuplicateDetector.getStackTraceFromDescription(extraText + "\n" + stackTrace + "\n"));
 	}
 
+	@Test
 	public void testStackTraceMisaligned() throws Exception {
 		String stackTrace = """
 				java.lang.IllegalStateException: zip file closed
@@ -58,6 +65,7 @@ public class StackTraceDuplicateDetectorTest extends TestCase {
 		assertEquals(stackTrace, StackTraceDuplicateDetector.getStackTraceFromDescription(stackTrace));
 	}
 
+	@Test
 	public void testStackTraceSUN() throws Exception {
 		// SUN, IBM (no space before brackets, one set of brackets)
 		String stackTrace = """
@@ -72,6 +80,7 @@ public class StackTraceDuplicateDetectorTest extends TestCase {
 		assertEquals(stackTrace, StackTraceDuplicateDetector.getStackTraceFromDescription(stackTrace));
 	}
 
+	@Test
 	public void testStackTraceGCJ() throws Exception {
 		// gcj/gij (path and lib names in additional brackets)
 		String stackTrace = """
@@ -82,6 +91,7 @@ public class StackTraceDuplicateDetectorTest extends TestCase {
 		assertEquals(stackTrace, StackTraceDuplicateDetector.getStackTraceFromDescription(stackTrace));
 	}
 
+	@Test
 	public void testStackTraceNoLineNums() throws Exception {
 		// ikvm (no line numbers)
 		String stackTrace = """
@@ -91,6 +101,7 @@ public class StackTraceDuplicateDetectorTest extends TestCase {
 		assertEquals(stackTrace, StackTraceDuplicateDetector.getStackTraceFromDescription(stackTrace));
 	}
 
+	@Test
 	public void testStackTraceJRockit() throws Exception {
 		// jrockit (slash delimiters)
 		String stackTrace = """
@@ -102,6 +113,7 @@ public class StackTraceDuplicateDetectorTest extends TestCase {
 		assertEquals(stackTrace, StackTraceDuplicateDetector.getStackTraceFromDescription(stackTrace));
 	}
 
+	@Test
 	public void testStackTraceOther() throws Exception {
 		// jamvm, sablevm, kaffe, cacao (space before brackets, one set of brackets)
 		String stackTrace = """

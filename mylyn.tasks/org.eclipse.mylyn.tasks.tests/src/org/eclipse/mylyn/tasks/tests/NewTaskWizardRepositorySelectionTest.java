@@ -14,6 +14,9 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -31,16 +34,16 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  */
 @SuppressWarnings("nls")
-public class NewTaskWizardRepositorySelectionTest extends TestCase {
+public class NewTaskWizardRepositorySelectionTest {
 
 	// see bug 203801
+	@Test
 	public void testRepositorySettingWithTaskListSelection() {
 		TaskRepository mockRepository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
@@ -75,6 +78,7 @@ public class NewTaskWizardRepositorySelectionTest extends TestCase {
 	}
 
 	// see bug bug 202184
+	@Test
 	public void testDefaultWithNoTaskListSelection() {
 		TaskListView view = (TaskListView) TasksUiUtil.openTasksViewInActivePerspective();
 		view.getViewer().setSelection(new StructuredSelection());

@@ -14,18 +14,21 @@
 
 package org.eclipse.mylyn.tasks.tests.ui;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskAttachmentPropertyTester;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskAttachmentPropertyTesterTest extends TestCase {
+public class TaskAttachmentPropertyTesterTest {
 
+	@Test
 	public void testHasUrl() {
 		TaskAttachment attachment = new StubAttachment();
 		TaskAttachmentPropertyTester tester = new TaskAttachmentPropertyTester();

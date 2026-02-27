@@ -14,7 +14,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
@@ -28,8 +29,8 @@ import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.ColumnSpan;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class LabelsAttributeEditorTest {
@@ -44,7 +45,7 @@ public class LabelsAttributeEditorTest {
 
 	private TaskAttribute multiSelectAttribute;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		TaskRepository repository = TaskTestUtil.createMockRepository();
 		taskData = new TaskData(new TaskAttributeMapper(repository), "kind", "url", "id");

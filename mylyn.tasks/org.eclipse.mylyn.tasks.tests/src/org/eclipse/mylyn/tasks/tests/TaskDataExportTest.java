@@ -14,6 +14,10 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -32,8 +36,9 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataSnapshotOperation;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizardPage;
 import org.eclipse.swt.widgets.Shell;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for the Task Export Wizard
@@ -43,7 +48,7 @@ import junit.framework.TestCase;
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskDataExportTest extends TestCase {
+public class TaskDataExportTest {
 
 	private File destinationDir;
 
@@ -88,7 +93,7 @@ public class TaskDataExportTest extends TestCase {
 		return entries;
 	}
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		// Create the export wizard
 		wizard = new TaskDataExportWizard();
@@ -130,7 +135,7 @@ public class TaskDataExportTest extends TestCase {
 		createFile(taskSubDir, "file2.xml.zip");
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		wizard.dispose();
 		wizardPage.dispose();
@@ -144,6 +149,7 @@ public class TaskDataExportTest extends TestCase {
 	/**
 	 * Tests the wizard when it has been asked to export all task data to a zip file.
 	 */
+	@Test
 	public void testExportAllToZip() throws Exception {
 		// set parameters in the wizard to simulate a user setting them and clicking "Finish"
 		wizardPage.setDestinationDirectory(destinationDir.getPath());
@@ -158,6 +164,7 @@ public class TaskDataExportTest extends TestCase {
 				"tasksandstuff/file1.xml.zip", "tasksandstuff/sub/file2.xml.zip"), entries);
 	}
 
+	@Test
 	public void testSnapshotWithContext() throws Exception {
 		File activityFile = new File(mylynFolder, "contexts/activity.xml.zip");
 		if (!activityFile.exists()) {
@@ -175,6 +182,7 @@ public class TaskDataExportTest extends TestCase {
 		assertEquals(Arrays.asList("contexts/activity.xml.zip", "repositories.xml.zip", "tasks.xml.zip"), entries);
 	}
 
+	@Test
 	public void testSnapshotWithoutContext() throws Exception {
 		File activityFile = new File(mylynFolder, "contexts/activity.xml.zip");
 		if (activityFile.exists()) {

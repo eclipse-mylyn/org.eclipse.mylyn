@@ -15,18 +15,18 @@ package org.eclipse.mylyn.internal.tasks.index.tests;
 
 import static org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.createTempFolder;
 import static org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.deleteFolderRecursively;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.mylyn.internal.tasks.index.core.TaskListIndex;
 import org.eclipse.mylyn.internal.tasks.index.tests.util.MockTestContext;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 
-@Ignore
+@Disabled
 public abstract class AbstractTaskListIndexTest {
 
 	protected MockTestContext context;
@@ -35,14 +35,14 @@ public abstract class AbstractTaskListIndexTest {
 
 	protected File tempDir;
 
-	@Before
+	@BeforeEach
 	public void setup() throws IOException {
 		tempDir = createTempFolder(getClass().getSimpleName());
 
 		context = new MockTestContext();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		disposeIndex();
 		if (tempDir != null) {

@@ -15,11 +15,12 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Locale;
 
 import org.eclipse.mylyn.internal.tasks.ui.editors.AttachmentSizeFormatter;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests attachment size value formatting.
@@ -28,20 +29,23 @@ import junit.framework.TestCase;
  * @author Frank Becker
  */
 @SuppressWarnings("nls")
-public class AttachmentSizeFormatterTest extends TestCase {
+public class AttachmentSizeFormatterTest {
 
+	@Test
 	public void testInvalidString() {
 		AttachmentSizeFormatter formatter = AttachmentSizeFormatter.getInstance();
 		assertEquals(AttachmentSizeFormatter.UNKNOWN_SIZE, formatter.format(null));
 		assertEquals(AttachmentSizeFormatter.UNKNOWN_SIZE, formatter.format("x"));
 	}
 
+	@Test
 	public void testNotAValidNumber() {
 		AttachmentSizeFormatter formatter = AttachmentSizeFormatter.getInstance();
 		assertEquals(AttachmentSizeFormatter.UNKNOWN_SIZE, formatter.format("-5"));
 		assertEquals(AttachmentSizeFormatter.UNKNOWN_SIZE, formatter.format("1.0"));
 	}
 
+	@Test
 	public void testByteFormatter() {
 		AttachmentSizeFormatter formatter = new AttachmentSizeFormatter(Locale.ENGLISH);
 		assertEquals("1 byte", formatter.format("1"));
@@ -49,6 +53,7 @@ public class AttachmentSizeFormatterTest extends TestCase {
 		assertEquals("1023 bytes", formatter.format("1023"));
 	}
 
+	@Test
 	public void testKBFormatter() {
 		AttachmentSizeFormatter formatterEnglish = new AttachmentSizeFormatter(Locale.ENGLISH);
 		assertEquals("1.00 KB", formatterEnglish.format("1024"));
@@ -59,6 +64,7 @@ public class AttachmentSizeFormatterTest extends TestCase {
 		assertEquals("1024,00 KB", formatterGerman.format("1048575"));
 	}
 
+	@Test
 	public void testMBFormatter() {
 		AttachmentSizeFormatter formatterEnglish = new AttachmentSizeFormatter(Locale.ENGLISH);
 		assertEquals("1.00 MB", formatterEnglish.format("1048576"));
@@ -69,6 +75,7 @@ public class AttachmentSizeFormatterTest extends TestCase {
 		assertEquals("1024,00 MB", formatterGerman.format("1073741823"));
 	}
 
+	@Test
 	public void testGBFormatter() {
 		AttachmentSizeFormatter formatterEnglish = new AttachmentSizeFormatter(Locale.ENGLISH);
 		assertEquals("1.00 GB", formatterEnglish.format("1073741824"));

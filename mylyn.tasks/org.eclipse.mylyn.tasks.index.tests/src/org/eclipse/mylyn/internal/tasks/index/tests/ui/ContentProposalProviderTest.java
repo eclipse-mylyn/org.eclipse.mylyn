@@ -14,9 +14,10 @@
 
 package org.eclipse.mylyn.internal.tasks.index.tests.ui;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -32,8 +33,8 @@ import org.eclipse.mylyn.internal.tasks.index.ui.ContentProposalProvider.Proposa
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link ContentProposalProvider}
@@ -46,7 +47,7 @@ public class ContentProposalProviderTest extends AbstractTaskListIndexTest {
 	private ContentProposalProvider proposalProvider;
 
 	@Override
-	@Before
+	@BeforeEach
 	public void setup() throws IOException {
 		super.setup();
 

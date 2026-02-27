@@ -14,6 +14,9 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
@@ -22,15 +25,16 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class LinkProviderTest extends TestCase {
+public class LinkProviderTest {
 
 	public class LinkProviderStub extends AbstractTaskRepositoryLinkProvider {
 
@@ -54,19 +58,20 @@ public class LinkProviderTest extends TestCase {
 
 	private LinkProviderStub provider;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		defaultTimeout = System.getProperty(ITasksCoreConstants.PROPERTY_LINK_PROVIDER_TIMEOUT, "");
 		provider = new LinkProviderStub();
 		TasksUiPlugin.getDefault().addRepositoryLinkProvider(provider);
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		TasksUiPlugin.getDefault().removeRepositoryLinkProvider(provider);
 		System.setProperty(ITasksCoreConstants.PROPERTY_LINK_PROVIDER_TIMEOUT, defaultTimeout);
 	}
 
+	@Test
 	public void testTimeout() {
 		System.setProperty(ITasksCoreConstants.PROPERTY_LINK_PROVIDER_TIMEOUT, "500");
 
@@ -85,6 +90,7 @@ public class LinkProviderTest extends TestCase {
 		assertEquals(2, provider.executions);
 	}
 
+	@Test
 	public void testTimeoutInfinite() {
 		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
 			System.err.println("Skipping LinkProviderTest.testTimeoutInfinite() on Macs");

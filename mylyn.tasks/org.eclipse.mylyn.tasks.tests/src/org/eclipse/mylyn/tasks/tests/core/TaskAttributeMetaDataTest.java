@@ -15,6 +15,10 @@
 package org.eclipse.mylyn.tasks.tests.core;
 
 import static java.util.concurrent.TimeUnit.HOURS;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.TimeUnit;
 
@@ -24,30 +28,32 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Benjamin Muskalla
  */
 @SuppressWarnings("nls")
-public class TaskAttributeMetaDataTest extends TestCase {
+public class TaskAttributeMetaDataTest {
 
 	private TaskData data;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		TaskRepository taskRepository = new TaskRepository("kind", "url");
 		data = new TaskData(new TaskAttributeMapper(taskRepository), MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL, "taskid");
 	}
 
+	@Test
 	public void testInitialRequiredAttribute() {
 		TaskAttribute attribute = new TaskAttribute(data.getRoot(), "attributeId");
 		boolean required = attribute.getMetaData().isRequired();
 		assertFalse(required);
 	}
 
+	@Test
 	public void testLifecycleRequiredAttribute() {
 		TaskAttribute attribute = new TaskAttribute(data.getRoot(), "attributeId");
 		attribute.getMetaData().setRequired(true);
@@ -56,6 +62,7 @@ public class TaskAttributeMetaDataTest extends TestCase {
 		assertFalse(attribute.getMetaData().isRequired());
 	}
 
+	@Test
 	public void testPrecision() throws Exception {
 		TaskAttribute attribute = new TaskAttribute(data.getRoot(), "attributeId");
 		TaskAttributeMetaData metaData = attribute.getMetaData();

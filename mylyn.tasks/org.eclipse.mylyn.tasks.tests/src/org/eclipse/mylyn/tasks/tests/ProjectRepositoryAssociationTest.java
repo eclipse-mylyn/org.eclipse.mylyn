@@ -14,20 +14,26 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.commons.sdk.util.ResourceTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.TestProject;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Rob Elves
  */
 @SuppressWarnings("nls")
-public class ProjectRepositoryAssociationTest extends TestCase {
+public class ProjectRepositoryAssociationTest {
 
 	private static final String REPOSITORY_URL = "http://mylyn.eclipse.org/bugs222";
 
@@ -35,19 +41,18 @@ public class ProjectRepositoryAssociationTest extends TestCase {
 
 	private TestProject projectWrapper;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
-		super.setUp();
 		projectWrapper = new TestProject(this.getClass().getName());
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		ResourceTestUtil.deleteProject(projectWrapper.getProject());
 		TasksUiPlugin.getRepositoryManager().clearRepositories();
 	}
 
+	@Test
 	public void testRepositoryForProject() throws CoreException {
 		assertNull(TasksUiPlugin.getDefault().getRepositoryForResource(projectWrapper.getProject()));
 		TaskRepository repository = new TaskRepository(REPOSITORY_KIND, REPOSITORY_URL);
@@ -62,6 +67,7 @@ public class ProjectRepositoryAssociationTest extends TestCase {
 		TasksUiPlugin.getRepositoryManager().removeRepository(repository);
 	}
 
+	@Test
 	public void testRepositoryForFolder() throws CoreException {
 		IFolder folder = projectWrapper.createFolder("testFolder");
 		assertTrue(folder.exists());

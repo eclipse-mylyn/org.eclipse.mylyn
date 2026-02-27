@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.tasks.tests.ui.editor;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -20,18 +22,18 @@ import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.PlanningPart;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
-public class PlanningPartTest extends TestCase {
+public class PlanningPartTest {
 
 	private static final int DAY = 24 * 60 * 60 * 1000;
 
 	private static final long WEEK = 7 * DAY;
 
+	@Test
 	public void testGetLabelWeek() {
 		DateRange range = TaskActivityUtil.getCurrentWeek();
 		assertEquals(Messages.PlanningPart_This_Week, PlanningPart.getLabel(range));
@@ -51,6 +53,7 @@ public class PlanningPartTest extends TestCase {
 		assertEquals(Messages.PlanningPart_This_Week, PlanningPart.getLabel(range));
 	}
 
+	@Test
 	public void testGetLabelDay() {
 		DateRange range = TaskActivityUtil.getDayOf(new Date());
 		assertEquals(Messages.PlanningPart_Today, PlanningPart.getLabel(range));

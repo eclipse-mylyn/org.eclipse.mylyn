@@ -14,6 +14,11 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
@@ -25,35 +30,31 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Rob Elves
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskListUnmatchedContainerTest extends TestCase {
+public class TaskListUnmatchedContainerTest {
 
 	private TaskList taskList;
 
 	private UnmatchedTaskContainer unmatchedContainer;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		taskList = new TaskList();
 		unmatchedContainer = new UnmatchedTaskContainer(MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
 		taskList.addUnmatchedContainer(unmatchedContainer);
 	}
-
-	@Override
-	protected void tearDown() throws Exception {
-	}
-
 	/**
 	 * When a local tasks is removed from a category it should be placed in the Uncategorized folder.
 	 */
+	@Test
 	public void testRemoveLocalTask() {
 		TaskCategory category = new TaskCategory("taskCategoryHandle");
 		taskList.addCategory(category);
@@ -72,6 +73,7 @@ public class TaskListUnmatchedContainerTest extends TestCase {
 	/**
 	 * Local tasks in a removed category should be orphaned.
 	 */
+	@Test
 	public void testLocalTaskOrphanedInDeletedTaskCategory() {
 		assertTrue(taskList.getDefaultCategory().isEmpty());
 		TaskCategory category = new TaskCategory("taskCategoryHandle");
@@ -87,6 +89,7 @@ public class TaskListUnmatchedContainerTest extends TestCase {
 	/**
 	 * Query removed with task in category, just query removed task remains.
 	 */
+	@Test
 	public void testTaskRemovedFromQuery() {
 		MockTask mockTask = new MockTask("1");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
@@ -102,6 +105,7 @@ public class TaskListUnmatchedContainerTest extends TestCase {
 	/**
 	 * Query removed with task in category, just query removed task remains.
 	 */
+	@Test
 	public void testTaskRemovedFromQueryButInCategory() {
 		MockTask mockTask = new MockTask("1");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
@@ -127,6 +131,7 @@ public class TaskListUnmatchedContainerTest extends TestCase {
 	/**
 	 * Repository tasks that exists in a query are not orphaned.
 	 */
+	@Test
 	public void testRepositoryTaskInDeletedCategory() {
 		MockTask mockTask = new MockTask("1");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
@@ -146,6 +151,7 @@ public class TaskListUnmatchedContainerTest extends TestCase {
 	/**
 	 * Repository tasks in deleted queries are orphaned.
 	 */
+	@Test
 	public void testRepositoryTaskInDeletedQuery() {
 		MockTask mockTask = new MockTask("1");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
@@ -162,6 +168,7 @@ public class TaskListUnmatchedContainerTest extends TestCase {
 	/**
 	 * Repository tasks that exist in another query are not orphaned
 	 */
+	@Test
 	public void testRemovalOfTaskInTwoQueries() {
 		MockTask mockTask = new MockTask("1");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query 1");
@@ -180,6 +187,7 @@ public class TaskListUnmatchedContainerTest extends TestCase {
 	/**
 	 * Moving an orphan to a Category should result in the task only being present in the target Category
 	 */
+	@Test
 	public void testMoveLocalTask() {
 		TaskCategory category = new TaskCategory("taskCategoryHandle");
 		taskList.addCategory(category);
@@ -190,6 +198,7 @@ public class TaskListUnmatchedContainerTest extends TestCase {
 		assertFalse(taskList.getDefaultCategory().contains(newTask.getHandleIdentifier()));
 	}
 
+	@Test
 	public void testAddRepositoryTask() {
 		MockTask mockTask = new MockTask("1");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
@@ -204,6 +213,7 @@ public class TaskListUnmatchedContainerTest extends TestCase {
 		assertTrue(unmatchedContainer.isEmpty());
 	}
 
+	@Test
 	public void testMoveRepositoryTask() {
 		TaskList tasklist = taskList;
 		assertTrue(tasklist.getAllTasks().isEmpty());
@@ -223,6 +233,7 @@ public class TaskListUnmatchedContainerTest extends TestCase {
 
 	}
 
+	@Test
 	public void testRefactorOrphanedHandle() {
 		MockTask mockTask = new MockTask("1");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
@@ -240,6 +251,7 @@ public class TaskListUnmatchedContainerTest extends TestCase {
 				.contains(mockTask.getHandleIdentifier()));
 	}
 
+	@Test
 	public void testOrphanedSubtasks() {
 		MockTask mockTask = new MockTask("1");
 		MockTask mockTask2 = new MockTask("2");
@@ -267,6 +279,7 @@ public class TaskListUnmatchedContainerTest extends TestCase {
 	 * If a task with subtasks falls out of a query, if its subtasks are subtasks of another task that is still around, they shouldn't be in
 	 * the archive.
 	 */
+	@Test
 	public void testOrphanedSubtaskWithOtherParent() {
 		MockTask mockTask = new MockTask("1");
 		MockTask mockTask2 = new MockTask("2");

@@ -14,6 +14,9 @@
 
 package org.eclipse.mylyn.tasks.tests.ui;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -32,14 +35,14 @@ import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Benjamin Muskalla
  */
 @SuppressWarnings("nls")
-public class AbstractRepositoryConnectorUiTest extends TestCase {
+public class AbstractRepositoryConnectorUiTest {
 
 	private AbstractRepositoryConnectorUi connectorUi;
 
@@ -49,7 +52,7 @@ public class AbstractRepositoryConnectorUiTest extends TestCase {
 
 	private MockTask task;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		AbstractRepositoryConnector connector = new MockRepositoryConnector();
 		connectorUi = new MockRepositoryConnectorUi(connector);
@@ -61,12 +64,14 @@ public class AbstractRepositoryConnectorUiTest extends TestCase {
 		commentAttribute = taskData.getRoot().createAttribute("comment");
 	}
 
+	@Test
 	public void testGetReplyTextDescription() throws Exception {
 		ITask task = new TaskTask("abc", "http://eclipse.org/mylyn", "1");
 		String replyText = connectorUi.getReplyText(null, task, null, false);
 		assertEquals("(In reply to comment #0)", replyText);
 	}
 
+	@Test
 	public void testGetReplyTextSpecificComment() throws Exception {
 		ITaskComment taskComment = new TaskComment(repository, task, commentAttribute) {
 			@Override
@@ -78,6 +83,7 @@ public class AbstractRepositoryConnectorUiTest extends TestCase {
 		assertEquals("(In reply to comment #13)", replyText);
 	}
 
+	@Test
 	public void testGetReplyTextSpecificCommentOnTask() throws Exception {
 		ITaskComment taskComment = new TaskComment(repository, task, commentAttribute) {
 			@Override
@@ -89,6 +95,7 @@ public class AbstractRepositoryConnectorUiTest extends TestCase {
 		assertEquals("(In reply to 1 comment #13)", replyText);
 	}
 
+	@Test
 	public void testGetImageDescriptor() {
 		ITask task = new TaskTask(MockRepositoryConnector.CONNECTOR_KIND, "http://connector.url", "1");
 		task.setOwner("TaskOwner");
@@ -98,6 +105,7 @@ public class AbstractRepositoryConnectorUiTest extends TestCase {
 		assertEquals(TasksUiImages.TASK, desc);
 	}
 
+	@Test
 	public void testGetImageDescriptorOwnedByMe() {
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://connector.url");
 		repository.setCredentials(AuthenticationType.REPOSITORY,
@@ -115,6 +123,7 @@ public class AbstractRepositoryConnectorUiTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetImageDescriptorOwnedNotByMe() {
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://connector.url");
 		repository.setCredentials(AuthenticationType.REPOSITORY,

@@ -14,6 +14,9 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -23,25 +26,16 @@ import java.util.Locale;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Rob Elves
  */
 @SuppressWarnings("nls")
-public class TaskListSaveManagerTest extends TestCase {
+public class TaskListSaveManagerTest {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
+	@Test
 	public void testRemovalOfSnapshots() throws IOException {
 		String backupPath = TasksUiPlugin.getDefault().getBackupFolderPath();
 		File backupFolder = new File(backupPath);
@@ -90,6 +84,8 @@ public class TaskListSaveManagerTest extends TestCase {
 		assertFalse(previousDay5.exists());
 	}
 
+	@Test
+	@Disabled("Test is not yet implemented")
 	public void testAddTaskDuringSave() {
 		// add task
 		// save
@@ -98,7 +94,7 @@ public class TaskListSaveManagerTest extends TestCase {
 
 	// test cancellation
 
-	private File createFile(File backupFolder, Calendar time) {
+	private static File createFile(File backupFolder, Calendar time) {
 		SimpleDateFormat format = new SimpleDateFormat(ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT, Locale.ENGLISH);
 		File newFile = new File(backupFolder, ITasksCoreConstants.OLD_PREFIX_TASKLIST + "-"
 				+ format.format(time.getTime()) + ITasksCoreConstants.FILE_EXTENSION);

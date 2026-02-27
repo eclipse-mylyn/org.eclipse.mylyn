@@ -14,6 +14,10 @@
 
 package org.eclipse.mylyn.tasks.tests.ui;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.core.runtime.CoreException;
@@ -38,14 +42,14 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Benjamin Muskalla
  */
 @SuppressWarnings("nls")
-public class AttributeEditorTest extends TestCase {
+public class AttributeEditorTest {
 
 	private class MockAttributeEditor extends AbstractAttributeEditor {
 
@@ -99,7 +103,7 @@ public class AttributeEditorTest extends TestCase {
 
 	private TaskDataModel manager;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, MockRepositoryConnector.REPOSITORY_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
@@ -110,6 +114,7 @@ public class AttributeEditorTest extends TestCase {
 		manager = createManager();
 	}
 
+	@Test
 	public void testDetermineNotRequired() throws Exception {
 		TaskAttribute attribute = new TaskAttribute(taskData.getRoot(), "not.required.field");
 		MockAttributeEditor editor = new MockAttributeEditor(manager, attribute);
@@ -120,6 +125,7 @@ public class AttributeEditorTest extends TestCase {
 		assertFalse(editor.needsValue());
 	}
 
+	@Test
 	public void testDetermineRequired() throws Exception {
 		TaskAttribute attribute = new TaskAttribute(taskData.getRoot(), "a.required.field");
 		attribute.getMetaData().setRequired(true);
@@ -131,6 +137,7 @@ public class AttributeEditorTest extends TestCase {
 		assertFalse(editor.needsValue());
 	}
 
+	@Test
 	public void testDecorateRequired() throws Exception {
 		final StringBuilder eventLog = new StringBuilder();
 		TaskAttribute attribute = new TaskAttribute(taskData.getRoot(), "a.required.field");
@@ -157,6 +164,7 @@ public class AttributeEditorTest extends TestCase {
 		assertEquals("", eventLog.toString());
 	}
 
+	@Test
 	public void testDecorateRequiredOnChange() throws Exception {
 		final StringBuilder eventLog = new StringBuilder();
 		TaskAttribute attribute = new TaskAttribute(taskData.getRoot(), "a.required.field");
@@ -189,6 +197,7 @@ public class AttributeEditorTest extends TestCase {
 		assertEquals("asked", eventLog.toString());
 	}
 
+	@Test
 	public void testDecorateRequiredReal() throws Exception {
 		TaskAttribute attribute = new TaskAttribute(taskData.getRoot(), "a.required.field");
 		MockAttributeEditor editor = new MockAttributeEditor(manager, attribute);
@@ -202,6 +211,7 @@ public class AttributeEditorTest extends TestCase {
 		manager.attributeChanged(attribute);
 	}
 
+	@Test
 	public void testNoDecorateWithoutLabel() throws Exception {
 		TaskAttribute attribute = new TaskAttribute(taskData.getRoot(), "a.required.field");
 		MockAttributeEditor editor = new MockAttributeEditor(manager, attribute) {
@@ -220,6 +230,7 @@ public class AttributeEditorTest extends TestCase {
 		manager.attributeChanged(attribute);
 	}
 
+	@Test
 	public void testBooleanAttribute() throws Exception {
 		FormToolkit toolkit = new FormToolkit(Display.getDefault());
 		TaskAttribute attribute = new TaskAttribute(taskData.getRoot(), "a.required.boolean");

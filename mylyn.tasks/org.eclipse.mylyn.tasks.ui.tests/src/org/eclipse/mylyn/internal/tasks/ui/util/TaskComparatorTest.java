@@ -14,8 +14,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.CategorizedPresentation;
@@ -25,15 +25,15 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.XMLMemento;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class TaskComparatorTest {
 
 	private TaskComparator taskComparator;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		taskComparator = new TaskComparator();
 	}

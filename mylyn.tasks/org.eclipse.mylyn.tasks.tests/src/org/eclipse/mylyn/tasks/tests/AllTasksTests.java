@@ -14,6 +14,7 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import org.eclipse.mylyn.commons.sdk.util.junit5.MylynTestSetup;
 import org.eclipse.mylyn.tasks.tests.bugs.SupportHandlerManagerTest;
 import org.eclipse.mylyn.tasks.tests.core.AbstractRepositoryConnectorTest;
 import org.eclipse.mylyn.tasks.tests.core.FileTaskAttachmentSourceTest;
@@ -36,7 +37,9 @@ import org.eclipse.mylyn.tasks.tests.data.TaskDataExternalizerTest;
 import org.eclipse.mylyn.tasks.tests.data.Xml11InputStreamTest;
 import org.eclipse.mylyn.tasks.tests.ui.AbstractRepositoryConnectorUiTest;
 import org.eclipse.mylyn.tasks.tests.ui.AttributeEditorTest;
+import org.eclipse.mylyn.tasks.tests.ui.MarkTaskHandlerTest;
 import org.eclipse.mylyn.tasks.tests.ui.MultipleTaskHyperlinkDetectorTest;
+import org.eclipse.mylyn.tasks.tests.ui.RetrieveTitleFromUrlTest;
 import org.eclipse.mylyn.tasks.tests.ui.ScheduledTaskContainerTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskAttachmentPropertyTesterTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskHyperlinkDetectorTest;
@@ -52,11 +55,8 @@ import org.eclipse.mylyn.tasks.tests.ui.editor.TaskEditorExtensionsTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.TaskEditorPartDescriptorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.TaskMigratorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.TaskUrlHyperlinkDetectorTest;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
-
-import junit.framework.TestSuite;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Mik Kersten
@@ -66,57 +66,44 @@ import junit.framework.TestSuite;
  * @author Miles Parker
  */
 
-@RunWith(Suite.class)
-@SuiteClasses({ ScheduledTaskContainerTest.class, TasksUiUtilTest.class, TaskListUiTest.class,
-		TaskRepositoryCredentialsTest.class, LinkProviderTest.class, TaskActivationActionTest.class,
-		TaskListPresentationTest.class, TaskRepositorySorterTest.class, CopyDetailsActionTest.class,
-		NewTaskFromSelectionActionTest.class, TaskListTest.class, ProjectRepositoryAssociationTest.class,
-		TaskListExternalizationTest.class, TaskDataManagerTest.class, TaskRepositoryManagerTest.class,
-		TaskRepositoriesExternalizerTest.class, TaskListContentProviderTest.class, TaskListBackupManagerTest.class,
-		TaskListSorterTest.class, TaskKeyComparatorTest.class, TaskTest.class, TaskListDropAdapterTest.class,
-		TaskDataExportTest.class, TaskDataImportTest.class, ScheduledPresentationTest.class, TaskAttachmentTest.class,
-		RepositorySettingsPageTest.class, CommentQuoterTest.class, TaskDataStoreTest.class, TaskExportImportTest.class,
-		PersonProposalProviderTest.class, OptionsProposalProviderTest.class, TaskRepositoryLocationTest.class,
-		TaskRepositoryTest.class, AttachmentSizeFormatterTest.class, TaskMapperTest.class,
-		TaskListUnmatchedContainerTest.class, TaskWorkingSetTest.class, TaskActivationHistoryTest.class,
-		TaskActivityManagerTest.class, TaskRepositoryFilterTests.class, TaskDiffUtilTest.class,
-		RefactorRepositoryUrlOperationTest.class, StackTraceDuplicateDetectorTest.class,
-		RepositoryCompletionProcessorTest.class,
+@Suite
+@SelectClasses({ ScheduledTaskContainerTest.class, TasksUiUtilTest.class, TaskListUiTest.class,
+	TaskRepositoryCredentialsTest.class, LinkProviderTest.class, TaskActivationActionTest.class,
+	TaskListPresentationTest.class, TaskRepositorySorterTest.class, CopyDetailsActionTest.class,
+	NewTaskFromSelectionActionTest.class, TaskListTest.class, ProjectRepositoryAssociationTest.class,
+	TaskListExternalizationTest.class, TaskDataManagerTest.class, TaskRepositoryManagerTest.class,
+	TaskRepositoriesExternalizerTest.class, TaskListContentProviderTest.class, TaskListBackupManagerTest.class,
+	TaskListSorterTest.class, TaskKeyComparatorTest.class, TaskTest.class, TaskListDropAdapterTest.class,
+	TaskDataExportTest.class, TaskDataImportTest.class, ScheduledPresentationTest.class, TaskAttachmentTest.class,
+	RepositorySettingsPageTest.class, CommentQuoterTest.class, TaskDataStoreTest.class, TaskExportImportTest.class,
+	PersonProposalProviderTest.class, OptionsProposalProviderTest.class, TaskRepositoryLocationTest.class,
+	TaskRepositoryTest.class, AttachmentSizeFormatterTest.class, TaskMapperTest.class,
+	TaskListUnmatchedContainerTest.class, TaskWorkingSetTest.class, TaskActivationHistoryTest.class,
+	TaskActivityManagerTest.class, TaskRepositoryFilterTests.class, TaskDiffUtilTest.class,
+	RefactorRepositoryUrlOperationTest.class, StackTraceDuplicateDetectorTest.class,
+	RepositoryCompletionProcessorTest.class,
 
-		RepositoryTemplateManagerTest.class, TaskHyperlinkDetectorTest.class, TaskRelationHyperlinkDetectorTest.class,
-		TaskUrlHyperlinkDetectorTest.class, TaskEditorPartDescriptorTest.class, TaskAttachmentPropertyTesterTest.class,
-		CommentGroupStrategyTest.class, ITasksCoreConstantsTest.class, EditorUtilTest.class,
-		FileTaskAttachmentSourceTest.class, TaskListSynchronizationSchedulerTest.class, PlanningPartTest.class,
-		RepositoryCompletionProcessorTest.class, TaskDiffUtilTest.class,
+	RepositoryTemplateManagerTest.class, TaskHyperlinkDetectorTest.class, TaskRelationHyperlinkDetectorTest.class,
+	TaskUrlHyperlinkDetectorTest.class, TaskEditorPartDescriptorTest.class, TaskAttachmentPropertyTesterTest.class,
+	CommentGroupStrategyTest.class, ITasksCoreConstantsTest.class, EditorUtilTest.class,
+	FileTaskAttachmentSourceTest.class, TaskListSynchronizationSchedulerTest.class, PlanningPartTest.class,
+	RepositoryCompletionProcessorTest.class, TaskDiffUtilTest.class,
 
-		TaskMigratorTest.class, TaskListViewTest.class, AttachmentTableLabelProviderTest.class,
-		TaskDataExternalizerTest.class, Xml11InputStreamTest.class, MultipleTaskHyperlinkDetectorTest.class,
-		RegionComparatorTest.class, PriorityLevelTest.class, TaskAttributeTest.class, TaskAttributeMapperTest.class,
-		SupportHandlerManagerTest.class, TaskAttributeMetaDataTest.class, AttributeEditorTest.class,
-		RepositoryClientManagerTest.class, AbstractRepositoryConnectorUiTest.class, SynchronizeTasksJobTest.class,
-		TaskAttributeTest.class, RepositoryConnectorContributorTest.class, TaskInitializationDataTest.class,
-		TaskDataDiffTest.class, SynchronizationMangerTest.class, TaskEditorExtensionsTest.class,
-		AbstractRepositoryConnectorTest.class, TaskJobFactoryTest.class
+	TaskMigratorTest.class, TaskListViewTest.class, AttachmentTableLabelProviderTest.class,
+	TaskDataExternalizerTest.class, Xml11InputStreamTest.class, MultipleTaskHyperlinkDetectorTest.class,
+	RegionComparatorTest.class, PriorityLevelTest.class, TaskAttributeTest.class, TaskAttributeMapperTest.class,
+	SupportHandlerManagerTest.class, TaskAttributeMetaDataTest.class, AttributeEditorTest.class,
+	RepositoryClientManagerTest.class, AbstractRepositoryConnectorUiTest.class, SynchronizeTasksJobTest.class,
+	TaskAttributeTest.class, RepositoryConnectorContributorTest.class, TaskInitializationDataTest.class,
+	TaskDataDiffTest.class, SynchronizationMangerTest.class, TaskEditorExtensionsTest.class,
+	AbstractRepositoryConnectorTest.class, TaskJobFactoryTest.class, MarkTaskHandlerTest.class,
+
+	// Disabled tests
+	TaskPlanningEditorTest.class, RetrieveTitleFromUrlTest.class,
+		/* org.eclipse.mylyn.commons.notifications.tests.feed.ServiceMessageManagerTest.class, */ // WHy is this here???
+		QueryExportImportTest.class,
+		BackgroundSaveTest.class
 })
+@MylynTestSetup
 public class AllTasksTests {
-	public static void addTests(TestSuite suite) {
-
-		// FIXME re-enable test
-		//TaskPlanningEditorTest.class,
-
-		// XXX fix and reenable
-		//MarkTaskHandlerTest.class,
-
-		// FIXME re-enable: bug 380390
-		//RetrieveTitleFromUrlTest.class,
-
-		// XXX re-enable
-		//ServiceMessageManagerTest.class,
-
-		// XXX long running tests, put back?
-		//QueryExportImportTest.class,
-		//BackgroundSaveTest.class,
-
-	}
-
 }

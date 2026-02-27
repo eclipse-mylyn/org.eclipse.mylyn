@@ -14,6 +14,12 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -29,8 +35,8 @@ import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
@@ -38,20 +44,22 @@ import junit.framework.TestCase;
  * @author Shawn Minto
  */
 @SuppressWarnings("nls")
-public class TaskListTest extends TestCase {
+public class TaskListTest {
 
 	private TaskList taskList;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		taskList = new TaskList();
 	}
 
+	@Test
 	public void testGetCategories() {
 		taskList.addCategory(new TaskCategory("a"));
 		assertEquals(2, taskList.getCategories().size());
 	}
 
+	@Test
 	public void testLocalSubTaskAdd() {
 		LocalTask task = new LocalTask("1", "summary");
 		LocalTask subTask = new LocalTask("2", "subTask");
@@ -63,6 +71,7 @@ public class TaskListTest extends TestCase {
 		assertEquals(subTask, task.getChildren().iterator().next());
 	}
 
+	@Test
 	public void testLocalTaskAddToSelf() {
 		LocalTask task = new LocalTask("1", "summary");
 
@@ -72,6 +81,7 @@ public class TaskListTest extends TestCase {
 		assertEquals(1, task.getParentContainers().size());
 	}
 
+	@Test
 	public void testLocalSubTaskAddCycle() {
 		LocalTask task = new LocalTask("1", "summary");
 		LocalTask subTask = new LocalTask("2", "subTask");
@@ -88,6 +98,7 @@ public class TaskListTest extends TestCase {
 		assertEquals(subTask, task.getChildren().iterator().next());
 	}
 
+	@Test
 	public void testLocalSubTaskAddDeepCycle() {
 		LocalTask task = new LocalTask("1", "summary");
 		LocalTask subTask1 = new LocalTask("2", "subTask");
@@ -151,6 +162,7 @@ public class TaskListTest extends TestCase {
 		assertEquals(0, subTask10.getChildren().size());
 	}
 
+	@Test
 	public void testLocalSubTaskAddMaxSubTaskDepthDeepCycle() {
 		LocalTask task = new LocalTask("1", "summary");
 		LocalTask subTask1 = new LocalTask("2", "subTask");
@@ -219,6 +231,7 @@ public class TaskListTest extends TestCase {
 		assertEquals(0, subTask11.getChildren().size());
 	}
 
+	@Test
 	public void testLocalSubTaskAddReallyDeepCycle() {
 		LocalTask task = new LocalTask("1", "summary");
 		LocalTask subTask1 = new LocalTask("2", "subTask");
@@ -325,6 +338,7 @@ public class TaskListTest extends TestCase {
 		assertEquals(0, subTask18.getChildren().size());
 	}
 
+	@Test
 	public void testQueryAndCategoryNameClash() {
 		TaskCategory category = new TaskCategory("TestClash");
 		taskList.addCategory(category);
@@ -356,6 +370,7 @@ public class TaskListTest extends TestCase {
 		assertEquals(taskList.getDefaultCategory(), TaskCategory.getParentTaskCategory(task1));
 	}
 
+	@Test
 	public void testDeleteCategory() {
 		assertEquals(1, taskList.getCategories().size());
 		TaskCategory category = new TaskCategory("cat");
@@ -365,6 +380,7 @@ public class TaskListTest extends TestCase {
 		assertEquals(1, taskList.getCategories().size());
 	}
 
+	@Test
 	public void testDeleteCategoryMovesTasksToRoot() {
 		AbstractTask task = new MockTask("delete");
 		TaskCategory category = new TaskCategory("cat");
@@ -376,6 +392,7 @@ public class TaskListTest extends TestCase {
 	}
 
 	@SuppressWarnings("deprecation")
+	@Test
 	public void testRenameCategory() {
 		TaskCategory category = new TaskCategory("handle", "cat");
 		taskList.addCategory(category);
@@ -389,6 +406,7 @@ public class TaskListTest extends TestCase {
 	}
 
 	@SuppressWarnings("deprecation")
+	@Test
 	public void testDeleteCategoryAfterRename() {
 		String newDesc = "newDescription";
 		assertNotNull(taskList);
@@ -401,6 +419,7 @@ public class TaskListTest extends TestCase {
 		assertEquals(1, taskList.getCategories().size());
 	}
 
+	@Test
 	public void testCreateSameCategoryName() {
 		assertEquals(1, taskList.getCategories().size());
 		TaskCategory category = new TaskCategory("cat");
@@ -417,6 +436,7 @@ public class TaskListTest extends TestCase {
 		assertEquals(container, category);
 	}
 
+	@Test
 	public void testDeleteRootTask() {
 		AbstractTask task = new LocalTask("1", "label");
 		taskList.addTask(task);
@@ -425,6 +445,7 @@ public class TaskListTest extends TestCase {
 		assertEquals(0, taskList.getDefaultCategory().getChildren().size());
 	}
 
+	@Test
 	public void testDeleteFromCategory() {
 		assertEquals(0, taskList.getAllTasks().size());
 		assertEquals(0, taskList.getDefaultCategory().getChildren().size());
@@ -449,6 +470,7 @@ public class TaskListTest extends TestCase {
 		assertEquals(0, category.getChildren().size());
 	}
 
+	@Test
 	public void testDeleteRepositoryTask() {
 		String repositoryUrl = "http://somewhere.com";
 		MockTask task = new MockTask(repositoryUrl, "1");
@@ -463,6 +485,7 @@ public class TaskListTest extends TestCase {
 		assertEquals(0, taskList.getDefaultCategory().getChildren().size());
 	}
 
+	@Test
 	public void testRefactorSingleTask() {
 		AbstractTask task = new LocalTask("1", "label");
 		taskList.addTask(task);
@@ -472,6 +495,7 @@ public class TaskListTest extends TestCase {
 		assertEquals(new LocalTask("2", "label"), taskList.getAllTasks().iterator().next());
 	}
 
+	@Test
 	public void testRefactorSingleTaskInUnmatched() {
 		String repositoryUrl = "http://somewhere.com";
 		MockTask task = new MockTask(repositoryUrl, "1");
@@ -485,6 +509,7 @@ public class TaskListTest extends TestCase {
 		assertEquals(new MockTask(repositoryUrl, "2"), unmatched.getChildren().iterator().next());
 	}
 
+	@Test
 	public void testRefactorSingleTaskKeepsProperties() {
 		AbstractTask task = new LocalTask("1", "label");
 		taskList.addTask(task);
@@ -499,6 +524,7 @@ public class TaskListTest extends TestCase {
 		assertEquals(task.getPriority(), refactoredTask.getPriority());
 	}
 
+	@Test
 	public void testRefactorTaskInQuery() {
 		MockRepositoryQuery query = new MockRepositoryQuery("query");
 		taskList.addQuery(query);
@@ -512,6 +538,7 @@ public class TaskListTest extends TestCase {
 		assertEquals(new MockTask("2"), taskList.getAllTasks().iterator().next());
 	}
 
+	@Test
 	public void testRefactorTaskInCategory() {
 		TaskCategory category = new TaskCategory("category");
 		taskList.addCategory(category);
@@ -525,6 +552,7 @@ public class TaskListTest extends TestCase {
 		assertEquals(new MockTask("2"), taskList.getAllTasks().iterator().next());
 	}
 
+	@Test
 	public void testRefactorTaskWithSubtask() {
 		AbstractTask task = new LocalTask("1", "label");
 		AbstractTask subtask = new LocalTask("2", "subtask");
@@ -541,6 +569,7 @@ public class TaskListTest extends TestCase {
 		assertEquals(subtask, refactoredTask.getChildren().iterator().next());
 	}
 
+	@Test
 	public void testRefactorTaskWithParent() {
 		AbstractTask task = new LocalTask("1", "label");
 		AbstractTask parent = new LocalTask("2", "parent");
@@ -557,6 +586,7 @@ public class TaskListTest extends TestCase {
 		assertEquals(parent, refactoredTask.getParentContainers().iterator().next());
 	}
 
+	@Test
 	public void testgetQueriesAndHitsForHandle() {
 		MockTask hit1 = new MockTask("1");
 		MockTask hit2 = new MockTask("2");
@@ -590,6 +620,7 @@ public class TaskListTest extends TestCase {
 		assertTrue(queriesReturned.contains(query2));
 	}
 
+	@Test
 	public void testUpdateQueryHits() {
 		MockTask hit1 = new MockTask("1");
 		MockTask hit2 = new MockTask("2");
@@ -636,6 +667,7 @@ public class TaskListTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetRepositoryTasks() {
 		String repositoryUrl = "https://bugs.eclipse.org/bugs";
 		String bugNumber = "106939";

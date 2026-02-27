@@ -14,16 +14,18 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesViewSorter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
-public class TaskRepositoryViewSorterTest extends TestCase {
+public class TaskRepositoryViewSorterTest {
 
+	@Test
 	public void testCategorySorting() {
 		ViewerComparator sorter = new TaskRepositoriesViewSorter();
 		TaskRepository t1 = new TaskRepository("kind", "http://a");

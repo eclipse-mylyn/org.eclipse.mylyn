@@ -14,6 +14,9 @@
 
 package org.eclipse.mylyn.tasks.tests.ui;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -31,26 +34,28 @@ import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskListViewTest extends TestCase {
+public class TaskListViewTest {
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		TaskTestUtil.resetTaskListAndRepositories();
 		TaskTestUtil.createMockRepository();
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		TaskTestUtil.resetTaskListAndRepositories();
 	}
 
+	@Test
 	public void testSelectedAndFocusTaskMultiple() {
 		TaskList taskList = TasksUiPlugin.getTaskList();
 		TaskCategory category1 = new TaskCategory(taskList.getUniqueHandleIdentifier());
@@ -73,6 +78,7 @@ public class TaskListViewTest extends TestCase {
 		assertEquals(toString(selection), toString((TreeSelection) view.getViewer().getSelection()));
 	}
 
+	@Test
 	public void testSelectedAndFocusTaskRestore() {
 		TaskList taskList = TasksUiPlugin.getTaskList();
 		TaskCategory category1 = new TaskCategory(taskList.getUniqueHandleIdentifier());
@@ -101,10 +107,11 @@ public class TaskListViewTest extends TestCase {
 		assertEquals(selection, view.getViewer().getSelection());
 	}
 
+	@Test
 	public void testWelcomeMessage() throws WorkbenchException {
 		TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ITasksUiPreferenceConstants.WELCOME_MESSAGE, Boolean.toString(false));
+		.getPreferenceStore()
+		.setValue(ITasksUiPreferenceConstants.WELCOME_MESSAGE, Boolean.toString(false));
 		// Closing the task list view somehow causes a widget disposed error in testBooleanAttribute,
 		// so instead we need to open a new window to create a new task list view
 		IWorkbenchWindow window = PlatformUI.getWorkbench().openWorkbenchWindow(null);
@@ -118,7 +125,7 @@ public class TaskListViewTest extends TestCase {
 		}
 	}
 
-	private String toString(TreeSelection s1) {
+	private static String toString(TreeSelection s1) {
 		StringBuilder sb = new StringBuilder();
 		for (TreePath path : s1.getPaths()) {
 			sb.append("[");

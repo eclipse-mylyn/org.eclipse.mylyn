@@ -14,18 +14,19 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Objects;
 
 import org.eclipse.mylyn.tasks.core.ITask.IPriorityValue;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class PriorityLevelTest extends TestCase {
+public class PriorityLevelTest {
 
 	private static class Priority implements IPriorityValue {
 
@@ -50,7 +51,7 @@ public class PriorityLevelTest extends TestCase {
 			if (this == obj) {
 				return true;
 			}
-			if ((obj == null) || (getClass() != obj.getClass())) {
+			if (obj == null || getClass() != obj.getClass()) {
 				return false;
 			}
 			Priority other = (Priority) obj;
@@ -62,6 +63,7 @@ public class PriorityLevelTest extends TestCase {
 
 	}
 
+	@Test
 	public void testFromValueThreePriorities() {
 		Priority p1 = new Priority(1);
 		Priority p2 = new Priority(2);
@@ -74,6 +76,7 @@ public class PriorityLevelTest extends TestCase {
 		assertEquals("P3", PriorityLevel.fromValue(priorities, null).toString());
 	}
 
+	@Test
 	public void testFromValueSinglePriority() {
 		Priority p1 = new Priority(10);
 		Priority[] priorities = { p1 };
@@ -82,6 +85,7 @@ public class PriorityLevelTest extends TestCase {
 		assertEquals("P3", PriorityLevel.fromValue(priorities, null).toString());
 	}
 
+	@Test
 	public void testFromValueSixPriorites() {
 		Priority p1 = new Priority(10);
 		Priority p2 = new Priority(20);

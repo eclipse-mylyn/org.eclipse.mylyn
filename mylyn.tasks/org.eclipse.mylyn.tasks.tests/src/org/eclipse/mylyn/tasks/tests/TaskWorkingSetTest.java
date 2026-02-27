@@ -14,6 +14,9 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
@@ -36,14 +39,15 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.internal.Workbench;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  */
 @SuppressWarnings("nls")
-public class TaskWorkingSetTest extends TestCase {
+public class TaskWorkingSetTest {
 
 	private IProject project;
 
@@ -53,14 +57,14 @@ public class TaskWorkingSetTest extends TestCase {
 
 	private IWorkingSetManager workingSetManager;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		workingSetManager = Workbench.getInstance().getWorkingSetManager();
 		root = ResourcesPlugin.getWorkspace().getRoot();
 		TestFixture.resetTaskList();
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		if (workingSet != null) {
 			workingSetManager.removeWorkingSet(workingSet);
@@ -71,6 +75,7 @@ public class TaskWorkingSetTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testDeleteQuery() {
 		MockRepositoryQuery query = new MockRepositoryQuery("description");
 		TaskList taskList = TasksUiPlugin.getTaskList();
@@ -81,6 +86,7 @@ public class TaskWorkingSetTest extends TestCase {
 		assertFalse(Arrays.asList(workingSet.getElements()).contains(query));
 	}
 
+	@Test
 	public void testRenameQuery() {
 		MockRepositoryQuery query = new MockRepositoryQuery("description");
 		TaskList taskList = TasksUiPlugin.getTaskList();
@@ -103,6 +109,7 @@ public class TaskWorkingSetTest extends TestCase {
 	}
 
 	// XXX see bug 212962
+//	@Test
 //	public void testRenameQuery() {
 //		MockRepositoryQuery query = new MockRepositoryQuery("description");
 //		TaskList taskList = TasksUiPlugin.getTaskList();
@@ -115,6 +122,7 @@ public class TaskWorkingSetTest extends TestCase {
 //		assertTrue(Arrays.asList(workingSet.getElements()).contains(query));
 //	}
 //
+//	@Test
 //	public void testEditQuery() {
 //		MockRepositoryQuery query = new MockRepositoryQuery("description");
 //		TaskList taskList = TasksUiPlugin.getTaskList();
@@ -126,6 +134,7 @@ public class TaskWorkingSetTest extends TestCase {
 //		assertTrue(Arrays.asList(workingSet.getElements()).contains(query));
 //	}
 
+	@Test
 	public void testRenameProject() throws Exception {
 		createProject("Test Rename");
 		workingSet = createWorkingSet(project);
@@ -146,6 +155,7 @@ public class TaskWorkingSetTest extends TestCase {
 		assertFalse(Arrays.asList(workingSet.getElements()).contains(oldProject));
 		assertTrue(Arrays.asList(workingSet.getElements()).contains(newProject));
 	}
+
 
 	private void createProject(String name) throws CoreException {
 		project = root.getProject(name);

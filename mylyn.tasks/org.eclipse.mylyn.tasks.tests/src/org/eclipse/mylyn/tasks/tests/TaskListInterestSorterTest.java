@@ -14,6 +14,8 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Date;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -25,11 +27,11 @@ import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListInterestSorter;
 import org.eclipse.swt.widgets.Control;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
-public class TaskListInterestSorterTest extends TestCase {
+public class TaskListInterestSorterTest {
 
 	private TaskListInterestSorter sorter;
 
@@ -79,18 +81,20 @@ public class TaskListInterestSorterTest extends TestCase {
 		}
 	}
 
-	@Override
+	@BeforeEach
 	public void setUp() {
 		sorter = new TaskListInterestSorter();
 		task1 = new LocalTask("1", "one");
 		task2 = new LocalTask("2", "two");
 	}
 
+	@Test
 	public void testSortDefault() {
 		assertEquals(0, sorter.compare(new EmptyViewer(), task1, task2));
 		assertEquals(0, sorter.compare(new EmptyViewer(), task2, task1));
 	}
 
+	@Test
 	public void testSortFallback() {
 		sorter.setconfiguredSorter(new FallbackSorter());
 
@@ -98,6 +102,7 @@ public class TaskListInterestSorterTest extends TestCase {
 		assertEquals(-1, sorter.compare(new EmptyViewer(), task2, task1));
 	}
 
+	@Test
 	public void testSortCompleted() {
 		Date now = new Date();
 
@@ -112,6 +117,7 @@ public class TaskListInterestSorterTest extends TestCase {
 		assertEquals(0, sorter.compare(new EmptyViewer(), task2, task1));
 	}
 
+	@Test
 	public void testSortScheduled() {
 		DateRange today = TaskActivityUtil.getCurrentWeek().getToday();
 		DateRange tomorrow = TaskActivityUtil.getCurrentWeek().getToday().next();
@@ -133,6 +139,7 @@ public class TaskListInterestSorterTest extends TestCase {
 		assertEquals(0, sorter.compare(new EmptyViewer(), task2, task1));
 	}
 
+	@Test
 	public void testSortDue() {
 		DateRange today = TaskActivityUtil.getCurrentWeek().getToday();
 		DateRange tomorrow = TaskActivityUtil.getCurrentWeek().getToday().next();

@@ -14,7 +14,7 @@
 package org.eclipse.mylyn.team.tests;
 
 import org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables.TaskURL;
-import org.eclipse.mylyn.tasks.tests.util.MockRepositoryConnectorTestCase;
+import org.eclipse.mylyn.tests.util.junit4.MockRepositoryConnectorTestCase;
 
 @SuppressWarnings("nls")
 public class CommitTemplateVariablesTest extends MockRepositoryConnectorTestCase {

@@ -33,8 +33,8 @@ import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class AbstractTaskEditorPageTest {
@@ -65,7 +65,7 @@ public class AbstractTaskEditorPageTest {
 
 	private TaskAttribute attribute;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		repository = TaskTestUtil.createMockRepository();
 		task = TaskTestUtil.createMockTask("1");

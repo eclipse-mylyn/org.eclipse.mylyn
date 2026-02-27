@@ -14,6 +14,13 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -24,15 +31,15 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class RepositorySettingsPageTest extends TestCase {
+public class RepositorySettingsPageTest {
 
+	@Test
 	public void testNeedsEncoding() {
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://localhost/");
 		repository.setCharacterEncoding("UTF-8");
@@ -48,6 +55,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		assertEquals("UTF-8", repository2.getCharacterEncoding());
 	}
 
+	@Test
 	public void testNeedsEncodingFalse() {
 		MockRepositorySettingsPage page = new MockRepositorySettingsPage(null);
 		page.setNeedsEncoding(false);
@@ -59,6 +67,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		page.createTaskRepository();
 	}
 
+	@Test
 	public void testNeedsAnonyoumousLoginFalse() {
 		MockRepositorySettingsPage page = new MockRepositorySettingsPage(null);
 		page.setNeedsAnonymousLogin(false);
@@ -70,6 +79,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		assertNull(page.getAnonymousButton());
 	}
 
+	@Test
 	public void testNeedsAnonyoumousLoginNoRepository() {
 		MockRepositorySettingsPage page = new MockRepositorySettingsPage(null);
 		page.setNeedsAnonymousLogin(true);
@@ -88,6 +98,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		page.getAnonymousButton().setSelection(false);
 	}
 
+	@Test
 	public void testNeedsAnonyoumousLogin() {
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://localhost/");
 
@@ -134,6 +145,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		assertEquals("password", page.getPassword());
 	}
 
+	@Test
 	public void testSavePassword() {
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://localhost/");
 		TasksUiPlugin.getDefault().addRepositoryConnectorUi(new MockRepositoryConnectorUi());
@@ -160,6 +172,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testSaveHttpPassword() {
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://localhost/");
 		TasksUiPlugin.getDefault().addRepositoryConnectorUi(new MockRepositoryConnectorUi());
@@ -188,6 +201,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testSaveProxyPassword() {
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://localhost/");
 		TasksUiPlugin.getDefault().addRepositoryConnectorUi(new MockRepositoryConnectorUi());
@@ -216,6 +230,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testValidUrl() throws Exception {
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://localhost/");
 		MockRepositorySettingsPage page = new MockRepositorySettingsPage(repository);
@@ -229,6 +244,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		assertTrue(page.isValidUrl("http://www.mylyn.org/bugzilla34"));
 	}
 
+	@Test
 	public void testInjectConnectorIntoSettingsPage() throws Exception {
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://localhost/");
 		MockRepositoryConnector connector = new MockRepositoryConnector();
@@ -236,12 +252,14 @@ public class RepositorySettingsPageTest extends TestCase {
 		assertSame(page.getConnector(), connector);
 	}
 
+	@Test
 	public void testNeedsRepositoryCredentialsDefaultsToTrue() {
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://localhost/");
 		MockRepositorySettingsPage page = new MockRepositorySettingsPage(repository);
 		assertTrue(page.needsRepositoryCredentials());
 	}
 
+	@Test
 	public void testNeedsRepositoryCredentialsCanBeSetToFalse() {
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://localhost/");
 		MockRepositorySettingsPage page = new MockRepositorySettingsPage(repository);
@@ -249,6 +267,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		assertFalse(page.needsRepositoryCredentials());
 	}
 
+	@Test
 	public void testNeedsRepositoryCredentialsPageCompletesWithoutCredentials() {
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://localhost/");
 		MockRepositorySettingsPage page = new MockRepositorySettingsPage(repository);

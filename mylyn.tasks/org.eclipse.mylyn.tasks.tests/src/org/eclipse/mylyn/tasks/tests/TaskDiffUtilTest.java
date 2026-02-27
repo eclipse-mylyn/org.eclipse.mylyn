@@ -15,6 +15,8 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
@@ -29,8 +31,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Eugene Kuleshov
@@ -38,8 +39,9 @@ import junit.framework.TestCase;
  * @author Robert Elves
  */
 @SuppressWarnings("nls")
-public class TaskDiffUtilTest extends TestCase {
+public class TaskDiffUtilTest {
 
+	@Test
 	public void testFoldSpaces() {
 		assertEquals("a b", TaskDiffUtil.foldSpaces("a   b"));
 		assertEquals("", TaskDiffUtil.foldSpaces("  "));
@@ -48,6 +50,7 @@ public class TaskDiffUtilTest extends TestCase {
 		assertEquals("b", TaskDiffUtil.cleanCommentText("   b"));
 	}
 
+	@Test
 	public void testCleanComment() {
 		assertEquals("attachment: some attachment. attachment description", TaskDiffUtil.cleanCommentText("""
 				Created an attachment (id=111)
@@ -79,23 +82,24 @@ public class TaskDiffUtilTest extends TestCase {
 				"""));
 	}
 
+	@Test
 	public void testDateDiff() {
 		TaskData dataA = new TaskData(new MyTaskAttributeMapper(new TaskRepository("mock", "url")), "mock", "url",
 				"1123");
 		TaskAttribute attributeA = new TaskAttribute(dataA.getRoot(), "attributeA");
 		attributeA.getMetaData()
-				.setKind(TaskAttribute.KIND_DEFAULT)
-				.setType(TaskAttribute.TYPE_DATE)
-				.setLabel("someDate:");
+		.setKind(TaskAttribute.KIND_DEFAULT)
+		.setType(TaskAttribute.TYPE_DATE)
+		.setLabel("someDate:");
 		attributeA.setValue("1275068800000");
 
 		TaskData dataB = new TaskData(new MyTaskAttributeMapper(new TaskRepository("mock", "url")), "mock", "url",
 				"1123");
 		TaskAttribute attributeB = new TaskAttribute(dataB.getRoot(), "attributeA");
 		attributeB.getMetaData()
-				.setKind(TaskAttribute.KIND_DEFAULT)
-				.setType(TaskAttribute.TYPE_DATE)
-				.setLabel("mydate");
+		.setKind(TaskAttribute.KIND_DEFAULT)
+		.setType(TaskAttribute.TYPE_DATE)
+		.setLabel("mydate");
 		attributeB.setValue("1265068800000");
 
 		TaskDataDiff diff = new TaskDataDiff(new RepositoryModel(new TaskList(), new TaskRepositoryManager()), dataA,

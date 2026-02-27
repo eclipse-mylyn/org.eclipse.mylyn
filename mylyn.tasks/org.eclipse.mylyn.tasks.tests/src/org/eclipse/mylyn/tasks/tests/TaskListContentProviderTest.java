@@ -14,6 +14,9 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Date;
 
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -24,14 +27,15 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListContentProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Felix Schwarz
  */
 @SuppressWarnings("nls")
-public class TaskListContentProviderTest extends TestCase {
+public class TaskListContentProviderTest {
 
 	private TaskListContentProvider provider;
 
@@ -39,9 +43,8 @@ public class TaskListContentProviderTest extends TestCase {
 
 	private TaskList taskList;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
-		super.setUp();
 		TasksUiUtil.openTasksViewInActivePerspective();
 		view = TaskListView.getFromActivePerspective();
 		provider = (TaskListContentProvider) view.getViewer().getContentProvider();
@@ -51,12 +54,12 @@ public class TaskListContentProviderTest extends TestCase {
 		taskList = TasksUiPlugin.getTaskList();
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		view.clearFilters();
-		super.tearDown();
 	}
 
+	@Test
 	public void testHasChildren() {
 
 		AbstractTask parent = new LocalTask("parent", "parent label");

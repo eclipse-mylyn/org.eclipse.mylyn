@@ -14,6 +14,9 @@
 
 package org.eclipse.mylyn.tasks.tests.ui;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,15 +35,15 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskHyperlinkDetector;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Sam Davis
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class MultipleTaskHyperlinkDetectorTest extends TestCase {
+public class MultipleTaskHyperlinkDetectorTest {
 
 	protected MockRepositoryConnectorUi connectorUi1;
 
@@ -52,7 +55,7 @@ public class MultipleTaskHyperlinkDetectorTest extends TestCase {
 
 	protected TaskRepository repository2;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		// define 2 repositories using "test xxx" as task id
 		repository1a = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
@@ -107,6 +110,7 @@ public class MultipleTaskHyperlinkDetectorTest extends TestCase {
 		return detector;
 	}
 
+	@Test
 	public void testSingleRepositoryMatches() {
 		IHyperlink[] links = detect("test 123 test 456 test 789", 9, 15, repository2);
 		assertNotNull(links);
@@ -116,6 +120,7 @@ public class MultipleTaskHyperlinkDetectorTest extends TestCase {
 		assertEquals(repository2, ((TaskHyperlink) links[0]).getRepository());
 	}
 
+	@Test
 	public void testMultipleRepositoriesMatch() {
 		IHyperlink[] links = detect("test 123 test 456 test 789", 9, 15, repository1a);
 		assertNotNull(links);

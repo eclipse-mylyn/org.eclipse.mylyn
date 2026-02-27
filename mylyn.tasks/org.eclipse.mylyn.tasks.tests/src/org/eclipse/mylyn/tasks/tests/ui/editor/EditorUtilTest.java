@@ -13,6 +13,12 @@
 
 package org.eclipse.mylyn.tasks.tests.ui.editor;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.mylyn.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
@@ -21,14 +27,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Shell;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
-public class EditorUtilTest extends TestCase {
+public class EditorUtilTest {
 
+	@Test
 	public void testSetEnabledState() {
 		Shell shell = new Shell();
 		Composite composite = new Composite(shell, SWT.NONE);
@@ -47,6 +53,7 @@ public class EditorUtilTest extends TestCase {
 		assertTrue(label.getEnabled());
 	}
 
+	@Test
 	public void testSetEnabledStateDisabledChild() {
 		Shell shell = new Shell();
 		Composite composite = new Composite(shell, SWT.NONE);
@@ -62,6 +69,7 @@ public class EditorUtilTest extends TestCase {
 		assertFalse(label.getEnabled());
 	}
 
+	@Test
 	public void testSetEnabledStateDisabledParent() {
 		Shell shell = new Shell();
 		Composite composite = new Composite(shell, SWT.NONE);
@@ -77,6 +85,7 @@ public class EditorUtilTest extends TestCase {
 		assertTrue(label.getEnabled());
 	}
 
+	@Test
 	public void testSetEnabledStateDisabledChildAndComposite() {
 		Shell shell = new Shell();
 		Composite composite = new Composite(shell, SWT.NONE);
@@ -93,6 +102,7 @@ public class EditorUtilTest extends TestCase {
 		assertFalse(label.getEnabled());
 	}
 
+	@Test
 	public void testSetEnabledStateDisableStateRemoved() {
 		Shell shell = new Shell();
 		Composite composite = new Composite(shell, SWT.NONE);
@@ -107,6 +117,7 @@ public class EditorUtilTest extends TestCase {
 		assertFalse(label.getEnabled());
 	}
 
+	@Test
 	public void testSetEnabledWithoutDisabling() {
 		Shell shell = new Shell();
 		Composite composite = new Composite(shell, SWT.NONE);
@@ -118,6 +129,7 @@ public class EditorUtilTest extends TestCase {
 		assertFalse(composite.getEnabled());
 	}
 
+	@Test
 	public void testAddScrollListener() {
 		Scrollable textWidget = new Composite(WorkbenchUtil.getShell(), SWT.V_SCROLL);
 

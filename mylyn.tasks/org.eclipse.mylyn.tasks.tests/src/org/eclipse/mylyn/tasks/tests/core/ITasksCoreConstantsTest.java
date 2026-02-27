@@ -13,17 +13,20 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants.MutexSchedulingRule;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants.ObjectSchedulingRule;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
-public class ITasksCoreConstantsTest extends TestCase {
+public class ITasksCoreConstantsTest {
 
+	@Test
 	public void testRootRuleConflicts() {
 		assertTrue(ITasksCoreConstants.ROOT_SCHEDULING_RULE.isConflicting(ITasksCoreConstants.ROOT_SCHEDULING_RULE));
 		assertTrue(
@@ -36,6 +39,7 @@ public class ITasksCoreConstantsTest extends TestCase {
 		assertTrue(new ObjectSchedulingRule(this).isConflicting(ITasksCoreConstants.ROOT_SCHEDULING_RULE));
 	}
 
+	@Test
 	public void testObjectSchdedulingRuleConflicts() {
 		assertTrue(new ObjectSchedulingRule(this).isConflicting(new ObjectSchedulingRule(this)));
 		assertFalse(new ObjectSchedulingRule(new Object()).isConflicting(new ObjectSchedulingRule(this)));

@@ -14,6 +14,10 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Date;
 
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -30,15 +34,16 @@ import org.eclipse.mylyn.tests.util.TasksUiTestUtil;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Shawn Minto
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TasksUiUtilTest extends TestCase {
+public class TasksUiUtilTest {
 
 	private TaskCategory cat1;
 
@@ -50,7 +55,7 @@ public class TasksUiUtilTest extends TestCase {
 
 	private TaskList taskList;
 
-	@Override
+	@BeforeEach
 	public void setUp() throws Exception {
 		taskList = TasksUiPlugin.getTaskList();
 
@@ -78,12 +83,13 @@ public class TasksUiUtilTest extends TestCase {
 		TasksUiTestUtil.ensureTasksUiInitialization();
 	}
 
-	@Override
+	@AfterEach
 	public void tearDown() throws Exception {
 		TaskTestUtil.resetTaskListAndRepositories();
 		activePage.closeAllEditors(false);
 	}
 
+	@Test
 	public void testOpenTaskFromTask() {
 		TasksUiUtil.openTask(cat1task1);
 		assertEquals(1, activePage.getEditorReferences().length);
@@ -98,6 +104,7 @@ public class TasksUiUtilTest extends TestCase {
 		assertEquals(TaskEditor.class, editor.getClass());
 	}
 
+	@Test
 	public void testOpenLocalTask() {
 		ITask localTask = TasksUiInternal.createNewLocalTask("summary");
 		TasksUiUtil.openTask(localTask);
@@ -106,12 +113,13 @@ public class TasksUiUtilTest extends TestCase {
 		assertEquals(TaskEditor.class, editor.getClass());
 	}
 
+	@Test
 	public void testOpenLocalTaskWebBrowserDefault() {
 		ITask localTask = TasksUiInternal.createNewLocalTask("summary");
 		try {
 			TasksUiPlugin.getDefault()
-					.getPreferenceStore()
-					.setValue(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH, false);
+			.getPreferenceStore()
+			.setValue(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH, false);
 			TasksUiUtil.openTask(localTask);
 			assertEquals(1, activePage.getEditorReferences().length);
 			IEditorPart editor = activePage.getEditorReferences()[0].getEditor(true);

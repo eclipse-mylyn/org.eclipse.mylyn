@@ -14,12 +14,13 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,6 +42,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.sdk.util.junit5.EnabledIfCI;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
@@ -75,10 +77,9 @@ import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.tests.connector.MockTaskDataHandler;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestFixture;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Benjamin Muskalla
@@ -118,7 +119,7 @@ public class SynchronizeTasksJobTest {
 
 	private TaskDataStore taskDataStore;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		tasksModel = TasksUi.getRepositoryModel();
 		taskDataManager = (TaskDataManager) TasksUi.getTaskDataManager();
@@ -127,7 +128,7 @@ public class SynchronizeTasksJobTest {
 		taskDataStore = new TaskDataStore(TasksUi.getRepositoryManager());
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		TestFixture.resetTaskList();
 	}
@@ -179,7 +180,7 @@ public class SynchronizeTasksJobTest {
 		job.run(new NullProgressMonitor());
 	}
 
-	@Ignore("No CI Server")
+	@EnabledIfCI
 	@Test
 	public void testMonitorWithSingleTaskData() throws Exception {
 		AbstractRepositoryConnector connector = new MockRepositoryConnector();
@@ -211,7 +212,7 @@ public class SynchronizeTasksJobTest {
 		listener.tearDown();
 	}
 
-	@Ignore("No CI Server")
+	@EnabledIfCI
 	@Test
 	public void testMonitorWithMultiTaskData() throws Exception {
 		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
@@ -664,7 +665,7 @@ public class SynchronizeTasksJobTest {
 		log.removeLogListener(listener);
 	}
 
-	@Ignore("No CI Server")
+	@EnabledIfCI
 	@Test
 	public void testTasksForSeveralRepositories() throws Exception {
 		final List<String> requestedTaskIds = new ArrayList<>();

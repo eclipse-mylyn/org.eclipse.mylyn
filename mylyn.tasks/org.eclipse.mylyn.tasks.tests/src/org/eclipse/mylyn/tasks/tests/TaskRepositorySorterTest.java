@@ -14,31 +14,34 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesSorter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  */
 @SuppressWarnings("nls")
-public class TaskRepositorySorterTest extends TestCase {
+public class TaskRepositorySorterTest {
 
 	private final static ViewerComparator sorter = new TaskRepositoriesSorter();
 
+	@Test
 	public void testConnectorKindSorting() {
 		TaskRepository t1 = new TaskRepository("t1", "http://a");
 		TaskRepository t2 = new TaskRepository("t2", "http://a");
 		TaskRepository t3 = new TaskRepository("t3", "http://a");
 
 		// connector kind no longer affects sorting order
-		assertTrue(sorter.compare(null, t1, t2) == 0);
-		assertTrue(sorter.compare(null, t2, t3) == 0);
-		assertTrue(sorter.compare(null, t3, t1) == 0);
+		assertEquals(0, sorter.compare(null, t1, t2));
+		assertEquals(0, sorter.compare(null, t2, t3));
+		assertEquals(0, sorter.compare(null, t3, t1));
 	}
 
 	public void testCategorySorting() {
@@ -50,9 +53,9 @@ public class TaskRepositorySorterTest extends TestCase {
 		t3.setCategory(TaskRepository.CATEGORY_TASKS);
 
 		// TaskRepositoriesSorter is not aware of categories, see TaskRepositoryViewSorterTest
-		assertTrue(sorter.compare(null, t1, t2) == 0);
-		assertTrue(sorter.compare(null, t2, t3) == 0);
-		assertTrue(sorter.compare(null, t3, t1) == 0);
+		assertEquals(0, sorter.compare(null, t1, t2));
+		assertEquals(0, sorter.compare(null, t2, t3));
+		assertEquals(0, sorter.compare(null, t3, t1));
 	}
 
 	public void testUrlSorting() {
