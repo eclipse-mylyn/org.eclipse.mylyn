@@ -15,6 +15,12 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -33,8 +39,8 @@ import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Shawn Minto
@@ -43,7 +49,7 @@ import junit.framework.TestCase;
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskActivityManagerTest extends TestCase {
+public class TaskActivityManagerTest {
 
 	public static class MockTaskActivationListenerExtension extends TaskActivationAdapter {
 
@@ -173,7 +179,7 @@ public class TaskActivityManagerTest extends TestCase {
 
 	private AbstractTask task2;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		taskActivityManager = TasksUiPlugin.getTaskActivityManager();
 		taskActivityManager.deactivateActiveTask();
@@ -186,6 +192,7 @@ public class TaskActivityManagerTest extends TestCase {
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 	}
 
+	@Test
 	public void testWeekEnd() {
 		AbstractTask task = new LocalTask("12", "task-12");
 		assertFalse(taskActivityManager.isScheduledForToday(task));
@@ -212,6 +219,7 @@ public class TaskActivityManagerTest extends TestCase {
 
 	}
 
+	@Test
 	public void testTaskActivation() {
 		MockTask task = new MockTask("test:activation");
 		MockTaskActivationListener listener = new MockTaskActivationListener();
@@ -237,6 +245,7 @@ public class TaskActivityManagerTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testTaskActivationExtension() {
 		if (MockTaskActivationListenerExtension.INSTANCE != null) {
 			MockTaskActivationListenerExtension.INSTANCE.reset();
@@ -245,8 +254,8 @@ public class TaskActivityManagerTest extends TestCase {
 		MockTask task = new MockTask("test:activation");
 		try {
 			taskActivityManager.activateTask(task);
-			assertNotNull("Expected creation of task activation listener instance",
-					MockTaskActivationListenerExtension.INSTANCE);
+			assertNotNull(MockTaskActivationListenerExtension.INSTANCE,
+					"Expected creation of task activation listener instance");
 			assertTrue(MockTaskActivationListenerExtension.INSTANCE.hasPreActivated);
 			assertTrue(MockTaskActivationListenerExtension.INSTANCE.hasActivated);
 			assertFalse(MockTaskActivationListenerExtension.INSTANCE.hasPreDeactivated);
@@ -262,18 +271,20 @@ public class TaskActivityManagerTest extends TestCase {
 		assertTrue(MockTaskActivationListenerExtension.INSTANCE.hasDeactivated);
 	}
 
+	@Test
 	public void testTaskActivationExtensionInstanceCount() {
 		MockTask task = new MockTask("test:activation");
 		try {
 			taskActivityManager.activateTask(task);
-			assertNotNull("Expected creation of task activation listener instance",
-					MockTaskActivationListenerExtension.INSTANCE);
+			assertNotNull(MockTaskActivationListenerExtension.INSTANCE,
+					"Expected creation of task activation listener instance");
 			assertEquals(1, MockTaskActivationListenerExtension.INSTANCE_COUNT);
 		} finally {
 			taskActivityManager.deactivateTask(task);
 		}
 	}
 
+	@Test
 	public void testIsActiveToday() {
 		AbstractTask task = new LocalTask("1", "task-1");
 		assertFalse(taskActivityManager.isScheduledForToday(task));
@@ -295,6 +306,7 @@ public class TaskActivityManagerTest extends TestCase {
 //		assertTrue(taskActivityManager.isScheduledForToday(task));
 	}
 
+	@Test
 	public void testScheduledForToday() {
 		AbstractTask task = new LocalTask("1", "task-1");
 		task.setScheduledForDate(TaskActivityUtil.getCurrentWeek().getToday());
@@ -303,14 +315,16 @@ public class TaskActivityManagerTest extends TestCase {
 		assertFalse(taskActivityManager.isScheduledForToday(task));
 	}
 
+	@Test
 	public void testSchedulePastEndOfMonth() {
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.MONTH, Calendar.SEPTEMBER);
 		calendar.set(Calendar.DAY_OF_MONTH, 30);
 		TaskActivityUtil.snapForwardNumDays(calendar, 1);
-		assertEquals("Should be October", Calendar.OCTOBER, calendar.get(Calendar.MONTH));
+		assertEquals(Calendar.OCTOBER, calendar.get(Calendar.MONTH), "Should be October");
 	}
 
+	@Test
 	public void testIsCompletedToday() {
 		ITask task = new LocalTask("1", "task 1");
 		task.setCompletionDate(new Date());
@@ -320,7 +334,7 @@ public class TaskActivityManagerTest extends TestCase {
 		mockTask.setOwner("unknown");
 		taskList.addTask(mockTask);
 		mockTask.setCompletionDate(new Date());
-		assertFalse("completed: " + mockTask.getCompletionDate(), taskActivityManager.isCompletedToday(mockTask));
+		assertFalse(taskActivityManager.isCompletedToday(mockTask), "completed: " + mockTask.getCompletionDate());
 
 		mockTask = new MockTask("2");
 		taskList.addTask(mockTask);
@@ -330,6 +344,7 @@ public class TaskActivityManagerTest extends TestCase {
 		assertTrue(taskActivityManager.isCompletedToday(mockTask));
 	}
 
+	@Test
 	public void testAllTasksDeactivation() {
 		initializeTasks();
 		taskActivityManager.activateTask(task2);
@@ -339,11 +354,13 @@ public class TaskActivityManagerTest extends TestCase {
 		assertNull(taskActivityManager.getActiveTask());
 	}
 
+	@Test
 	public void testActivateNonActiveTaskCanDeactivate() {
 		initializeTasks();
 		assertActivateNonActiveTaskCanDeactivate(true, task2);
 	}
 
+	@Test
 	public void testActivateNonActiveTaskCannotDeactivate() {
 		initializeTasks();
 		assertActivateNonActiveTaskCanDeactivate(false, task1);
@@ -366,11 +383,13 @@ public class TaskActivityManagerTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testDeactivateTaskCanDeactivate() {
 		initializeTasks();
 		assertDeactivateTaskCanDeactivate(true, null);
 	}
 
+	@Test
 	public void testDeactivateTaskCannotDeactivate() {
 		initializeTasks();
 		assertDeactivateTaskCanDeactivate(false, task1);
@@ -393,12 +412,14 @@ public class TaskActivityManagerTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testDeactivateTaskOnInactiveTask() {
 		initializeTasks();
 		taskActivityManager.deactivateTask(task1);
 		assertNull(taskActivityManager.getActiveTask());
 	}
 
+	@Test
 	public void testMoveActivity() {
 		initializeTasks();
 		Calendar end = TaskActivityUtil.getNextWeek().getEndDate();

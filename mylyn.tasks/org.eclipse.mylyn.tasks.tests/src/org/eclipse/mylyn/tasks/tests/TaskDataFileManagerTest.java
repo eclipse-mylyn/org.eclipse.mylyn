@@ -12,19 +12,21 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataFileManager;
 import org.eclipse.mylyn.tasks.core.ITask;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Alexei Trebounskikh
  */
 @SuppressWarnings("nls")
-public class TaskDataFileManagerTest extends TestCase {
+public class TaskDataFileManagerTest {
 
 	private class TestTaskDataFileManager extends TaskDataFileManager {
 		public String getFileName(ITask task, boolean fileExists) {
@@ -35,6 +37,7 @@ public class TaskDataFileManagerTest extends TestCase {
 
 	private final TestTaskDataFileManager fileManager = new TestTaskDataFileManager();
 
+	@Test
 	public void testShortFileName() {
 		// <max, exists, not requires encoding == encoded anyway for backwards compatibility
 		assertEquals("11111%2520", fileManager.getFileName(TaskTestUtil.createMockTask("11111%20"), true));
@@ -46,6 +49,7 @@ public class TaskDataFileManagerTest extends TestCase {
 		assertEquals("11111%2520%2B", fileManager.getFileName(TaskTestUtil.createMockTask("11111%20+"), true));
 	}
 
+	@Test
 	public void testLongFileNameThatDoesNotRequireEncoding() {
 		// >max, does not exist, not requires encoding == not encoded + trimmed
 		String str = StringUtils.repeat("1", 256);
@@ -56,6 +60,7 @@ public class TaskDataFileManagerTest extends TestCase {
 		assertEquals(str, fileManager.getFileName(TaskTestUtil.createMockTask(str), true));
 	}
 
+	@Test
 	public void testLongFileNameThatRequiresEncoding() {
 		// >max, does not exist, requires encoding == encoded + trimmed
 		String str = "+" + StringUtils.repeat("1", 255);
@@ -67,12 +72,14 @@ public class TaskDataFileManagerTest extends TestCase {
 		assertEquals(str.replace("+", "%2B"), result);
 	}
 
+	@Test
 	public void testGetSetDataPath() {
 		final String path = "path";
 		fileManager.setDataPath(path);
 		assertEquals(path, fileManager.getDataPath());
 	}
 
+	@Test
 	public void testGetFile() {
 		final String path = "path";
 		fileManager.setDataPath(path);

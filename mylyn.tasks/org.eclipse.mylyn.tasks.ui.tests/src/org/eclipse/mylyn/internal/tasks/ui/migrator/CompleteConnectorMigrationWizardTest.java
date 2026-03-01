@@ -15,11 +15,11 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.migrator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.spy;
@@ -50,9 +50,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 @SuppressWarnings({ "nls", "restriction" })
@@ -67,7 +67,7 @@ public class CompleteConnectorMigrationWizardTest {
 	private DefaultTasksState tasksState;
 
 	@SuppressWarnings("unchecked")
-	@Before
+	@BeforeEach
 	public void setUp() {
 		tasksState = new DefaultTasksState();
 		migrationUi = spy(new ConnectorMigrationUi(TaskListView.getFromActivePerspective(),
@@ -83,7 +83,7 @@ public class CompleteConnectorMigrationWizardTest {
 		return migrator;
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		org.eclipse.mylyn.tests.util.TestFixture.resetTaskList();
 	}

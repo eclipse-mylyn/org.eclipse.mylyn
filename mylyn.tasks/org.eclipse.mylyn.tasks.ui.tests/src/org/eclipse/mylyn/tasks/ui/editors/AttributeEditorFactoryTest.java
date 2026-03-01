@@ -14,7 +14,8 @@
 
 package org.eclipse.mylyn.tasks.ui.editors;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
 import org.eclipse.mylyn.internal.tasks.ui.editors.BooleanAttributeEditor;
@@ -26,15 +27,10 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class AttributeEditorFactoryTest {
-
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
 	private final TaskData data = new TaskData(mock(TaskAttributeMapper.class), "kind", "url", "id");
 
@@ -67,8 +63,7 @@ public class AttributeEditorFactoryTest {
 
 	@Test
 	public void createAttributeEditorForUnknownType() {
-		thrown.expect(IllegalArgumentException.class);
-		factory.createEditor("unknown type", data.getRoot());
+		assertThrows(IllegalArgumentException.class, () -> factory.createEditor("unknown type", data.getRoot()));
 	}
 
 }

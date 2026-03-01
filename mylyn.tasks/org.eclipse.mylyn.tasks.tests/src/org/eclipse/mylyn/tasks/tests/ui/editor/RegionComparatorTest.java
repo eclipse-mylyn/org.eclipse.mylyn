@@ -13,18 +13,21 @@
 
 package org.eclipse.mylyn.tasks.tests.ui.editor;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import org.eclipse.jface.text.Region;
 import org.eclipse.mylyn.internal.tasks.ui.editors.AbstractHyperlinkTextPresentationManager.RegionComparator;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
-public class RegionComparatorTest extends TestCase {
+public class RegionComparatorTest {
 
 	RegionComparator comparator = new RegionComparator();
 
+	@Test
 	public void testCompareToEquals() {
 		Region r1 = new Region(0, 10);
 		Region r2 = new Region(0, 10);
@@ -32,6 +35,7 @@ public class RegionComparatorTest extends TestCase {
 		assertEquals(0, comparator.compare(r1, r2));
 	}
 
+	@Test
 	public void testCompareToSameLength() {
 		Region r1 = new Region(0, 10);
 		Region r2 = new Region(1, 10);
@@ -40,6 +44,7 @@ public class RegionComparatorTest extends TestCase {
 		assertEquals(1, comparator.compare(r2, r1));
 	}
 
+	@Test
 	public void testCompareToNested() {
 		Region r1 = new Region(0, 10);
 		Region r2 = new Region(1, 8);
@@ -47,6 +52,7 @@ public class RegionComparatorTest extends TestCase {
 		assertEquals(1, comparator.compare(r2, r1));
 	}
 
+	@Test
 	public void testCompareToOverlapping() {
 		Region r1 = new Region(0, 10);
 		Region r2 = new Region(1, 12);
@@ -58,6 +64,7 @@ public class RegionComparatorTest extends TestCase {
 		assertEquals(1, comparator.compare(r2, r1));
 	}
 
+	@Test
 	public void testCompareToSameOffset() {
 		Region r1 = new Region(5, 8);
 		Region r2 = new Region(5, 10);

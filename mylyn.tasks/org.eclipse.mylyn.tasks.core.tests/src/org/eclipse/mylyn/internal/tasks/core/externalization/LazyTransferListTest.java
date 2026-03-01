@@ -27,8 +27,8 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITransferList;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class LazyTransferListTest {
@@ -37,7 +37,7 @@ public class LazyTransferListTest {
 
 	private LazyTransferList lazyList;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		taskList = mock(TaskList.class);
 		lazyList = new LazyTransferList(taskList);

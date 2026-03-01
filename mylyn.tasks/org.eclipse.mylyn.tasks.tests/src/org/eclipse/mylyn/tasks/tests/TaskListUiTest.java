@@ -15,6 +15,11 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -37,8 +42,9 @@ import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.TreeItem;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import junit.framework.TestCase;
 
 /**
  * Tests TaskListView's filtering mechanism.
@@ -47,7 +53,7 @@ import junit.framework.TestCase;
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskListUiTest extends TestCase {
+public class TaskListUiTest {
 
 	private TaskCategory cat1 = null;
 
@@ -85,7 +91,7 @@ public class TaskListUiTest extends TestCase {
 
 	private final static int CHECK_PRIORITY_FILTER = 3;
 
-	@Override
+	@BeforeEach
 	public void setUp() throws Exception {
 		taskList = TasksUiPlugin.getTaskList();
 
@@ -157,11 +163,8 @@ public class TaskListUiTest extends TestCase {
 		taskList.addTask(cat2task5, cat2);
 	}
 
-	@Override
-	public void tearDown() throws Exception {
-		// clear everything
-	}
 
+	@Test
 	public void testUiFilter() {
 		assertNotNull(TaskListView.getFromActivePerspective());
 		TreeViewer viewer = TaskListView.getFromActivePerspective().getViewer();
@@ -171,7 +174,7 @@ public class TaskListUiTest extends TestCase {
 		TreeItem[] items = viewer.getTree().getItems();
 		assertTrue(checkFilter(CHECK_COMPLETE_FILTER, items));
 		TaskListView.getFromActivePerspective()
-				.removeFilter(TaskListView.getFromActivePerspective().getCompleteFilter());
+		.removeFilter(TaskListView.getFromActivePerspective().getCompleteFilter());
 
 		TaskPriorityFilter filter = TaskListView.getFromActivePerspective().getPriorityFilter();
 		filter.displayPrioritiesAbove("P2");
@@ -188,6 +191,7 @@ public class TaskListUiTest extends TestCase {
 	 * Tests that TaskEditors remove all listeners when closed
 	 */
 	// FIXME re-enable test
+	//@Test
 	//	public void testListenersRemoved() {
 //		int numListenersBefore = 0;
 //		int numListenersDuring = 0;
@@ -218,6 +222,7 @@ public class TaskListUiTest extends TestCase {
 	/**
 	 * Tests whether an additional NewCategory action is added to the category
 	 */
+	@Test
 	public void testGetSubMenuManagerContainsAllCategoriesPlusNewCategory() {
 		// setup
 		MoveToCategoryMenuContributor moveToMenuContrib = new MoveToCategoryMenuContributor();
@@ -247,6 +252,7 @@ public class TaskListUiTest extends TestCase {
 	/**
 	 * Tests visibility of SubMenuManager
 	 */
+	@Test
 	public void testVisibilityOfSubMenuManager() {
 		//setup
 		MoveToCategoryMenuContributor moveToMenuContrib = new MoveToCategoryMenuContributor();
@@ -284,6 +290,7 @@ public class TaskListUiTest extends TestCase {
 	/**
 	 * Tests that the category name is shown in the Move To Category submenu, even when they have an @ in their name
 	 */
+	@Test
 	public void testCategoryNameIsShownInMoveToCategoryAction() {
 		String catNameWithAtBefore = "@CatName";
 		String catNameWithAtExpected = "@CatName@";
@@ -302,7 +309,7 @@ public class TaskListUiTest extends TestCase {
 		assertEquals(catNameNoAtExpected, catNameNoAtActual);
 	}
 
-	public boolean checkFilter(int type, TreeItem[] items) {
+	private static boolean checkFilter(int type, TreeItem[] items) {
 		return switch (type) {
 			case CHECK_COMPLETE_FILTER -> checkCompleteIncompleteFilter(items, false);
 			case CHECK_INCOMPLETE_FILTER -> checkCompleteIncompleteFilter(items, true);
@@ -311,7 +318,7 @@ public class TaskListUiTest extends TestCase {
 		};
 	}
 
-	public boolean checkCompleteIncompleteFilter(TreeItem[] items, boolean checkComplete) {
+	private static boolean checkCompleteIncompleteFilter(TreeItem[] items, boolean checkComplete) {
 		assertEquals(2, items.length);
 		int count = 0;
 		for (TreeItem item : items) {
@@ -333,7 +340,7 @@ public class TaskListUiTest extends TestCase {
 		return true;
 	}
 
-	public boolean checkPriorityFilter(TreeItem[] items) {
+	private static boolean checkPriorityFilter(TreeItem[] items) {
 		assertEquals(2, items.length);
 		int p2Count = 0;
 		int p1Count = 0;

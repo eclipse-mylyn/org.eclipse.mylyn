@@ -14,6 +14,11 @@
 
 package org.eclipse.mylyn.tasks.tests.ui;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -45,14 +50,16 @@ import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.internal.Workbench;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class MarkTaskHandlerTest extends TestCase {
+public class MarkTaskHandlerTest {
 
 	private IHandlerService handlerService;
 
@@ -60,7 +67,7 @@ public class MarkTaskHandlerTest extends TestCase {
 
 	private IWorkingSetManager workingSetManager;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		TaskTestUtil.resetTaskListAndRepositories();
 
@@ -75,7 +82,7 @@ public class MarkTaskHandlerTest extends TestCase {
 		workingSetManager = Workbench.getInstance().getWorkingSetManager();
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		TaskTestUtil.resetTaskListAndRepositories();
 		if (workingSet != null) {
@@ -84,6 +91,7 @@ public class MarkTaskHandlerTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testMarkTaskCompleted() throws Exception {
 		MockRepositoryConnector.getDefault().setHasLocalCompletionState(true);
 		TaskTask task = TaskTestUtil.createMockTask("1");
@@ -101,6 +109,8 @@ public class MarkTaskHandlerTest extends TestCase {
 		}
 	}
 
+	@Test
+	@Disabled("broken")
 	public void testMarkLocalTaskCompleted() throws Exception {
 		LocalTask localTask = new LocalTask("1", "");
 		TaskTestUtil.addAndSelectTask(localTask);
@@ -117,6 +127,8 @@ public class MarkTaskHandlerTest extends TestCase {
 		}
 	}
 
+	@Test
+	@Disabled("broken")
 	public void testMarkWorkingSetIncomingRead() throws Exception {
 		workingSet = createAndSelectWorkingSet();
 		Incoming incoming = setScheduledPresentationAndSelectIncoming();

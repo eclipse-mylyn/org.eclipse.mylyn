@@ -14,6 +14,9 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.Collection;
 
 import org.eclipse.jface.viewers.TreeViewer;
@@ -22,21 +25,22 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListDropAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Rob Elves
  * @author Mik Kersten
  */
 @SuppressWarnings("nls")
-public class TaskListDropAdapterTest extends TestCase {
+public class TaskListDropAdapterTest {
 
 	private TaskListDropAdapter dropAdapter;
 
 	private TaskList taskList;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		TaskTestUtil.resetTaskListAndRepositories();
 
@@ -46,11 +50,12 @@ public class TaskListDropAdapterTest extends TestCase {
 		taskList = TasksUiPlugin.getTaskList();
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		TaskTestUtil.resetTaskList();
 	}
 
+	@Test
 	public void testUrlDrop() {
 		assertEquals(0, taskList.getDefaultCategory().getChildren().size());
 		String url = "http://eclipse.org/mylyn";

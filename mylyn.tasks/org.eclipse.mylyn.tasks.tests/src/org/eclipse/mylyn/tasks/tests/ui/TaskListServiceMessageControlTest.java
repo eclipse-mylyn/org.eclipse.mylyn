@@ -14,6 +14,8 @@
 
 package org.eclipse.mylyn.tasks.tests.ui;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -25,14 +27,14 @@ import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListServiceMessageControl;
 import org.eclipse.swt.widgets.Composite;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskListServiceMessageControlTest extends TestCase {
+public class TaskListServiceMessageControlTest {
 
 	private final class TestTaskListServiceMessageControl extends TaskListServiceMessageControl {
 		private TestTaskListServiceMessageControl(Composite parent) {
@@ -45,13 +47,14 @@ public class TaskListServiceMessageControlTest extends TestCase {
 		}
 	}
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ID, "");
+		.getPreferenceStore()
+		.setValue(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ID, "");
 	}
 
+	@Test
 	public void testGetAction() {
 		assertEquals("abc", TaskListServiceMessageControl.getAction("ABC"));
 		assertEquals("abc", TaskListServiceMessageControl.getAction("abc"));
@@ -60,6 +63,7 @@ public class TaskListServiceMessageControlTest extends TestCase {
 		assertEquals(null, TaskListServiceMessageControl.getAction("http://eclipse.org?foo=bar&action=defg"));
 	}
 
+	@Test
 	public void testCloseMessageWithNoId() {
 		TestTaskListServiceMessageControl control = new TestTaskListServiceMessageControl(WorkbenchUtil.getShell());
 		control.setMessage(new ServiceMessage("123"));
@@ -67,6 +71,7 @@ public class TaskListServiceMessageControlTest extends TestCase {
 		assertEquals("", getLastMessageId());
 	}
 
+	@Test
 	public void testCloseMessageWithId() {
 		TestTaskListServiceMessageControl control = new TestTaskListServiceMessageControl(WorkbenchUtil.getShell());
 		ServiceMessage message = new ServiceMessage("123");
@@ -76,6 +81,7 @@ public class TaskListServiceMessageControlTest extends TestCase {
 		assertEquals("300", getLastMessageId());
 	}
 
+	@Test
 	public void testHandleEvent() throws Exception {
 		TestTaskListServiceMessageControl control = new TestTaskListServiceMessageControl(WorkbenchUtil.getShell());
 		handleMessage(control, "123");

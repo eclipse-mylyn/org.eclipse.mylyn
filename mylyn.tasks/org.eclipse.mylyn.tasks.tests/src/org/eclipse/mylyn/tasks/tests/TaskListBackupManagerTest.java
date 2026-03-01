@@ -14,6 +14,8 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.File;
 
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
@@ -21,26 +23,27 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Rob Elves
  */
 @SuppressWarnings("nls")
-public class TaskListBackupManagerTest extends TestCase {
+public class TaskListBackupManagerTest {
 
 	private AbstractTask task1;
 
 	private TaskListBackupManager backupManager;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		backupManager = TasksUiPlugin.getBackupManager();
 		CommonTestUtil.deleteFolder(new File(TasksUiPlugin.getDefault().getBackupFolderPath()));
 		TaskTestUtil.resetTaskList();
 	}
 
+	@Test
 	public void testAutoBackupDisabled() throws Exception {
 		backupManager.start(5);
 		Thread.sleep(3000);
@@ -54,6 +57,7 @@ public class TaskListBackupManagerTest extends TestCase {
 		assertEquals(1, backupManager.getBackupFiles().size());
 	}
 
+	@Test
 	public void testAutoBackupEnabled() throws Exception {
 		task1 = new LocalTask("handle", "label");
 		TasksUiPlugin.getTaskList().addTask(task1);

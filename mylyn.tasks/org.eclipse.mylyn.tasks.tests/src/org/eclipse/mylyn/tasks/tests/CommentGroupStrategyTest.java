@@ -14,6 +14,8 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,14 +30,14 @@ import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Jingwen Ou
  */
 @SuppressWarnings("nls")
-public class CommentGroupStrategyTest extends TestCase {
+public class CommentGroupStrategyTest {
 
 	private static final String MOCK_CURRENT_PERSON_ID = "mockCurrentPersonId";
 
@@ -75,11 +77,12 @@ public class CommentGroupStrategyTest extends TestCase {
 		return comment;
 	}
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		comments.clear();
 	}
 
+	@Test
 	public void testGroupCommentsAuthoredLatestComment() {
 		int recentComments = CommentGroupStrategy.MAX_CURRENT;
 
@@ -103,6 +106,7 @@ public class CommentGroupStrategyTest extends TestCase {
 		assertEquals(1, currentGroup.getComments().size());
 	}
 
+	@Test
 	public void testGroupCommentsMaxCurrent() {
 		// one less than max current
 		int oneLessThanMaxCurrent = CommentGroupStrategy.MAX_CURRENT - 1;
@@ -120,6 +124,7 @@ public class CommentGroupStrategyTest extends TestCase {
 		assertEquals(oneLessThanMaxCurrent, currentGroup.getComments().size());
 	}
 
+	@Test
 	public void testGroupCommentsNotAuthoredLastestComment() {
 		// didn't author previous comments
 		for (int i = 0; i < CommentGroupStrategy.MAX_CURRENT; i++) {
@@ -142,6 +147,7 @@ public class CommentGroupStrategyTest extends TestCase {
 		assertEquals(CommentGroupStrategy.MAX_CURRENT, currentGroup.getComments().size());
 	}
 
+	@Test
 	public void testGroupComments_RecentAndOlder() {
 		int total = CommentGroupStrategy.MAX_CURRENT + CommentGroupStrategy.MAX_RECENT;
 		// didn't author previous comments
@@ -168,6 +174,7 @@ public class CommentGroupStrategyTest extends TestCase {
 		assertEquals(CommentGroupStrategy.MAX_CURRENT, currentGroup.getComments().size());
 	}
 
+	@Test
 	public void testGroupCommentsRecentAndOlder2() {
 		int older = 10;
 		int recent = CommentGroupStrategy.MAX_RECENT;
@@ -198,6 +205,7 @@ public class CommentGroupStrategyTest extends TestCase {
 
 	// 2: current person
 	// 1: current person
+	@Test
 	public void testIsCurrentAuthoredPreviousComment() {
 		comments.add(mockComment(2, MOCK_CURRENT_PERSON_ID, new Date(2)));
 		boolean isCurrent = strategy.isCurrent(comments, mockComment(1, MOCK_CURRENT_PERSON_ID, new Date(1)),
@@ -207,6 +215,7 @@ public class CommentGroupStrategyTest extends TestCase {
 
 	// 2: current person - system generated, e.g. mylyn/context/zip
 	// 1: current person
+	@Test
 	public void testIsCurrentAuthoredPreviousCommentButSystemGenerated() {
 		comments.add(mockComment(2, MOCK_CURRENT_PERSON_ID, new Date(2), AttachmentUtil.CONTEXT_DESCRIPTION));
 		boolean isCurrent = strategy.isCurrent(comments, mockComment(1, MOCK_CURRENT_PERSON_ID, new Date(1)),
@@ -215,6 +224,7 @@ public class CommentGroupStrategyTest extends TestCase {
 	}
 
 	// test max current
+	@Test
 	public void testIsCurrentMaxCurrent() {
 		for (int i = 0; i < CommentGroupStrategy.MAX_CURRENT; i++) {
 			comments.add(mockComment(i + 1, MOCK_CURRENT_PERSON_ID, new Date(i + 1)));
@@ -226,6 +236,7 @@ public class CommentGroupStrategyTest extends TestCase {
 	}
 
 	// no comment
+	@Test
 	public void testIsCurrentNoComment() {
 		boolean isCurrent = strategy.isCurrent(comments, mockComment(1, MOCK_CURRENT_PERSON_ID, new Date(1)),
 				MOCK_CURRENT_PERSON_ID);
@@ -234,6 +245,7 @@ public class CommentGroupStrategyTest extends TestCase {
 
 	// 2: another person
 	// 1: current person
+	@Test
 	public void testIsCurrentNotAuthoredPreviousComment() {
 		comments.add(mockComment(2, "AnotherPerson", new Date(2), MOCK_TEXT));
 		boolean isCurrent = strategy.isCurrent(comments, mockComment(1, MOCK_CURRENT_PERSON_ID, new Date(1)),

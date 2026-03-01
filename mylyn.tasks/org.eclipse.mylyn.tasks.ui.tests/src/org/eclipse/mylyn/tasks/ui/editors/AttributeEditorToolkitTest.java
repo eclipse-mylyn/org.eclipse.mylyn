@@ -15,9 +15,9 @@
 
 package org.eclipse.mylyn.tasks.ui.editors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -42,9 +42,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 @SuppressWarnings({ "nls", "restriction" })
@@ -78,7 +78,7 @@ public class AttributeEditorToolkitTest {
 
 	private final TaskDataModel taskDataModel = mock(TaskDataModel.class);
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		CommonTextSupport textSupport = mock(CommonTextSupport.class);
 		toolkit = spy(new TestAttributeEditorToolkit(textSupport));
@@ -87,7 +87,7 @@ public class AttributeEditorToolkitTest {
 		when(taskDataModel.getTaskData()).thenReturn(taskData);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		formToolkit.dispose();
 	}

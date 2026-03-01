@@ -14,6 +14,9 @@
 
 package org.eclipse.mylyn.tasks.tests.ui.editor;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -22,14 +25,15 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Leo Dos Santos
  */
 @SuppressWarnings("nls")
-public class TaskEditorExtensionsTest extends TestCase {
+public class TaskEditorExtensionsTest {
 
 	private static final String ID_TEXTILE_EXTENSION = "org.eclipse.mylyn.tasks.tests.editor.mock.textile";
 
@@ -37,7 +41,7 @@ public class TaskEditorExtensionsTest extends TestCase {
 
 	private TaskData taskData;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, MockRepositoryConnector.REPOSITORY_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
@@ -45,11 +49,12 @@ public class TaskEditorExtensionsTest extends TestCase {
 				MockRepositoryConnector.REPOSITORY_URL, "taskId");
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		TasksUiPlugin.getRepositoryManager().removeRepository(repository);
 	}
 
+	@Test
 	public void testMarkupAssociationFromRepository() {
 		TaskEditorExtensions.setTaskEditorExtensionId(repository, ID_TEXTILE_EXTENSION);
 		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DESCRIPTION);
@@ -57,6 +62,7 @@ public class TaskEditorExtensionsTest extends TestCase {
 		assertTrue(extension instanceof MockTextileEditorExtension);
 	}
 
+	@Test
 	public void testMarkupAssociationFromAttribute() {
 		TaskEditorExtensions.setTaskEditorExtensionId(repository, "none");
 		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DESCRIPTION);
@@ -65,6 +71,7 @@ public class TaskEditorExtensionsTest extends TestCase {
 		assertTrue(extension instanceof MockWikiEditorExtension);
 	}
 
+	@Test
 	public void testMarkupAssociationFromBoth() {
 		TaskEditorExtensions.setTaskEditorExtensionId(repository, ID_TEXTILE_EXTENSION);
 		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DESCRIPTION);
@@ -73,6 +80,7 @@ public class TaskEditorExtensionsTest extends TestCase {
 		assertTrue(extension instanceof MockWikiEditorExtension);
 	}
 
+	@Test
 	public void testMarkupAssociationComplexMediaType() {
 		TaskEditorExtensions.setTaskEditorExtensionId(repository, ID_TEXTILE_EXTENSION);
 		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DESCRIPTION);
@@ -81,6 +89,7 @@ public class TaskEditorExtensionsTest extends TestCase {
 		assertTrue(extension instanceof MockWikiEditorExtension);
 	}
 
+	@Test
 	public void testMarkupAssociationNotMarkupMediaType() {
 		TaskEditorExtensions.setTaskEditorExtensionId(repository, ID_TEXTILE_EXTENSION);
 		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DESCRIPTION);
@@ -89,6 +98,7 @@ public class TaskEditorExtensionsTest extends TestCase {
 		assertTrue(extension instanceof MockTextileEditorExtension);
 	}
 
+	@Test
 	public void testMarkupAssociationNoAssociation() {
 		TaskEditorExtensions.setTaskEditorExtensionId(repository, "none");
 		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DESCRIPTION);
@@ -96,6 +106,7 @@ public class TaskEditorExtensionsTest extends TestCase {
 		assertNull(extension);
 	}
 
+	@Test
 	public void testBaseMarkupAssociation() {
 		TaskEditorExtensions.setTaskEditorExtensionId(repository, ID_TEXTILE_EXTENSION);
 		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DESCRIPTION);
@@ -104,6 +115,7 @@ public class TaskEditorExtensionsTest extends TestCase {
 		assertTrue(extension instanceof MockWikiEditorExtension);
 	}
 
+	@Test
 	public void testBaseMarkupAssociationNoMarkup() {
 		TaskEditorExtensions.setTaskEditorExtensionId(repository, ID_TEXTILE_EXTENSION);
 		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DESCRIPTION);

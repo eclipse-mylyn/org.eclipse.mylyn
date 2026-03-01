@@ -14,26 +14,29 @@
 
 package org.eclipse.mylyn.tasks.tests.ui.editor;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskEditorPartDescriptorTest extends TestCase {
+public class TaskEditorPartDescriptorTest {
 
 	private TaskEditorPartDescriptor descriptor1;
 
 	private TaskEditorPartDescriptor descriptor2;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		descriptor1 = new TaskEditorPartDescriptor("id") {
 			@Override
@@ -50,11 +53,13 @@ public class TaskEditorPartDescriptorTest extends TestCase {
 		}.setPath(AbstractTaskEditorPage.PATH_ACTIONS);
 	}
 
+	@Test
 	public void testEquals() {
 		assertEquals(descriptor1, descriptor2);
 		assertEquals(descriptor1.hashCode(), descriptor2.hashCode());
 	}
 
+	@Test
 	public void testInsertIntoSet() {
 		Set<TaskEditorPartDescriptor> set = new LinkedHashSet<>();
 		set.add(descriptor1);

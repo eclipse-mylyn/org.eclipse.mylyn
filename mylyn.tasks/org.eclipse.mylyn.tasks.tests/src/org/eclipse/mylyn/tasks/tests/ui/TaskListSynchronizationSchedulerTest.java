@@ -14,6 +14,8 @@
 
 package org.eclipse.mylyn.tasks.tests.ui;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -27,15 +29,16 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
-
-import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskListSynchronizationSchedulerTest extends TestCase {
+public class TaskListSynchronizationSchedulerTest {
 
 	private class TestConnector extends MockRepositoryConnector {
 
@@ -69,11 +72,11 @@ public class TaskListSynchronizationSchedulerTest extends TestCase {
 
 	private final CountDownLatch mainLatch = new CountDownLatch(1);
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
+		.getPreferenceStore()
+		.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 
 		TaskTestUtil.resetTaskListAndRepositories();
 		repository = TaskTestUtil.createMockRepository();
@@ -84,13 +87,14 @@ public class TaskListSynchronizationSchedulerTest extends TestCase {
 		TasksUiPlugin.getRepositoryManager().addRepositoryConnector(connector);
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		release();
 		TasksUiPlugin.getRepositoryManager().removeRepositoryConnector(repository.getConnectorKind());
 		TasksUiPlugin.getRepositoryManager().addRepositoryConnector(oldConnector);
 	}
 
+	@Test
 	public void testSynchronization() throws Exception {
 		TaskListSynchronizationScheduler scheduler = new TaskListSynchronizationScheduler(
 				TasksUiPlugin.getTaskJobFactory().createSynchronizeRepositoriesJob(null));
@@ -103,7 +107,7 @@ public class TaskListSynchronizationSchedulerTest extends TestCase {
 			scheduler.userAttentionGained();
 			release();
 
-			assertTrue("Expected synchronization to run again", connector.latch.await(5, TimeUnit.SECONDS));
+			assertTrue(connector.latch.await(5, TimeUnit.SECONDS), "Expected synchronization to run again");
 		} finally {
 			scheduler.dispose();
 		}

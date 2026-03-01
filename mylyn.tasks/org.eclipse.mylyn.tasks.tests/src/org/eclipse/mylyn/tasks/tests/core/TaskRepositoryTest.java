@@ -14,23 +14,28 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
-import org.eclipse.mylyn.tasks.core.TaskRepository;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import junit.framework.TestCase;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Shawn Minto
  */
 @SuppressWarnings("nls")
-public class TaskRepositoryTest extends TestCase {
+public class TaskRepositoryTest {
 
 	private TaskRepository taskRepository;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		taskRepository = new TaskRepository("kind", "url");
 	}
 
+	@Test
 	public void testSetTaskRepositoryProperty() {
 		String key = "key";
 		String value = "value";
@@ -38,6 +43,7 @@ public class TaskRepositoryTest extends TestCase {
 		assertEquals(value, taskRepository.getProperty(key));
 	}
 
+	@Test
 	public void testResetTaskRepositoryProperty() {
 		String key = "key";
 		String value = "value";
@@ -48,6 +54,7 @@ public class TaskRepositoryTest extends TestCase {
 		assertEquals(value, taskRepository.getProperty(key));
 	}
 
+	@Test
 	public void testSetTaskRepositoryPropertyWithSpace() {
 		String key = "key 1";
 		String value = "value";
@@ -60,6 +67,7 @@ public class TaskRepositoryTest extends TestCase {
 		assertTrue(caughtException);
 	}
 
+	@Test
 	public void testSetTaskRepositoryPropertyWithTab() {
 		String key = "key\t1";
 		String value = "value";
@@ -72,6 +80,7 @@ public class TaskRepositoryTest extends TestCase {
 		assertTrue(caughtException);
 	}
 
+	@Test
 	public void testSetTaskRepositoryPropertyWithNewline() {
 		String key = "key\n1";
 		String value = "value";
@@ -84,10 +93,12 @@ public class TaskRepositoryTest extends TestCase {
 		assertTrue(caughtException);
 	}
 
+	@Test
 	public void testGetCategory() {
 		assertNull(taskRepository.getCategory());
 	}
 
+	@Test
 	public void testSetCategory() {
 		taskRepository.setCategory(TaskRepository.CATEGORY_TASKS);
 		assertEquals(TaskRepository.CATEGORY_TASKS, taskRepository.getCategory());

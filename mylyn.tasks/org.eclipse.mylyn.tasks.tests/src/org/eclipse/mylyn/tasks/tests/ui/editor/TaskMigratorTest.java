@@ -14,21 +14,24 @@
 
 package org.eclipse.mylyn.tasks.tests.ui.editor;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskMigrator;
 import org.eclipse.mylyn.tasks.core.TaskMigrationEvent;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskMigratorTest extends TestCase {
+public class TaskMigratorTest {
 
+	@Test
 	public void testMigrateTask() {
 		MockRepositoryConnector connector = MockRepositoryConnector.getDefault();
 		connector.setTaskMigrationEvent(null);

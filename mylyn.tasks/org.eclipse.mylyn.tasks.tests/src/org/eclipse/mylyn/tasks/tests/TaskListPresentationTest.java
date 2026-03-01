@@ -13,18 +13,20 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 
 import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  */
-public class TaskListPresentationTest extends TestCase {
+public class TaskListPresentationTest {
 
+	@Test
 	public void testDefaultPresentations() {
 
 		List<AbstractTaskListPresentation> presentations = TaskListView.getPresentations();

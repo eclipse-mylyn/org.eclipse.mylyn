@@ -35,7 +35,9 @@
         <artifactId>tycho-surefire-plugin</artifactId>
         <configuration>
           <skip>${test.component.skip}</skip> 
-          <testClass>${test.suite}</testClass>
+		  <includes>
+			<include>**/AllTasksTests.class</include>
+		  </includes>
         </configuration>
       </plugin>
     </plugins>

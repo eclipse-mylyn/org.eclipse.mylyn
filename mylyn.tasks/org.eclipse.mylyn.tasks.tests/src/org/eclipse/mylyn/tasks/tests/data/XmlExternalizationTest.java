@@ -14,6 +14,8 @@
 
 package org.eclipse.mylyn.tasks.tests.data;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
@@ -26,6 +28,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.internal.tasks.core.data.ITaskDataConstants;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -34,14 +37,12 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.DefaultHandler;
 
-import junit.framework.TestCase;
-
 /**
  * @author Steffen Pingel
  * @author Shawn Minto
  */
 @SuppressWarnings("nls")
-public class XmlExternalizationTest extends TestCase {
+public class XmlExternalizationTest {
 
 	private static class SimpleCharacterReader extends DefaultHandler {
 
@@ -82,6 +83,7 @@ public class XmlExternalizationTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testWriteandReadBadCharacterXml10() throws Exception {
 		System.err.println("= XML 1.0 =");
 		for (int i = 0; i < 0xFFFF; i++) {
@@ -125,6 +127,7 @@ public class XmlExternalizationTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testWriteandReadBadCharacterXml11() throws Exception {
 		System.err.println("= XML 1.1 =");
 		for (int i = 0; i < 0xFFFF; i++) {

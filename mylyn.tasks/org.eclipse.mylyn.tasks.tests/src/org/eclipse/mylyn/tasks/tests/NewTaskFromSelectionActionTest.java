@@ -15,6 +15,9 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.TaskComment;
@@ -24,15 +27,14 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Frank Becker
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class NewTaskFromSelectionActionTest extends TestCase {
+public class NewTaskFromSelectionActionTest {
 
 	// FIXME causes display of modal dialog
 //	public void testNoSelection() throws Exception {
@@ -43,6 +45,7 @@ public class NewTaskFromSelectionActionTest extends TestCase {
 //		assertNull(action.getTaskSelection());
 //	}
 
+	@Test
 	public void testComment() throws Exception {
 		TaskRepository taskRepository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
@@ -55,6 +58,7 @@ public class NewTaskFromSelectionActionTest extends TestCase {
 		assertNotNull(action.getTaskMapping());
 	}
 
+	@Test
 	public void testText() throws Exception {
 		NewTaskFromSelectionAction action = new NewTaskFromSelectionAction();
 		action.selectionChanged(new TextSelection(0, 0) {

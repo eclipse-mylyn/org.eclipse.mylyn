@@ -14,8 +14,9 @@
 
 package org.eclipse.mylyn.tasks.core.data;
 
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
+
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +25,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.data.TextTaskAttachmentSource;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel

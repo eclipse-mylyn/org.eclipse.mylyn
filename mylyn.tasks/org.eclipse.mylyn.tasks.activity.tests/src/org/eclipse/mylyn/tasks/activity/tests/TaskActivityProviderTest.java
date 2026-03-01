@@ -12,13 +12,14 @@
 
 package org.eclipse.mylyn.tasks.activity.tests;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.mylyn.commons.sdk.util.junit5.MylynTestSetup;
 import org.eclipse.mylyn.internal.tasks.activity.core.TaskActivityProvider;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
@@ -29,15 +30,16 @@ import org.eclipse.mylyn.tasks.activity.core.ActivityEvent;
 import org.eclipse.mylyn.tasks.activity.core.IActivityManager;
 import org.eclipse.mylyn.tasks.activity.core.TaskActivityScope;
 import org.eclipse.mylyn.tasks.activity.core.spi.IActivitySession;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  * @author Timur Achmetow
  */
 @SuppressWarnings({ "nls", "restriction" })
+@MylynTestSetup
 public class TaskActivityProviderTest {
 
 	protected List<ActivityEvent> events = new ArrayList<>();
@@ -46,7 +48,7 @@ public class TaskActivityProviderTest {
 
 	private TaskTask task1;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		task1 = new TaskTask(LocalRepositoryConnector.CONNECTOR_KIND, LocalRepositoryConnector.REPOSITORY_URL, "2");
 		task1.setSummary("1: hit http://task/url1");
@@ -66,7 +68,7 @@ public class TaskActivityProviderTest {
 		taskListIndex.waitUntilIdle();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		((TaskList) reference.index().getTaskList()).reset();
 		reference.dispose();

@@ -14,7 +14,8 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -24,7 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

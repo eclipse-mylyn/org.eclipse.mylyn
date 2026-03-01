@@ -16,8 +16,8 @@ package org.eclipse.mylyn.internal.tasks.core.data;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -48,16 +48,15 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.xml.sax.SAXException;
 
 @SuppressWarnings("nls")
 public class TaskDataStoreTest {
 
-	@Rule
-	public TemporaryFolder folder = new TemporaryFolder();
+	@TempDir
+	public File folder;
 
 	private static final int THREAD_COUNT = 10;
 
@@ -207,7 +206,7 @@ public class TaskDataStoreTest {
 	}
 
 	private File newTaskDataZipFile() throws IOException {
-		File file = folder.newFile("test.zip");
+		File file = new File(folder, "test.zip");
 		try (ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(file))) {
 			ZipEntry entry = new ZipEntry("data.xml");
 			outputStream.putNextEntry(entry);
@@ -314,8 +313,8 @@ public class TaskDataStoreTest {
 	}
 
 	private static void assertNoFailures(List<Throwable> failures) {
-		assertTrue(format("expected no failures but found %d:\n%s", failures.size(), collectMessages(failures)),
-				failures.isEmpty());
+		assertTrue(failures.isEmpty(),
+				format("expected no failures but found %d:\n%s", failures.size(), collectMessages(failures)));
 	}
 
 	private static String collectMessages(List<Throwable> failures) {

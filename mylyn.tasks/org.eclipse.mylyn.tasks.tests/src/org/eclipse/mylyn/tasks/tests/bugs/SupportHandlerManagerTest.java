@@ -14,9 +14,14 @@
 
 package org.eclipse.mylyn.tasks.tests.bugs;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.commons.sdk.util.junit5.MylynTestSetup;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
 import org.eclipse.mylyn.internal.tasks.bugs.AttributeTaskMapper;
 import org.eclipse.mylyn.internal.tasks.bugs.SupportHandlerManager;
@@ -32,25 +37,25 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnectorWithTaskDataHandler;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Frank Becker
  */
 @SuppressWarnings("nls")
-public class SupportHandlerManagerTest extends TestCase {
+@MylynTestSetup
+public class SupportHandlerManagerTest {
 
 	private TaskRepository mockRepository;
 
 	private MockRepositoryConnectorWithTaskDataHandler mockRepositoryConnector;
 
-	@Override
+	@BeforeEach
 	public void setUp() throws Exception {
-		super.setUp();
 		TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
+		.getPreferenceStore()
+		.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 
 		TaskTestUtil.resetTaskListAndRepositories();
 		mockRepositoryConnector = new MockRepositoryConnectorWithTaskDataHandler();
@@ -60,10 +65,7 @@ public class SupportHandlerManagerTest extends TestCase {
 		TasksUiPlugin.getRepositoryManager().addRepository(mockRepository);
 	}
 
-	@Override
-	public void tearDown() throws Exception {
-	}
-
+	@Test
 	public void testSupportHandlerManager() throws CoreException {
 		SupportHandlerManager handlerManager = new SupportHandlerManager();
 		SupportProviderManager providerManager = new SupportProviderManager();
@@ -86,6 +88,7 @@ public class SupportHandlerManagerTest extends TestCase {
 		assertEquals("enhancement", serv.getValue());
 	}
 
+	@Test
 	public void testSeverityDefinedInExtensionPoint() throws CoreException {
 		SupportHandlerManager handlerManager = new SupportHandlerManager();
 		SupportProviderManager providerManager = new SupportProviderManager();

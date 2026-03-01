@@ -29,19 +29,20 @@ import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.TaskJob;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
-public class TaskJobFactoryTest extends TestCase {
+public class TaskJobFactoryTest {
 	private TaskJobFactory jobFactory;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		jobFactory = new TaskJobFactory(mock(TaskList.class), mock(TaskDataManager.class),
 				mock(IRepositoryManager.class), mock(IRepositoryModel.class));
 	}
 
+	@Test
 	public void testCreateUpdateRepositoryConfigurationJob() throws CoreException, InterruptedException {
 		AbstractRepositoryConnector connector = mock(AbstractRepositoryConnector.class);
 		TaskRepository repository = new TaskRepository("mock", "http://mock");

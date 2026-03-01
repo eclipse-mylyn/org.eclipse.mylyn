@@ -14,6 +14,10 @@
 
 package org.eclipse.mylyn.tasks.tests.data;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -31,15 +35,14 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskDataDiffTest extends TestCase {
+public class TaskDataDiffTest {
 
 	private RepositoryModel model;
 
@@ -51,7 +54,7 @@ public class TaskDataDiffTest extends TestCase {
 
 	private TaskData oldData;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		ITask task = new TaskTask("kind", "url", "1");
 		repository = new TaskRepository(task.getConnectorKind(), task.getRepositoryUrl());

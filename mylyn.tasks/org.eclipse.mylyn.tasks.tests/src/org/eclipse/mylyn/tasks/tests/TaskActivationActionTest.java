@@ -14,23 +14,27 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  */
 @SuppressWarnings("nls")
-public class TaskActivationActionTest extends TestCase {
+public class TaskActivationActionTest {
 
-	@Override
+	@BeforeEach
 	protected void tearDown() throws Exception {
 		TasksUi.getTaskActivityManager().deactivateActiveTask();
 	}
 
+	@Test
 	public void testUpdateOnExternalActivation() {
 		MockTask task = new MockTask("test:activation");
 		ToggleTaskActivationAction action = new ToggleTaskActivationAction(task);

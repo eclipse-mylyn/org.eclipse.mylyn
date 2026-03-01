@@ -14,22 +14,17 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class RepositoryVersionTest {
 
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
-
 	@Test
 	public void constructWithNullVersion() throws Exception {
-		thrown.expect(NullPointerException.class);
-		new RepositoryVersion(null);
+		assertThrows(NullPointerException.class, () -> new RepositoryVersion(null));
 	}
 
 	@Test

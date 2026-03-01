@@ -14,7 +14,11 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.eclipse.mylyn.commons.ui.ClipboardCopier;
@@ -27,15 +31,14 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  * @author Thomas Ehrnhoefer
  */
 @SuppressWarnings("nls")
-public class CopyDetailsActionTest extends TestCase {
+public class CopyDetailsActionTest {
 
 //	public void testIdLabelIncluded() {
 //		MockRepositoryConnector connector = MockRepositoryConnector.getDefault();
@@ -63,6 +66,7 @@ public class CopyDetailsActionTest extends TestCase {
 //		}
 //	}
 
+	@Test
 	public void testGetTextForTask() {
 		MockTask task = new MockTask("123");
 		task.setSummary("abc");
@@ -75,6 +79,7 @@ public class CopyDetailsActionTest extends TestCase {
 		assertEquals("abc", CopyTaskDetailsAction.getTextForTask(task));
 	}
 
+	@Test
 	public void testGetSummaryAndUrl() {
 		MockTask task = new MockTask("321");
 		task.setSummary("s321");
@@ -98,6 +103,7 @@ public class CopyDetailsActionTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetBrowseableUrl() {
 		MockTask task = new MockTask("123");
 		task.setSummary("Ticket 123");
@@ -111,8 +117,8 @@ public class CopyDetailsActionTest extends TestCase {
 			@Override
 			public URL getBrowserUrl(TaskRepository repository, IRepositoryElement element) {
 				try {
-					return new URL("http://mock-repo-evolved.com/tickets/123");
-				} catch (MalformedURLException e) {
+					return new URI("http://mock-repo-evolved.com/tickets/123").toURL();
+				} catch (MalformedURLException | URISyntaxException e) {
 					return null;
 				}
 			}

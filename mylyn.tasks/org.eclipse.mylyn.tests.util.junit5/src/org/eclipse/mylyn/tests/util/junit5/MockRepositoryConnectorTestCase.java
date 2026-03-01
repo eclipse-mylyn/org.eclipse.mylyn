@@ -12,9 +12,11 @@
  *     See git history
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.tests.util;
+package org.eclipse.mylyn.tests.util.junit5;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -25,11 +27,11 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 @SuppressWarnings("nls")
-public class MockRepositoryConnectorTestCase extends TestCase {
+public class MockRepositoryConnectorTestCase {
 
 	protected AbstractRepositoryConnector connectorWithUrl;
 
@@ -81,8 +83,8 @@ public class MockRepositoryConnectorTestCase extends TestCase {
 		public URL getBrowserUrl(TaskRepository repository, IRepositoryElement element) {
 			if (element instanceof ITask) {
 				try {
-					return new URL(repository.getRepositoryUrl() + "/tickets/" + ((ITask) element).getTaskId());
-				} catch (MalformedURLException e) {
+					return new URI(repository.getRepositoryUrl() + "/tickets/" + ((ITask) element).getTaskId()).toURL();
+				} catch (MalformedURLException | URISyntaxException e) {
 					return null;
 				}
 			}
@@ -109,7 +111,7 @@ public class MockRepositoryConnectorTestCase extends TestCase {
 		};
 	}
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		TaskRepositoryManager manager = TasksUiPlugin.getRepositoryManager();
 		connectorWithUrl = new MockRepositoryWithUrl();
@@ -133,7 +135,7 @@ public class MockRepositoryConnectorTestCase extends TestCase {
 		TasksUiPlugin.getTaskList().addTask(taskWithBrowserUrl);
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		TaskRepositoryManager manager = TasksUiPlugin.getRepositoryManager();
 		manager.removeRepository(repositoryWithUrl);

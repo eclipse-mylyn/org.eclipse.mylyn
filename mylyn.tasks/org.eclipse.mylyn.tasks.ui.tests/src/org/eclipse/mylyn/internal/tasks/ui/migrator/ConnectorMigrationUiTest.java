@@ -15,9 +15,9 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.migrator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
@@ -52,9 +52,9 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.widgets.Display;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 
@@ -73,13 +73,13 @@ public class ConnectorMigrationUiTest {
 	private CompleteMigrationJob completeMigrationJob;
 
 	@SuppressWarnings("unchecked")
-	@Before
+	@BeforeEach
 	public void setUp() {
 		doNothing().when(migrationUi).warnOfValidationFailure(any(List.class));
 		doNothing().when(migrationUi).notifyMigrationComplete();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		if (completeMigrationJob != null) {
 			completeMigrationJob.dispose();

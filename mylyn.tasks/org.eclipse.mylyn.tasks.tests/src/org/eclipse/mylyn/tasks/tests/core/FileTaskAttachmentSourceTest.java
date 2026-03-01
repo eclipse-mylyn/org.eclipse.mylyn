@@ -14,16 +14,18 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
-import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import junit.framework.TestCase;
+import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author David Green
  */
 @SuppressWarnings("nls")
-public class FileTaskAttachmentSourceTest extends TestCase {
+public class FileTaskAttachmentSourceTest {
 
+	@Test
 	public void testGetContentTypeFromFilename() {
 		assertEquals("text/plain", FileTaskAttachmentSource.getContentTypeFromFilename("a.txt"));
 		assertEquals("text/plain", FileTaskAttachmentSource.getContentTypeFromFilename("foo.mylyn-test-text"));

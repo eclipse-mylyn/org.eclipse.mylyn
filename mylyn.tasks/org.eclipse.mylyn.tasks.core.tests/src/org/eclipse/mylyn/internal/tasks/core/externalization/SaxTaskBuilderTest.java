@@ -14,11 +14,11 @@
 
 package org.eclipse.mylyn.internal.tasks.core.externalization;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
@@ -33,8 +33,8 @@ import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -43,12 +43,12 @@ public class SaxTaskBuilderTest {
 
 	private SaxTaskBuilder builder;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		TaskList taskList = new TaskList();
 		IRepositoryManager repositoryManager = mock(IRepositoryManager.class);
 		doReturn(mock(AbstractRepositoryConnector.class)).when(repositoryManager)
-				.getRepositoryConnector("connector.kind");
+		.getRepositoryConnector("connector.kind");
 		doReturn(mock(LocalRepositoryConnector.class)).when(repositoryManager).getRepositoryConnector("local");
 		builder = new SaxTaskBuilder(new RepositoryModel(taskList, repositoryManager), repositoryManager);
 	}

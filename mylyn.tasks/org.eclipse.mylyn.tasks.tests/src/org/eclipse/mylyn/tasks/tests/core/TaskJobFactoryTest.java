@@ -14,6 +14,9 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Collections;
 
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -22,11 +25,12 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
-public class TaskJobFactoryTest extends TestCase {
+public class TaskJobFactoryTest {
 	private static abstract class JobCreator {
 		public abstract SynchronizationJob createJob();
 	}
@@ -35,17 +39,18 @@ public class TaskJobFactoryTest extends TestCase {
 
 	private boolean oldFetchSubtasks;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		jobFactory = TasksUiPlugin.getTaskJobFactory();
 		oldFetchSubtasks = jobFactory.getFetchSubtasks();
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		jobFactory.setFetchSubtasks(oldFetchSubtasks);
 	}
 
+	@Test
 	public void testFetchSubtasksDefaultValue() throws Exception {
 		assertTrue(TasksUiPlugin.getTaskJobFactory().getFetchSubtasks());
 	}
@@ -58,6 +63,7 @@ public class TaskJobFactoryTest extends TestCase {
 		assertFalse(jobCreator.createJob().getFetchSubtasks());
 	}
 
+	@Test
 	public void testCreateSynchronizeTasksJob() {
 		assertFetchSubtasks(new JobCreator() {
 			@Override
@@ -73,6 +79,7 @@ public class TaskJobFactoryTest extends TestCase {
 		});
 	}
 
+	@Test
 	public void testCreateSynchronizeQueriesJob() {
 		assertFetchSubtasks(new JobCreator() {
 			@Override
@@ -83,6 +90,7 @@ public class TaskJobFactoryTest extends TestCase {
 		});
 	}
 
+	@Test
 	public void testCreateSynchronizeRepositoriesJob() {
 		assertFetchSubtasks(new JobCreator() {
 			@Override

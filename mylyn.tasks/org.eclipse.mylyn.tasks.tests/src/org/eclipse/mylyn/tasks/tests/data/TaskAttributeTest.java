@@ -14,6 +14,11 @@
 
 package org.eclipse.mylyn.tasks.tests.data;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -21,19 +26,19 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Benjamin Muskalla
  * @author Miles Parker
  */
 @SuppressWarnings("nls")
-public class TaskAttributeTest extends TestCase {
+public class TaskAttributeTest {
 
 	private TaskAttribute attribute;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		TaskRepository taskRepository = new TaskRepository("kind", "repository");
 		TaskAttributeMapper mapper = new TaskAttributeMapper(taskRepository);
@@ -41,6 +46,7 @@ public class TaskAttributeTest extends TestCase {
 		attribute = new TaskAttribute(data.getRoot(), "test");
 	}
 
+	@Test
 	public void testGetValue() {
 		attribute.setValue("baz");
 		assertEquals("baz", attribute.getValue());
@@ -48,16 +54,19 @@ public class TaskAttributeTest extends TestCase {
 		assertEquals("bee", attribute.getValue());
 	}
 
+	@Test
 	public void testRegularValue() throws Exception {
 		attribute.setValue("foo");
 		assertEquals("foo", attribute.getValue());
 	}
 
+	@Test
 	public void testRegularValues() throws Exception {
 		attribute.setValues(Collections.singletonList("foo"));
 		assertEquals("foo", attribute.getValue());
 	}
 
+	@Test
 	public void testHasValue() {
 		assertFalse(attribute.hasValue());
 
@@ -71,6 +80,7 @@ public class TaskAttributeTest extends TestCase {
 		assertTrue(attribute.hasValue());
 	}
 
+	@Test
 	public void testNullValue() throws Exception {
 		try {
 			attribute.setValue(null);
@@ -80,6 +90,7 @@ public class TaskAttributeTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNullAsValues() throws Exception {
 		try {
 			attribute.setValues(null);
@@ -89,6 +100,7 @@ public class TaskAttributeTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNullAsList() throws Exception {
 		try {
 			attribute.setValues(Collections.<String> singletonList(null));
@@ -98,6 +110,7 @@ public class TaskAttributeTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNullInsideValuesList() throws Exception {
 		try {
 			attribute.setValues(Arrays.asList("foo", null, "bar"));

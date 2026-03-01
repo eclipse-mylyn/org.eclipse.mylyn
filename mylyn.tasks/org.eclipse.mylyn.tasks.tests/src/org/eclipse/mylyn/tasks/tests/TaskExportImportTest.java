@@ -13,13 +13,14 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Disabled;
 
 /**
  * @author Jevgeni Holodkov
  */
 //FIXME fix test
-public class TaskExportImportTest extends TestCase {
+@Disabled
+public class TaskExportImportTest {
 
 	public void testRewriteTestCases() {
 	}
@@ -105,7 +106,7 @@ public class TaskExportImportTest extends TestCase {
 //			taskList.addTask(loadedTask);
 //		}
 //		ContextCore.getContextStore().importContext(task.getHandleIdentifier(), outFile);
-////		ContextCorePlugin.getContextStore().importContext(loadedContext);
+	////		ContextCorePlugin.getContextStore().importContext(loadedContext);
 //
 //		// check that context was imported and is the same as original one
 //		IInteractionContext savedContext = ContextCorePlugin.getContextStore().loadContext(task.getHandleIdentifier());

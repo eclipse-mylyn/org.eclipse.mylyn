@@ -14,20 +14,22 @@
 
 package org.eclipse.mylyn.tasks.tests.ui.editor;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.ui.editors.AttachmentTableLabelProvider;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Thomas Ehrnhoefer
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class AttachmentTableLabelProviderTest extends TestCase {
+public class AttachmentTableLabelProviderTest {
 
+	@Test
 	public void testGetAttachmentId() {
 		TaskAttachment attachment = TaskTestUtil.createMockTaskAttachment("1");
 		AttachmentTableLabelProvider labelProvider = new AttachmentTableLabelProvider();
@@ -48,6 +50,7 @@ public class AttachmentTableLabelProviderTest extends TestCase {
 		assertEquals("myid", labelProvider.buildTextFromEventIndex(5, attachment).getString());
 	}
 
+	@Test
 	public void testGetAttachmentDescription() throws Exception {
 		TaskAttachment attachment = TaskTestUtil.createMockTaskAttachment("1");
 		attachment.setDescription(null);

@@ -14,6 +14,11 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,15 +29,14 @@ import org.eclipse.mylyn.tasks.core.data.DefaultTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  * @author Miles Parker
  */
 @SuppressWarnings("nls")
-public class DefaultTaskSchemaTest extends TestCase {
+public class DefaultTaskSchemaTest {
 
 	private class TestSchema extends AbstractTaskSchema {
 
@@ -52,6 +56,7 @@ public class DefaultTaskSchemaTest extends TestCase {
 
 	}
 
+	@Test
 	public void testInheritFlags() {
 		TestSchema schema = new TestSchema();
 		assertEquals(TaskAttribute.SUMMARY, schema.SUMMARY.getKey());
@@ -60,6 +65,7 @@ public class DefaultTaskSchemaTest extends TestCase {
 		assertTrue(schema.SUMMARY_READ_ONLY.isReadOnly());
 	}
 
+	@Test
 	public void testInheritFlagsAddRemoveFlag() {
 		TestSchema schema = new TestSchema();
 		assertEquals(TaskAttribute.KIND_PEOPLE, schema.REPORTER.getKind());
@@ -69,6 +75,7 @@ public class DefaultTaskSchemaTest extends TestCase {
 		assertFalse(schema.REPORTER_MODIFIED.isReadOnly());
 	}
 
+	@Test
 	public void testIterator() {
 		AbstractTaskSchema schema = new DefaultTaskSchema();
 		int i = 0;
@@ -78,12 +85,13 @@ public class DefaultTaskSchemaTest extends TestCase {
 			i++;
 		}
 		//Let's allow for adding fields to default schema without breaking test, but assume that no-existing attributes will be removed
-		assertTrue("Actual Attribute Count: " + i, i >= 40);
+		assertTrue(i >= 40, "Actual Attribute Count: " + i);
 		assertTrue(attributeIds.contains(TaskAttribute.ADD_SELF_CC));
 		assertTrue(attributeIds.contains(TaskAttribute.ATTACHMENT_AUTHOR));
 		assertTrue(attributeIds.contains(TaskAttribute.SUMMARY));
 	}
 
+	@Test
 	public void testInitializeTaskData() {
 		AbstractTaskSchema schema = new DefaultTaskSchema();
 		TaskData testData = new TaskData(new TaskAttributeMapper(new TaskRepository("mock", "http://mock")), "mock",
@@ -91,16 +99,18 @@ public class DefaultTaskSchemaTest extends TestCase {
 		schema.initialize(testData);
 		int size = testData.getRoot().getAttributes().size();
 		//Let's allow for adding fields to default schema without breaking test, but assume that no-existing attributes will be removed
-		assertTrue("Actual Attribute Count: " + size, size >= 40);
+		assertTrue(size >= 40, "Actual Attribute Count: " + size);
 		assertNotNull(testData.getRoot().getAttribute(TaskAttribute.ADD_SELF_CC));
 		assertNotNull(testData.getRoot().getAttribute(TaskAttribute.ATTACHMENT_ID));
 		assertNotNull(testData.getRoot().getAttribute(TaskAttribute.SUMMARY));
 	}
 
+	@Test
 	public void testDescriptionHasKind() {
 		assertEquals(TaskAttribute.KIND_DESCRIPTION, DefaultTaskSchema.getInstance().DESCRIPTION.getKind());
 	}
 
+	@Test
 	public void testRequiredAttribute() {
 		TestSchema schema = new TestSchema();
 		assertEquals(TaskAttribute.PRODUCT, schema.PRODUCT_REQUIRED.getKey());
@@ -108,11 +118,11 @@ public class DefaultTaskSchemaTest extends TestCase {
 				"http://mock", "-1");
 		schema.initialize(testData);
 		assertNotNull(testData.getRoot().getAttribute(TaskAttribute.USER_REPORTER));
-		assertFalse("USER_REPORTER should be not required",
-				testData.getRoot().getAttribute(TaskAttribute.USER_REPORTER).getMetaData().isRequired());
+		assertFalse(testData.getRoot().getAttribute(TaskAttribute.USER_REPORTER).getMetaData().isRequired(),
+				"USER_REPORTER should be not required");
 		assertNotNull(testData.getRoot().getAttribute(TaskAttribute.PRODUCT));
-		assertTrue("PRODUCT should be required",
-				testData.getRoot().getAttribute(TaskAttribute.PRODUCT).getMetaData().isRequired());
+		assertTrue(testData.getRoot().getAttribute(TaskAttribute.PRODUCT).getMetaData().isRequired(),
+				"PRODUCT should be required");
 	}
 
 }

@@ -14,6 +14,10 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,9 +36,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.internal.Workbench;
-import org.junit.Ignore;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for the Task Import Wizard.
@@ -43,7 +48,7 @@ import junit.framework.TestCase;
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskDataImportTest extends TestCase {
+public class TaskDataImportTest {
 
 	private TaskDataImportWizard wizard = null;
 
@@ -59,10 +64,8 @@ public class TaskDataImportTest extends TestCase {
 
 	private TaskList taskList;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
-		super.setUp();
-
 		// Create the import wizard
 		wizard = new TaskDataImportWizard();
 		wizard.addPages();
@@ -76,19 +79,19 @@ public class TaskDataImportTest extends TestCase {
 //		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		wizard.dispose();
 		wizardPage.dispose();
 //		ContextCorePlugin.getContextManager().resetActivityMetaContext();
 		TaskTestUtil.resetTaskListAndRepositories();
-		super.tearDown();
 	}
 
 	/**
 	 * Tests import of task data with working set active doesn't result in queries and categories being erroneously added to the active
 	 * working set.
 	 */
+	@Test
 	public void testDisableWorkingSets() throws Exception {
 		IWorkingSetManager workingSetManager = Workbench.getInstance().getWorkingSetManager();
 		IWorkingSet workingSet = workingSetManager.createWorkingSet("Task Working Set", new IAdaptable[] {});
@@ -113,8 +116,8 @@ public class TaskDataImportTest extends TestCase {
 	/**
 	 * Tests the wizard when it has been asked to import all task data from a zip file
 	 */
-	@Ignore
-	//FIXME: AF: investigate further flaky failure on windows
+	@Disabled("flaky failure on windows")
+	@Test
 	public void testImportRepositoriesZip() {
 		if (Platform.OS_WIN32.equals(Platform.getOS())) {
 			System.err.println("Skipping TaskDataImportTest.testImportRepositoriesZip() on Windows");
@@ -146,6 +149,7 @@ public class TaskDataImportTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testImportOverwritesAllTasks() {
 //		InteractionContext historyContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		assertNotNull(taskList);
@@ -178,6 +182,7 @@ public class TaskDataImportTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testImportBackupWithOldTaskList() {
 		wizardPage.setSource(true, TaskTestUtil.getLocalFile(BACKUP_OLD_v3).getAbsolutePath());
 		wizard.performFinish();
@@ -187,6 +192,7 @@ public class TaskDataImportTest extends TestCase {
 		assertEquals("Task 3", tasks.iterator().next().getSummary());
 	}
 
+	@Test
 	public void testImportBackup() {
 		wizardPage.setSource(true, TaskTestUtil.getLocalFile(BACKUP_v3).getAbsolutePath());
 		wizard.performFinish();

@@ -14,7 +14,8 @@
 
 package org.eclipse.mylyn.internal.tasks.index.tests;
 
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -24,7 +25,7 @@ import java.io.OutputStream;
 import java.util.Random;
 
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class TaskListIndexCorruptTest extends AbstractTaskListIndexTest {

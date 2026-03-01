@@ -15,9 +15,9 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.migrator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -53,8 +53,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.PlatformUI;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class ConnectorMigrationWizardTest {
@@ -87,7 +87,7 @@ public class ConnectorMigrationWizardTest {
 	private ConnectorMigrator migrator;
 
 	@SuppressWarnings("unchecked")
-	@Before
+	@BeforeEach
 	public void setUp() {
 		doNothing().when(migrationUi).warnOfValidationFailure(any(List.class));
 		doNothing().when(migrationUi).notifyMigrationComplete();

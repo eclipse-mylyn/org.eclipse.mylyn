@@ -14,19 +14,20 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.io.File;
 import java.io.Serializable;
 
 import org.eclipse.mylyn.tasks.core.RepositoryClientManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Benjamin Muskalla
  */
 @SuppressWarnings("nls")
-public class RepositoryClientManagerTest extends TestCase {
+public class RepositoryClientManagerTest {
 
 	public static class MyConfig implements Serializable {
 
@@ -67,6 +68,7 @@ public class RepositoryClientManagerTest extends TestCase {
 
 	}
 
+	@Test
 	public void testClassloadingSerialize() throws Exception {
 		File cacheFile = File.createTempFile("config", "");
 		cacheFile.delete();

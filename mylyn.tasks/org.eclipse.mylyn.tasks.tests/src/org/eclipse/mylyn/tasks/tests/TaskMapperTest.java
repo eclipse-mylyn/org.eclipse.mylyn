@@ -14,6 +14,12 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,14 +33,14 @@ import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskMapperTest extends TestCase {
+public class TaskMapperTest {
 
 	private StubTaskAttributeMapper mapper;
 
@@ -44,7 +50,7 @@ public class TaskMapperTest extends TestCase {
 
 	private TaskRepository taskRepository;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		taskRepository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
@@ -53,6 +59,7 @@ public class TaskMapperTest extends TestCase {
 		target = new TaskMapper(new TaskData(mapper, "kind", "http://url", "2"), true);
 	}
 
+	@Test
 	public void testTaskSchema() {
 		source.setReporter("reporter");
 
@@ -63,6 +70,7 @@ public class TaskMapperTest extends TestCase {
 		assertEquals(TaskAttribute.TYPE_PERSON, attribute.getMetaData().getType());
 	}
 
+	@Test
 	public void testTaskAttachmentMapperSchema() {
 		TaskAttribute attachmentAttribute = mapper.createTaskAttachment(source.getTaskData());
 		TaskAttachmentMapper mapper = new TaskAttachmentMapper();
@@ -76,6 +84,7 @@ public class TaskMapperTest extends TestCase {
 		assertEquals(TaskAttribute.TYPE_PERSON, attribute.getMetaData().getType());
 	}
 
+	@Test
 	public void testTaskCommentMapperSchema() {
 		TaskAttribute attachmentAttribute = mapper.createTaskAttachment(source.getTaskData());
 		TaskCommentMapper mapper = new TaskCommentMapper();
@@ -89,6 +98,7 @@ public class TaskMapperTest extends TestCase {
 		assertEquals(TaskAttribute.TYPE_PERSON, attribute.getMetaData().getType());
 	}
 
+	@Test
 	public void testCloneTaskCloneCommonAttributes() {
 		source.setDescription("sourceDescription");
 		target.setDescription("");
@@ -102,6 +112,7 @@ public class TaskMapperTest extends TestCase {
 		assertEquals("sourceSummary", target.getSummary());
 	}
 
+	@Test
 	public void testCloneTaskDataAttributeWithValues() {
 		source.getTaskData().getRoot().createAttribute("key1").addValue("value1");
 		target.merge(source);
@@ -123,6 +134,7 @@ public class TaskMapperTest extends TestCase {
 		assertEquals("v2", values.get(1));
 	}
 
+	@Test
 	public void testCloneTaskDataAttributeWithOptions() {
 		TaskAttribute sourceAttribute = source.getTaskData().getRoot().createAttribute("key");
 		sourceAttribute.setValue("o2");
@@ -152,6 +164,7 @@ public class TaskMapperTest extends TestCase {
 		assertEquals("o3", values.get(1));
 	}
 
+	@Test
 	public void testCloneTaskDifferentRepositoryTypesCloneCommonAttributes() {
 		target = new TaskMapper(new TaskData(mapper, "otherkind", "http://url", "2"), true);
 
@@ -166,6 +179,7 @@ public class TaskMapperTest extends TestCase {
 		assertEquals("sourceSummary", target.getSummary());
 	}
 
+	@Test
 	public void testCloneTaskDifferentRepositoryTypesCloneMappedAttribues() {
 		StubTaskAttributeMapper targetMapper = new StubTaskAttributeMapper(taskRepository);
 		target = new TaskMapper(new TaskData(targetMapper, "otherkind", "http://url", "2"), true);
@@ -192,6 +206,7 @@ public class TaskMapperTest extends TestCase {
 		assertEquals("source", target.getTaskData().getRoot().getAttribute("key").getValue());
 	}
 
+	@Test
 	public void testNoCreationOfAttributes() {
 		target = new TaskMapper(new TaskData(mapper, "otherkind", "http://url", "2"));
 		target.setDescription("abc");

@@ -14,6 +14,11 @@
 
 package org.eclipse.mylyn.tasks.tests.ui;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -39,14 +44,15 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.internal.Workbench;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  */
 @SuppressWarnings("nls")
-public class TaskListFilterTest extends TestCase {
+public class TaskListFilterTest {
 
 	private TaskListView view;
 
@@ -68,7 +74,7 @@ public class TaskListFilterTest extends TestCase {
 
 	private TaskList taskList;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		TaskTestUtil.resetTaskListAndRepositories();
 
@@ -102,7 +108,7 @@ public class TaskListFilterTest extends TestCase {
 		taskScheduledLastWeek = new LocalTask("6", "t-scheduledLastWeek");
 		taskList.addTask(taskScheduledLastWeek);
 		TasksUiPlugin.getTaskActivityManager()
-				.setScheduledFor(taskScheduledLastWeek, TaskActivityUtil.getCurrentWeek().previous());
+		.setScheduledFor(taskScheduledLastWeek, TaskActivityUtil.getCurrentWeek().previous());
 
 		taskCompleteAndOverdue = new LocalTask("7", "t-completeandoverdue");
 		taskList.addTask(taskCompleteAndOverdue);
@@ -112,7 +118,7 @@ public class TaskListFilterTest extends TestCase {
 		taskCompleteAndOverdue.setCompletionDate(cal.getTime());
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		TaskWorkingSetUpdater.applyWorkingSetsToAllWindows(new HashSet<>(0));
 		view.clearFilters();
@@ -121,6 +127,7 @@ public class TaskListFilterTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testSearchScheduledWorkingSet() throws InterruptedException {
 		TaskCategory category = new TaskCategory("category");
 		taskList.addCategory(category);
@@ -157,6 +164,7 @@ public class TaskListFilterTest extends TestCase {
 		view.getFilteredTree().getRefreshPolicy().internalForceRefresh();
 	}
 
+	@Test
 	public void testInterestFilter() {
 		TaskListInterestFilter interestFilter = new TaskListInterestFilter();
 		view.addFilter(interestFilter);
@@ -173,12 +181,14 @@ public class TaskListFilterTest extends TestCase {
 		view.removeFilter(interestFilter);
 	}
 
+	@Test
 	public void testNoFilters() {
-		assertEquals("should have working set filter and orphan/archive filter: " + view.getFilters(), 2,
-				view.getFilters().size());
+		assertEquals(2, view.getFilters().size(),
+				"should have working set filter and orphan/archive filter: " + view.getFilters());
 		view.getViewer().refresh();
 
-		assertEquals("should only have Uncategorized folder present in stock task list: "
-				+ view.getViewer().getTree().getItems(), 1, view.getViewer().getTree().getItemCount());
+		assertEquals(1, view.getViewer().getTree().getItemCount(),
+				"should only have Uncategorized folder present in stock task list: "
+						+ view.getViewer().getTree().getItems());
 	}
 }

@@ -14,6 +14,9 @@
 
 package org.eclipse.mylyn.tasks.tests.data;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.zip.ZipInputStream;
@@ -28,21 +31,21 @@ import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXParseException;
-
-import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskDataExternalizerTest extends TestCase {
+public class TaskDataExternalizerTest {
 
 	private TaskDataExternalizer externalizer;
 
 	private TaskRepository repository;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		TaskRepositoryManager taskRepositoryManager = new TaskRepositoryManager();
 		taskRepositoryManager.addRepositoryConnector(new MockRepositoryConnector());
@@ -51,6 +54,7 @@ public class TaskDataExternalizerTest extends TestCase {
 		externalizer = new TaskDataExternalizer(taskRepositoryManager);
 	}
 
+	@Test
 	public void testRead() throws Exception {
 		ZipInputStream in = new ZipInputStream(
 				CommonTestUtil.getResource(this, "testdata/taskdata-1.0-bug-219897.zip"));
@@ -61,6 +65,7 @@ public class TaskDataExternalizerTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testReadWrite() throws Exception {
 		ITaskDataWorkingCopy state;
 		try (ZipInputStream in = new ZipInputStream(
@@ -78,6 +83,7 @@ public class TaskDataExternalizerTest extends TestCase {
 		assertEquals(state.getRepositoryData().getRoot().toString(), state2.getRepositoryData().getRoot().toString());
 	}
 
+	@Test
 	public void testReadWriteInvalidCharactersXML11() throws Exception {
 		TaskData data = new TaskData(new TaskAttributeMapper(repository), repository.getConnectorKind(),
 				repository.getRepositoryUrl(), "1");
@@ -95,6 +101,7 @@ public class TaskDataExternalizerTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testReadWriteInvalidCharactersXML10() throws Exception {
 		TaskData data = new TaskData(new TaskAttributeMapper(repository), repository.getConnectorKind(),
 				repository.getRepositoryUrl(), "1");

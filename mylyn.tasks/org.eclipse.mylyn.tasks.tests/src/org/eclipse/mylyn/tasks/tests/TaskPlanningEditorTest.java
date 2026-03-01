@@ -15,14 +15,16 @@ package org.eclipse.mylyn.tasks.tests;
 
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 
 /**
  * @author Rob Elves
  */
 // FIXME re-enable tests
-public class TaskPlanningEditorTest extends TestCase {
+@Disabled
+public class TaskPlanningEditorTest {
 
 //	private static final String MOCK_LABEL = "label";
 //
@@ -30,12 +32,12 @@ public class TaskPlanningEditorTest extends TestCase {
 //
 //	private static final String NEW_DESCRIPTION = "new summary";
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		TasksUiPlugin.getDefault().getLocalTaskRepository();
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
 		TasksUiPlugin.getRepositoryManager().clearRepositories();

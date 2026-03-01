@@ -14,6 +14,12 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -32,25 +38,25 @@ import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Robert Elves
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class RefactorRepositoryUrlOperationTest extends TestCase {
+public class RefactorRepositoryUrlOperationTest {
 
 	private TaskList taskList;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
-		super.setUp();
 		taskList = TasksUiPlugin.getTaskList();
 		TaskTestUtil.resetTaskList();
 	}
 
+	@Test
 	public void testMigrateQueryUrlHandles() throws Exception {
 		RepositoryQuery query = new MockRepositoryQuery("mquery");
 		query.setRepositoryUrl("http://foo.bar");
@@ -64,6 +70,7 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		assertEquals("http://bar.baz/b", changedQuery.getUrl());
 	}
 
+	@Test
 	public void testMigrateQueryHandles() throws Exception {
 		RepositoryQuery query = new MockRepositoryQuery("mquery");
 		query.setRepositoryUrl("http://a");
@@ -73,6 +80,7 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		assertTrue(taskList.getRepositoryQueries("http://a").isEmpty());
 	}
 
+	@Test
 	public void testMigrateTaskHandles() throws Exception {
 		AbstractTask task = new MockTask("http://a", "123");
 		AbstractTask task2 = new MockTask("http://other", "other");
@@ -108,6 +116,7 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testMigrateTaskHandlesWithExplicitSet() throws Exception {
 		AbstractTask task = new MockTask("http://aa", "123");
 		task.setUrl("http://aa/task/123");
@@ -118,6 +127,7 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		assertEquals("http://bb/task/123", task.getUrl());
 	}
 
+	@Test
 	public void testMigrateTaskHandlesUnsubmittedTask() throws Exception {
 		ITask task = TasksUiUtil.createOutgoingNewTask(MockRepositoryConnector.CONNECTOR_KIND, "http://a");
 		String handleIdentifier = task.getHandleIdentifier();

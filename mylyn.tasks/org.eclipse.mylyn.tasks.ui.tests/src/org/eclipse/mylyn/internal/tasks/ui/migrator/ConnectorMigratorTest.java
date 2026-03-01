@@ -15,12 +15,12 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.migrator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -71,9 +71,9 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
 @SuppressWarnings({ "nls", "restriction" })
@@ -163,13 +163,13 @@ public class ConnectorMigratorTest {
 	private final ConnectorMigrationUi migrationUi = spy(new ConnectorMigrationUi(taskList, backupManager, tasksState));
 
 	@SuppressWarnings("unchecked")
-	@Before
+	@BeforeEach
 	public void setUp() {
 		doNothing().when(migrationUi).warnOfValidationFailure(any(List.class));
 		doNothing().when(migrationUi).notifyMigrationComplete();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		org.eclipse.mylyn.tests.util.TestFixture.resetTaskList();
 		new File("test-context.zip").delete();

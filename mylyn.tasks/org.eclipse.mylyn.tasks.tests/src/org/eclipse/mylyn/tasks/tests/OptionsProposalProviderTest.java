@@ -14,6 +14,9 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -21,19 +24,19 @@ import java.util.Map;
 
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.mylyn.internal.tasks.ui.OptionsProposalProvider;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
-public class OptionsProposalProviderTest extends TestCase {
+public class OptionsProposalProviderTest {
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		TaskTestUtil.resetTaskListAndRepositories();
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		TaskTestUtil.resetTaskListAndRepositories();
 	}

@@ -14,8 +14,13 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -46,15 +51,16 @@ import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.tests.util.TestUtils;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  * @author Rob Elves
  */
 @SuppressWarnings("nls")
-public class TaskRepositoryManagerTest extends TestCase {
+public class TaskRepositoryManagerTest {
 
 	private static final String DEFAULT_KIND = MockRepositoryConnector.CONNECTOR_KIND;
 
@@ -92,22 +98,21 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 	private TaskRepositoryManager manager;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
-		super.setUp();
 		manager = TasksUiPlugin.getRepositoryManager();
 		assertNotNull(manager);
 		manager.clearRepositories();
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		if (manager != null) {
 			manager.clearRepositories();
 		}
 	}
 
+	@Test
 	public void testsUseSecureStorage() throws Exception {
 		TaskRepository repository = new TaskRepository("bugzilla", "http://repository2/");
 		flushAuthenticationCredentials(repository);
@@ -124,6 +129,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		assertEquals("httpPassword", securePreferences.get(AUTH_HTTP_PASSWORD, null));
 	}
 
+	@Test
 	public void testsSaveCredentials() throws Exception {
 		TaskRepository repository = new TaskRepository("bugzilla", "http://repository3/");
 		repository.setCredentials(AuthenticationType.REPOSITORY,
@@ -138,6 +144,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		assertEquals("httpPassword", repository.getCredentials(AuthenticationType.HTTP).getPassword());
 	}
 
+	@Test
 	public void testMigrationFromKeyring() throws Exception {
 		if (!TestUtils.isCompatibilityAuthInstalled()) {
 			System.err.println("Skipping TaskRepositoryManagerTest.testMigrationFromKeyring()");
@@ -147,20 +154,23 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 		TaskRepository repository = new TaskRepository("bugzilla", "http://example.com/");
 		flushAuthenticationCredentials(repository);
-		AuthorizationHandler.addAuthorizationInfo(new URL(repository.getUrl()), AUTH_REALM, AUTH_SCHEME, authInfo);
+		AuthorizationHandler.addAuthorizationInfo(new URI(repository.getUrl()).toURL(), AUTH_REALM, AUTH_SCHEME,
+				authInfo);
 		new TaskRepositoryKeyringMigrator(AUTH_REALM, AUTH_SCHEME)
-				.migrateCredentials(Collections.singleton(repository));
+		.migrateCredentials(Collections.singleton(repository));
 		assertCredentialsMigrated(repository);
 
 		repository = new TaskRepository("bugzilla", "I am not a url.");
 		flushAuthenticationCredentials(repository);
-		AuthorizationHandler.addAuthorizationInfo(new URL("http://eclipse.org/mylyn"), repository.getUrl(), AUTH_SCHEME,
+		AuthorizationHandler.addAuthorizationInfo(new URI("http://eclipse.org/mylyn").toURL(), repository.getUrl(),
+				AUTH_SCHEME,
 				authInfo);
 		new TaskRepositoryKeyringMigrator(AUTH_REALM, AUTH_SCHEME)
-				.migrateCredentials(Collections.singleton(repository));
+		.migrateCredentials(Collections.singleton(repository));
 		assertCredentialsMigrated(repository);
 	}
 
+	@Test
 	public void testMigrationFromKeyringAfterGetUserNameCalled() throws Exception {
 		if (!TestUtils.isCompatibilityAuthInstalled()) {
 			System.err.println("Skipping TaskRepositoryManagerTest.testMigrationFromKeyringAfterGetUserNameCalled()");
@@ -170,12 +180,13 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 		TaskRepository repository = new TaskRepository("bugzilla", "http://example.com/");
 		flushAuthenticationCredentials(repository);
-		AuthorizationHandler.addAuthorizationInfo(new URL(repository.getUrl()), AUTH_REALM, AUTH_SCHEME, authInfo);
+		AuthorizationHandler.addAuthorizationInfo(new URI(repository.getUrl()).toURL(), AUTH_REALM, AUTH_SCHEME,
+				authInfo);
 
 		assertNull(repository.getUserName());
 
 		new TaskRepositoryKeyringMigrator(AUTH_REALM, AUTH_SCHEME)
-				.migrateCredentials(Collections.singleton(repository));
+		.migrateCredentials(Collections.singleton(repository));
 		assertNotNull(repository.getUserName());
 		assertTrue(repository.getUserName().equals("testuser"));
 		assertCredentialsMigrated(repository);
@@ -192,6 +203,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		return authInfo;
 	}
 
+	@Test
 	public void testMigrationFromOldSecureStoreNode() throws Exception {
 		TaskRepository repository = new TaskRepository("bugzilla", "http://example.com/");
 		flushAuthenticationCredentials(repository);
@@ -208,6 +220,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		new TaskRepositorySecureStoreMigrator().migrateCredentials(Collections.singleton(repository));
 		assertCredentialsMigrated(repository);
 	}
+
 
 	private void assertCredentialsMigrated(TaskRepository repository)
 			throws CoreException, MalformedURLException, StorageException {
@@ -416,7 +429,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 		TasksUiPlugin.getExternalizationManager().load();
 		//manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		assertEquals("got: " + manager.getAllRepositories(), 2, manager.getAllRepositories().size());
+		assertEquals(2, manager.getAllRepositories().size(), "got: " + manager.getAllRepositories());
 	}
 
 	public void testDeletion() {

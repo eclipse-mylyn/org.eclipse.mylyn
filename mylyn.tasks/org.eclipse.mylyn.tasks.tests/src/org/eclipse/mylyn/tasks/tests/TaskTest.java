@@ -14,31 +14,26 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskTest extends TestCase {
+public class TaskTest {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
+	@Test
 	public void testUrl() {
 		AbstractTask task = new LocalTask("handle", "label");
 		task.setUrl("http://eclipse.org/mylyn/doc");
@@ -57,6 +52,7 @@ public class TaskTest extends TestCase {
 		assertFalse(TasksUiInternal.isValidUrl(task.getUrl()));
 	}
 
+	@Test
 	public void testPriorityNeverNull() {
 		ITask task = new LocalTask("handle", "label");
 		assertNotNull(task.getPriority());
@@ -67,6 +63,7 @@ public class TaskTest extends TestCase {
 		assertEquals(def, PriorityLevel.fromString("garbage"));
 	}
 
+	@Test
 	public void testPriorityLevelFromLevel() {
 		assertEquals(PriorityLevel.P1, PriorityLevel.fromLevel(Integer.MIN_VALUE));
 		assertEquals(PriorityLevel.P1, PriorityLevel.fromLevel(-1));

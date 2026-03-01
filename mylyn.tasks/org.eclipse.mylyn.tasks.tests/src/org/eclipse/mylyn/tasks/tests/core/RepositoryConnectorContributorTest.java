@@ -14,11 +14,16 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylyn.commons.sdk.util.junit5.MylynTestSetup;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -33,14 +38,13 @@ import org.eclipse.mylyn.tasks.tests.support.MockRepositoryConnectorDescriptor.D
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.graphics.Image;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
-public class RepositoryConnectorContributorTest extends TestCase {
+@MylynTestSetup
+public class RepositoryConnectorContributorTest {
 
 	private final IBrandManager manager = TasksUiPlugin.getDefault().getBrandManager();
 
@@ -54,8 +58,7 @@ public class RepositoryConnectorContributorTest extends TestCase {
 
 	private TaskTask taskForConnectorWithNoBrands;
 
-	@Before
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		setUpBrand("org.mylyn");
 		setUpBrand("org.eclipse");
@@ -79,8 +82,7 @@ public class RepositoryConnectorContributorTest extends TestCase {
 		tasks.put(brand, new TaskTask(connector.getConnectorKind(), repositoryUrl, "1"));
 	}
 
-	@Override
-	@After
+	@AfterEach
 	protected void tearDown() throws Exception {
 		for (TaskRepository repository : repositories.values()) {
 			((TaskRepositoryManager) TasksUi.getRepositoryManager()).removeRepository(repository);
@@ -92,7 +94,7 @@ public class RepositoryConnectorContributorTest extends TestCase {
 	public void testConnectorContributed() {
 		AbstractRepositoryConnector connector = TasksUi
 				.getRepositoryConnector(DynamicMockRepositoryConnector.CONNECTOR_KIND);
-		assertNotNull("Expected dynamically contributed mock connector", connector);
+		assertNotNull(connector, "Expected dynamically contributed mock connector");
 		assertEquals(DynamicMockRepositoryConnector.class, connector.getClass());
 		assertEquals(DynamicMockRepositoryConnector.CONNECTOR_KIND, connector.getConnectorKind());
 	}
@@ -101,7 +103,7 @@ public class RepositoryConnectorContributorTest extends TestCase {
 	public void testConnectorUiContributed() {
 		AbstractRepositoryConnectorUi connector = TasksUi
 				.getRepositoryConnectorUi(DynamicMockRepositoryConnector.CONNECTOR_KIND);
-		assertNotNull("Expected connector UI contributed by MockRepositoryConnectorAdapter", connector);
+		assertNotNull(connector, "Expected connector UI contributed by MockRepositoryConnectorAdapter");
 		assertEquals(DynamicMockRepositoryConnectorUi.class, connector.getClass());
 		assertEquals(DynamicMockRepositoryConnector.CONNECTOR_KIND, connector.getConnectorKind());
 	}
@@ -111,7 +113,7 @@ public class RepositoryConnectorContributorTest extends TestCase {
 		Image brandingImage = TasksUiPlugin.getDefault()
 				.getBrandManager()
 				.getDefaultBrandingIcon(DynamicMockRepositoryConnector.CONNECTOR_KIND);
-		assertNotNull("Expected branding image contributed by MockRepositoryConnectorAdapter", brandingImage);
+		assertNotNull(brandingImage, "Expected branding image contributed by MockRepositoryConnectorAdapter");
 		assertEquals(16, brandingImage.getImageData().height);
 	}
 
@@ -120,7 +122,7 @@ public class RepositoryConnectorContributorTest extends TestCase {
 		ImageDescriptor overlay = TasksUiPlugin.getDefault()
 				.getBrandManager()
 				.getDefaultOverlayIcon(DynamicMockRepositoryConnector.CONNECTOR_KIND);
-		assertNotNull("Expected overlay image contributed by MockRepositoryConnectorAdapter", overlay);
+		assertNotNull(overlay, "Expected overlay image contributed by MockRepositoryConnectorAdapter");
 		assertEquals(8, overlay.getImageData(100).height);
 	}
 
@@ -185,7 +187,7 @@ public class RepositoryConnectorContributorTest extends TestCase {
 		assertEquals(expectedHeight, image.getImageData().height);
 	}
 
-	private void assertIconHeight(int expectedHeight, ImageDescriptor descriptor) {
+	private static void assertIconHeight(int expectedHeight, ImageDescriptor descriptor) {
 		assertEquals(expectedHeight, CommonImages.getImage(descriptor).getImageData().height);
 	}
 }

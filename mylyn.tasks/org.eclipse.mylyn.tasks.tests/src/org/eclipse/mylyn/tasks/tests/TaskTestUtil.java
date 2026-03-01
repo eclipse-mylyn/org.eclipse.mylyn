@@ -14,6 +14,8 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertSame;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -36,7 +38,6 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.ViewIntroAdapterPart;
-import org.junit.Assert;
 
 /**
  * @author Mik Kersten
@@ -115,8 +116,8 @@ public class TaskTestUtil {
 				.getActiveWorkbenchWindow()
 				.getActivePage()
 				.showView(ITasksUiConstants.ID_VIEW_TASKS);
-		Assert.assertSame("Failed to make task list view active",
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart(), taskListView);
+		assertSame(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart(), taskListView,
+				"Failed to make task list view active");
 		return taskListView;
 	}
 
@@ -126,7 +127,7 @@ public class TaskTestUtil {
 		taskListView.refresh();
 		taskListView.getViewer().expandAll();
 		taskListView.getViewer().setSelection(new StructuredSelection(task), true);
-		Assert.assertSame("Failed to select task", task, taskListView.getSelectedTask());
+		assertSame(task, taskListView.getSelectedTask(), "Failed to select task");
 	}
 
 	public static TaskData createTaskData(TaskRepository taskRepository, String taskId) {

@@ -14,17 +14,22 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
-import org.eclipse.mylyn.tasks.tests.util.MockRepositoryConnectorTestCase;
+import org.eclipse.mylyn.tests.util.junit5.MockRepositoryConnectorTestCase;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class AbstractRepositoryConnectorTest extends MockRepositoryConnectorTestCase {
 
+	@Test
 	public void testGetTaskUrl() {
 		assertEquals("http://mock-repo.com/tickets/123",
 				connectorWithUrl.getTaskUrl(repositoryWithUrl.getRepositoryUrl(), taskWithUrl.getTaskId()));
@@ -32,12 +37,14 @@ public class AbstractRepositoryConnectorTest extends MockRepositoryConnectorTest
 				.getTaskUrl(repositoryWithBrowserUrl.getRepositoryUrl(), taskWithBrowserUrl.getTaskId()));
 	}
 
+	@Test
 	public void testGetBrowserUrl() {
 		assertNull(connectorWithUrl.getBrowserUrl(repositoryWithUrl, taskWithUrl));
 		assertEquals("http://mock-repo-evolved.com/tickets/123",
 				connectorWithBrowserUrl.getBrowserUrl(repositoryWithBrowserUrl, taskWithBrowserUrl).toString());
 	}
 
+	@Test
 	public void testGetTaskByUrl() {
 		MockTask taskWithBrowserUrl2 = createMockTaskForRepository(repositoryWithBrowserUrl, "234");
 		TasksUiPlugin.getTaskList().addTask(taskWithBrowserUrl2);
@@ -54,6 +61,7 @@ public class AbstractRepositoryConnectorTest extends MockRepositoryConnectorTest
 		assertNull(TasksUiInternal.getTaskByUrl(""));
 	}
 
+	@Test
 	public void testIsOwnedByUser() throws Exception {
 		assertIsOwnedByUser("joel.user", "joel.user", "joel.user", true);
 		assertIsOwnedByUser("joel.user", "Joel K. User", "joel.user", true);

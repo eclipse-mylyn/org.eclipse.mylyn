@@ -14,11 +14,12 @@
 
 package org.eclipse.mylyn.internal.tasks.core.externalization;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -30,7 +31,7 @@ public class SaxOrphanBuilderTest {
 
 	private SaxOrphanBuilder builder;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		builder = new SaxOrphanBuilder();
 	}

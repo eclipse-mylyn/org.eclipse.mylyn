@@ -15,21 +15,21 @@
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import static org.eclipse.mylyn.internal.tasks.ui.wizards.Messages.SelectRepositoryConnectorPage_Select_a_task_repository_type;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.eclipse.mylyn.internal.tasks.ui.ConnectorBrand;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositorySettingsPage;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class NewRepositoryWizardTest {
 
 	private NewRepositoryWizard wizard;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		wizard = new NewRepositoryWizard();
 		wizard.addPages();

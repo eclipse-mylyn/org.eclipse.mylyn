@@ -14,16 +14,19 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
-import org.eclipse.mylyn.tasks.tests.connector.MockTask;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import junit.framework.TestCase;
+import org.eclipse.mylyn.tasks.tests.connector.MockTask;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TaskContainerTest extends TestCase {
+public class TaskContainerTest {
 
+	@Test
 	public void testGetChildren() {
 		MockTask task1 = new MockTask("1");
 		MockTask task2 = new MockTask("2");

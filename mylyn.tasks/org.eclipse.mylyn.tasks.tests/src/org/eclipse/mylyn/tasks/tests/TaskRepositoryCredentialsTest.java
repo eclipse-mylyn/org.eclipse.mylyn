@@ -14,6 +14,13 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.net.URI;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Date;
@@ -28,14 +35,15 @@ import org.eclipse.mylyn.internal.commons.repositories.core.LocationService;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.util.TestUtils;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  */
 @SuppressWarnings("nls")
-public class TaskRepositoryCredentialsTest extends TestCase {
+public class TaskRepositoryCredentialsTest {
 
 	private static final String AUTH_REPOSITORY = "org.eclipse.mylyn.tasklist.repositories";
 
@@ -67,28 +75,30 @@ public class TaskRepositoryCredentialsTest extends TestCase {
 
 	private ILocationService service;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		service = LocationService.getDefault();
 		taskRepository = new TaskRepository("kind", "http://url");
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		taskRepository.flushAuthenticationCredentials();
 	}
 
+	@Test
 	public void testPlatformAuthHandlerAvailable() throws Exception {
 		if (!TestUtils.isCompatibilityAuthInstalled()) {
 			System.err.println("Skipping TaskRepositoryCredentialsTest.testPlatformAuthHandlerAvailable()");
 			return;
 		}
-		URL url = new URL("http://mylyn");
+		URL url = new URI("http://mylyn").toURL();
 		AuthorizationHandler.addAuthorizationInfo(url, "", "", Collections.emptyMap());
-		assertNotNull("Tests require org.eclipse.core.runtime.compatibility.auth",
-				AuthorizationHandler.getAuthorizationInfo(url, "", ""));
+		assertNotNull(AuthorizationHandler.getAuthorizationInfo(url, "", ""),
+				"Tests require org.eclipse.core.runtime.compatibility.auth");
 	}
 
+	@Test
 	public void testLabel() {
 		TaskRepository repository = new TaskRepository("kind", "http://foo.bar");
 		assertTrue(repository.getRepositoryLabel().equals(repository.getRepositoryUrl()));
@@ -98,6 +108,7 @@ public class TaskRepositoryCredentialsTest extends TestCase {
 	}
 
 	@SuppressWarnings("deprecation")
+	@Test
 	public void testPassword() throws Exception {
 		assertCredentials(AuthenticationType.REPOSITORY);
 
@@ -112,6 +123,7 @@ public class TaskRepositoryCredentialsTest extends TestCase {
 	}
 
 	@SuppressWarnings("deprecation")
+	@Test
 	public void testHttpPassword() throws Exception {
 		assertCredentials(AuthenticationType.HTTP);
 
@@ -122,6 +134,7 @@ public class TaskRepositoryCredentialsTest extends TestCase {
 	}
 
 	@SuppressWarnings("deprecation")
+	@Test
 	public void testProxyPassword() throws Exception {
 		assertCredentials(AuthenticationType.PROXY);
 
@@ -132,6 +145,7 @@ public class TaskRepositoryCredentialsTest extends TestCase {
 	}
 
 	@SuppressWarnings("deprecation")
+	@Test
 	public void testFlushCredentials() throws Exception {
 		TaskRepository taskRepository = new TaskRepository("kind", "url");
 		taskRepository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"),
@@ -157,6 +171,7 @@ public class TaskRepositoryCredentialsTest extends TestCase {
 		assertNull(taskRepository.getCredentials(AuthenticationType.PROXY));
 	}
 
+	@Test
 	public void testPlatformIsRunning() {
 		assertTrue(Platform.isRunning());
 	}
@@ -199,16 +214,18 @@ public class TaskRepositoryCredentialsTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testConfigUpdateStoring() throws Exception {
 		Date stamp = taskRepository.getConfigurationDate();
-		assertNull("unset configuration date returns null", stamp);
+		assertNull(stamp, "unset configuration date returns null");
 		stamp = new Date();
 		stamp.setTime(stamp.getTime() - 35000L);
 
 		taskRepository.setConfigurationDate(stamp);
-		assertEquals("Time stamp set", stamp.getTime(), taskRepository.getConfigurationDate().getTime());
+		assertEquals(stamp.getTime(), taskRepository.getConfigurationDate().getTime(), "Time stamp set");
 	}
 
+	@Test
 	public void testDoNotPersistCredentials() throws Exception {
 		taskRepository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"),
 				true);
@@ -223,6 +240,7 @@ public class TaskRepositoryCredentialsTest extends TestCase {
 		assertEquals("pwd", taskRepository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
 	}
 
+	@Test
 	public void testSetCredentialsDoesNotAffectExistingRepositoryWhenShouldNotPersistIsSetToTrue() throws Exception {
 		taskRepository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"),
 				true);
@@ -241,6 +259,7 @@ public class TaskRepositoryCredentialsTest extends TestCase {
 		assertEquals("newpwd", newRepository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
 	}
 
+	@Test
 	public void testSetCredentialsAffectExistingRepository() throws Exception {
 		taskRepository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"),
 				true);

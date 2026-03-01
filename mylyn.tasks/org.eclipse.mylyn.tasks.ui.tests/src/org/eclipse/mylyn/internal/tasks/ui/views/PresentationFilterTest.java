@@ -14,9 +14,9 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import java.util.Calendar;
@@ -37,10 +37,10 @@ import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.StateTaskContainer;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class PresentationFilterTest {
@@ -53,20 +53,20 @@ public class PresentationFilterTest {
 
 	private static PresentationFilter filter;
 
-	@BeforeClass
+	@BeforeAll
 	public static void recordSettings() {
 		preferenceStore = TasksUiPlugin.getDefault().getPreferenceStore();
 		filterHidden = preferenceStore.getBoolean(ITasksUiPreferenceConstants.FILTER_HIDDEN);
 		filterNonMatching = preferenceStore.getBoolean(ITasksUiPreferenceConstants.FILTER_NON_MATCHING);
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void resetSettings() {
 		preferenceStore.setValue(ITasksUiPreferenceConstants.FILTER_HIDDEN, filterHidden);
 		preferenceStore.setValue(ITasksUiPreferenceConstants.FILTER_NON_MATCHING, filterNonMatching);
 	}
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		preferenceStore.setValue(ITasksUiPreferenceConstants.FILTER_HIDDEN, false);
 		preferenceStore.setValue(ITasksUiPreferenceConstants.FILTER_NON_MATCHING, false);

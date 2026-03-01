@@ -15,20 +15,22 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoriesExternalizer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Rob Elves
  */
 @SuppressWarnings("nls")
-public class TaskRepositoriesExternalizerTest extends TestCase {
+public class TaskRepositoriesExternalizerTest {
 
 	private Set<TaskRepository> taskRepositories = new HashSet<>();
 
@@ -52,7 +54,7 @@ public class TaskRepositoriesExternalizerTest extends TestCase {
 
 	private TaskRepository repository2;
 
-	@Override
+	@BeforeEach
 	protected void setUp() throws Exception {
 		repository1 = new TaskRepository(REP_TYPE, REPURL1);
 		repository2 = new TaskRepository("bugzilla", REPURL2);
@@ -70,6 +72,7 @@ public class TaskRepositoriesExternalizerTest extends TestCase {
 		taskRepositories.add(repository2);
 	}
 
+	@Test
 	public void testExternalization() {
 		TaskRepositoriesExternalizer externalizer = new TaskRepositoriesExternalizer();
 		String path = "repositories.xml";
@@ -98,6 +101,7 @@ public class TaskRepositoriesExternalizerTest extends TestCase {
 
 	}
 
+	@Test
 	public void testExternalizationEmptyRepository() {
 		TaskRepositoriesExternalizer externalizer = new TaskRepositoriesExternalizer();
 		String path = "repositories.xml";
