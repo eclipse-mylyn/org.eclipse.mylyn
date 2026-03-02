@@ -416,7 +416,6 @@ public class TaskListExternalizationTest {
 		assertEquals(1, ((AbstractTask) localTask).getParentContainers().size());
 	}
 
-	@SuppressWarnings("null")
 	@Test
 	public void testRemindedPersistance() throws Exception {
 		String bugNumber = "106939";
@@ -442,7 +441,6 @@ public class TaskListExternalizationTest {
 		}
 	}
 
-	@SuppressWarnings("null")
 	@Test
 	public void testOwnerPersistance() throws Exception {
 		String bugNumber = "106939";
