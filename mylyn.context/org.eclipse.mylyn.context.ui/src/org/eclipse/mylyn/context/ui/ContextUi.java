@@ -51,7 +51,7 @@ public final class ContextUi {
 		} else if (node.getInterest().isInteresting()) {
 			return null;
 		}
-		return ColorMap.GRAY_MEDIUM;
+		return ColorMap.GRAY_LIGHT;
 	}
 
 	public static boolean isEditorAutoCloseEnabled() {
