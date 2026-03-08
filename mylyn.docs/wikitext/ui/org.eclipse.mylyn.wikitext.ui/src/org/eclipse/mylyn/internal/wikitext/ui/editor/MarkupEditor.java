@@ -41,11 +41,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.jface.action.AbstractAction;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -123,7 +121,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.editors.text.TextEditor;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTarget;
@@ -1265,27 +1262,6 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		action.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
 		setAction("ContentAssistProposal", action); //$NON-NLS-1$
 		markAsStateDependentAction("ContentAssistProposal", true); //$NON-NLS-1$
-	}
-
-	@Override
-	public void setAction(String actionID, IAction action) {
-		if (action != null && action.getActionDefinitionId() != null && !isCommandAction(action)) {
-			// bug 336679: don't activate handlers for CommandAction.
-			// We do this by class name so that we don't rely on internals
-			IHandlerService handlerService = getSite().getService(IHandlerService.class);
-			handlerService.activateHandler(action.getActionDefinitionId(), new ActionHandler(action));
-		}
-		super.setAction(actionID, action);
-	}
-
-	private boolean isCommandAction(IAction action) {
-		for (Class<?> clazz = action.getClass(); clazz != Object.class
-				&& clazz != AbstractAction.class; clazz = clazz.getSuperclass()) {
-			if (clazz.getName().equals("org.eclipse.ui.internal.actions.CommandAction")) { //$NON-NLS-1$
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@Override
