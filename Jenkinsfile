@@ -10,14 +10,6 @@
  * Contributors:
  *   See git history
  *******************************************************************************/
-def secrets = [
-  [path: 'cbi/tools.mylyn/develocity.eclipse.org', secretValues: [
-    [envVar: 'DEVELOCITY_ACCESS_KEY', vaultKey: 'api-token']
-    ]
-  ]
-]
-
-
 pipeline {
 	options {
 		timeout(time: 80, unit: 'MINUTES')
@@ -82,7 +74,6 @@ MAVEN_PROFILES=${env.MAVEN_PROFILES}
 			steps {
 				sshagent (['projects-storage.eclipse.org-bot-ssh']) {
 					wrap([$class: 'Xvnc', useXauthority: true]) {
-                        withVault([vaultSecrets: secrets]) {
                             sh '''
                                 mvn \
                                 clean \
@@ -95,7 +86,6 @@ MAVEN_PROFILES=${env.MAVEN_PROFILES}
                                 -Dbuild.type=$BUILD_TYPE \
                                 -Dgit.commit=$GIT_COMMIT
                             '''
-                        }
 					}
 				}
 			}
