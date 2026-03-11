@@ -33,4 +33,3 @@ target
 build.log
 .local-repo
 .flattened-pom.xml
-.mvn/.develocity/develocity-workspace-id
