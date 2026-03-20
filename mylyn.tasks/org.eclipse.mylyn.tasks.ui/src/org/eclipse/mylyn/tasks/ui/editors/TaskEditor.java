@@ -783,7 +783,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 		CompositeImageDescriptor descriptor = new CompositeImageDescriptor() {
 			@Override
 			protected void drawCompositeImage(int width, int height) {
-				if (image != null) {
+				if (image != null && !image.isDisposed()) {
 					drawImage(image.getImageData(), size.x + padding, (height - image.getBounds().height) / 2);
 				}
 			}
@@ -935,7 +935,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 		TaskRepository outgoingNewRepository = getOutgoingRepository();
 		final TaskRepository taskRepository = outgoingNewRepository != null
 				? outgoingNewRepository
-				: taskEditorInput.getTaskRepository();
+						: taskEditorInput.getTaskRepository();
 		ControlContribution repositoryLabelControl = new ControlContribution(Messages.AbstractTaskEditorPage_Title) {
 			@Override
 			protected Control createControl(Composite parent) {
@@ -1052,7 +1052,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 			TaskRepository outgoingNewRepository = getOutgoingRepository();
 			TaskRepository taskRepository = outgoingNewRepository != null
 					? outgoingNewRepository
-					: taskEditorInput.getTaskRepository();
+							: taskEditorInput.getTaskRepository();
 			menuService.populateContributionManager(leftToolBarManager, "toolbar:" + ID_LEFT_TOOLBAR_HEADER + "." //$NON-NLS-1$ //$NON-NLS-2$
 					+ taskRepository.getConnectorKind());
 		}
@@ -1123,7 +1123,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 		TaskRepository outgoingNewRepository = getOutgoingRepository();
 		TaskRepository taskRepository = outgoingNewRepository != null
 				? outgoingNewRepository
-				: taskEditorInput.getTaskRepository();
+						: taskEditorInput.getTaskRepository();
 
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
 		String kindLabel = Messages.TaskEditor_Task;
