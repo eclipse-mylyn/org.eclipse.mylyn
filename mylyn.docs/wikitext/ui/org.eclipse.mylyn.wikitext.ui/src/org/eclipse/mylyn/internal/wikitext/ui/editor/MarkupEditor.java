@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2021 David Green and others.
+ * Copyright (c) 2007, 2026 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -168,7 +168,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			"org.eclipse.ui.navigator.ProjectExplorer", // 3.5 //$NON-NLS-1$
 			IPageLayout.ID_OUTLINE };
 
-	private static IShowInTargetList SHOW_IN_TARGET_LIST = () -> SHOW_IN_TARGETS;
+	private static final IShowInTargetList SHOW_IN_TARGET_LIST = () -> SHOW_IN_TARGETS;
 
 	private IDocument document;
 
@@ -313,9 +313,9 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 						}
 						try {
 							PlatformUI.getWorkbench()
-									.getBrowserSupport()
-									.createBrowser("org.eclipse.ui.browser") //$NON-NLS-1$
-									.openURL(new URL(event.location));
+							.getBrowserSupport()
+							.createBrowser("org.eclipse.ui.browser") //$NON-NLS-1$
+							.openURL(new URL(event.location));
 						} catch (Exception e) {
 							new URLHyperlink(new Region(0, 1), event.location).open();
 						}
@@ -363,7 +363,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			}
 		});
 		viewer.getTextWidget()
-				.addSelectionListener(SelectionListener.widgetSelectedAdapter(e -> updateOutlineSelection()));
+		.addSelectionListener(SelectionListener.widgetSelectedAdapter(e -> updateOutlineSelection()));
 		viewer.getTextWidget().addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -374,16 +374,10 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 			private boolean isRelevantKeyCode(int keyCode) {
 				// for some reason not all key presses result in a selection change
-				switch (keyCode) {
-					case SWT.ARROW_DOWN:
-					case SWT.ARROW_LEFT:
-					case SWT.ARROW_RIGHT:
-					case SWT.ARROW_UP:
-					case SWT.PAGE_DOWN:
-					case SWT.PAGE_UP:
-						return true;
-				}
-				return false;
+				return switch (keyCode) {
+					case SWT.ARROW_DOWN, SWT.ARROW_LEFT, SWT.ARROW_RIGHT, SWT.ARROW_UP, SWT.PAGE_DOWN, SWT.PAGE_UP -> true;
+					default -> false;
+				};
 			}
 		});
 		viewer.getTextWidget().addMouseListener(new MouseAdapter() {
@@ -493,11 +487,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	}
 
 	private boolean isFontPreferenceChange(PropertyChangeEvent event) {
-		if (event.getProperty().equals(sourceViewerConfiguration.getFontPreference())
-				|| event.getProperty().equals(sourceViewerConfiguration.getMonospaceFontPreference())) {
-			return true;
-		}
-		return false;
+		return event.getProperty().equals(sourceViewerConfiguration.getFontPreference())
+				|| event.getProperty().equals(sourceViewerConfiguration.getMonospaceFontPreference());
 	}
 
 	@Override
@@ -603,7 +594,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				}
 				document.addDocumentListener(documentListener);
 				if (documentPartitioningListener == null) {
-					documentPartitioningListener = document -> scheduleOutlineUpdate();
+					documentPartitioningListener = doc -> scheduleOutlineUpdate();
 				}
 				document.addDocumentPartitioningListener(documentPartitioningListener);
 			}
@@ -696,7 +687,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					}
 
 					String css = WikiTextUiPlugin.getDefault().getPreferences().getMarkupViewerCss();
-					if (css != null && css.length() > 0) {
+					if (css != null && !css.isEmpty()) {
 						builder.addCssStylesheet(new HtmlDocumentBuilder.Stylesheet(new StringReader(css)));
 					}
 
@@ -1008,16 +999,15 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				Iterator<Annotation> annotationIt = projectionAnnotationModel.getAnnotationIterator();
 				while (annotationIt.hasNext()) {
 					Annotation annotation = annotationIt.next();
-					if (annotation instanceof HeadingProjectionAnnotation projectionAnnotation) {
-						if (!projectionAnnotationById.containsKey(projectionAnnotation.getHeadingId())
-								&& !toDelete.contains(projectionAnnotation)) {
-							toDelete.add(projectionAnnotation);
-						}
+					if (annotation instanceof HeadingProjectionAnnotation projectionAnnotation
+							&& !projectionAnnotationById.containsKey(projectionAnnotation.getHeadingId())
+							&& !toDelete.contains(projectionAnnotation)) {
+						toDelete.add(projectionAnnotation);
 					}
 				}
 				projectionAnnotationModel.modifyAnnotations(
 						toDelete.isEmpty() ? null : toDelete.toArray(new Annotation[toDelete.size()]),
-						annotationToPosition, null);
+								annotationToPosition, null);
 			} else {
 				projectionAnnotationModel.modifyAnnotations(null, annotationToPosition, null);
 				for (HeadingProjectionAnnotation annotation : annotationToPosition.keySet()) {
@@ -1037,7 +1027,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		final int lastIndex = size - 1;
 		for (int x = 0; x < size; ++x) {
 			OutlineItem child = children.get(x);
-			if (child.getId() == null || child.getId().length() == 0) {
+
+			if (child.getId() == null || child.getId().isEmpty()) {
 				continue;
 			}
 			int offset = child.getOffset();
@@ -1168,9 +1159,9 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				sourceTab.setToolTipText(Messages.MarkupEditor_markupSource_tooltip);
 			} else {
 				sourceTab.setText(
-						NLS.bind(Messages.MarkupEditor_markupSource_named, new Object[] { markupLanguage.getName() }));
+						NLS.bind(Messages.MarkupEditor_markupSource_named, markupLanguage.getName()));
 				sourceTab.setToolTipText(NLS.bind(Messages.MarkupEditor_markupSource_tooltip_named,
-						new Object[] { markupLanguage.getName() }));
+						markupLanguage.getName()));
 			}
 		}
 	}
@@ -1233,8 +1224,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 						new QualifiedName(WikiTextUiPlugin.getDefault().getPluginId(), MARKUP_LANGUAGE), preference);
 			} catch (CoreException e) {
 				WikiTextUiPlugin.getDefault()
-						.log(IStatus.ERROR,
-								NLS.bind(Messages.MarkupEditor_markupPreferenceError2, new Object[] { preference }), e);
+						.log(IStatus.ERROR, NLS.bind(Messages.MarkupEditor_markupPreferenceError2, preference), e);
 			}
 		}
 	}
