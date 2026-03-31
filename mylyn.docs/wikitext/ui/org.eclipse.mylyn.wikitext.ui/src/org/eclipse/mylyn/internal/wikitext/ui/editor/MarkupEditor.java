@@ -193,8 +193,6 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 	private boolean disableReveal = false;
 
-	private ISourceViewer viewer;
-
 	private IPropertyChangeListener preferencesListener;
 
 	private IDocumentPartitioningListener documentPartitioningListener;
@@ -245,15 +243,13 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			}
 		});
 
-		{
-			sourceTab = new CTabItem(tabFolder, SWT.NONE);
-			updateSourceTabLabel();
+		sourceTab = new CTabItem(tabFolder, SWT.NONE);
+		updateSourceTabLabel();
 
-			viewer = new MarkupProjectionViewer(tabFolder, ruler, getOverviewRuler(), isOverviewRulerVisible(),
-					styles | SWT.WRAP);
+		ISourceViewer viewer = new MarkupProjectionViewer(tabFolder, ruler, getOverviewRuler(),
+				isOverviewRulerVisible(), styles | SWT.WRAP);
 
-			sourceTab.setControl(((Viewer) viewer).getControl());
-		}
+		sourceTab.setControl(((Viewer) viewer).getControl());
 
 		try {
 			previewTab = new CTabItem(tabFolder, SWT.NONE);
@@ -483,7 +479,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		syncProjectionModeWithPreferences();
 		((MarkupTokenScanner) sourceViewerConfiguration.getMarkupScanner()).reloadPreferences();
 		sourceViewerConfiguration.initializeDefaultFonts();
-		viewer.invalidateTextPresentation();
+		getSourceViewer().invalidateTextPresentation();
 	}
 
 	private boolean isFontPreferenceChange(PropertyChangeEvent event) {
@@ -786,7 +782,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	}
 
 	public ISourceViewer getViewer() {
-		return viewer;
+		return getSourceViewer();
 	}
 
 	public OutlineItem getOutlineModel() {
@@ -1133,8 +1129,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		scheduleOutlineUpdate();
 		updateSourceTabLabel();
 
-		if (viewer != null) {
-			viewer.getTextWidget().setData(MarkupLanguage.class.getName(), getMarkupLanguage());
+		if (getSourceViewer() != null) {
+			getSourceViewer().getTextWidget().setData(MarkupLanguage.class.getName(), getMarkupLanguage());
 		}
 
 		if (persistSetting && markupLanguage != null) {
