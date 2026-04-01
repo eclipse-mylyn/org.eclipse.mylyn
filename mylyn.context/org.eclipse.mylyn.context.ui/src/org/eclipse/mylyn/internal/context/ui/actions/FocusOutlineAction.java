@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2013 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2026 Tasktop Technologies and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,12 +8,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.context.ui.actions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -26,8 +28,8 @@ import org.eclipse.mylyn.context.ui.InterestFilter;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
@@ -105,12 +107,12 @@ public class FocusOutlineAction extends AbstractFocusViewAction {
 		return viewers;
 	}
 
-	public static FocusOutlineAction getOutlineActionForEditor(IEditorPart part) {
-		IViewPart outlineView = part.getSite().getPage().findView(ID_CONTENT_OUTLINE);
-		if (outlineView != null) {
-			return (FocusOutlineAction) AbstractFocusViewAction.getActionForPart(outlineView);
-		} else {
-			return null;
-		}
+	public static Optional<FocusOutlineAction> findForEditor(IEditorPart part) {
+		return Optional.ofNullable(part.getSite())
+				.map(IWorkbenchPartSite::getPage)
+				.map(p -> p.findView(ID_CONTENT_OUTLINE))
+				.map(AbstractFocusViewAction::getActionForPart)
+				.filter(FocusOutlineAction.class::isInstance)
+				.map(FocusOutlineAction.class::cast);
 	}
 }
