@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2026 Tasktop Technologies and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.context.ui;
@@ -27,11 +28,8 @@ public class ContentOutlineManager implements IPartListener {
 	public void partBroughtToTop(final IWorkbenchPart part) {
 		// use the display async due to bug 261977: [context] outline view does not filter contents when new editor is opened
 		Display.getDefault().asyncExec(() -> {
-			if (part instanceof IEditorPart editorPart) {
-				FocusOutlineAction applyAction = FocusOutlineAction.getOutlineActionForEditor(editorPart);
-				if (applyAction != null) {
-					applyAction.update(editorPart);
-				}
+			if (part instanceof IEditorPart editor) {
+				FocusOutlineAction.findForEditor(editor).ifPresent(a -> a.update(editor));
 			}
 		});
 	}
