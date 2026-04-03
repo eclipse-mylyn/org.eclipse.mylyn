@@ -105,10 +105,7 @@ public class ScheduleDatePicker extends Composite {
 
 		scheduledDateText = new Text(this, style);
 		scheduledDateText.setEditable(false);
-		GridData dateTextGridData = new GridData(SWT.FILL, SWT.FILL, false, false);
-		dateTextGridData.heightHint = 5;
-		dateTextGridData.grabExcessHorizontalSpace = true;
-		dateTextGridData.verticalAlignment = SWT.FILL;
+		GridData dateTextGridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
 
 		scheduledDateText.setLayoutData(dateTextGridData);
 		scheduledDateText.setText(initialText);
@@ -160,13 +157,13 @@ public class ScheduleDatePicker extends Composite {
 		});
 
 		updateDateText();
-		pack();
 	}
 
 	private void updateClearControlVisibility() {
 		if (clearControl != null && clearControl.getLayoutData() instanceof GridData) {
 			GridData gd = (GridData) clearControl.getLayoutData();
 			gd.exclude = scheduledDate == null;
+			clearControl.setVisible(scheduledDate != null);
 			clearControl.getParent().layout();
 		}
 	}

@@ -104,10 +104,8 @@ public class DatePicker extends Composite {
 		setLayout(gridLayout);
 
 		dateText = new Text(this, style);
-		GridData dateTextGridData = new GridData(SWT.FILL, SWT.FILL, false, false);
-		dateTextGridData.heightHint = 5;
-		dateTextGridData.grabExcessHorizontalSpace = true;
-		dateTextGridData.verticalAlignment = SWT.FILL;
+		GridData dateTextGridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+//		dateTextGridData.minimumWidth = 80;
 
 		dateText.setLayoutData(dateTextGridData);
 		dateText.setText(initialText);
@@ -187,7 +185,6 @@ public class DatePicker extends Composite {
 			}
 		});
 		updateClearControlVisibility();
-		pack();
 		setBackground(getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 	}
 
