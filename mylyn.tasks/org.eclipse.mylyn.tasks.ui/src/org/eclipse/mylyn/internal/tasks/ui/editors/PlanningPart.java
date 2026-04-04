@@ -91,7 +91,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 	private static final int SCHEDULE_DATE_WIDTH = 170;
 
-	private static final int DUE_DATE_WIDTH = 250;
+	private static final int DUE_DATE_WIDTH = 260;
 
 	private DatePicker dueDatePicker;
 
