@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -155,10 +158,21 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 		tempCalendar.set(Calendar.MINUTE, 0);
 		tempCalendar.set(Calendar.SECOND, 0);
 		String[] times = new String[24];
+		int maxLen = 0;
 		for (int x = 0; x < 24; x++) {
 			tempCalendar.set(Calendar.HOUR_OF_DAY, x);
-			String timeString = dateFormat.format(tempCalendar.getTime());
-			times[x] = timeString;
+			times[x] = dateFormat.format(tempCalendar.getTime());
+			if (times[x].length() > maxLen) {
+				maxLen = times[x].length();
+			}
+		}
+
+		// Right-justify by padding shorter strings with leading spaces
+		for (int i = 0; i < times.length; i++) {
+			int padding = maxLen - times[i].length();
+			if (padding > 0) {
+				times[i] = " ".repeat(padding) + times[i]; //$NON-NLS-1$
+			}
 		}
 
 		ListViewer listViewer = new ListViewer(composite);
@@ -167,6 +181,13 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 		listViewer.setInput(times);
 
 		timeList = listViewer.getList();
+
+		// Use a monospace font so that leading spaces produce consistent alignment
+		FontData[] fontData = timeList.getFont().getFontData();
+		Font monoFont = new Font(composite.getDisplay(),
+				new FontData("Monospace", fontData[0].getHeight(), fontData[0].getStyle())); //$NON-NLS-1$
+		timeList.setFont(monoFont);
+		timeList.addDisposeListener(e -> monoFont.dispose());
 
 		listViewer.addSelectionChangedListener(event -> {
 			date.set(Calendar.HOUR_OF_DAY, timeList.getSelectionIndex());
