@@ -18,20 +18,19 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.mylyn.internal.commons.workbench.Messages;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -51,7 +50,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  */
 public class DatePickerPanel extends Composite implements KeyListener, ISelectionProvider {
 
-	private TableViewer timeList = null;
+	private org.eclipse.swt.widgets.List timeList = null;
 
 	private ISelection selection = null;
 
@@ -150,7 +149,7 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 	}
 
 	/**
-	 * This method initializes the time list
+	 * This method initializes the month combo
 	 */
 	private void createTimeList(Composite composite) {
 
@@ -159,66 +158,58 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 		tempCalendar.set(Calendar.MINUTE, 0);
 		tempCalendar.set(Calendar.SECOND, 0);
 		String[] times = new String[24];
+		int maxLen = 0;
 		for (int x = 0; x < 24; x++) {
 			tempCalendar.set(Calendar.HOUR_OF_DAY, x);
 			times[x] = dateFormat.format(tempCalendar.getTime());
+			if (times[x].length() > maxLen) {
+				maxLen = times[x].length();
+			}
 		}
 
-		timeList = new TableViewer(composite, SWT.SINGLE | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
-
-		// SWT ignores alignment on column 0; use a zero-width dummy column so
-		// the time column is column 1, which correctly respects SWT.RIGHT.
-		TableViewerColumn dummy = new TableViewerColumn(timeList, SWT.NONE);
-		dummy.getColumn().setWidth(0);
-		dummy.getColumn().setResizable(false);
-		dummy.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				return ""; //$NON-NLS-1$
+		// Right-justify by padding shorter strings with leading spaces
+		for (int i = 0; i < times.length; i++) {
+			int padding = maxLen - times[i].length();
+			if (padding > 0) {
+				times[i] = " ".repeat(padding) + times[i]; //$NON-NLS-1$
 			}
-		});
+		}
 
-		TableViewerColumn column = new TableViewerColumn(timeList, SWT.RIGHT);
-		column.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				return element == null ? "" : element.toString(); //$NON-NLS-1$
-			}
-		});
+		ListViewer listViewer = new ListViewer(composite);
 
-		timeList.setContentProvider(new ArrayContentProvider());
-		timeList.setInput(times);
-		column.getColumn().pack();
+		listViewer.setContentProvider(new ArrayContentProvider());
+		listViewer.setInput(times);
 
-		timeList.addSelectionChangedListener(event -> {
-			date.set(Calendar.HOUR_OF_DAY, timeList.getTable().getSelectionIndex());
+		timeList = listViewer.getList();
+
+		// Use a monospace font so that leading spaces produce consistent alignment
+		FontData[] fontData = timeList.getFont().getFontData();
+		Font monoFont = new Font(composite.getDisplay(),
+				new FontData("Monospace", fontData[0].getHeight(), fontData[0].getStyle())); //$NON-NLS-1$
+		timeList.setFont(monoFont);
+		timeList.addDisposeListener(e -> monoFont.dispose());
+
+		listViewer.addSelectionChangedListener(event -> {
+			date.set(Calendar.HOUR_OF_DAY, timeList.getSelectionIndex());
 			date.set(Calendar.MINUTE, 0);
 			setSelection(new DateSelection(date));
 			notifyListeners(new SelectionChangedEvent(DatePickerPanel.this, getSelection()));
 		});
 
-		timeList.addOpenListener(event -> {
-			date.set(Calendar.HOUR_OF_DAY, timeList.getTable().getSelectionIndex());
+		listViewer.addOpenListener(event -> {
+			date.set(Calendar.HOUR_OF_DAY, timeList.getSelectionIndex());
 			date.set(Calendar.MINUTE, 0);
 			setSelection(new DateSelection(date, true));
 			notifyListeners(new SelectionChangedEvent(DatePickerPanel.this, getSelection()));
 		});
 
-		GridDataFactory.fillDefaults().hint(column.getColumn().getWidth(), 50).grab(false, true)
-				.applyTo(timeList.getTable());
-		timeList.getTable().addControlListener(new ControlAdapter() {
-			@Override
-			public void controlResized(ControlEvent e) {
-				column.getColumn().setWidth(timeList.getTable().getClientArea().width);
-			}
-		});
-
+		GridDataFactory.fillDefaults().hint(SWT.DEFAULT, 50).applyTo(timeList);
 		if (date != null) {
-			timeList.setSelection(new StructuredSelection(times[date.get(Calendar.HOUR_OF_DAY)]), true);
+			listViewer.setSelection(new StructuredSelection(times[date.get(Calendar.HOUR_OF_DAY)]), true);
 		} else {
-			timeList.setSelection(new StructuredSelection(times[8]), true);
+			listViewer.setSelection(new StructuredSelection(times[8]), true);
 		}
-		timeList.getTable().addKeyListener(this);
+		timeList.addKeyListener(this);
 	}
 
 	public void setDate(Calendar date) {
@@ -289,6 +280,7 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 		public DateSelection(Calendar calendar, boolean isDefaultSelection) {
 			date = calendar;
 			this.isDefaultSelection = isDefaultSelection;
+
 		}
 
 		@Override
@@ -303,6 +295,7 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 		public Calendar getDate() {
 			return date;
 		}
+
 	}
 
 }
