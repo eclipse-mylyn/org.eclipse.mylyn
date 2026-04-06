@@ -24,6 +24,7 @@ import org.eclipse.jface.text.IInformationControlExtension2;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.commons.ui.FontUtils;
 import org.eclipse.mylyn.context.ui.InterestFilter;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.swt.SWT;
@@ -38,7 +39,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontMetrics;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -57,7 +57,7 @@ import org.eclipse.ui.navigator.CommonViewer;
  * @author Mik Kersten
  */
 public class QuickContextPopupDialog extends PopupDialog
-		implements IInformationControl, IInformationControlExtension, IInformationControlExtension2, DisposeListener {
+implements IInformationControl, IInformationControlExtension, IInformationControlExtension2, DisposeListener {
 
 	public static final String ID_VIEWER = "org.eclipse.mylyn.context.ui.navigator.context.quick"; //$NON-NLS-1$
 
@@ -341,10 +341,7 @@ public class QuickContextPopupDialog extends PopupDialog
 		// Create the widget
 		fFilterText = new Text(parent, SWT.NONE);
 		// Set the font
-		GC gc = new GC(parent);
-		gc.setFont(parent.getFont());
-		FontMetrics fontMetrics = gc.getFontMetrics();
-		gc.dispose();
+		FontMetrics fontMetrics = FontUtils.getFontMetrics(parent);
 		// Create the layout
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		data.heightHint = Dialog.convertHeightInCharsToPixels(fontMetrics, 1);
@@ -371,11 +368,8 @@ public class QuickContextPopupDialog extends PopupDialog
 				if (e.keyCode == 0x0D) {
 					// Return key was pressed
 					gotoSelectedElement();
-				} else if (e.keyCode == SWT.ARROW_DOWN) {
+				} else if ((e.keyCode == SWT.ARROW_DOWN) || (e.keyCode == SWT.ARROW_UP)) {
 					// Down key was pressed
-					commonViewer.getTree().setFocus();
-				} else if (e.keyCode == SWT.ARROW_UP) {
-					// Up key was pressed
 					commonViewer.getTree().setFocus();
 				} else if (e.character == 0x1B) {
 					// Escape key was pressed
