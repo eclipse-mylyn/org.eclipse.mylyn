@@ -11,6 +11,7 @@
  *     IBM Corporation - initial API and implementation
  *     Tasktop Technologies - adapted for Mylyn
  *     Frank Becker - adapted for Mylyn Task Editor
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors.outline;
@@ -486,7 +487,7 @@ implements IInformationControl, IInformationControlExtension, IInformationContro
 				if (e.keyCode == 0x0D) {
 					// Return key was pressed
 					gotoSelectedElement();
-				} else if ((e.keyCode == SWT.ARROW_DOWN) || (e.keyCode == SWT.ARROW_UP)) {
+				} else if (e.keyCode == SWT.ARROW_DOWN || e.keyCode == SWT.ARROW_UP) {
 					// Down key was pressed
 					viewer.getTree().setFocus();
 				} else if (e.character == 0x1B) {

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.workbench.forms;
@@ -31,7 +32,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -77,16 +77,12 @@ public class DatePicker extends Composite {
 
 	private ImageHyperlink clearControl;
 
-	private final int pixelWidth;
-
 	public DatePicker(Composite parent, int style, String initialText, boolean includeHours, int selectedHourOfDay) {
 		super(parent, style);
 		this.initialText = initialText;
 		includeTimeOfday = includeHours;
 		this.selectedHourOfDay = selectedHourOfDay;
-		FontMetrics fm = FontUtils.getFontMetrics(parent);
-		pixelWidth = (int) ("Apr 28, 2026, 4:00 p.m.".length() * fm.getAverageCharacterWidth()) + // //$NON-NLS-1$
-				initialize((style & SWT.FLAT) != 0 ? SWT.FLAT : 0);// 40px for the buttons
+		initialize((style & SWT.FLAT) != 0 ? SWT.FLAT : 0);
 	}
 
 	public DateFormat getDateFormat() {
@@ -101,9 +97,7 @@ public class DatePicker extends Composite {
 		this.dateFormat = dateFormat;
 	}
 
-	private int initialize(int style) {
-		int pixels = 0;
-
+	private void initialize(int style) {
 		GridLayout gridLayout = new GridLayout(3, false);
 		gridLayout.horizontalSpacing = 0;
 		gridLayout.verticalSpacing = 0;
@@ -113,7 +107,7 @@ public class DatePicker extends Composite {
 
 		dateText = new Text(this, style);
 		GridData dateTextGridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
-//		dateTextGridData.minimumWidth = 80;
+		dateTextGridData.widthHint = FontUtils.getStringPixels(dateText, Messages.DatePicker_Sample_Due_Date).x;
 
 		dateText.setLayoutData(dateTextGridData);
 		dateText.setText(initialText);
@@ -151,7 +145,6 @@ public class DatePicker extends Composite {
 		GridData clearButtonGridData = new GridData();
 		clearButtonGridData.horizontalIndent = 3;
 		clearControl.setLayoutData(clearButtonGridData);
-		pixels += clearControl.getImage().getImageData().width;
 
 		pickButton = new Button(this, style | SWT.ARROW | SWT.DOWN);
 		GridData pickButtonGridData = new GridData(SWT.RIGHT, SWT.FILL, false, true);
@@ -193,12 +186,9 @@ public class DatePicker extends Composite {
 				dialog.open();
 			}
 		});
-		pixels += pickButton.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
 
 		updateClearControlVisibility();
 		setBackground(getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
-
-		return pixels;
 	}
 
 	public void addPickerSelectionListener(SelectionListener listener) {
@@ -326,13 +316,4 @@ public class DatePicker extends Composite {
 		clearControl.setEnabled(enabled);
 		super.setEnabled(enabled);
 	}
-
-	/**
-	 * @since 4.11
-	 * @return pixel width
-	 */
-	public int getWidth() {
-		return pixelWidth;
-	}
-
 }

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.workbench;
@@ -41,9 +42,13 @@ public class Messages extends NLS {
 
 	public static String DatePicker_Clear;
 
+	public static String DatePicker_Sample_Due_Date;
+
 	public static String DateSelectionDialog_Date_Selection;
 
 	public static String DatePickerPanel_Today;
+
+	public static String DatePickerPanel_Sample_Date;
 
 	public static String TextControl_FindToolTip;
 

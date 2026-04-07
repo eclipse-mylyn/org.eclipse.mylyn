@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -25,7 +26,6 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.ui.CommonUiUtil;
-import org.eclipse.mylyn.commons.ui.FontUtils;
 import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.commons.workbench.editors.CommonTextSupport;
 import org.eclipse.mylyn.commons.workbench.forms.DatePicker;
@@ -57,7 +57,6 @@ import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -483,22 +482,13 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	}
 
 	private void createDueDatePicker(FormToolkit toolkit, Composite parent) {
-		final int labelWidth;
-
 		Label label = toolkit.createLabel(parent, Messages.TaskEditorPlanningPart_Due);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		FontMetrics fm = FontUtils.getFontMetrics(parent);
-		int avgCharWidth = (int) fm.getAverageCharacterWidth();
-		labelWidth = avgCharWidth * Messages.TaskEditorPlanningPart_Due.length();
 
 		Composite composite = createComposite(parent, 1, toolkit);
 
 		dueDatePicker = new DatePicker(composite, SWT.FLAT, DatePicker.LABEL_CHOOSE, true, 0);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(dueDatePicker);
-		GridDataFactory.fillDefaults()
-		.grab(false, false)
-		.hint(labelWidth + dueDatePicker.getWidth() + 10, SWT.DEFAULT)
-		.applyTo(composite);
 		dueDatePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		dueDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		if (getTask().getDueDate() != null) {
@@ -553,21 +543,12 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	}
 
 	private void createScheduledDatePicker(FormToolkit toolkit, Composite parent) {
-		final int labelWidth;
-
 		Label label = toolkit.createLabel(parent, Messages.TaskEditorPlanningPart_Scheduled);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		FontMetrics fm = FontUtils.getFontMetrics(parent);
-		labelWidth = (int) (fm.getAverageCharacterWidth() * Messages.TaskEditorPlanningPart_Scheduled.length());
 
 		Composite composite = createComposite(parent, 2, toolkit);
 
 		scheduleDatePicker = new ScheduleDatePicker(composite, getTask(), SWT.FLAT);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(scheduleDatePicker);
-		GridDataFactory.fillDefaults()
-		.grab(false, false)
-		.hint(labelWidth + scheduleDatePicker.getWidth() + 10, SWT.DEFAULT)
-		.applyTo(composite);
 		scheduleDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		toolkit.adapt(scheduleDatePicker, false, false);
 		toolkit.paintBordersFor(composite);

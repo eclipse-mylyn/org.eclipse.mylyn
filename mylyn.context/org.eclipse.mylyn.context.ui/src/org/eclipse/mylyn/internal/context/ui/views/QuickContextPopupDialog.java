@@ -9,6 +9,7 @@
  *
  *     IBM Corporation - initial API and implementation
  *     Tasktop Technologies - adapted for Mylyn
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.context.ui.views;
@@ -368,7 +369,7 @@ implements IInformationControl, IInformationControlExtension, IInformationContro
 				if (e.keyCode == 0x0D) {
 					// Return key was pressed
 					gotoSelectedElement();
-				} else if ((e.keyCode == SWT.ARROW_DOWN) || (e.keyCode == SWT.ARROW_UP)) {
+				} else if (e.keyCode == SWT.ARROW_DOWN || e.keyCode == SWT.ARROW_UP) {
 					// Down key was pressed
 					commonViewer.getTree().setFocus();
 				} else if (e.character == 0x1B) {

@@ -9,19 +9,20 @@
  *
  *     Bahadir Yagan - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.workbench.forms;
 
-import java.text.DateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
-
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -153,15 +154,11 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 	 */
 	private void createTimeList(Composite composite) {
 
-		DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
-		Calendar tempCalendar = Calendar.getInstance();
-		tempCalendar.set(Calendar.MINUTE, 0);
-		tempCalendar.set(Calendar.SECOND, 0);
+		DateTimeFormatter timeFormatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
 		String[] times = new String[24];
 		int maxLen = 0;
 		for (int x = 0; x < 24; x++) {
-			tempCalendar.set(Calendar.HOUR_OF_DAY, x);
-			times[x] = dateFormat.format(tempCalendar.getTime());
+			times[x] = LocalTime.of(x, 0).format(timeFormatter);
 			if (times[x].length() > maxLen) {
 				maxLen = times[x].length();
 			}
@@ -183,11 +180,7 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 		timeList = listViewer.getList();
 
 		// Use a monospace font so that leading spaces produce consistent alignment
-		FontData[] fontData = timeList.getFont().getFontData();
-		Font monoFont = new Font(composite.getDisplay(),
-				new FontData("Monospace", fontData[0].getHeight(), fontData[0].getStyle())); //$NON-NLS-1$
-		timeList.setFont(monoFont);
-		timeList.addDisposeListener(e -> monoFont.dispose());
+		timeList.setFont(JFaceResources.getTextFont());
 
 		listViewer.addSelectionChangedListener(event -> {
 			date.set(Calendar.HOUR_OF_DAY, timeList.getSelectionIndex());

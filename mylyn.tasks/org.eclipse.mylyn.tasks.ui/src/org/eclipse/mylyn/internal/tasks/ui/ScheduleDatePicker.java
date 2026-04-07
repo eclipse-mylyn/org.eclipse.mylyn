@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui;
@@ -29,7 +30,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -65,8 +65,6 @@ public class ScheduleDatePicker extends Composite {
 
 	private ImageHyperlink clearControl;
 
-	private final int pixelWidth;
-
 	public ScheduleDatePicker(Composite parent, AbstractTask task, int style) {
 		super(parent, style);
 		if (task != null) {
@@ -74,10 +72,9 @@ public class ScheduleDatePicker extends Composite {
 				scheduledDate = task.getScheduledForDate();
 			}
 		}
-		FontMetrics fm = FontUtils.getFontMetrics(parent);
-		int controlWidth = initialize((style & SWT.FLAT) > 0 ? SWT.FLAT : 0);
-		pixelWidth = (int) ("Mar 28, 2026".length() * fm.getAverageCharacterWidth()) + // //$NON-NLS-1$
-				controlWidth;
+
+		initialize((style & SWT.FLAT) > 0 ? SWT.FLAT : 0);
+
 		contributor = new ScheduleTaskMenuContributor() {
 
 			@Override
@@ -100,9 +97,7 @@ public class ScheduleDatePicker extends Composite {
 		tasks.add(task);
 	}
 
-	private int initialize(int style) {
-		int pixels = 0;
-
+	private void initialize(int style) {
 		GridLayout gridLayout = new GridLayout(3, false);
 		gridLayout.horizontalSpacing = 0;
 		gridLayout.verticalSpacing = 0;
@@ -113,6 +108,8 @@ public class ScheduleDatePicker extends Composite {
 		scheduledDateText = new Text(this, style);
 		scheduledDateText.setEditable(false);
 		GridData dateTextGridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		dateTextGridData.widthHint = FontUtils.getStringPixels(scheduledDateText,
+				Messages.ScheduleDatePicker_Sample_Date).x;
 
 		scheduledDateText.setLayoutData(dateTextGridData);
 		scheduledDateText.setText(initialText);
@@ -142,7 +139,6 @@ public class ScheduleDatePicker extends Composite {
 		GridData clearButtonGridData = new GridData();
 		clearButtonGridData.horizontalIndent = 3;
 		clearControl.setLayoutData(clearButtonGridData);
-		pixels += clearControl.getImage().getImageData().width;
 
 		pickButton = new Button(this, style | SWT.ARROW | SWT.DOWN);
 		GridData pickButtonGridData = new GridData(SWT.RIGHT, SWT.FILL, false, true);
@@ -163,11 +159,8 @@ public class ScheduleDatePicker extends Composite {
 				menu.setLocation(location.x - pickButton.getBounds().x, location.y + bounds.height + 2);
 			}
 		});
-		pixels += pickButton.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
 
 		updateDateText();
-
-		return pixels;
 	}
 
 	private void updateClearControlVisibility() {
@@ -233,14 +226,6 @@ public class ScheduleDatePicker extends Composite {
 
 	public boolean isFloatingDate() {
 		return isFloating;
-	}
-
-	/**
-	 * @since 4.11
-	 * @return pixel width of the controls
-	 */
-	public int getWidth() {
-		return pixelWidth;
 	}
 
 }
