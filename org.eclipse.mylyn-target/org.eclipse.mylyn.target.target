@@ -20,7 +20,7 @@
 			<unit id="org.eclipse.license.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/"/>
+			<repository location="https://download.eclipse.org/eclipse/updates/4.40-I-builds/I20260402-1800/"/>
 			<unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.equinox.p2.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.sdk.feature.group" version="0.0.0"/>
@@ -30,13 +30,13 @@
 			<unit id="org.eclipse.egit.github.core" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/egit/updates-7.6/"/>
+			<repository location="https://download.eclipse.org/egit/staging/v7.7.0.202604061937-m1/"/>
 			<unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.jgit.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.jgit.lfs.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/modeling/emf/emf/builds/release/2.45.0/"/>
+			<repository location="https://download.eclipse.org/modeling/emf/emf/builds/milestone/S202604010752/"/>
 			<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -73,7 +73,7 @@
 			<unit id="org.apache.commons.io" version="2.8.0.v20210415-0900"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/2026-03/"/>
+			<repository location="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/2026-06/"/>
 			<unit id="junit-jupiter-api" version="[5.14.0,6.0.0)"/>
 			<unit id="junit-jupiter-engine" version="[5.14.0,6.0.0)"/>
 			<unit id="junit-jupiter-migrationsupport" version="[5.14.0,6.0.0)"/>
