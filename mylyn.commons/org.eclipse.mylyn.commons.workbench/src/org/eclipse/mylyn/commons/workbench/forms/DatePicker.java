@@ -107,7 +107,7 @@ public class DatePicker extends Composite {
 
 		dateText = new Text(this, style);
 		GridData dateTextGridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
-		dateTextGridData.widthHint = FontUtils.getStringPixels(dateText, Messages.DatePicker_Sample_Due_Date).x;
+		dateTextGridData.widthHint = FontUtils.getStringPixels(dateText, Messages.DatePicker_Sample_Due_Date).x + 5;
 
 		dateText.setLayoutData(dateTextGridData);
 		dateText.setText(initialText);
