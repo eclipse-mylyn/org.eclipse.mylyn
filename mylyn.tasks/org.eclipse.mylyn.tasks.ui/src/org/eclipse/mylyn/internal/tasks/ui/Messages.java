@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui;
@@ -60,6 +61,8 @@ public class Messages extends NLS {
 	public static String RefactorRepositoryUrlOperation_Repository_URL_update;
 
 	public static String ScheduleDatePicker_Clear;
+
+	public static String ScheduleDatePicker_Sample_Date;
 
 	public static String ScheduleTaskMenuContributor_Cannot_schedule_completed_tasks;
 
