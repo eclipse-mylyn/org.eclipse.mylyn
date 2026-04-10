@@ -488,7 +488,6 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		Composite composite = createComposite(parent, 1, toolkit);
 
 		dueDatePicker = new DatePicker(composite, SWT.FLAT, DatePicker.LABEL_CHOOSE, true, 0);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(dueDatePicker);
 		dueDatePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		dueDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		if (getTask().getDueDate() != null) {

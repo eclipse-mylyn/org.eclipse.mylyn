@@ -488,7 +488,7 @@ implements IInformationControl, IInformationControlExtension, IInformationContro
 					// Return key was pressed
 					gotoSelectedElement();
 				} else if (e.keyCode == SWT.ARROW_DOWN || e.keyCode == SWT.ARROW_UP) {
-					// Down key was pressed
+					// Down/Up key was pressed
 					viewer.getTree().setFocus();
 				} else if (e.character == 0x1B) {
 					// Escape key was pressed
