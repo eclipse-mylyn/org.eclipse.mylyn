@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.FontUtils;
 import org.eclipse.mylyn.commons.workbench.forms.DatePicker;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
@@ -72,6 +74,7 @@ public class ScheduleDatePicker extends Composite {
 		}
 
 		initialize((style & SWT.FLAT) > 0 ? SWT.FLAT : 0);
+
 		contributor = new ScheduleTaskMenuContributor() {
 
 			@Override
@@ -95,7 +98,6 @@ public class ScheduleDatePicker extends Composite {
 	}
 
 	private void initialize(int style) {
-
 		GridLayout gridLayout = new GridLayout(3, false);
 		gridLayout.horizontalSpacing = 0;
 		gridLayout.verticalSpacing = 0;
@@ -105,10 +107,9 @@ public class ScheduleDatePicker extends Composite {
 
 		scheduledDateText = new Text(this, style);
 		scheduledDateText.setEditable(false);
-		GridData dateTextGridData = new GridData(SWT.FILL, SWT.FILL, false, false);
-		dateTextGridData.heightHint = 5;
-		dateTextGridData.grabExcessHorizontalSpace = true;
-		dateTextGridData.verticalAlignment = SWT.FILL;
+		GridData dateTextGridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		dateTextGridData.widthHint = FontUtils.getStringPixels(scheduledDateText,
+				Messages.ScheduleDatePicker_Sample_Date).x + 5;
 
 		scheduledDateText.setLayoutData(dateTextGridData);
 		scheduledDateText.setText(initialText);
@@ -160,13 +161,13 @@ public class ScheduleDatePicker extends Composite {
 		});
 
 		updateDateText();
-		pack();
 	}
 
 	private void updateClearControlVisibility() {
 		if (clearControl != null && clearControl.getLayoutData() instanceof GridData) {
 			GridData gd = (GridData) clearControl.getLayoutData();
 			gd.exclude = scheduledDate == null;
+			clearControl.setVisible(scheduledDate != null);
 			clearControl.getParent().layout();
 		}
 	}

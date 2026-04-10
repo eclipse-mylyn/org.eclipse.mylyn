@@ -11,6 +11,7 @@
  *     IBM Corporation - initial API and implementation
  *     Tasktop Technologies - adapted for Mylyn
  *     Frank Becker - adapted for Mylyn Task Editor
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors.outline;
@@ -34,6 +35,7 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylyn.commons.ui.FontUtils;
 import org.eclipse.mylyn.commons.workbench.DecoratingPatternStyledCellLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorOutlineContentProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorOutlineModel;
@@ -54,7 +56,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontMetrics;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -76,7 +77,7 @@ import org.eclipse.ui.forms.editor.IFormPage;
  * @author Steffen Pingel
  */
 public class QuickOutlineDialog extends PopupDialog
-		implements IInformationControl, IInformationControlExtension, IInformationControlExtension2, DisposeListener {
+implements IInformationControl, IInformationControlExtension, IInformationControlExtension2, DisposeListener {
 
 	public final class Filter extends PatternFilter {
 		@Override
@@ -459,10 +460,7 @@ public class QuickOutlineDialog extends PopupDialog
 		// Create the widget
 		filterText = new Text(parent, SWT.NONE);
 		// Set the font
-		GC gc = new GC(parent);
-		gc.setFont(parent.getFont());
-		FontMetrics fontMetrics = gc.getFontMetrics();
-		gc.dispose();
+		FontMetrics fontMetrics = FontUtils.getFontMetrics(parent);
 		// Create the layout
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		data.heightHint = Dialog.convertHeightInCharsToPixels(fontMetrics, 1);
@@ -489,11 +487,8 @@ public class QuickOutlineDialog extends PopupDialog
 				if (e.keyCode == 0x0D) {
 					// Return key was pressed
 					gotoSelectedElement();
-				} else if (e.keyCode == SWT.ARROW_DOWN) {
-					// Down key was pressed
-					viewer.getTree().setFocus();
-				} else if (e.keyCode == SWT.ARROW_UP) {
-					// Up key was pressed
+				} else if (e.keyCode == SWT.ARROW_DOWN || e.keyCode == SWT.ARROW_UP) {
+					// Down/Up key was pressed
 					viewer.getTree().setFocus();
 				} else if (e.character == 0x1B) {
 					// Escape key was pressed
