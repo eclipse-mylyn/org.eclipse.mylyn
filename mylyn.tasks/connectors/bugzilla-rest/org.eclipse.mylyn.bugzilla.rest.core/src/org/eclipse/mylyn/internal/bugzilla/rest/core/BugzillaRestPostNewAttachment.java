@@ -20,11 +20,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -120,8 +120,7 @@ public class BugzillaRestPostNewAttachment extends BugzillaRestPostRequest<Bugzi
 			throw new BugzillaRestException(new CoreException(new Status(IStatus.WARNING, BugzillaRestCore.ID_PLUGIN,
 					Messages.BugzillaRestPostNewAttachment_DesccriptionRequiredWhenSubmittingAttachments)));
 		}
-		Base64 base64 = new Base64();
-		String dataBase64 = base64.encodeAsString(outb.toByteArray());
+		String dataBase64 = Base64.getEncoder().encodeToString(outb.toByteArray());
 		try {
 			StringWriter stringWriter = new StringWriter();
 			try (JsonWriter out = new JsonWriter(stringWriter)) {
@@ -191,8 +190,7 @@ public class BugzillaRestPostNewAttachment extends BugzillaRestPostRequest<Bugzi
 				BugzillaRestStatus status = parseErrorFromJson(in);
 				throw new BugzillaRestException(
 						NLS.bind(Messages.BugzillaRestPostNewAttachment_StatusFromServer,
-								new String[] { response.getRequestPath(),
-										HttpUtil.getStatusText(response.getStatusCode()), status.getMessage() }));
+								response.getRequestPath(), HttpUtil.getStatusText(response.getStatusCode()), status.getMessage()));
 			}
 		};
 	}
