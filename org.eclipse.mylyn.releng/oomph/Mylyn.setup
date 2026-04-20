@@ -437,6 +437,11 @@
         xsi:type="maven:MavenUpdateTask"
         id="maven.update"
         predecessor="launch.install"/>
+    <setupTask
+        xsi:type="setup:EclipseIniTask"
+        option="-Dpde.addTransitiveDependenciesWithForbiddenAccess"
+        value="=false"
+        vm="true"/>
     <stream
         name="main"
         label="main">
