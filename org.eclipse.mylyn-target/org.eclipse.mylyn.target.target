@@ -58,7 +58,6 @@
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20221123021534/repository/"/>
 			<unit id="jakarta.servlet" version="0.0.0"/>
-			<unit id="org.apache.httpcomponents.httpclient" version="0.0.0"/>
 			<unit id="org.apache.xmlrpc.client" version="0.0.0"/>
 			<unit id="org.apache.xmlrpc.common" version="0.0.0"/>
 			<unit id="org.apache.xmlrpc.server" version="0.0.0"/>
@@ -91,6 +90,7 @@
 			<unit id="org.apache.commons.lang3" version="0.0.0"/>
 			<unit id="org.apache.commons.logging" version="0.0.0"/>
 			<unit id="org.apache.commons.text" version="0.0.0"/>
+			<unit id="org.apache.httpcomponents.httpclient" version="0.0.0"/>
 			<unit id="org.apache.lucene.analysis-common" version="0.0.0"/>
 			<unit id="org.apache.lucene.core" version="0.0.0"/>
 			<unit id="org.apache.lucene.facet" version="0.0.0"/>

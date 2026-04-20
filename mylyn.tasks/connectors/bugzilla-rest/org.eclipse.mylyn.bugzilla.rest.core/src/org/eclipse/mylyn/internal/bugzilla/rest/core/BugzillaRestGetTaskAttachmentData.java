@@ -17,8 +17,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.util.Base64;
 
-import org.apache.commons.codec.binary.Base64InputStream;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -66,7 +66,7 @@ public class BugzillaRestGetTaskAttachmentData extends BugzillaRestGetRequest<In
 			}
 			InputStream is = new ByteArrayInputStream(attachment.getAsString().getBytes());
 
-			return new Base64InputStream(is);
+			return Base64.getDecoder().wrap(is);
 		}
 	}
 
