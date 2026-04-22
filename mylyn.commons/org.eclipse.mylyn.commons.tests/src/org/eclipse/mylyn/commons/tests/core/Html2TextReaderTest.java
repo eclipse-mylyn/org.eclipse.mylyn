@@ -10,17 +10,19 @@
  *     IBM Corporation - initial API and implementation
  *     ArSysOp - ongoing support
  *     See git history
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.core;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
 import org.eclipse.mylyn.internal.commons.core.Html2TextReader;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * <p>
@@ -38,7 +40,7 @@ import junit.framework.TestCase;
  */
 
 @SuppressWarnings("nls")
-public class Html2TextReaderTest extends TestCase {
+public class Html2TextReaderTest {
 
 	private static final boolean DEBUG = false;
 
@@ -59,6 +61,7 @@ public class Html2TextReaderTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void test0() throws IOException {
 
 		String string = "<code>3<5<code>";
@@ -69,6 +72,7 @@ public class Html2TextReaderTest extends TestCase {
 
 	}
 
+	@Test
 	public void test1() throws IOException {
 
 		String string = "<dl><dt>@author</dt><dd>Foo Bar</dd></dl>";
@@ -79,30 +83,35 @@ public class Html2TextReaderTest extends TestCase {
 
 	}
 
+	@Test
 	public void test2() throws IOException {
 		String string = "<code>3>5<code>";
 		String expected = "3>5";
 		verify(string, expected);
 	}
 
+	@Test
 	public void test3() throws IOException {
 		String string = "<a href= \"<p>this is only a string - not a tag<p>\">text</a>";
 		String expected = "text";
 		verify(string, expected);
 	}
 
+	@Test
 	public void test4() throws IOException {
 		String string = "<html><body text=\"#000000\" bgcolor=\"#FFFF88\"><font size=-1><h5>void p.Bb.fes()</h5><p><dl><dt>Parameters:</dt><dd><b>i</b> fred or <code>null</code></dd></dl></font></body></html>";
 		String expected = "void p.Bb.fes()" + LD + LD + LD + "Parameters:" + LD + "\ti fred or null" + LD;
 		verify(string, expected);
 	}
 
+	@Test
 	public void test5() throws IOException {
 		String string = "<code>1<2<3<4</code>";
 		String expected = "1<2<3<4";
 		verify(string, expected);
 	}
 
+	@Test
 	public void test6() throws IOException {
 		//test for bug 19070
 		String string = "<p>Something.<p>Something more.";
@@ -110,60 +119,70 @@ public class Html2TextReaderTest extends TestCase {
 		verify(string, expected);
 	}
 
+	@Test
 	public void testComments() throws Exception {
 		String string = "<!-- begin-user-doc -->no comment<!-- end-user-doc -->";
 		String expected = "no comment";
 		verify(string, expected);
 	}
 
+	@Test
 	public void testSymbolLt() throws IOException {
 		String string = "&lt;";
 		String expected = "<";
 		verify(string, expected);
 	}
 
+	@Test
 	public void testSymbolGt() throws IOException {
 		String string = "&gt;";
 		String expected = ">";
 		verify(string, expected);
 	}
 
+	@Test
 	public void testSymbolNbsp() throws IOException {
 		String string = "a&nbsp;b";
 		String expected = "a b";
 		verify(string, expected);
 	}
 
+	@Test
 	public void testSymbolAmp() throws IOException {
 		String string = "&amp;";
 		String expected = "&";
 		verify(string, expected);
 	}
 
+	@Test
 	public void testSymbolCirc() throws IOException {
 		String string = "&circ;";
 		String expected = "^";
 		verify(string, expected);
 	}
 
+	@Test
 	public void testSymbolTilde() throws IOException {
 		String string = "&tilde;";
 		String expected = "~";
 		verify(string, expected);
 	}
 
+	@Test
 	public void testSymbolQuot() throws IOException {
 		String string = "&quot;";
 		String expected = "\"";
 		verify(string, expected);
 	}
 
+	@Test
 	public void testSymbolAElig() throws IOException {
 		String string = "&AElig;";
 		String expected = "&AElig;";
 		verify(string, expected);
 	}
 
+	@Test
 	public void testSymbolNotInEntityLookup() throws IOException {
 		String string = "&auml;";
 		String expected = "&auml;";

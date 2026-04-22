@@ -9,11 +9,15 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.repositories.http.tests;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.net.Proxy;
 
@@ -26,9 +30,9 @@ import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpRequestProcessor;
 import org.eclipse.mylyn.commons.sdk.util.MockServer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
@@ -41,13 +45,13 @@ public class CommonHttpClientPreemptiveAuthTest {
 	public CommonHttpClientPreemptiveAuthTest() {
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		server = new MockServer();
 		server.startAndWait();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		server.stop();
 	}
@@ -61,19 +65,20 @@ public class CommonHttpClientPreemptiveAuthTest {
 		server.addResponse(MockServer.OK);
 		CommonHttpResponse response = client.executeGet("/", null, HttpRequestProcessor.DEFAULT);
 		assertEquals(HttpStatus.SC_OK, response.getStatusCode());
-		assertEquals(null, server.getRequest().getHeader("Authorization"));
+		assertNull(server.getRequest().getHeader("Authorization"));
 	}
 
-	@Test(expected = AuthenticationException.class)
+	@Test
 	public void testExecuteGetAuthChallengeNoCredentials() throws Exception {
 		RepositoryLocation location = createLocation();
 		CommonHttpClient client = new CommonHttpClient(location);
 
 		server.addResponse(MockServer.UNAUTHORIZED);
-		client.executeGet("/", null, HttpRequestProcessor.DEFAULT);
+		assertThrows(AuthenticationException.class, () -> client.executeGet("/", null, HttpRequestProcessor.DEFAULT));
 	}
 
 	@Test
+//	@Disabled
 	public void testExecuteGetAuthChallenge() throws Exception {
 		RepositoryLocation location = createLocation();
 		location.setCredentials(AuthenticationType.HTTP, new UserCredentials("user", "pass"));
@@ -83,9 +88,9 @@ public class CommonHttpClientPreemptiveAuthTest {
 		server.addResponse(MockServer.OK);
 		CommonHttpResponse response = client.executeGet("/", null, HttpRequestProcessor.DEFAULT);
 		assertEquals(HttpStatus.SC_OK, response.getStatusCode());
-		assertEquals("Did not expect preemptive credentails", null, server.getRequest().getHeader("Authorization"));
-		assertEquals("Expect credentails on challenge", "Authorization: Basic dXNlcjpwYXNz",
-				server.getRequest().getHeader("Authorization"));
+		assertNull(server.getRequest().getHeader("Authorization"), "Did not expect preemptive credentails");
+		assertEquals("Authorization: Basic dXNlcjpwYXNz", server.getRequest().getHeader("Authorization"),
+				"Expect credentails on challenge");
 	}
 
 	@Test

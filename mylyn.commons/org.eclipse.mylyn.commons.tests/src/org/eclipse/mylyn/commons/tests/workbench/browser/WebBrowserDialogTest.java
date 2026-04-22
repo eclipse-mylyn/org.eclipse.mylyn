@@ -9,11 +9,15 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.workbench.browser;
 
-import org.eclipse.core.runtime.Platform;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.commons.workbench.browser.WebBrowserDialog;
@@ -24,11 +28,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 @SuppressWarnings("nls")
-public class WebBrowserDialogTest extends TestCase {
+public class WebBrowserDialogTest {
 
 	private class TestWebBrowserDialog extends WebBrowserDialog {
 		private Composite parent;
@@ -50,16 +55,11 @@ public class WebBrowserDialogTest extends TestCase {
 		}
 	}
 
+	@Test
+	@DisabledOnOs(value = OS.LINUX, disabledReason = "missing GTK 3.x/4.x bindings") // TODO Is this still the case
 	public void testCreate() {
-		if (CommonTestUtil.skipBrowserTests()) {
-			System.err.println("Skipping WebBrowserDialogTest.testCreate()");
-			return;
-		}
-		if (Platform.OS_LINUX.equals(Platform.getOS())) {
-			System.err.println(
-					"Skipping WebBrowserDialogTest.testCreate() on Ubuntu because of missing GTK 3.x/4.x bindings");
-			return;
-		}
+		assumeFalse(CommonTestUtil.skipBrowserTests(), "Browser crashes");
+
 		TestWebBrowserDialog dialog = new TestWebBrowserDialog(WorkbenchUtil.getShell(), "title", null, "message", 0,
 				new String[0], 0);
 		dialog.create();
@@ -69,16 +69,11 @@ public class WebBrowserDialogTest extends TestCase {
 		assertEquals(Label.class, dialog.getParent().getChildren()[2].getClass());
 	}
 
+	@Test
+	@DisabledOnOs(value = OS.LINUX, disabledReason = "missing GTK 3.x/4.x bindings") // TODO Is this still the case
 	public void testSetShow() {
-		if (CommonTestUtil.skipBrowserTests()) {
-			System.err.println("Skipping WebBrowserDialogTest.testSetShow()");
-			return;
-		}
-		if (Platform.OS_LINUX.equals(Platform.getOS())) {
-			System.err.println(
-					"Skipping WebBrowserDialogTest.testSetShow() on Ubuntu because of missing GTK 3.x/4.x bindings");
-			return;
-		}
+		assumeFalse(CommonTestUtil.skipBrowserTests(), "Browser crashes");
+
 		TestWebBrowserDialog dialog = new TestWebBrowserDialog(WorkbenchUtil.getShell(), "title", null, "message", 0,
 				new String[0], 0);
 		dialog.setShowLocation(false);
@@ -88,31 +83,17 @@ public class WebBrowserDialogTest extends TestCase {
 		assertEquals(Browser.class, dialog.getParent().getChildren()[0].getClass());
 	}
 
+	@Test
+	@DisabledOnOs(value = OS.LINUX, disabledReason = "missing GTK 3.x/4.x bindings") // TODO Is this still the case
 	public void testSetShowAfterCreate() {
-		if (CommonTestUtil.skipBrowserTests()) {
-			System.err.println("Skipping WebBrowserDialogTest.testSetShowAfterCreate()");
-			return;
-		}
-		if (Platform.OS_LINUX.equals(Platform.getOS())) {
-			System.err.println(
-					"Skipping WebBrowserDialogTest.testSetShowAfterCreate() on Ubuntu because of missing GTK 3.x/4.x bindings");
-			return;
-		}
+		assumeFalse(CommonTestUtil.skipBrowserTests(), "Browser crashes");
+
 		WebBrowserDialog dialog = new WebBrowserDialog(WorkbenchUtil.getShell(), "title", null, "message", 0,
 				new String[0], 0);
 		dialog.create();
-		try {
-			dialog.setShowLocation(false);
-			fail("Expected exception");
-		} catch (IllegalStateException e) {
-			// expected
-		}
-		try {
-			dialog.setShowStatus(false);
-			fail("Expected exception");
-		} catch (IllegalStateException e) {
-			// expected
-		}
+		assertThrows(IllegalStateException.class, () -> dialog.setShowLocation(false));
+
+		assertThrows(IllegalStateException.class, () -> dialog.setShowStatus(false));
 	}
 
 }

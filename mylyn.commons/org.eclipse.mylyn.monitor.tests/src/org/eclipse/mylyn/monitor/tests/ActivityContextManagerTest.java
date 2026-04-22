@@ -8,21 +8,27 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.monitor.tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 
 import org.eclipse.mylyn.internal.monitor.ui.ActivityContextManager;
 import org.eclipse.mylyn.monitor.ui.AbstractUserActivityMonitor;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
-public class ActivityContextManagerTest extends TestCase {
+public class ActivityContextManagerTest {
 
 	private class StubMonitor extends AbstractUserActivityMonitor {
 
@@ -50,7 +56,7 @@ public class ActivityContextManagerTest extends TestCase {
 		@Override
 		public long getLastInteractionTime() {
 			if (fail) {
-				throw new LinkageError();
+				throw new LinkageError("Told to fail");
 			}
 			return super.getLastInteractionTime();
 		}
@@ -63,20 +69,21 @@ public class ActivityContextManagerTest extends TestCase {
 
 	private ActivityContextManager manager;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		monitor1 = new StubMonitor();
 		monitor2 = new StubMonitor();
 		manager = new ActivityContextManager(Arrays.asList(monitor1, monitor2));
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		if (manager != null) {
 			manager.stop();
 		}
 	}
 
+	@Test
 	public void testStartStop() {
 		manager.start();
 		assertTrue(monitor1.started);
@@ -86,6 +93,7 @@ public class ActivityContextManagerTest extends TestCase {
 		assertFalse(monitor2.started);
 	}
 
+	@Test
 	public void testGetInactivityTimeout() {
 		monitor1.setLastEventTime(1);
 		monitor2.setLastEventTime(2);
@@ -93,6 +101,7 @@ public class ActivityContextManagerTest extends TestCase {
 		assertEquals(1, manager.getLastInteractionTime());
 	}
 
+	@Test
 	public void testGetInactivityTimeoutFailure() {
 		monitor1.setLastEventTime(1);
 		monitor2.setLastEventTime(2);
@@ -106,6 +115,7 @@ public class ActivityContextManagerTest extends TestCase {
 		assertFalse(monitor2.started);
 	}
 
+	@Test
 	public void testEnabled() {
 		monitor1.enabled = false;
 		monitor1.setLastEventTime(1);

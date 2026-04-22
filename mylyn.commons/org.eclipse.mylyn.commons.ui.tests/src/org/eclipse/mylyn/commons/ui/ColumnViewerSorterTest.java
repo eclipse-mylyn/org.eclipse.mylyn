@@ -12,14 +12,14 @@
 
 package org.eclipse.mylyn.commons.ui;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Item;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 /**
@@ -55,8 +55,8 @@ public class ColumnViewerSorterTest {
 
 	private StubColumnViewerSorter sorter;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		sorter = new StubColumnViewerSorter();
 	}
 

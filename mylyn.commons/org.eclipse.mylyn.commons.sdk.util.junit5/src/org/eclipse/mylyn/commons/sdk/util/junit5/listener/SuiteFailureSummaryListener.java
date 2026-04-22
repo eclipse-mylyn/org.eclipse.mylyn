@@ -55,10 +55,10 @@ public class SuiteFailureSummaryListener implements TestExecutionListener {
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 		delegate.executionFinished(testIdentifier, testExecutionResult);
 		if (testExecutionResult.getStatus() == TestExecutionResult.Status.ABORTED) {
-			Throwable cause = testExecutionResult.getThrowable().orElse(null);
-			if (cause != null) {
-				skippedTests.put(testIdentifier, cause.getMessage());
-			}
+			String message = testExecutionResult.getThrowable()
+					.map(t -> t.getMessage() != null ? t.getMessage() : t.toString())
+					.orElse("assumption failed");
+			skippedTests.put(testIdentifier, message);
 		}
 	}
 

@@ -14,18 +14,20 @@
 
 package org.eclipse.mylyn.commons.notifications.tests.feed;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.net.HttpURLConnection;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.notifications.feed.ServiceMessageManager;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.junit5.EnabledIfCI;
 import org.eclipse.mylyn.internal.commons.notifications.feed.ServiceMessage;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -36,7 +38,7 @@ public class ServiceMessageManagerTest {
 
 	private static final String MESSAGE_XML_URL = "http://mylyn.org/message.xml";
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		if (CommonTestUtil.fixProxyConfiguration()) {
 			CommonTestUtil.dumpSystemInfo(System.err);
@@ -44,7 +46,8 @@ public class ServiceMessageManagerTest {
 	}
 
 	@Test
-	@Ignore("No CI Server")
+	@EnabledIfCI
+	@Disabled("Looking for http://mylyn.org/message.xml")
 	public void testRetrievingMessage() throws Exception {
 		ServiceMessageManager manager = new ServiceMessageManager(MESSAGE_XML_URL, "", "", 0l);
 		int status = manager.refresh(new NullProgressMonitor());
@@ -60,7 +63,8 @@ public class ServiceMessageManagerTest {
 	}
 
 	@Test
-	@Ignore("No CI Server")
+	@EnabledIfCI
+	@Disabled("Looking for http://mylyn.org/message.xml")
 	public void testETag() throws Exception {
 		ServiceMessageManager manager = new ServiceMessageManager(MESSAGE_XML_URL, "", "", 0l);
 		int status = manager.refresh(new NullProgressMonitor());

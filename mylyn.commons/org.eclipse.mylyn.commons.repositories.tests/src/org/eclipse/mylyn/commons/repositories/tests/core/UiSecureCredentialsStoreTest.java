@@ -9,14 +9,18 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.repositories.tests.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -25,8 +29,8 @@ import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.mylyn.internal.commons.repositories.ui.UiLocationService;
 import org.eclipse.mylyn.internal.commons.repositories.ui.UiSecureCredentialsStore;
 import org.eclipse.swt.widgets.Display;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class UiSecureCredentialsStoreTest {
@@ -55,6 +59,9 @@ public class UiSecureCredentialsStoreTest {
 
 	@Test
 	public void testDetectDeadlockOnUiThread() throws Exception {
+		assumeFalse(System.getProperty("eclipse.launcher") != null || System.getProperty("eclipse.application") != null,
+				"Secure Storage not set up by the PDE"); // FIXME secure storage not set up
+
 		assertNotNull(Display.getCurrent());
 		TestSecureCredentialsStore store = createCredentialsStore();
 		store.put("key", "value", true);
@@ -83,18 +90,12 @@ public class UiSecureCredentialsStoreTest {
 				// wait for background thread to acquire lock
 			}
 
-			try {
-				store.get("key", null);
-				fail("Expected exception");
-			} catch (RuntimeException e) {// expected
-				assertEquals(DEADLOCK_ERROR_MESSAGE, e.getMessage());
-			}
-			try {
-				store.put("key", "newValue", true);
-				fail("Expected exception");
-			} catch (RuntimeException e) {// expected
-				assertEquals(DEADLOCK_ERROR_MESSAGE, e.getMessage());
-			}
+			Throwable e = assertThrows(RuntimeException.class, () -> store.get("key", null));
+			assertEquals(DEADLOCK_ERROR_MESSAGE, e.getMessage());
+
+			e = assertThrows(RuntimeException.class, () -> store.put("key", "newValue", true));
+			assertEquals(DEADLOCK_ERROR_MESSAGE, e.getMessage());
+
 		} finally {
 			done.set(true);
 		}
@@ -130,6 +131,9 @@ public class UiSecureCredentialsStoreTest {
 
 	@Test
 	public void testDetectDeadlockOnBackgroundThread() throws Exception {
+		assumeFalse(System.getProperty("eclipse.launcher") != null || System.getProperty("eclipse.application") != null,
+				"Secure Storage not set up by the PDE"); // FIXME secure storage not set up
+
 		assertNotNull(Display.getCurrent());
 		final TestSecureCredentialsStore store = createCredentialsStore();
 		store.put("key", "value", true);
@@ -139,18 +143,11 @@ public class UiSecureCredentialsStoreTest {
 		try {
 			assertTrue(lock.acquire(3000));
 			runOnBackgroundThread(true, () -> {
-				try {
-					store.get("key", null);
-					fail("Expected exception");
-				} catch (RuntimeException e) {// expected
-					assertEquals(DEADLOCK_ERROR_MESSAGE, e.getMessage());
-				}
-				try {
-					store.put("key", "newValue", true);
-					fail("Expected exception");
-				} catch (RuntimeException e) {// expected
-					assertEquals(DEADLOCK_ERROR_MESSAGE, e.getMessage());
-				}
+				Throwable e = assertThrows(RuntimeException.class, () -> store.get("key", null));
+				assertEquals(DEADLOCK_ERROR_MESSAGE, e.getMessage());
+
+				e = assertThrows(RuntimeException.class, () -> store.put("key", "newValue", true));
+				assertEquals(DEADLOCK_ERROR_MESSAGE, e.getMessage());
 			});
 		} catch (InterruptedException e) {
 			fail("Interrupted trying to acquire SecurePreferencesRoot lock");
@@ -189,13 +186,8 @@ public class UiSecureCredentialsStoreTest {
 	}
 
 	@Test
-	public void testRunOnBackgroundThread() throws Exception {
-		try {
-			runOnBackgroundThread(true, Assert::fail);
-		} catch (AssertionError e) {// expected
-			return;
-		}
-		fail("Expected AssertionError");
+	public void testRunOnBackgroundThread() {
+		assertThrows(AssertionError.class, () -> runOnBackgroundThread(true, Assertions::fail));
 	}
 
 }

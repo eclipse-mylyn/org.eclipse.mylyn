@@ -9,17 +9,20 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.notifications.tests.feed;
 
-import org.eclipse.mylyn.internal.commons.notifications.feed.ServiceMessage;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import junit.framework.TestCase;
+import org.eclipse.mylyn.internal.commons.notifications.feed.ServiceMessage;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
-public class ServiceMessageTest extends TestCase {
+public class ServiceMessageTest {
 
+	@Test
 	public void testServiceMessage() {
 		assertEquals("0", new ServiceMessage("2763").getId());
 	}

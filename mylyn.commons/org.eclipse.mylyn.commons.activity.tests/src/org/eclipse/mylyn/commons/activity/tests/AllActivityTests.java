@@ -11,19 +11,13 @@
 
 package org.eclipse.mylyn.commons.activity.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Steffen Pingel
  */
+@Suite
+@SelectClasses({ MonitorUserActivityJobTest.class, UserActivityManagerTest.class })
 public class AllActivityTests {
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite(AllActivityTests.class.getName());
-		suite.addTestSuite(MonitorUserActivityJobTest.class);
-		suite.addTestSuite(UserActivityManagerTest.class);
-		return suite;
-	}
-
 }

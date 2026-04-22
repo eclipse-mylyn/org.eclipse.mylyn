@@ -14,25 +14,26 @@
 
 package org.eclipse.mylyn.commons.tests.net;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.net.http.CommonHttpMethod3;
+import org.eclipse.mylyn.commons.sdk.util.TestUrl;
+import org.eclipse.mylyn.commons.sdk.util.junit5.EnabledIfCI;
 import org.eclipse.mylyn.commons.tests.net.WebUtilTest.StubProgressMonitor;
 import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 import org.eclipse.mylyn.internal.commons.net.http.CommonGetMethod3;
 import org.eclipse.mylyn.internal.commons.net.http.CommonPostMethod3;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
@@ -40,24 +41,24 @@ import org.junit.Test;
 @SuppressWarnings("nls")
 public class CommonHttpMethod3Test {
 
-	@Ignore("No CI Server")
 	@Test
+	@EnabledIfCI
 	public void testGetOpenStreamAndCancel() throws Exception {
 		CommonGetMethod3 method = new CommonGetMethod3("/");
 		openStreamAndCancel(method);
 	}
 
-	@Ignore("No CI Server")
 	@Test
+	@EnabledIfCI
 	public void testPostOpenStreamAndCancel() throws Exception {
 		CommonPostMethod3 method = new CommonPostMethod3("/");
 		openStreamAndCancel(method);
 	}
 
-	void openStreamAndCancel(CommonHttpMethod3 method) throws Exception {
+	private void openStreamAndCancel(CommonHttpMethod3 method) throws Exception {
 		StubProgressMonitor monitor = new StubProgressMonitor();
 		HttpClient client = new HttpClient();
-		String url = "http://mylyn.org/";
+		String url = TestUrl.DEFAULT.getHttpsOk().toString() + "mylyn_idx/service";
 		WebLocation location = new WebLocation(url);
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, monitor);
 
@@ -72,11 +73,6 @@ public class CommonHttpMethod3Test {
 		assertNotNull(in);
 		Thread.sleep(500); // wait for executor to release
 		assertEquals(0, ((ThreadPoolExecutor) CommonsNetPlugin.getExecutorService()).getActiveCount());
-		try {
-			in.read();
-			fail("Expected channel to be closed");
-		} catch (IOException e) {
-			// expected
-		}
+		assertThrows(OperationCanceledException.class, () -> in.read());
 	}
 }

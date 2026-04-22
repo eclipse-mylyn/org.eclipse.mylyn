@@ -13,30 +13,35 @@
 
 package org.eclipse.mylyn.monitor.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.monitor.ui.CheckActivityJob;
 import org.eclipse.mylyn.internal.monitor.ui.IActivityManagerCallback;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class CheckActivityJobTest extends TestCase {
+public class CheckActivityJobTest {
 
 	private StubCallback callback;
 
 	private TestableCheckActivityJob job;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		callback = new StubCallback();
 		job = new TestableCheckActivityJob(callback);
 	}
 
+	@Test
 	public void testInactivityTimeout() throws Exception {
 		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
 			System.err.println("Skipping CheckActivityJobTest.testInactivityTimeout() on Macs");
@@ -56,10 +61,11 @@ public class CheckActivityJobTest extends TestCase {
 		job.run();
 		long slept = System.currentTimeMillis() - callback.lastEventTime;
 		assertTrue(job.isActive());
-		assertTrue("expected less than 5 < activeTime < 40, got " + callback.activeTime + " (slept " + slept + " ms)",
-				callback.activeTime > 5 && callback.activeTime < 40);
+		assertTrue(callback.activeTime > 5 && callback.activeTime < 40,
+				"expected less than 5 < activeTime < 40, got " + callback.activeTime + " (slept " + slept + " ms)");
 	}
 
+	@Test
 	public void testResumeFromSleepNoTimeout() throws Exception {
 		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
 			System.err.println("Skipping CheckActivityJobTest.testResumeFromSleepNoTimeout() on Macs");
@@ -77,10 +83,11 @@ public class CheckActivityJobTest extends TestCase {
 		Thread.sleep(11);
 		job.run();
 		assertTrue(job.isActive());
-		assertTrue("expected more than 10 ms, got " + callback.activeTime, callback.activeTime > 10);
+		assertTrue(callback.activeTime > 10, "expected more than 10 ms, got " + callback.activeTime);
 		assertEquals(3, callback.eventCount);
 	}
 
+	@Test
 	public void testResumeFromSleepTimeoutNoEvent() throws Exception {
 		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
 			System.err.println("Skipping CheckActivityJobTest.testResumeFromSleepTimeoutNoEvent() on Macs");
@@ -100,11 +107,12 @@ public class CheckActivityJobTest extends TestCase {
 		assertFalse(job.isActive());
 		job.run();
 		assertFalse(job.isActive());
-		assertTrue("expected less than 10 ms, got " + callback.activeTime, callback.activeTime < 10);
+		assertTrue(callback.activeTime < 10, "expected less than 10 ms, got " + callback.activeTime);
 		assertEquals(1, callback.eventCount);
 		assertEquals(callback.lastEventTime, callback.startTime);
 	}
 
+	@Test
 	public void testResumeFromSleepTimeoutEvent() throws Exception {
 		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
 			System.err.println("Skipping CheckActivityJobTest.testResumeFromSleepTimeoutEvent() on Macs");
@@ -136,11 +144,12 @@ public class CheckActivityJobTest extends TestCase {
 		job.run();
 		// check if time sleeping was logged
 		long slept = System.currentTimeMillis() - callback.lastEventTime;
-		assertTrue("expected less than 10 < activeTime < 20, got " + callback.activeTime + " (slept " + slept + " ms)",
-				callback.activeTime > 10 && callback.activeTime < 20);
+		assertTrue(callback.activeTime > 10 && callback.activeTime < 20,
+				"expected less than 10 < activeTime < 20, got " + callback.activeTime + " (slept " + slept + " ms)");
 		assertEquals(2, callback.eventCount);
 	}
 
+	@Test
 	public void testResumeFromSleepTimeoutEventDiscarded() throws Exception {
 		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
 			System.err.println("Skipping CheckActivityJobTest.testResumeFromSleepTimeoutEventDiscarded() on Macs");
@@ -170,8 +179,8 @@ public class CheckActivityJobTest extends TestCase {
 		assertTrue(job.isActive());
 		// check if time sleeping was logged
 		assertEquals(2, callback.eventCount);
-		assertTrue("expected less than 5 < activeTime < 40, got " + callback.activeTime + " (slept " + slept + " ms)",
-				callback.activeTime > 5 && callback.activeTime < 40);
+		assertTrue(callback.activeTime > 5 && callback.activeTime < 40,
+				"expected less than 5 < activeTime < 40, got " + callback.activeTime + " (slept " + slept + " ms)");
 	}
 
 	private class TestableCheckActivityJob extends CheckActivityJob {

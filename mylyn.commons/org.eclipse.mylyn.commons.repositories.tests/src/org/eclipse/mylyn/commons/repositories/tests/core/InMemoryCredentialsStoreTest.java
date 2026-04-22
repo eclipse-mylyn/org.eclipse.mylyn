@@ -9,17 +9,19 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.repositories.tests.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel

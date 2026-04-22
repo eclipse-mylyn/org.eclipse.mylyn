@@ -9,34 +9,38 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.xmlrpc;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.commons.xmlrpc.CommonXmlRpcClient;
 import org.eclipse.mylyn.internal.commons.xmlrpc.XmlRpcOperation;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class XmlRpcOperationTest extends TestCase {
+public class XmlRpcOperationTest {
 
 	private CommonXmlRpcClient client;
 
 	private int port;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		port = XmlRpcTestServer.start();
 		client = new CommonXmlRpcClient(new WebLocation("http://localhost:" + port + "/xmlrpc"));
 	}
 
+	@Test
 	public void testExecute() throws Exception {
 		Integer response = new XmlRpcOperation<Integer>(client) {
 			@Override

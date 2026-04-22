@@ -9,9 +9,12 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.notifications.tests.feed;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Collections;
 import java.util.Locale;
@@ -23,21 +26,21 @@ import org.eclipse.mylyn.commons.notifications.core.NotificationEnvironment;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.commons.notifications.feed.FeedEntry;
 import org.eclipse.mylyn.internal.commons.notifications.feed.FeedReader;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class FeedReaderTest extends TestCase {
+public class FeedReaderTest {
 
 	private FeedReader reader;
 
 	private NotificationEnvironment environment;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 		environment = new NotificationEnvironment() {
 			@Override
 			public Set<String> getInstalledFeatures(IProgressMonitor monitor) {
@@ -47,6 +50,7 @@ public class FeedReaderTest extends TestCase {
 		reader = new FeedReader("eventId", environment);
 	}
 
+	@Test
 	public void testParse() throws Exception {
 		assertEquals(Status.OK_STATUS, reader
 				.parse(CommonTestUtil.getResource(FeedReaderTest.class, "testdata/FeedReaderTest/update1.xml"), null));
@@ -67,6 +71,7 @@ public class FeedReaderTest extends TestCase {
 				entry.getDescription());
 	}
 
+	@Test
 	public void testParseWithGermanLocale() throws Exception {
 		Locale locale = Locale.getDefault();
 		try {

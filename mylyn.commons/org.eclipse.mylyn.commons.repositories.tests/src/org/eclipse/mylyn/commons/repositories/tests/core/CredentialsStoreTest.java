@@ -9,18 +9,20 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.repositories.tests.core;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Arrays;
 
 import org.eclipse.mylyn.commons.repositories.core.auth.ICredentialsStore;
 import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
 import org.eclipse.mylyn.internal.commons.repositories.core.SecureCredentialsStore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
@@ -49,12 +51,12 @@ public class CredentialsStoreTest {
 		assertValues(target);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testCopySecureToInMemory() {
 		SecureCredentialsStore source = new SecureCredentialsStore(CredentialsStoreTest.class.getName());
 		source.clear();
 		InMemoryCredentialsStore target = new InMemoryCredentialsStore();
-		source.copyTo(target);
+		assertThrows(IllegalArgumentException.class, () -> source.copyTo(target));
 	}
 
 	@Test
