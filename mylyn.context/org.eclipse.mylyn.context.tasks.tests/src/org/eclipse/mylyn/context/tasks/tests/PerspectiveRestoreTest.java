@@ -13,6 +13,9 @@
 
 package org.eclipse.mylyn.context.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.Collections;
 
 import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
@@ -26,17 +29,15 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestFixture;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings({ "nls", "restriction" })
-public class PerspectiveRestoreTest extends TestCase {
+public class PerspectiveRestoreTest {
 
 	private static final String ID_RESOURCE_PERSPECTIVE = "org.eclipse.ui.resourcePerspective";
 
@@ -44,9 +45,8 @@ public class PerspectiveRestoreTest extends TestCase {
 
 	private boolean previousSetting;
 
-	@Override
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		ContextTestUtil.triggerContextUiLazyStart();
 
 		TestFixture.resetTaskListAndRepositories();
@@ -58,9 +58,8 @@ public class PerspectiveRestoreTest extends TestCase {
 		.setValue(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES, true);
 	}
 
-	@Override
-	@After
-	public void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		ContextUiPlugin.getDefault()
 		.getPreferenceStore()
 		.setValue(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES, previousSetting);
@@ -77,8 +76,8 @@ public class PerspectiveRestoreTest extends TestCase {
 
 	@Test
 	public void testHasActiveWorkbenchWindow() throws Exception {
-		assertNotNull("No active workbench window. Following tests are likely to fail.",
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+		assertNotNull(PlatformUI.getWorkbench().getActiveWorkbenchWindow(),
+				"No active workbench window. Following tests are likely to fail.");
 	}
 
 	@Test

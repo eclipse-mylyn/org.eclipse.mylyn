@@ -13,6 +13,11 @@
 
 package org.eclipse.mylyn.java.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.CoreException;
@@ -26,6 +31,8 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
 import org.eclipse.mylyn.internal.java.ui.InterestUpdateDeltaListener;
 import org.eclipse.ui.IViewPart;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
@@ -35,18 +42,13 @@ public class RefactoringTest extends AbstractJavaContextTest {
 
 	private IViewPart view;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		view = PackageExplorerPart.openInActivePerspective();
 		InterestUpdateDeltaListener.setAsyncExecMode(false);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
+	@Test
 	public void testDelete() throws CoreException, InvocationTargetException, InterruptedException {
 		IType type = project.createType(p1, "Refactor.java", "public class Refactor { }");
 
@@ -68,6 +70,7 @@ public class RefactoringTest extends AbstractJavaContextTest {
 	/**
 	 * Limitation: only interest of compilation unit is preserved
 	 */
+	@Test
 	public void testTypeRename() throws CoreException, InterruptedException, InvocationTargetException {
 		IType type = project.createType(p1, "Refactor.java", "public class Refactor { }");
 		monitor.selectionChanged(view, new StructuredSelection(type));
@@ -97,6 +100,7 @@ public class RefactoringTest extends AbstractJavaContextTest {
 		assertTrue(newParentNode.getInterest().isInteresting());
 	}
 
+	@Test
 	public void testMethodRename() throws CoreException, InterruptedException, InvocationTargetException {
 		IType type = project.createType(p1, "Refactor.java", "public class Refactor { }");
 		IMethod method = type.createMethod("public void refactorMe() { }", null, true, null);

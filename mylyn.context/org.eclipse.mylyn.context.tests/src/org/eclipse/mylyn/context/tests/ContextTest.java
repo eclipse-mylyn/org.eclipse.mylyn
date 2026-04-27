@@ -13,11 +13,19 @@
 
 package org.eclipse.mylyn.context.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.context.sdk.util.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
@@ -29,18 +37,13 @@ public class ContextTest extends AbstractContextTest {
 
 	private InteractionContextScaling scaling;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		scaling = new InteractionContextScaling();
 		context = new InteractionContext("0", scaling);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
+	@Test
 	public void testEquality() {
 		InteractionContext context1 = new InteractionContext("1", scaling);
 		context1.parseEvent(mockSelection("1"));
@@ -49,6 +52,7 @@ public class ContextTest extends AbstractContextTest {
 		assertFalse(context1.equals(context2));
 	}
 
+	@Test
 	public void testReset() {
 		context.parseEvent(mockSelection());
 		context.reset();
@@ -57,6 +61,7 @@ public class ContextTest extends AbstractContextTest {
 
 	}
 
+	@Test
 	public void testManipulation() {
 		IInteractionElement node = context.parseEvent(mockSelection("1"));
 		context.parseEvent(mockSelection("1"));
@@ -67,6 +72,7 @@ public class ContextTest extends AbstractContextTest {
 		assertEquals(22 - scaling.getDecay() * 1, node.getInterest().getValue());
 	}
 
+	@Test
 	public void testPropagatedInterest() {
 		IInteractionElement node = context.parseEvent(mockPropagation("1"));
 		assertTrue(node.getInterest().isPropagated());
@@ -78,6 +84,7 @@ public class ContextTest extends AbstractContextTest {
 		// node.getDegreeOfInterest().getValue());
 	}
 
+	@Test
 	public void testEdges() {
 		IInteractionElement node = context.parseEvent(mockSelection("1"));
 		context.parseEvent(mockNavigation("2"));
@@ -86,6 +93,7 @@ public class ContextTest extends AbstractContextTest {
 		assertEquals(edge.getTarget().getHandleIdentifier(), "2");
 	}
 
+	@Test
 	public void testDecay() {
 		float decay = scaling.getDecay();
 		IInteractionElement node1 = context.parseEvent(mockSelection("1"));
@@ -97,6 +105,7 @@ public class ContextTest extends AbstractContextTest {
 		assertEquals(99 - decay * 99, node1.getInterest().getValue());
 	}
 
+	@Test
 	public void testLandmarkScaling() {
 		IInteractionElement node1 = context.parseEvent(mockSelection("1"));
 		for (int i = 0; i < scaling.getLandmark() - 2 + scaling.getLandmark() * scaling.getDecay(); i++) {
@@ -109,6 +118,7 @@ public class ContextTest extends AbstractContextTest {
 		assertTrue(node1.getInterest().isLandmark());
 	}
 
+	@Test
 	public void testSelections() {
 		IInteractionElement missing = context.get("0");
 		assertNull(missing);

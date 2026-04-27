@@ -13,6 +13,11 @@
 
 package org.eclipse.mylyn.java.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,6 +32,8 @@ import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
 import org.eclipse.mylyn.context.ui.AbstractFocusViewAction;
 import org.eclipse.mylyn.context.ui.InterestFilter;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
@@ -38,20 +45,15 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
 
 	private TreeViewer viewer;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		view = PackageExplorerPart.openInActivePerspective();
 		viewer = view.getTreeViewer();
 		ContextUiPlugin.getViewerManager().setSyncRefreshMode(true);
 		AbstractFocusViewAction.getActionForPart(view).update(true);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
+	@Test
 	public void testIsEmptyAfterDeactivation() throws JavaModelException, InterruptedException {
 		IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
 		StructuredSelection sm1 = new StructuredSelection(m1);
@@ -64,11 +66,12 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
 
 		manager.deactivateContext(contextId);
 		AbstractFocusViewAction.getActionForPart(view).update(true);
-		assertTrue("num items: " + UiTestUtil.countItemsInTree(viewer.getTree()),
-				UiTestUtil.countItemsInTree(viewer.getTree()) == 0);
+		assertEquals(0, UiTestUtil.countItemsInTree(viewer.getTree()),
+				"num items: " + UiTestUtil.countItemsInTree(viewer.getTree()));
 		AbstractFocusViewAction.getActionForPart(view).update();
 	}
 
+	@Test
 	public void testFocusPackageExplorerFilterAddition() {
 		AbstractFocusViewAction.getActionForPart(view).update(false);
 		List<ViewerFilter> filters = Arrays.asList(viewer.getFilters());
@@ -92,6 +95,7 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
 		assertEquals(1, filterCount);
 	}
 
+	@Test
 	public void testPropagation() throws JavaModelException {
 		IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
 		StructuredSelection sm1 = new StructuredSelection(m1);

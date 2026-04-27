@@ -13,9 +13,10 @@
 
 package org.eclipse.mylyn.internal.debug.ui;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,9 +44,9 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.mylyn.context.sdk.java.WorkspaceSetupHelper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -67,16 +68,16 @@ public class BreakpointsStateUtilTest {
 
 	private IBreakpoint breakpoint;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		BreakpointsTestUtil.setManageBreakpointsPreference(true);
 		BreakpointsTestUtil.createProject();
 		deleteAllBreakpoints();
 		breakpoint = BreakpointsTestUtil.createTestBreakpoint();
 	}
 
-	@After
-	public void tearDown() throws IOException, CoreException {
+	@AfterEach
+	void tearDown() throws IOException, CoreException {
 		deleteAllBreakpoints();
 		FileUtils.deleteDirectory(pluginStateDir.toFile());
 		WorkspaceSetupHelper.clearWorkspace();
@@ -95,8 +96,8 @@ public class BreakpointsStateUtilTest {
 		Document testDocument = getDocument(new File("testdata/breakpointFile.xml"));
 		sortNodes(pluginStateDocument);
 		sortNodes(testDocument);
-		assertTrue("Documents not equal:\n" + documentToString(pluginStateDocument) + "\n===\n"
-				+ documentToString(testDocument), pluginStateDocument.isEqualNode(testDocument));
+		assertTrue(pluginStateDocument.isEqualNode(testDocument), "Documents not equal:\n"
+				+ documentToString(pluginStateDocument) + "\n===\n" + documentToString(testDocument));
 	}
 
 	private void sortNodes(Node node) {

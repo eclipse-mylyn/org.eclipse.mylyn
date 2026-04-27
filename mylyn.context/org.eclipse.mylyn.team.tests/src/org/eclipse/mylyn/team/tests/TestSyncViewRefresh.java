@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.team.tests;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.team.internal.ui.synchronize.SynchronizeView;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -20,15 +22,15 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.MessagePage;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  */
 @SuppressWarnings("nls")
-public class TestSyncViewRefresh extends TestCase {
+public class TestSyncViewRefresh {
 
+	@Test
 	public void testInitialPage() throws PartInitException {
 		String ID = "org.eclipse.team.sync.views.SynchronizeView";
 		IViewPart view = openInActivePerspective(ID);

@@ -13,19 +13,22 @@
 
 package org.eclipse.mylyn.ide.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  */
 @SuppressWarnings("nls")
-public class IdePreferencesTest extends TestCase {
+public class IdePreferencesTest {
 
+	@Test
 	public void testExclusionPatterns() {
 		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(new HashSet<>());
 		assertEquals(0, ResourcesUiPreferenceInitializer.getExcludedResourcePatterns().size());

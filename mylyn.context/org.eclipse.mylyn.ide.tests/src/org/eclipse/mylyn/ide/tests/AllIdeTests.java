@@ -12,19 +12,13 @@
 
 package org.eclipse.mylyn.ide.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Mik Kersten
  */
+@Suite
+@SelectClasses({ IdeStartupTest.class, IdePreferencesTest.class })
 public class AllIdeTests {
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite(AllIdeTests.class.getName());
-		suite.addTestSuite(IdeStartupTest.class);
-		suite.addTestSuite(IdePreferencesTest.class);
-		return suite;
-	}
-
 }

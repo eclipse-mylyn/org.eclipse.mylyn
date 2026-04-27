@@ -13,22 +13,26 @@
 
 package org.eclipse.mylyn.team.tests;
 
-import org.eclipse.mylyn.internal.team.ui.actions.TaskFinder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-import junit.framework.TestCase;
+import org.eclipse.mylyn.internal.team.ui.actions.TaskFinder;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  */
 @SuppressWarnings("nls")
-public class TaskFinderTest extends TestCase {
+public class TaskFinderTest {
 
+	@Test
 	public void test07LegacyMatching() {
 		String label = "Progress on: 123: foo \nhttps://bugs.eclipse.org";
 		String id = TaskFinder.getTaskIdFromLegacy07Label(label);
 		assertEquals("123", id);
 	}
 
+	@Test
 	public void testUrlMatching() {
 		String label = "bla bla\nhttp://foo.bar-123 bla bla";
 		String id = TaskFinder.getUrlFromComment(label);
@@ -38,6 +42,7 @@ public class TaskFinderTest extends TestCase {
 		assertEquals("http://foo.bar-1234", id);
 	}
 
+	@Test
 	public void testExtractTaskId() throws Exception {
 		assertNull(TaskFinder.extractTaskId("http://example.com/tasks/123", "", ""));
 		assertNull(TaskFinder.extractTaskId("http://example.com/tasks/123", "prefix", "postfix"));
@@ -49,6 +54,7 @@ public class TaskFinderTest extends TestCase {
 				"/viewtask.cgi"));
 	}
 
+	@Test
 	public void testGuessTaskKey() throws Exception {
 		assertNull(TaskFinder.guessTaskKey("http://example.com/tasks/123", "", ""));
 		assertNull(TaskFinder.guessTaskKey("http://example.com/tasks/123", "http://example.com/tasks/45", "123"));

@@ -13,6 +13,10 @@
 
 package org.eclipse.mylyn.java.tests.search;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +28,6 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.sdk.util.search.ISearchPluginTest;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
-import org.junit.Assert;
 
 /**
  * @author Shawn Minto
@@ -58,8 +61,8 @@ public class SearchPluginTestHelper {
 				}
 			}
 		}
-		Assert.assertNotNull("Results Null", results);
-		Assert.assertEquals("Wrong number search results", expected, size);
+		assertNotNull(results, "Results Null");
+		assertEquals(expected, size, "Wrong number search results");
 		notifier.clearContext();
 	}
 
@@ -80,8 +83,8 @@ public class SearchPluginTestHelper {
 			}
 		}
 
-		Assert.assertNotNull("Results Null", results);
-		Assert.assertEquals("Wrong number search results", expected, size);
+		assertNotNull(results, "Results Null");
+		assertEquals(expected, size, "Wrong number search results");
 		notifier.clearContext();
 	}
 
@@ -97,8 +100,8 @@ public class SearchPluginTestHelper {
 				}
 			}
 		}
-		Assert.assertNotNull("Results Null", results);
-		Assert.assertEquals("Wrong number search results", expected, size);
+		assertNotNull(results, "Results Null");
+		assertEquals(expected, size, "Wrong number search results");
 		notifier.clearContext();
 	}
 
@@ -107,14 +110,14 @@ public class SearchPluginTestHelper {
 		notifier.mockRaiseInterest(handle, kind);
 
 		List<?> results = test.search(dos, searchNode);
-		Assert.assertNull("Results Not Null", results);
+		assertNull(results, "Results Not Null");
 		notifier.clearContext();
 	}
 
 	public void searchResultsNull(ActiveSearchNotifier notifier, IInteractionElement searchNode, int dos)
 			throws IOException, CoreException {
 		List<?> results = test.search(dos, searchNode);
-		Assert.assertNull("Results Not Null", results);
+		assertNull(results, "Results Not Null");
 		notifier.clearContext();
 	}
 

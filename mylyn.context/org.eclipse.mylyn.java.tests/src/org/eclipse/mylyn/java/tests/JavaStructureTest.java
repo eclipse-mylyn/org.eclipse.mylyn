@@ -14,6 +14,9 @@
 
 package org.eclipse.mylyn.java.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
@@ -25,7 +28,6 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.sdk.util.ResourceTestUtil;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
 import org.eclipse.mylyn.context.sdk.java.TestJavaProject;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
@@ -35,12 +37,15 @@ import org.eclipse.mylyn.internal.ide.ui.IdeUiUtil;
 import org.eclipse.mylyn.internal.java.ui.JavaEditingMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  */
 @SuppressWarnings("nls")
-public class JavaStructureTest extends AbstractJavaContextTest {
+public class JavaStructureTest {
 
 	private final InteractionContextManager manager = ContextCorePlugin.getContextManager();
 
@@ -62,8 +67,9 @@ public class JavaStructureTest extends AbstractJavaContextTest {
 
 	private final InteractionContextScaling scaling = new InteractionContextScaling();
 
-	@Override
-	protected void setUp() throws Exception {
+
+	@BeforeEach
+	void setUp() throws Exception {
 		monitor = new JavaEditingMonitor();
 		project = new TestJavaProject(this.getClass().getName());
 		pkg = project.createPackage("pkg1");
@@ -77,13 +83,14 @@ public class JavaStructureTest extends AbstractJavaContextTest {
 		part = IdeUiUtil.getNavigatorFromActivePage();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		manager.deactivateContext("12312");
 		monitor.dispose();
 		ResourceTestUtil.deleteProject(project.getProject());
 	}
 
+	@Test
 	public void testNavigation() throws JavaModelException, PartInitException {
 		CompilationUnitEditor editorPart = (CompilationUnitEditor) JavaUI.openInEditor(caller);
 
@@ -111,7 +118,7 @@ public class JavaStructureTest extends AbstractJavaContextTest {
 				typeFoo.getCompilationUnit().getSource().indexOf("callee();"), "callee".length());
 		editorPart.setHighlightRange(callerAgain.getOffset(), callerAgain.getLength(), true);
 		monitor.selectionChanged(editorPart, callerSelection);
-		assertTrue(calleeNode.getRelations().size() == 1);
+		assertEquals(1, calleeNode.getRelations().size());
 	}
 
 }

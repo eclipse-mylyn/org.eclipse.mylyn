@@ -8,35 +8,27 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.tests;
 
 import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.platform.suite.api.BeforeSuite;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Mik Kersten
  */
+@Suite
+@SelectClasses({ ContextExternalizerTest.class, ContextTest.class, DegreeOfInterestTest.class,
+	EditorStateParticipantTest.class, InteractionContextListeningTest.class, InteractionContextTest.class,
+	InteractionEventTest.class, ScalingFactorsTest.class, ShadowsBridgeTest.class,
+	ToggleFocusActiveViewHandlerTest.class })
 public class AllContextTests {
-
-	public static Test suite() {
+	@BeforeSuite
+	static void suiteSetup() {
 		ContextTestUtil.triggerContextUiLazyStart();
-
-		TestSuite suite = new TestSuite(AllContextTests.class.getName());
-		suite.addTestSuite(InteractionContextListeningTest.class);
-		suite.addTestSuite(ScalingFactorsTest.class);
-		suite.addTestSuite(InteractionContextTest.class);
-		suite.addTestSuite(ContextExternalizerTest.class);
-		suite.addTestSuite(DegreeOfInterestTest.class);
-		suite.addTestSuite(ContextTest.class);
-		suite.addTestSuite(InteractionEventTest.class);
-		suite.addTestSuite(ShadowsBridgeTest.class);
-		suite.addTestSuite(EditorStateParticipantTest.class);
-		suite.addTestSuite(ToggleFocusActiveViewHandlerTest.class);
-		return suite;
 	}
-
 }

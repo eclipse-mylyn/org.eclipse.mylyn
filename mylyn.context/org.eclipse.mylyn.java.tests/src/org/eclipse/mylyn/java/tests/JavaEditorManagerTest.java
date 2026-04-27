@@ -13,6 +13,11 @@
 
 package org.eclipse.mylyn.java.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.resources.IFile;
@@ -41,6 +46,9 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
@@ -52,9 +60,8 @@ public class JavaEditorManagerTest extends AbstractJavaContextTest {
 
 	private IViewPart view;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		assertNotNull(page);
 		view = PackageExplorerPart.openInActivePerspective();
@@ -70,9 +77,8 @@ public class JavaEditorManagerTest extends AbstractJavaContextTest {
 		UiTestUtil.closeAllEditors();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@AfterEach
+	void tearDown() throws Exception {
 		UiTestUtil.closeAllEditors();
 		ContextUiPlugin.getDefault()
 		.getPreferenceStore()
@@ -82,6 +88,7 @@ public class JavaEditorManagerTest extends AbstractJavaContextTest {
 				.getDefaultBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING));
 	}
 
+	@Test
 	public void testInterestCapturedForResourceOnFocus()
 			throws CoreException, InvocationTargetException, InterruptedException {
 
@@ -124,6 +131,7 @@ public class JavaEditorManagerTest extends AbstractJavaContextTest {
 //		MylarContextManager.getScalingFactors().getDecay().setValue(decayFactor);
 	}
 
+	@Test
 	public void testEditorTrackerListenerRegistration() throws JavaModelException {
 		ActiveFoldingEditorTracker tracker = JavaUiBridgePlugin.getDefault().getEditorTracker();
 		assertTrue(tracker.getEditorListenerMap().isEmpty());
@@ -147,6 +155,7 @@ public class JavaEditorManagerTest extends AbstractJavaContextTest {
 		assertEquals(0, tracker.getEditorListenerMap().size());
 	}
 
+	@Test
 	public void testAutoCloseWithDecay() throws JavaModelException, InvocationTargetException, InterruptedException {
 		ContextUiPlugin.getEditorStateParticipant().closeAllEditors();
 		assertEquals(0, page.getEditorReferences().length);

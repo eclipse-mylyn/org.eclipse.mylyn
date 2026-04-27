@@ -13,7 +13,8 @@
 package org.eclipse.mylyn.internal.debug.ui.cnf;
 
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.internal.ui.views.breakpoints.BreakpointsLabelProvider;
@@ -31,10 +32,10 @@ public class BreakpointManagerLabelProvider extends BreakpointsLabelProvider {
 
 	public BreakpointManagerLabelProvider() {
 		try {
-			URL bpmImageUrl = new URL(DebugUiPlugin.getDefault().getBundle().getEntry("/"), //$NON-NLS-1$
-					"icons/elcl16/breakpointmanager.gif"); //$NON-NLS-1$
-			bpmImage = ImageDescriptor.createFromURL(bpmImageUrl).createImage();
-		} catch (MalformedURLException e) {
+			URI bpmImageUri = DebugUiPlugin.getDefault().getBundle().getEntry("/").toURI() //$NON-NLS-1$
+					.resolve("icons/elcl16/breakpointmanager.gif"); //$NON-NLS-1$
+			bpmImage = ImageDescriptor.createFromURL(bpmImageUri.toURL()).createImage();
+		} catch (URISyntaxException | MalformedURLException e) {
 		}
 	}
 

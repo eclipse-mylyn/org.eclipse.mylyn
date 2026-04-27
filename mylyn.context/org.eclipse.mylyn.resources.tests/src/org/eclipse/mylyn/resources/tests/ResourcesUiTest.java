@@ -14,6 +14,8 @@
 
 package org.eclipse.mylyn.resources.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Set;
@@ -28,6 +30,8 @@ import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
 import org.eclipse.mylyn.resources.ui.ResourcesUi;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Manuel Doninger
@@ -36,9 +40,8 @@ import org.eclipse.mylyn.resources.ui.ResourcesUi;
 @SuppressWarnings("nls")
 public class ResourcesUiTest extends AbstractResourceContextTest {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 //		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(true);
 		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(true);
 
@@ -49,6 +52,7 @@ public class ResourcesUiTest extends AbstractResourceContextTest {
 		.setValue(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, false);
 	}
 
+	@Test
 	public void testGetProjects() throws CoreException {
 		Set<IProject> projects = ResourcesUi.getProjects(ContextCore.getContextManager().getActiveContext());
 		assertEquals(Collections.emptySet(), projects);
@@ -62,6 +66,7 @@ public class ResourcesUiTest extends AbstractResourceContextTest {
 		assertEquals(Collections.singleton(project.getProject()), projects);
 	}
 
+	@Test
 	public void testGetProjectsInWithInvalidProject()
 			throws CoreException, InvocationTargetException, InterruptedException {
 		Set<IProject> projects = ResourcesUi.getProjects(ContextCore.getContextManager().getActiveContext());

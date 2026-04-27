@@ -13,10 +13,17 @@
 
 package org.eclipse.mylyn.context.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.mylyn.context.sdk.util.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
@@ -24,6 +31,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 @SuppressWarnings("nls")
 public class InteractionContextTest extends AbstractContextTest {
 
+	@Test
 	public void testReset() {
 		InteractionEvent event = mockSelection("aaaaa");
 		InteractionContext context = new InteractionContext("test", new InteractionContextScaling());
@@ -36,12 +44,14 @@ public class InteractionContextTest extends AbstractContextTest {
 		assertEquals(0, context.getInteractionHistory().size());
 	}
 
+	@Test
 	public void testParseEventWithNullHandle() {
 		InteractionEvent event = mockSelection(null);
 		InteractionContext context = new InteractionContext("test", new InteractionContextScaling());
 		assertNull(context.parseEvent(event));
 	}
 
+	@Test
 	public void testSetScalingFactors() {
 		InteractionContextScaling oldScalingFactors = new InteractionContextScaling();
 //		InteractionContextScaling newScalingFactors = new InteractionContextScaling();
@@ -54,6 +64,7 @@ public class InteractionContextTest extends AbstractContextTest {
 		assertEquals(10f, globalContext.getScaling().get(InteractionEvent.Kind.EDIT));
 	}
 
+	@Test
 	public void testScalingFactorSet() {
 		InteractionContextScaling scalingFactors = new InteractionContextScaling();
 		scalingFactors.setDecay(0f);
@@ -61,6 +72,7 @@ public class InteractionContextTest extends AbstractContextTest {
 		assertEquals(0f, context.getScaling().getDecay());
 	}
 
+	@Test
 	public void testIsInteresting() {
 		InteractionContext context = new InteractionContext("test", new InteractionContextScaling());
 

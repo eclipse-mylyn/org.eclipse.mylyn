@@ -13,6 +13,10 @@
 
 package org.eclipse.mylyn.team.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,15 +25,15 @@ import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateManager;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  */
 @SuppressWarnings("nls")
-public class CommitTemplateTest extends TestCase {
+public class CommitTemplateTest {
 
+	@Test
 	public void testCreateTemplate() {
 		String template = "${task.status} - ${connector.task.prefix} ${task.key}: ${task.description}";
 
@@ -49,6 +53,7 @@ public class CommitTemplateTest extends TestCase {
 
 	}
 
+	@Test
 	public void testTemplateNullKeyTrailingCharacters() {
 		String template = "${task.status} - ${connector.task.prefix} ${task.key}: ${task.description}";
 
@@ -63,6 +68,7 @@ public class CommitTemplateTest extends TestCase {
 		assertEquals("Incomplete - : TestSummary", commitComment);
 	}
 
+	@Test
 	public void testTemplateCollapseWhitespace() {
 		String template = "${task.status} - ${connector.task.prefix} ${task.key} ${task.key} : ${task.description}";
 
@@ -77,6 +83,7 @@ public class CommitTemplateTest extends TestCase {
 		assertEquals("Incomplete - : TestSummary", commitComment);
 	}
 
+	@Test
 	public void testTemplateWithTab() {
 		String template = "${task.status} - \t${connector.task.prefix} ${task.key} ${task.key} : ${task.description}";
 
@@ -91,6 +98,7 @@ public class CommitTemplateTest extends TestCase {
 		assertEquals("Incomplete - \t : TestSummary", commitComment);
 	}
 
+	@Test
 	public void testTemplateVariableWithParameters() {
 		CommitTemplateManager manager = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager();
 		TaskTask testTask = createTask();
@@ -114,6 +122,7 @@ public class CommitTemplateTest extends TestCase {
 				manager.generateComment(testTask, "${task.status} ${TestVar()} ${task.description}"));
 	}
 
+	@Test
 	public void testTemplateVariableWithParametersIncorrectSyntax() {
 		CommitTemplateManager manager = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager();
 		TaskTask testTask = createTask();
@@ -140,6 +149,7 @@ public class CommitTemplateTest extends TestCase {
 		return testTask;
 	}
 
+	@Test
 	public void testRepositoryTaskCommentParsing() {
 		String template = FocusedTeamUiPlugin.getDefault()
 				.getPreferenceStore()
@@ -154,6 +164,7 @@ public class CommitTemplateTest extends TestCase {
 		assertEquals("12345", taskId);
 	}
 
+	@Test
 	public void testRepositoryTaskCommentParsingMultiline() {
 		String template = FocusedTeamUiPlugin.getDefault()
 				.getPreferenceStore()
@@ -169,6 +180,7 @@ public class CommitTemplateTest extends TestCase {
 		assertEquals("12345", taskId);
 	}
 
+	@Test
 	public void testRegex() {
 		String comment = "task 123: label for handle-123";
 		String regex = ".*\\ (\\d+):\\ .*";

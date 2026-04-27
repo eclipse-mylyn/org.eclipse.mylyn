@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.java.tests;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
@@ -39,6 +42,7 @@ public class ProblemsListTest extends AbstractJavaContextTest {
 
 	boolean done = false;
 
+	@Test
 	public void testInterestSorting() throws CoreException, InvocationTargetException, InterruptedException {
 		IViewPart problemsPart = JavaPlugin.getActivePage().showView("org.eclipse.ui.views.ProblemView");
 		assertNotNull(problemsPart);

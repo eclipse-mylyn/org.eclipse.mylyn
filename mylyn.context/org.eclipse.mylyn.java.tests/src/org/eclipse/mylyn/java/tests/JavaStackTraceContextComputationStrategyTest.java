@@ -12,6 +12,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.java.tests;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -21,8 +24,8 @@ import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.internal.java.ui.JavaStackTraceContextComputationStrategy;
 import org.eclipse.mylyn.internal.java.ui.JavaStackTraceContextComputationStrategy.Element;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link JavaStackTraceContextComputationStrategy}.
@@ -30,19 +33,20 @@ import junit.framework.TestCase;
  * @author David Green
  */
 @SuppressWarnings("nls")
-public class JavaStackTraceContextComputationStrategyTest extends TestCase {
+public class JavaStackTraceContextComputationStrategyTest {
 
 	@SuppressWarnings("unused")
 	private InteractionContext context;
 
 	private JavaStackTraceContextComputationStrategy stackTraceDetector;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		context = new InteractionContext("test", new InteractionContextScaling());
 		stackTraceDetector = new JavaStackTraceContextComputationStrategy();
 	}
 
+	@Test
 	public void testStackTrace() throws IOException {
 		File file = CommonTestUtil.getFile(this, "testdata/taskDescription1.txt");
 		List<Element> contextObjects = stackTraceDetector.computeElements(CommonTestUtil.read(file));
@@ -59,6 +63,7 @@ public class JavaStackTraceContextComputationStrategyTest extends TestCase {
 	/**
 	 * bug 354184
 	 */
+	@Test
 	public void testStackTracePopulatedWithoutEclipseErrorHeaderElements() throws IOException {
 		File file = CommonTestUtil.getFile(this, "testdata/taskDescription2.txt");
 		List<Element> contextObjects = stackTraceDetector.computeElements(CommonTestUtil.read(file));

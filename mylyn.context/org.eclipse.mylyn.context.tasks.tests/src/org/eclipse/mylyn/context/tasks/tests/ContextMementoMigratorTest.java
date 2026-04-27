@@ -13,6 +13,9 @@
 
 package org.eclipse.mylyn.context.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.mylyn.commons.core.storage.ICommonStorable;
@@ -26,17 +29,15 @@ import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.ui.IMemento;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings({ "nls", "restriction" })
-public class ContextMementoMigratorTest extends TestCase {
+public class ContextMementoMigratorTest {
 
 	private static final String ID_PLANNING_PERSPECTIVE = "org.eclipse.mylyn.tasks.ui.perspectives.planning";
 
@@ -44,9 +45,8 @@ public class ContextMementoMigratorTest extends TestCase {
 
 	private ICommonStorable storable;
 
-	@Override
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		task = TaskTestUtil.createMockTask("1");
 		TasksUiPlugin.getTaskList().addTask(task);
 
@@ -55,9 +55,8 @@ public class ContextMementoMigratorTest extends TestCase {
 		storable.delete("context-state.xml");
 	}
 
-	@Override
-	@After
-	public void tearDown() {
+	@AfterEach
+	void tearDown() {
 		if (storable != null) {
 			storable.release();
 		}

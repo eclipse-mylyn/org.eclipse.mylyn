@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.team.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -28,19 +30,19 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
-public class CopyCommitMessageHandlerTest extends TestCase {
+public class CopyCommitMessageHandlerTest {
 
 	private Clipboard clipboard;
 
 	private TaskRepository repository;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		TaskTestUtil.resetTaskListAndRepositories();
 
 		repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, MockRepositoryConnector.REPOSITORY_URL);
@@ -52,8 +54,8 @@ public class CopyCommitMessageHandlerTest extends TestCase {
 		FocusedTeamUiPlugin.getDefault().getPreferenceStore().setToDefault(FocusedTeamUiPlugin.COMMIT_TEMPLATE);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		clipboard.dispose();
 
 		TaskTestUtil.resetTaskListAndRepositories();

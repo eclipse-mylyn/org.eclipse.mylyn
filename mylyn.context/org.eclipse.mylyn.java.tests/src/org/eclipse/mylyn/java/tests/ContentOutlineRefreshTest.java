@@ -13,6 +13,9 @@
 
 package org.eclipse.mylyn.java.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +37,8 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
@@ -45,9 +50,8 @@ public class ContentOutlineRefreshTest extends AbstractJavaContextTest {
 
 	private FocusOutlineAction action;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		view = UiTestUtil.openView(FocusOutlineAction.ID_CONTENT_OUTLINE);
 		assertNotNull(view);
 		assertNotNull(ContextUiPlugin.getDefault());
@@ -57,11 +61,7 @@ public class ContentOutlineRefreshTest extends AbstractJavaContextTest {
 		UiTestUtil.closeWelcomeView();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
+	@Test
 	public void testContents() throws JavaModelException, PartInitException {
 		IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
 		UiTestUtil.openView("org.eclipse.ui.views.ContentOutline");

@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.context.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
@@ -20,25 +22,25 @@ import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class InteractionContextListeningTest extends TestCase {
+public class InteractionContextListeningTest {
 
 	private final InteractionContext mockContext = new InteractionContext("doitest", new InteractionContextScaling());
 
 	private InteractionContextManager contextManager;
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		contextManager.deactivateAllContexts();
 	}
 
+	@Test
 	public void testAddRemoveListenerInContextActivated() {
 		contextManager = ContextCorePlugin.getContextManager();
 		((CompositeInteractionContext) contextManager.getActiveContext()).getContextMap().put("handle", mockContext);

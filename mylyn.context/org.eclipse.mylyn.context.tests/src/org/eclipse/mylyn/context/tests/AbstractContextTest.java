@@ -13,12 +13,14 @@
 
 package org.eclipse.mylyn.context.tests;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * @deprecated use {@link org.eclipse.mylyn.context.sdk.util.AbstractContextTest} instead
@@ -26,7 +28,7 @@ import junit.framework.TestCase;
  */
 @Deprecated
 @SuppressWarnings("nls")
-public abstract class AbstractContextTest extends TestCase {
+public abstract class AbstractContextTest {
 
 	@Deprecated
 	protected static final String MOCK_HANDLE = "<mock-handle>";
@@ -40,24 +42,20 @@ public abstract class AbstractContextTest extends TestCase {
 	protected static final String MOCK_KIND = "java";
 
 	@Deprecated
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		if (ContextCore.getContextManager() != null) {
-			assertFalse(
-					"Unexpected context active: "
-							+ ((InteractionContextManager) ContextCore.getContextManager()).getActiveContexts(),
-							ContextCore.getContextManager().isContextActive());
+			assertFalse(ContextCore.getContextManager().isContextActive(), "Unexpected context active: "
+					+ ((InteractionContextManager) ContextCore.getContextManager()).getActiveContexts());
 		}
 	}
 
 	@Deprecated
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@AfterEach
+	void tearDown() throws Exception {
 		if (ContextCore.getContextManager() != null) {
-			assertFalse("" + ((InteractionContextManager) ContextCore.getContextManager()).getActiveContexts(),
-					ContextCore.getContextManager().isContextActive());
+			assertFalse(ContextCore.getContextManager().isContextActive(),
+					"" + ((InteractionContextManager) ContextCore.getContextManager()).getActiveContexts());
 		}
 	}
 

@@ -16,6 +16,8 @@ package org.eclipse.mylyn.context.sdk.java;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.eclipse.core.resources.IFolder;
@@ -160,9 +162,13 @@ public class TestJavaProject {
 	private Path findFileInPlugin(Plugin plugin, String file) throws MalformedURLException, IOException {
 		// Plugin p = Platform.getPlugin(plugin);
 		URL pluginURL = plugin.getBundle().getEntry("/");
-		URL jarURL = new URL(pluginURL, file);
-		URL localJarURL = FileLocator.toFileURL(jarURL);//Platform.asLocalURL(jarURL);
-		return new Path(localJarURL.getPath());
+		try {
+			URI jarURI = pluginURL.toURI().resolve(file);
+			URL localJarURL = FileLocator.toFileURL(jarURI.toURL());
+			return new Path(localJarURL.getPath());
+		} catch (URISyntaxException e) {
+			throw new MalformedURLException(e.getMessage());
+		}
 	}
 
 	@SuppressWarnings("deprecation")

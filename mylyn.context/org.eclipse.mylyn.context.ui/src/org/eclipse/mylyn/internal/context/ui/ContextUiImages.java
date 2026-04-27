@@ -13,6 +13,8 @@
 package org.eclipse.mylyn.internal.context.ui;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -24,7 +26,7 @@ public class ContextUiImages {
 
 	private static final String T_ELCL = "elcl16"; //$NON-NLS-1$
 
-	private static final URL baseURL = ContextUiPlugin.getDefault().getBundle().getEntry("/icons/"); //$NON-NLS-1$
+	private static final URI baseURI = toURI(ContextUiPlugin.getDefault().getBundle().getEntry("/icons/")); //$NON-NLS-1$
 
 	public static final ImageDescriptor FILE_XML = create(T_ELCL, "file-xml.gif"); //$NON-NLS-1$
 
@@ -34,27 +36,36 @@ public class ContextUiImages {
 
 	public static final ImageDescriptor CONTEXT_FOCUS = create(T_ELCL, "focus.gif"); //$NON-NLS-1$
 
-	private static ImageDescriptor create(String prefix, String name) {
-		return create(prefix, name, baseURL);
+	private static URI toURI(URL url) {
+		if (url == null) {
+			return null;
+		}
+		try {
+			return url.toURI();
+		} catch (URISyntaxException e) {
+			return null;
+		}
 	}
 
-	private static ImageDescriptor create(String prefix, String name, URL baseURL) {
+	private static ImageDescriptor create(String prefix, String name) {
+		return create(prefix, name, baseURI);
+	}
+
+	private static ImageDescriptor create(String prefix, String name, URI baseURI) {
 		try {
-			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name, baseURL));
-		} catch (MalformedURLException e) {
+			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name, baseURI));
+		} catch (URISyntaxException | MalformedURLException e) {
 			return ImageDescriptor.getMissingImageDescriptor();
 		}
 	}
 
-	private static URL makeIconFileURL(String prefix, String name, URL baseURL) throws MalformedURLException {
-		if (baseURL == null) {
-			throw new MalformedURLException();
+	private static URL makeIconFileURL(String prefix, String name, URI baseURI)
+			throws URISyntaxException, MalformedURLException {
+		if (baseURI == null) {
+			throw new URISyntaxException("", "baseURI is null"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-
-		StringBuilder buffer = new StringBuilder(prefix);
-		buffer.append('/');
-		buffer.append(name);
-		return new URL(baseURL, buffer.toString());
+		URI resolved = baseURI.resolve(prefix + '/' + name);
+		return resolved.toURL();
 	}
 
 }

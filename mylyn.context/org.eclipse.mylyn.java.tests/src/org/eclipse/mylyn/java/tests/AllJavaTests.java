@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.java.tests;
@@ -20,45 +21,29 @@ import org.eclipse.mylyn.java.tests.search.JavaReadAccessSearchPluginTest;
 import org.eclipse.mylyn.java.tests.search.JavaReferencesSearchTest;
 import org.eclipse.mylyn.java.tests.search.JavaWriteAccessSearchPluginTest;
 import org.eclipse.mylyn.java.tests.tasks.JavaTaskTemplateVariableResolverTest;
+import org.eclipse.mylyn.java.tests.xml.ResultUpdaterTest;
 import org.eclipse.mylyn.java.tests.xml.XmlSearchPluginTest;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.platform.suite.api.BeforeSuite;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Mik Kersten
  */
+@Suite
+@SelectClasses({ ContentSpecificContextTest.class, ResourceStructureMappingTest.class, InterestManipulationTest.class,
+	RefactoringTest.class, ContentOutlineRefreshTest.class, TypeHistoryManagerTest.class,
+	PackageExplorerRefreshTest.class, ProblemsListTest.class, InterestFilterTest.class,
+	InteractionContextManagerTest.class, JavaStructureTest.class, JavaImplementorsSearchPluginTest.class,
+	ResultUpdaterTest.class, JavaReadAccessSearchPluginTest.class, JavaReferencesSearchTest.class,
+	JavaWriteAccessSearchPluginTest.class, JUnitReferencesSearchPluginTest.class, XmlSearchPluginTest.class,
+	JavaEditingMonitorTest.class, JavaStackTraceContextComputationStrategyTest.class,
+	JavaTaskTemplateVariableResolverTest.class, JavaEditorManagerTest.class })
 public class AllJavaTests {
 
-	public static Test suite() {
+	@BeforeSuite
+	static void suiteSetup() {
 		ContextTestUtil.triggerContextUiLazyStart();
 		UiTestUtil.closeWelcomeView();
-
-		TestSuite suite = new TestSuite(AllJavaTests.class.getName());
-		suite.addTestSuite(ContentSpecificContextTest.class);
-		suite.addTestSuite(ResourceStructureMappingTest.class);
-		suite.addTestSuite(InterestManipulationTest.class);
-		suite.addTestSuite(RefactoringTest.class);
-		suite.addTestSuite(ContentOutlineRefreshTest.class);
-		suite.addTestSuite(TypeHistoryManagerTest.class);
-		suite.addTestSuite(PackageExplorerRefreshTest.class);
-		// XXX 3.5 re-enable test case?
-		//suite.addTestSuite(ResultUpdaterTest.class);
-		suite.addTestSuite(ProblemsListTest.class);
-		suite.addTestSuite(InterestFilterTest.class);
-		suite.addTestSuite(InteractionContextManagerTest.class);
-		suite.addTestSuite(JavaStructureTest.class);
-		suite.addTestSuite(JavaImplementorsSearchPluginTest.class);
-		suite.addTestSuite(JavaReadAccessSearchPluginTest.class);
-		suite.addTestSuite(JavaReferencesSearchTest.class);
-		suite.addTestSuite(JavaWriteAccessSearchPluginTest.class);
-		suite.addTestSuite(JUnitReferencesSearchPluginTest.class);
-		suite.addTestSuite(XmlSearchPluginTest.class);
-		suite.addTestSuite(JavaEditingMonitorTest.class);
-		suite.addTestSuite(JavaStackTraceContextComputationStrategyTest.class);
-		suite.addTestSuite(JavaTaskTemplateVariableResolverTest.class);
-		suite.addTestSuite(JavaEditorManagerTest.class);
-		return suite;
 	}
-
 }

@@ -13,21 +13,18 @@
 package org.eclipse.mylyn.cdt.tests;
 
 import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.platform.suite.api.BeforeSuite;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Steffen Pingel
  */
+@Suite
+@SelectClasses({ CdtStructureBridgeTest.class })
 public class AllCdtTests {
-
-	public static Test suite() {
+	@BeforeSuite
+	static void suiteSetup() {
 		ContextTestUtil.triggerContextUiLazyStart();
-
-		TestSuite suite = new TestSuite(AllCdtTests.class.getName());
-		suite.addTestSuite(CdtStructureBridgeTest.class);
-		return suite;
 	}
-
 }

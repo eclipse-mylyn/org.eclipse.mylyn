@@ -13,6 +13,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.java.tests.tasks;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Iterator;
 
 import org.eclipse.jdt.internal.corext.template.java.JavaContextType;
@@ -35,24 +38,25 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.osgi.util.NLS;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Andreas Hoehmann
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class JavaTaskTemplateVariableResolverTest extends TestCase {
+public class JavaTaskTemplateVariableResolverTest {
 
-	@Override
-	protected void tearDown() throws Exception {
+	@BeforeEach
+	void tearDown() throws Exception {
 		TasksUiPlugin.getTaskActivityManager().deactivateActiveTask();
 	}
 
 	/**
 	 * Test with no active task. The resolver should not be able to resolve the mylyn template-variable.
 	 */
+	@Test
 	public void testNoTaskActive() throws Exception {
 		canHandleTemplateResolver("${activeTaskKey}", "activeTaskKey");
 		canHandleTemplateResolver("${activeTaskPrefix}", "activeTaskPrefix");
@@ -61,6 +65,7 @@ public class JavaTaskTemplateVariableResolverTest extends TestCase {
 	/**
 	 * Test with active task. The resolver must resolve the mylyn template-variable to the expected values.
 	 */
+	@Test
 	public void testActiveLocalTask() throws Exception {
 		ITask task = new LocalTask("12345", "Test Task");
 		TasksUiPlugin.getTaskActivityManager().activateTask(task);
@@ -73,6 +78,7 @@ public class JavaTaskTemplateVariableResolverTest extends TestCase {
 	/**
 	 * Test with active task. Special check if task-key contains a "-".
 	 */
+	@Test
 	public void testActiveTaskJira() throws Exception {
 		ITask task = new MockTask("http://foo.bar", "12345");
 		task.setTaskKey("DEMO-2");
@@ -85,6 +91,7 @@ public class JavaTaskTemplateVariableResolverTest extends TestCase {
 	/**
 	 * Test with active task. Check if fallback from task-key to task-id is working.
 	 */
+	@Test
 	public void testActiveTaskIdOrKey() throws Exception {
 		ITask task = new MockTask("http://foo.bar", "12345");
 		TasksUiPlugin.getTaskActivityManager().activateTask(task);
@@ -113,8 +120,8 @@ public class JavaTaskTemplateVariableResolverTest extends TestCase {
 		buffer = translator.translate(template);
 		final TemplateVariable[] variables = buffer.getVariables();
 		for (final TemplateVariable variable : variables) {
-			assertTrue(NLS.bind("No resolver found for variable ''{0}'' in template ''{1}''", variable, template),
-					canHandleVariable(context, variable));
+			assertTrue(canHandleVariable(context, variable),
+					NLS.bind("No resolver found for variable ''{0}'' in template ''{1}''", variable, template));
 		}
 		assertEquals(expectedResolvedTemplate, getResolveTemplate(context, template));
 	}

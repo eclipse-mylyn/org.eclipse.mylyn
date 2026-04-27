@@ -13,6 +13,11 @@
 
 package org.eclipse.mylyn.java.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -52,6 +57,8 @@ import org.eclipse.mylyn.internal.resources.ui.ResourceStructureBridge;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
@@ -63,17 +70,11 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 
 	private LocalContextStore contextStore;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		explorer = PackageExplorerPart.openInActivePerspective();
 		contextStore = ContextCorePlugin.getContextStore();
 		assertNotNull(explorer);
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 
 	class LandmarksModelListener extends AbstractContextListener {
@@ -95,6 +96,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		}
 	}
 
+	@Test
 	public void testHandleToPathConversion() throws IOException {
 		String handle = "https://bugs.eclipse.org/bugs-123";
 		File file = contextStore.getFileForContext(handle);
@@ -103,6 +105,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		assertTrue(file.exists());
 	}
 
+	@Test
 	public void testPauseAndResume() throws JavaModelException {
 		ContextCore.getContextManager().setContextCapturePaused(true);
 		ContextCore.getContextManager().processInteractionEvent(mockInterestContribution("paused", 3));
@@ -125,6 +128,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 //		assertEquals(InteractionContextManager.ACTIVITY_DELTA_ACTIVATED, events.get(1).getDelta());
 //	}
 
+	@Test
 	public void testActivityHistory() {
 		manager.resetActivityMetaContext();
 		InteractionContext history = manager.getActivityMetaContext();
@@ -138,6 +142,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		assertEquals(2, manager.getActivityMetaContext().getInteractionHistory().size());
 	}
 
+	@Test
 	public void testChangeHandle() {
 		ContextCore.getContextManager().processInteractionEvent(mockInterestContribution("old", 3));
 		IInteractionElement old = ContextCore.getContextManager().getElement("old");
@@ -148,6 +153,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		assertTrue(changed.getInterest().isInteresting());
 	}
 
+	@Test
 	public void testCopyContext() {
 		File sourceFile = contextStore.getFileForContext(context.getHandleIdentifier());
 		context.parseEvent(mockSelection("1"));
@@ -172,6 +178,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		manager.deactivateAllContexts();
 	}
 
+	@Test
 	public void testHasContext() {
 		manager.deleteContext("1");
 		assertFalse(contextStore.getFileForContext("1").exists());
@@ -189,6 +196,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		contextStore.getFileForContext("1").delete();
 	}
 
+	@Test
 	public void testDelete() {
 		manager.deleteContext("1");
 		assertFalse(contextStore.getFileForContext("1").exists());
@@ -237,12 +245,14 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		return false;
 	}
 
+	@Test
 	public void testPredictedInterest() {
 		IInteractionElement node = ContextCore.getContextManager().getElement("doesn't exist");
 		assertFalse(node.getInterest().isInteresting());
 		assertFalse(node.getInterest().isPropagated());
 	}
 
+	@Test
 	public void testParentInterestAfterDecay() throws JavaModelException {
 		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
 		IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
@@ -267,6 +277,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		assertTrue(ContextCore.getContextManager().getElement(m1.getHandleIdentifier()).getInterest().isInteresting());
 	}
 
+	@Test
 	public void testPropagation() throws JavaModelException, Exception {
 		IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
 		IInteractionElement node = ContextCore.getContextManager().getElement(m1.getHandleIdentifier());
@@ -291,6 +302,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		assertTrue(parentNode.getInterest().isInteresting());
 	}
 
+	@Test
 	public void testPropagationBetweenResourcesAndJava() throws JavaModelException, Exception {
 		Workspace workspace = (Workspace) ResourcesPlugin.getWorkspace();
 		IPath fullPath = p1.getResource().getFullPath();
@@ -326,12 +338,13 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		ContextCorePlugin.getContextManager().processInteractionEvent(selectionEvent, true);
 
 		parentNode = ContextCore.getContextManager().getElement(p1.getHandleIdentifier());
-		assertTrue("Package is not in the context", parentNode.getInterest().isInteresting());
+		assertTrue(parentNode.getInterest().isInteresting(), "Package is not in the context");
 
 		parentNode = ContextCore.getContextManager().getElement(projectHandle);
-		assertTrue("Project is not in the context", parentNode.getInterest().isInteresting());
+		assertTrue(parentNode.getInterest().isInteresting(), "Project is not in the context");
 	}
 
+	@Test
 	public void testIncremenOfParentDoi() throws JavaModelException, Exception {
 		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
 		IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
@@ -351,13 +364,14 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 			level++;
 			IInteractionElement parentNode = ContextCore.getContextManager().getElement(parent.getHandleIdentifier());
 			if (!(parent instanceof JavaModel)) {
-				assertEquals("failed on: " + parent.getClass(), node.getInterest().getValue(),
-						parentNode.getInterest().getValue());
+				assertEquals(node.getInterest().getValue(), parentNode.getInterest().getValue(),
+						"failed on: " + parent.getClass());
 			}
 			parent = parent.getParent();
 		} while (parent != null);
 	}
 
+	@Test
 	public void testIncremenOfParentDoiAfterForcedDecay() throws JavaModelException, Exception {
 		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
 		IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
@@ -379,8 +393,8 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 			if (!(parent instanceof JavaModel)) {
 				assertTrue(parentNode.getInterest().isInteresting());
 				ContextCore.getContextManager()
-						.processInteractionEvent(mockInterestContribution(parentNode.getHandleIdentifier(),
-								-2 * parentNode.getInterest().getValue()));
+				.processInteractionEvent(mockInterestContribution(parentNode.getHandleIdentifier(),
+						-2 * parentNode.getInterest().getValue()));
 				IInteractionElement updatedParent = ContextCore.getContextManager()
 						.getElement(parent.getHandleIdentifier());
 				assertFalse(updatedParent.getInterest().isInteresting());
@@ -411,6 +425,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		} while (parent != null);
 	}
 
+	@Test
 	public void testLandmarks() throws CoreException, IOException {
 		LandmarksModelListener listener = new LandmarksModelListener();
 		try {
@@ -443,6 +458,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		}
 	}
 
+	@Test
 	public void testEventProcessWithObject() throws JavaModelException {
 		InteractionContext context = new InteractionContext("global-id", new InteractionContextScaling());
 		context.setContentLimitedTo(JavaStructureBridge.CONTENT_TYPE);
@@ -451,12 +467,13 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		assertEquals(0, ContextCore.getContextManager().getActiveContext().getAllElements().size());
 		assertEquals(0, context.getAllElements().size());
 		ContextCorePlugin.getContextManager()
-				.processInteractionEvent(type1, InteractionEvent.Kind.SELECTION, MOCK_ORIGIN, context);
+		.processInteractionEvent(type1, InteractionEvent.Kind.SELECTION, MOCK_ORIGIN, context);
 		assertEquals(9, context.getAllElements().size());
 		assertEquals(0, ContextCore.getContextManager().getActiveContext().getAllElements().size());
 		ContextCorePlugin.getContextManager().removeGlobalContext(context);
 	}
 
+	@Test
 	public void testEventProcessWithNonExistentObject() throws JavaModelException {
 		InteractionContext context = new InteractionContext("global-id", new InteractionContextScaling());
 		context.setContentLimitedTo(JavaStructureBridge.CONTENT_TYPE);
@@ -465,12 +482,13 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		assertEquals(0, ContextCore.getContextManager().getActiveContext().getAllElements().size());
 		assertEquals(0, context.getAllElements().size());
 		ContextCorePlugin.getContextManager()
-				.processInteractionEvent("non existent", InteractionEvent.Kind.SELECTION, MOCK_ORIGIN, context);
+		.processInteractionEvent("non existent", InteractionEvent.Kind.SELECTION, MOCK_ORIGIN, context);
 		assertEquals(0, context.getAllElements().size());
 		assertEquals(0, ContextCore.getContextManager().getActiveContext().getAllElements().size());
 		ContextCorePlugin.getContextManager().removeGlobalContext(context);
 	}
 
+	@Test
 	public void testExplicitContextManipulationListener() throws JavaModelException {
 
 		StubContextElementedDeletedListener listener = new StubContextElementedDeletedListener();
@@ -539,6 +557,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		}
 	}
 
+	@Test
 	public void testRemoveProjectFromContextRemovesOnlyInteresting() throws JavaModelException {
 
 		StubContextElementedDeletedListener listener = new StubContextElementedDeletedListener();
@@ -575,6 +594,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		}
 	}
 
+	@Test
 	public void testDeleteElementsFromContext() {
 		StubContextElementedDeletedListener listener = new StubContextElementedDeletedListener();
 		try {

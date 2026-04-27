@@ -12,6 +12,9 @@
 
 package org.eclipse.mylyn.cdt.tests.support;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.jobs.Job;
@@ -26,6 +29,8 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * @author Mik Kersten
@@ -44,9 +49,8 @@ public abstract class AbstractCdtContextTest extends AbstractContextTest {
 
 	protected InteractionContextScaling scaling = new InteractionContextScaling();
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void _setUp() throws Exception {
 		ContextTestUtil.triggerContextUiLazyStart();
 		project = new CdtProject(getClass().getSimpleName());
 		context = new InteractionContext(contextId, scaling);
@@ -61,8 +65,8 @@ public abstract class AbstractCdtContextTest extends AbstractContextTest {
 		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(false);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void _tearDown() throws Exception {
 		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(true);
 		context.reset();
 		assertTrue(context.getInteresting().isEmpty());
@@ -77,7 +81,6 @@ public abstract class AbstractCdtContextTest extends AbstractContextTest {
 		}
 		assertFalse(manager.isContextActive());
 		waitForAutoBuild();
-		super.tearDown();
 	}
 
 	public static void waitForAutoBuild() {

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.java.tests.search;
@@ -20,17 +21,17 @@ import org.eclipse.mylyn.context.sdk.util.search.ISearchPluginTest;
 import org.eclipse.mylyn.context.sdk.util.search.TestActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 import org.eclipse.mylyn.internal.java.ui.search.JUnitReferencesProvider;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  */
-public class JUnitReferencesSearchPluginTest extends TestCase implements ISearchPluginTest {
+public class JUnitReferencesSearchPluginTest implements ISearchPluginTest {
 
 	// TESTCASENEEDED need a project that has a method that starts with test,
 	// but doesn't extend junit.framework.TestCase
 
+	@Test
 	public void testJUnitReferencesSearchDOS1() {
 		// List<?> results = search(1);
 	}
