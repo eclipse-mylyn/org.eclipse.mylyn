@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.context.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,12 +39,12 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.ide.IDE;
-import org.junit.Before;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
-public class TaskEditorRestoreTest extends TestCase {
+public class TaskEditorRestoreTest {
 
 	private IWorkbenchPage page;
 
@@ -60,9 +62,8 @@ public class TaskEditorRestoreTest extends TestCase {
 
 	private IFile fileB;
 
-	@Override
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		taskActivityManager = TasksUiPlugin.getTaskActivityManager();
 		taskActivityManager.deactivateActiveTask();
@@ -79,8 +80,8 @@ public class TaskEditorRestoreTest extends TestCase {
 		fileB.create(new ByteArrayInputStream("abc".getBytes()), false, null);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		taskActivityManager.deactivateActiveTask();
 		if (project != null) {
 			project.delete(true, null);
@@ -88,6 +89,7 @@ public class TaskEditorRestoreTest extends TestCase {
 		UiTestUtil.closeAllEditors();
 	}
 
+	@Test
 	public void testDeactivateDoesNotRestoreForNoOpenTasks() {
 		createTasks("testDeactivateDoesNotRestoreForNoOpenTasks");
 		taskActivityManager.activateTask(task1);
@@ -97,6 +99,7 @@ public class TaskEditorRestoreTest extends TestCase {
 		assertNoTaskOrTextEditorsOpen();
 	}
 
+	@Test
 	public void testDeactivateRestoresActiveTaskEditor() {
 		createTasks("testDeactivateRestoresActiveTaskEditor");
 		taskActivityManager.activateTask(task1);
@@ -109,6 +112,7 @@ public class TaskEditorRestoreTest extends TestCase {
 		assertEquals(Collections.emptySet(), getOpenEditorsByType(TextEditor.class, v -> v));
 	}
 
+	@Test
 	public void testDeactivateRestoresActiveTaskEditorAndFiles() throws Exception {
 		createTasks("testDeactivateRestoresActiveTaskEditorAndFiles");
 		taskActivityManager.activateTask(task1);

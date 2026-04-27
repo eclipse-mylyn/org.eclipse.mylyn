@@ -29,6 +29,8 @@ import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.internal.ide.filesystem.FileSystemStructureProvider;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Sam Davis
@@ -37,9 +39,8 @@ import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 public class CdtStructureBridgeTest extends AbstractCdtContextTest {
 	private IProject importedProject;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		importedProject = ResourcesPlugin.getWorkspace().getRoot().getProject("TestProject");
 		ImportOperation importOperation = new ImportOperation(importedProject.getFullPath(),
 				new File("data/TestProject/"), new FileSystemStructureProvider(), file -> IOverwriteQuery.ALL);
@@ -47,18 +48,20 @@ public class CdtStructureBridgeTest extends AbstractCdtContextTest {
 		importOperation.run(null);
 	}
 
+	@Test
 	public void testBridgePresent() {
 		// see super.setUp()
 	}
 
+	@Test
 	public void testFolding() throws Exception {
 		TasksUi.getTaskActivityManager().activateTask(new TaskTask("kind", "http://mylyn.org", "1"));
 		IFile file = importedProject.getFile("Test.cpp");
 		String editorId = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(".cpp").getId();
 		PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow()
-				.getActivePage()
-				.openEditor(new FileEditorInput(file), editorId);
+		.getActiveWorkbenchWindow()
+		.getActivePage()
+		.openEditor(new FileEditorInput(file), editorId);
 		CUIPlugin.getDefault().getPreferenceStore().setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, true);
 		CDTUIBridgePlugin.getDefault().getPreferenceStore().setValue(CDTUIBridgePlugin.AUTO_FOLDING_ENABLED, true);
 	}

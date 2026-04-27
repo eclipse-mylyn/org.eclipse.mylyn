@@ -13,6 +13,10 @@
 
 package org.eclipse.mylyn.resources.tests;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -38,6 +42,9 @@ import org.eclipse.mylyn.context.sdk.util.AbstractResourceContextTest;
 import org.eclipse.mylyn.internal.resources.ui.ResourceChangeMonitor;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
@@ -95,9 +102,8 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 
 	private IFile file;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		changeMonitor = new ResourceChangeMonitor();
 		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(true);
 
@@ -118,21 +124,22 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		ContextCore.getContextManager().setContextCapturePaused(false);
 		// disable ResourceModifiedDateExclusionStrategy
 		ResourcesUiBridgePlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, false);
+		.getPreferenceStore()
+		.setValue(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, false);
 
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(false);
-		super.tearDown();
+		// super.tearDown();
 		// re-enable ResourceModifiedDateExclusionStrategy
 		ResourcesUiBridgePlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, true);
+		.getPreferenceStore()
+		.setValue(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, true);
 	}
 
+	@Test
 	public void testCreatedFile() throws CoreException {
 		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
 				new String[] { "/test.txt" }, IResourceDelta.ADDED | IResourceDelta.CONTENT, IResource.PROJECT);
@@ -145,6 +152,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		assertTrue(element.getInterest().isPropagated());
 	}
 
+	@Test
 	public void testLargeFileChangeNotAddedToContext() throws CoreException {
 
 		List<String> filePaths = new ArrayList<>();
@@ -167,6 +175,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		assertNull(element);
 	}
 
+	@Test
 	public void testLargeFileAddedNotAddedToContext() throws CoreException {
 
 		List<String> filePaths = new ArrayList<>();
@@ -189,6 +198,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		assertNull(element);
 	}
 
+	@Test
 	public void testLargeFolderAddedNotAddedToContext() throws CoreException {
 
 		List<String> folderPaths = new ArrayList<>();
@@ -211,6 +221,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		assertNull(element);
 	}
 
+	@Test
 	public void testLargeFolderChangeNotAddedToContext() throws CoreException {
 
 		List<String> folderPaths = new ArrayList<>();
@@ -233,6 +244,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		assertNull(element);
 	}
 
+	@Test
 	public void testFolderAdded() throws CoreException {
 
 		List<String> folderPaths = new ArrayList<>();
@@ -249,6 +261,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		assertNull(element);
 	}
 
+	@Test
 	public void testModifiedFile() throws CoreException {
 		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
 				new String[] { "/test.txt" }, IResourceDelta.CHANGED | IResourceDelta.CONTENT, IResource.PROJECT);
@@ -261,6 +274,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		assertTrue(element.getInterest().isPredicted());
 	}
 
+	@Test
 	public void testDerrivedFileChanged() throws CoreException {
 		fileInFolder.setDerived(true, null);
 
@@ -274,6 +288,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		assertNull(element);
 	}
 
+	@Test
 	public void testDerrivedFolderChanged() throws CoreException {
 		folder.setDerived(true, null);
 		fileInFolder.setDerived(false, null);
@@ -300,6 +315,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		assertNull(element);
 	}
 
+	@Test
 	public void testExcluded() throws CoreException {
 		try {
 			ResourcesUiPreferenceInitializer.addForcedExclusionPattern("*.txt");

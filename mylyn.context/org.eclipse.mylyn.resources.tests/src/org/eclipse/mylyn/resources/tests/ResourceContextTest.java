@@ -14,6 +14,10 @@
 
 package org.eclipse.mylyn.resources.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
@@ -37,6 +41,9 @@ import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
@@ -45,9 +52,8 @@ import org.eclipse.ui.PlatformUI;
 @SuppressWarnings("nls")
 public class ResourceContextTest extends AbstractResourceContextTest {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 //		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(true);
 		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(true);
 
@@ -58,9 +64,8 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		.setValue(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, false);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@AfterEach
+	void tearDown() throws Exception {
 		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(false);
 		// re-enable ResourceModifiedDateExclusionStrategy
 		ResourcesUiBridgePlugin.getDefault()
@@ -74,6 +79,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		}
 	}
 
+	@Test
 	public void testResourceSelect() throws CoreException {
 		ContextCore.getContextManager().setContextCapturePaused(true);
 		IFile file = project.getProject().getFile("file");
@@ -90,6 +96,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		assertTrue(element.getInterest().isInteresting());
 	}
 
+	@Test
 	public void testFileNotAddedIfExcluded() throws CoreException {
 		Set<String> previousExcludions = ResourcesUiPreferenceInitializer.getExcludedResourcePatterns();
 		Set<String> exclude = new HashSet<>();
@@ -106,6 +113,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(previousExcludions);
 	}
 
+	@Test
 	public void testPatternNotAddedIfExcluded() throws CoreException {
 		Set<String> previousExcludions = ResourcesUiPreferenceInitializer.getExcludedResourcePatterns();
 		Set<String> exclude = new HashSet<>();
@@ -122,6 +130,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(previousExcludions);
 	}
 
+	@Test
 	public void testPatternNotAddedMatching() throws CoreException {
 
 		Set<String> previousExcludions = ResourcesUiPreferenceInitializer.getExcludedResourcePatterns();
@@ -146,6 +155,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(previousExcludions);
 	}
 
+	@Test
 	public void testFileAdded() throws CoreException {
 		IFile file = project.getProject().getFile("new-file" + new Date().getTime() + ".txt");
 		assertFalse(file.exists());
@@ -157,6 +167,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		assertTrue(element.getInterest().isInteresting());
 	}
 
+	@Test
 	public void testFolderAddedOnCreation() throws CoreException {
 		IFolder folder = project.getProject().getFolder("folder");
 		folder.create(true, true, null);
@@ -167,6 +178,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		assertTrue(element.getInterest().isInteresting());
 	}
 
+	@Test
 	public void testProjectClose() throws CoreException, UnsupportedEncodingException {
 		IProject project2 = project.getProject();
 		createRealFiles(project2);
@@ -177,6 +189,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		assertEquals(0, context.getInteractionHistory().size());
 	}
 
+	@Test
 	public void testProjectOpen() throws CoreException, UnsupportedEncodingException {
 		IProject project2 = project.getProject();
 		createRealFiles(project2);
@@ -189,6 +202,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		assertEquals(0, context.getInteractionHistory().size());
 	}
 
+	@Test
 	public void testProjectDelete() throws CoreException, UnsupportedEncodingException {
 		IProject project2 = project.getProject();
 		createRealFiles(project2);
@@ -202,6 +216,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 	/**
 	 * Test that working sets are properly handled by the resource bridge
 	 */
+	@Test
 	public void testWorkingSetHandledByResourceBridge() {
 		IProject project2 = project.getProject();
 
@@ -217,6 +232,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 	/**
 	 * Test that working sets are filtered based on the interest of their contents
 	 */
+	@Test
 	public void testWorkingSetFiltering() throws CoreException {
 		IProject project2 = project.getProject();
 		IFile file = project2.getFile("file");

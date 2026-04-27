@@ -13,6 +13,10 @@
 
 package org.eclipse.mylyn.resources.tests;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.ByteArrayInputStream;
 import java.util.Date;
 
@@ -23,6 +27,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.sdk.util.AbstractResourceContextTest;
 import org.eclipse.mylyn.internal.resources.ui.ResourceModifiedDateExclusionStrategy;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Shawn Minto
@@ -39,9 +46,8 @@ public class ResourceModificationDateExclusionStrategyTest extends AbstractResou
 	private IFile file;
 
 	@SuppressWarnings("deprecation")
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		// we need to make sure the files are created and modified before the context is activated
 		ContextCore.getContextManager().deactivateContext(taskId);
 
@@ -79,9 +85,8 @@ public class ResourceModificationDateExclusionStrategyTest extends AbstractResou
 		manager.internalActivateContext(context);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@AfterEach
+	void tearDown() throws Exception {
 		exclusionStrategy.dispose();
 		file.delete(true, null);
 		folder.delete(true, null);
@@ -89,12 +94,14 @@ public class ResourceModificationDateExclusionStrategyTest extends AbstractResou
 		ContextCore.getContextManager().deactivateContext(taskId);
 	}
 
+	@Test
 	public void testIsExcludedFolder() {
 		assertFalse(exclusionStrategy.isExcluded(ResourcesPlugin.getWorkspace().getRoot()));
 		assertFalse(exclusionStrategy.isExcluded(project.getProject()));
 		assertFalse(exclusionStrategy.isExcluded(folder));
 	}
 
+	@Test
 	public void testIsExcludedNotEnabled() {
 		exclusionStrategy.setEnabled(false);
 		assertFalse(exclusionStrategy.isEnabled());
@@ -104,6 +111,7 @@ public class ResourceModificationDateExclusionStrategyTest extends AbstractResou
 		assertFalse(exclusionStrategy.isExcluded(folder));
 	}
 
+	@Test
 	public void testIsExcludedFileNoContextActive() {
 		ContextCore.getContextManager().deactivateContext(taskId);
 		assertFalse(ContextCore.getContextManager().isContextActive());
@@ -111,12 +119,14 @@ public class ResourceModificationDateExclusionStrategyTest extends AbstractResou
 		assertTrue(exclusionStrategy.isExcluded(fileInFolder));
 	}
 
+	@Test
 	public void testIsExcludedFileContextActiveNoChange() {
 		assertTrue(ContextCore.getContextManager().isContextActive());
 		assertTrue(exclusionStrategy.isExcluded(file));
 		assertTrue(exclusionStrategy.isExcluded(fileInFolder));
 	}
 
+	@Test
 	public void testIsExcludedFileContextActiveChanged() throws CoreException {
 		assertTrue(ContextCore.getContextManager().isContextActive());
 
@@ -129,6 +139,7 @@ public class ResourceModificationDateExclusionStrategyTest extends AbstractResou
 		assertTrue(exclusionStrategy.isExcluded(fileInFolder));
 	}
 
+	@Test
 	public void testIsExcludedFileContextActiveChangedDateRounded() throws CoreException {
 		// some OS's round to the nearest second, so we need to make sure to handle this case
 		assertTrue(ContextCore.getContextManager().isContextActive());
@@ -146,6 +157,7 @@ public class ResourceModificationDateExclusionStrategyTest extends AbstractResou
 		assertTrue(exclusionStrategy.isExcluded(fileInFolder));
 	}
 
+	@Test
 	public void testIsExcludedFileContextActiveReallyOld() throws CoreException {
 		// some OS's round to the nearest second, so we need to make sure to handle this case
 		assertTrue(ContextCore.getContextManager().isContextActive());
@@ -163,6 +175,7 @@ public class ResourceModificationDateExclusionStrategyTest extends AbstractResou
 		assertTrue(exclusionStrategy.isExcluded(fileInFolder));
 	}
 
+	@Test
 	public void testIsExcludedFileContextActiveReallyNew() throws CoreException {
 		// some OS's round to the nearest second, so we need to make sure to handle this case
 		assertTrue(ContextCore.getContextManager().isContextActive());
@@ -180,6 +193,7 @@ public class ResourceModificationDateExclusionStrategyTest extends AbstractResou
 		assertTrue(exclusionStrategy.isExcluded(file));
 	}
 
+	@Test
 	public void testWasModifiedAfterNullDate() {
 		assertFalse(exclusionStrategy.wasModifiedAfter(null, null));
 		assertFalse(exclusionStrategy.wasModifiedAfter(file, null));

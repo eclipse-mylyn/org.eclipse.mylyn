@@ -13,10 +13,15 @@
 
 package org.eclipse.mylyn.context.tests;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.mylyn.context.sdk.util.AbstractResourceContextTest;
 import org.eclipse.mylyn.context.ui.AbstractFocusViewAction;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Gregory Amerson
@@ -24,6 +29,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 @SuppressWarnings("nls")
 public class ToggleFocusActiveViewHandlerTest extends AbstractResourceContextTest {
 
+	@Test
 	public void testToggleFocusActiveViewHandler() throws Exception {
 		AbstractFocusViewAction action = AbstractFocusViewAction.getActionForPart(navigator);
 		assertNotNull(action);
@@ -38,7 +44,7 @@ public class ToggleFocusActiveViewHandlerTest extends AbstractResourceContextTes
 		assertTrue(action.isChecked());
 
 		hs.executeCommand("org.eclipse.mylyn.context.ui.commands.toggle.focus.active.view", null);
-		assertTrue(!action.isChecked());
+		assertFalse(action.isChecked());
 	}
 
 }

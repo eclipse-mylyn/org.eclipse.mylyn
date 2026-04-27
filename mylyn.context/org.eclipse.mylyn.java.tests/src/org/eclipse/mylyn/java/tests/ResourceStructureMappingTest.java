@@ -15,6 +15,10 @@
 
 package org.eclipse.mylyn.java.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -30,6 +34,9 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
@@ -38,17 +45,14 @@ import org.eclipse.ui.PlatformUI;
 @SuppressWarnings("nls")
 public class ResourceStructureMappingTest extends AbstractJavaContextTest {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		// make sure some part is active
 		IdeUiUtil.getNavigatorFromActivePage();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-
+	@AfterEach
+	void tearDown() throws Exception {
 		IWorkingSetManager workingSetManager = PlatformUI.getWorkbench().getWorkingSetManager();
 		IWorkingSet workingSet = workingSetManager.getWorkingSet("TestWorkingSet");
 		if (workingSet != null) {
@@ -56,6 +60,7 @@ public class ResourceStructureMappingTest extends AbstractJavaContextTest {
 		}
 	}
 
+	@Test
 	public void testParentResourceMapping() throws CoreException {
 		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
 		IMethod m1 = type1.createMethod("public void m1() { }", null, true, null);
@@ -71,6 +76,7 @@ public class ResourceStructureMappingTest extends AbstractJavaContextTest {
 	/**
 	 * Test that working sets are correctly handled in the presence of the Java bridge
 	 */
+	@Test
 	public void testWorkingSetFiltering() throws CoreException {
 		IWorkingSetManager workingSetManager = PlatformUI.getWorkbench().getWorkingSetManager();
 		IWorkingSet workingSet = workingSetManager.createWorkingSet("TestWorkingSet",

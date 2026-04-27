@@ -12,24 +12,15 @@
 
 package org.eclipse.mylyn.context.tasks.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Steffen Pingel
  */
+@Suite
+@SelectClasses({ ContextMementoMigratorTest.class, EditorRestoreTest.class, PerspectiveRestoreTest.class,
+	RefactorRepositoryUrlOperationTest.class, TaskActivityTimingTest.class, TaskContextStoreTest.class,
+	TaskEditorRestoreTest.class })
 public class AllContextTasksTests {
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite(AllContextTasksTests.class.getName());
-		suite.addTestSuite(ContextMementoMigratorTest.class);
-		suite.addTestSuite(EditorRestoreTest.class);
-		suite.addTestSuite(PerspectiveRestoreTest.class);
-		suite.addTestSuite(RefactorRepositoryUrlOperationTest.class);
-		suite.addTestSuite(TaskActivityTimingTest.class);
-		suite.addTestSuite(TaskContextStoreTest.class);
-		suite.addTestSuite(TaskEditorRestoreTest.class);
-		return suite;
-	}
-
 }

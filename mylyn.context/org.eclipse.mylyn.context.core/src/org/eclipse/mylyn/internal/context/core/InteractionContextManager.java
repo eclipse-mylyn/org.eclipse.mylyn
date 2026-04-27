@@ -289,8 +289,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 						@Override
 						public void handleException(Throwable e) {
 							StatusHandler
-									.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
-											+ listener.getClass(), e));
+							.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+									+ listener.getClass(), e));
 						}
 
 						@Override
@@ -310,8 +310,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 						@Override
 						public void handleException(Throwable e) {
 							StatusHandler
-									.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
-											+ listener.getClass(), e));
+							.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+									+ listener.getClass(), e));
 						}
 
 						@Override
@@ -467,8 +467,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 						@Override
 						public void handleException(Throwable e) {
 							StatusHandler
-									.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
-											+ listener.getClass(), e));
+							.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+									+ listener.getClass(), e));
 						}
 
 						@Override
@@ -490,7 +490,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 //			saveActivityMetaContext();
 		} catch (Throwable t) {
 			StatusHandler
-					.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not deactivate context", t)); //$NON-NLS-1$
+			.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not deactivate context", t)); //$NON-NLS-1$
 		}
 	}
 
@@ -571,7 +571,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		if (context == null) {
 			return;
 		}
-		activeContext.getContextMap().remove(context);
+		activeContext.getContextMap().remove(context); // FIXME should be handleIdentifier
 		context.reset();
 	}
 
@@ -815,9 +815,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 	protected boolean isInterestDelta(float previousInterest, boolean previouslyPredicted, boolean previouslyPropagated,
 			IInteractionElement node) {
 		float currentInterest = node.getInterest().getValue();
-		if (previousInterest <= 0 && currentInterest > 0) {
-			return true;
-		} else if (previousInterest > 0 && currentInterest <= 0) {
+		if (previousInterest <= 0 && currentInterest > 0 || previousInterest > 0 && currentInterest <= 0) {
 			return true;
 		} else if (currentInterest > 0 && previouslyPredicted && !node.getInterest().isPredicted()) {
 			return true;
@@ -1469,8 +1467,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 						@Override
 						public void handleException(Throwable e) {
 							StatusHandler
-									.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
-											+ listener.getClass(), e));
+							.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
+									+ listener.getClass(), e));
 						}
 
 						@Override

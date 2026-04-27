@@ -13,12 +13,16 @@
 
 package org.eclipse.mylyn.team.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables.TaskURL;
-import org.eclipse.mylyn.tests.util.junit4.MockRepositoryConnectorTestCase;
+import org.eclipse.mylyn.tests.util.junit5.MockRepositoryConnectorTestCase;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class CommitTemplateVariablesTest extends MockRepositoryConnectorTestCase {
 
+	@Test
 	public void testTaskUrl() {
 		assertEquals("http://mock-repo.com/tickets/123", new TaskURL().getValue(taskWithUrl));
 		assertEquals("http://mock-repo-evolved.com/tickets/123", new TaskURL().getValue(taskWithBrowserUrl));

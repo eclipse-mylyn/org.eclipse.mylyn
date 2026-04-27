@@ -8,20 +8,23 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  */
-public class ScalingFactorsTest extends TestCase {
+public class ScalingFactorsTest {
 
+	@Test
 	public void testLandmarkDefaults() {
 		IInteractionContextScaling scalingFactors = new InteractionContextScaling();
 		assertEquals(7 * scalingFactors.getLandmark(), scalingFactors.getForcedLandmark());

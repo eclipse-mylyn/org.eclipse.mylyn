@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.java.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
@@ -21,6 +23,9 @@ import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
 import org.eclipse.mylyn.internal.java.ui.TypeHistoryManager;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
@@ -30,19 +35,18 @@ public class TypeHistoryManagerTest extends AbstractJavaContextTest {
 
 	private TypeHistoryManager manager;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		manager = new TypeHistoryManager();
 //		ContextCorePlugin.getContextManager().addListener(manager);
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
-		super.tearDown();
 //		ContextCorePlugin.getContextManager().removeListener(manager);
 	}
 
+	@Test
 	public void testPredictedElementPopulationOfTypeHistory() throws JavaModelException {
 		manager.clearTypeHistory();
 		assertEquals(0, OpenTypeHistory.getInstance().getTypeInfos().length);

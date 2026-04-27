@@ -14,6 +14,8 @@
 
 package org.eclipse.mylyn.java.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
@@ -25,7 +27,6 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.ResourceTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
-import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
 import org.eclipse.mylyn.context.sdk.java.TestJavaProject;
 import org.eclipse.mylyn.internal.java.ui.JavaEditingMonitor;
 import org.eclipse.mylyn.monitor.core.IInteractionEventListener;
@@ -33,6 +34,10 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.ui.PartInitException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 
 /**
  * @author Jingwen Ou
@@ -40,7 +45,7 @@ import org.eclipse.ui.PartInitException;
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class JavaEditingMonitorTest extends AbstractJavaContextTest {
+public class JavaEditingMonitorTest {
 
 	private IMethod callee;
 
@@ -60,15 +65,16 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 
 	private IInteractionEventListener listener;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp(TestInfo testInfo) throws Exception {
 		monitor = new JavaEditingMonitor();
 		// open editors seem to cause a problem with the selection count
 		UiTestUtil.closeAllEditors();
 
 		// make sure the project name is unique for each test run so there is no pollution
-		project = new TestJavaProject(this.getClass().getName() + getName());
-		pkg = project.createPackage("pkg1" + getName());
+		String name = testInfo.getTestMethod().get().getName();
+		project = new TestJavaProject(this.getClass().getName() + name);
+		pkg = project.createPackage("pkg1" + name);
 		typeFoo = project.createType(pkg, "Foo.java", "public class Foo { }");
 		caller = typeFoo.createMethod("void caller() {  }", null, true, null);
 		callee = typeFoo.createMethod("void callee() { }", callee, true, null);
@@ -96,8 +102,8 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 		MonitorUi.addInteractionListener(listener);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		monitor.dispose();
 		if (listener != null) {
 			MonitorUi.removeInteractionListener(listener);
@@ -110,6 +116,7 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 	 * Selects a method twice to see whether the editing is handled correctly. Note: Two sequential selections on the same element are
 	 * deemed to be an edit of the selection as this is the best guess that can be made. See bug 252306.
 	 */
+	@Test
 	public void testHandleElementEdit() throws PartInitException, JavaModelException, InterruptedException {
 		assertEquals(0, editingCount);
 		assertEquals(0, selectingCount);
@@ -141,6 +148,7 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 		assertEquals(1, selectingCount);
 	}
 
+	@Test
 	public void testHandleElementSelection() throws PartInitException, JavaModelException, InterruptedException {
 		if (CommonTestUtil.isEclipse4()) {
 			return;
@@ -179,6 +187,7 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 		assertEquals(2, selectingCount);
 	}
 
+	@Test
 	public void testHandleElementSelection_e_4() throws PartInitException, JavaModelException, InterruptedException {
 		if (!CommonTestUtil.isEclipse4()) {
 			return;

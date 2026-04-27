@@ -13,6 +13,9 @@
 
 package org.eclipse.mylyn.context.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,11 +44,9 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Verifies that editors are restored on task activation.
@@ -53,7 +54,7 @@ import junit.framework.TestCase;
  * @author Steffen Pingel
  */
 @SuppressWarnings({ "nls", "restriction" })
-public class EditorRestoreTest extends TestCase {
+public class EditorRestoreTest {
 
 	private IEditorDescriptor editor;
 
@@ -171,9 +172,8 @@ public class EditorRestoreTest extends TestCase {
 		return refs;
 	}
 
-	@Override
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		task = new LocalTask(getClass().getName(), getClass().getName());
 		TasksUiPlugin.getTaskList().addTask(task);
 
@@ -210,9 +210,8 @@ public class EditorRestoreTest extends TestCase {
 		assertTrue(ContextUiPlugin.getEditorStateParticipant().isEnabled());
 	}
 
-	@Override
-	@After
-	public void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		ContextCore.getContextManager().deactivateContext(task.getHandleIdentifier());
 		TasksUiPlugin.getTaskList().deleteTask(task);
 		page.closeAllEditors(false);

@@ -12,16 +12,10 @@
 package org.eclipse.mylyn.context.tasks.ui.tests;
 
 import org.eclipse.mylyn.internal.context.tasks.ui.ContextTaskActivationListenerTest;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
+@Suite
+@SelectClasses({ ContextTaskActivationListenerTest.class })
 public class AllContextTasksUiTests {
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite(AllContextTasksUiTests.class.getName());
-		suite.addTestSuite(ContextTaskActivationListenerTest.class);
-		return suite;
-	}
-
 }

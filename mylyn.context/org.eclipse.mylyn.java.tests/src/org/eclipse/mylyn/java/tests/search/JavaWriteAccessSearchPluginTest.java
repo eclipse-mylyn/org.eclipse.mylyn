@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.java.tests.search;
@@ -20,11 +21,11 @@ import org.eclipse.mylyn.context.sdk.util.search.ISearchPluginTest;
 import org.eclipse.mylyn.context.sdk.util.search.TestActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 import org.eclipse.mylyn.internal.java.ui.search.JavaWriteAccessProvider;
+import org.junit.jupiter.api.Test;
 
-import junit.framework.TestCase;
+public class JavaWriteAccessSearchPluginTest implements ISearchPluginTest {
 
-public class JavaWriteAccessSearchPluginTest extends TestCase implements ISearchPluginTest {
-
+	@Test
 	public void testJavaWriteAccessSearchDOS1() {
 		// List<?> results = search(1);
 	}

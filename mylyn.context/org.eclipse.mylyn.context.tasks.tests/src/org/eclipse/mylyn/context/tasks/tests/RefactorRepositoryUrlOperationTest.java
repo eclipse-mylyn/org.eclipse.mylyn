@@ -13,6 +13,9 @@
 
 package org.eclipse.mylyn.context.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Calendar;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -29,23 +32,20 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
-import org.junit.Before;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Robert Elves
  * @author Steffen Pingel
  */
 @SuppressWarnings({ "nls", "restriction" })
-public class RefactorRepositoryUrlOperationTest extends TestCase {
+public class RefactorRepositoryUrlOperationTest {
 
 	private TaskList taskList;
 
-	@Override
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		taskList = TasksUiPlugin.getTaskList();
 		TaskTestUtil.resetTaskList();
 	}

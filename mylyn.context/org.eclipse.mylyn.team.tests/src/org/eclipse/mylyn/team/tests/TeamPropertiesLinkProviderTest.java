@@ -13,6 +13,10 @@
 
 package org.eclipse.mylyn.team.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +33,15 @@ import org.eclipse.mylyn.internal.team.ui.properties.TeamPropertiesLinkProvider;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class TeamPropertiesLinkProviderTest extends TestCase {
+public class TeamPropertiesLinkProviderTest {
 
 	private IProject project1;
 
@@ -44,8 +49,8 @@ public class TeamPropertiesLinkProviderTest extends TestCase {
 
 	private IProject project2;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		project1 = root.getProject("Test Project1");
 		project1.create(null);
@@ -58,12 +63,13 @@ public class TeamPropertiesLinkProviderTest extends TestCase {
 		resources = new ArrayList<>();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		project1.delete(true, null);
 		project2.delete(true, null);
 	}
 
+	@Test
 	public void testCommitCommentTemplate() throws Exception {
 		MockTask task = new MockTask("1");
 		task.setSummary("summary");
@@ -108,6 +114,7 @@ public class TeamPropertiesLinkProviderTest extends TestCase {
 		assertTrue(linkProvider.canAccessProperties(project1));
 	}
 
+	@Test
 	public void testChangeSetCommitCommentMultipleProjects() throws Exception {
 		MockTask task = new MockTask("1");
 		task.setSummary("summary");
@@ -137,6 +144,7 @@ public class TeamPropertiesLinkProviderTest extends TestCase {
 		assertEquals("project template: 1", changeSet.getComment());
 	}
 
+	@Test
 	public void testChangeSetCommitCommentChangedResources() throws Exception {
 		MockTask task = new MockTask("1");
 		task.setSummary("summary");

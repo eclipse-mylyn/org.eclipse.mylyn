@@ -11,19 +11,23 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.debug.ui;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -38,9 +42,9 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.sdk.java.WorkspaceSetupHelper;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Sebastian Schmidt
@@ -58,8 +62,8 @@ public class BreakpointsContextUtilTest {
 
 	private IBreakpointManager breakpointManager;
 
-	@Before
-	public void setUp() throws IOException, CoreException {
+	@BeforeEach
+	void setUp() throws IOException, CoreException {
 		BreakpointsTestUtil.setManageBreakpointsPreference(true);
 		breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
 		File contextStore = ContextCorePlugin.getContextStore().getContextDirectory();
@@ -68,7 +72,7 @@ public class BreakpointsContextUtilTest {
 		assertTrue(contextFile.exists());
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		if (tempContextFile != null && tempContextFile.exists()) {
 			tempContextFile.delete();
@@ -142,11 +146,11 @@ public class BreakpointsContextUtilTest {
 	public void testDeactivateTaskDisabled() throws Exception {
 		BreakpointsTestUtil.createProject();
 
-		assertEquals(getBreakpointsAsString(), 0, breakpointManager.getBreakpoints().length);
+		assertEquals(0, breakpointManager.getBreakpoints().length, getBreakpointsAsString());
 
 		activateContext();
 		try {
-			assertEquals(getBreakpointsAsString(), 2, breakpointManager.getBreakpoints().length);
+			assertEquals(2, breakpointManager.getBreakpoints().length, getBreakpointsAsString());
 		} catch (AssertionError e) {
 			Thread.sleep(100);
 			System.out.println("# Slept once");
@@ -160,7 +164,7 @@ public class BreakpointsContextUtilTest {
 		BreakpointsTestUtil.setManageBreakpointsPreference(false);
 
 		contextManager.deactivateContext("contextWithBreakpoints"); //$NON-NLS-1$
-		assertEquals(getBreakpointsAsString(), 2, breakpointManager.getBreakpoints().length);
+		assertEquals(2, breakpointManager.getBreakpoints().length, getBreakpointsAsString());
 	}
 
 	private String getBreakpointsAsString() {
@@ -173,8 +177,15 @@ public class BreakpointsContextUtilTest {
 		List<IBreakpoint> breakpoints = BreakpointsTestUtil.createTestBreakpoints();
 
 		InputStream exportedBreakpoints = BreakpointsContextUtil.exportBreakpoints(breakpoints, null);
-		List<String> expected = IOUtils.readLines(CommonTestUtil.getResource(this, "testdata/breakpointFile.xml"));
-		List<String> actual = IOUtils.readLines(exportedBreakpoints);
+		List<String> expected;
+		try (BufferedReader reader = new BufferedReader(
+				new InputStreamReader(CommonTestUtil.getResource(this, "testdata/breakpointFile.xml"), StandardCharsets.UTF_8))) {
+			expected = reader.lines().collect(Collectors.toList());
+		}
+		List<String> actual;
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(exportedBreakpoints, StandardCharsets.UTF_8))) {
+			actual = reader.lines().collect(Collectors.toList());
+		}
 		Collections.sort(expected);
 		Collections.sort(actual);
 		assertEquals(expected, actual);

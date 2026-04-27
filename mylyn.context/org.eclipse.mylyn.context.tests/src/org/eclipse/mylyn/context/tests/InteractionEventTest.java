@@ -8,18 +8,23 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.eclipse.mylyn.context.sdk.util.AbstractContextTest;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  */
 public class InteractionEventTest extends AbstractContextTest {
 
+	@Test
 	public void testCopy() throws InterruptedException {
 		InteractionEvent original = mockSelection();
 		Thread.sleep(1000);

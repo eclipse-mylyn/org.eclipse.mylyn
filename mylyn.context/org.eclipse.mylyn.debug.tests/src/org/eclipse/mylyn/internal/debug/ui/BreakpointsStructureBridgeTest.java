@@ -12,18 +12,19 @@
 
 package org.eclipse.mylyn.internal.debug.ui;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.mylyn.context.sdk.java.WorkspaceSetupHelper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Sebastian Schmidt
@@ -34,15 +35,15 @@ public class BreakpointsStructureBridgeTest {
 
 	private IBreakpoint testBreakpoint;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		BreakpointsTestUtil.setManageBreakpointsPreference(true);
 		BreakpointsTestUtil.createProject();
 		testBreakpoint = BreakpointsTestUtil.createTestBreakpoint();
 	}
 
-	@After
-	public void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		WorkspaceSetupHelper.clearWorkspace();
 	}
 

@@ -13,6 +13,9 @@
 
 package org.eclipse.mylyn.resources.tests;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
 import org.eclipse.mylyn.context.sdk.util.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
@@ -25,6 +28,8 @@ import org.eclipse.mylyn.internal.ide.ui.IdeUiUtil;
 import org.eclipse.mylyn.internal.resources.ui.ResourceInteractionMonitor;
 import org.eclipse.mylyn.internal.resources.ui.ResourceStructureBridge;
 import org.eclipse.ui.navigator.resources.ProjectExplorer;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * @author Mik Kersten
@@ -58,9 +63,8 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 	protected ProjectExplorer navigator;
 
 	@Deprecated
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void _setUp() throws Exception {
 		assertNotNull(IdeUiBridgePlugin.getDefault());
 		monitor = new ResourceInteractionMonitor();
 		project = new TestProject(this.getClass().getName());
@@ -73,8 +77,8 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 	}
 
 	@Deprecated
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void _tearDown() throws Exception {
 		context.reset();
 		assertTrue(context.getInteresting().isEmpty());
 		manager.deactivateContext(taskId);
@@ -82,6 +86,5 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 		ContextCorePlugin.getContextStore().getFileForContext(taskId).delete();
 		monitor.dispose();
 		ResourceTestUtil.deleteProject(project.getProject());
-		super.tearDown();
 	}
 }
