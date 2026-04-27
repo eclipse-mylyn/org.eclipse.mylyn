@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.sdk.util;
@@ -17,6 +18,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Socket;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
@@ -29,17 +32,19 @@ public class TestUrl {
 
 	public static final TestUrl DEFAULT = probeLocalhost();
 
-	private final String URL_HTTP_404_NOT_FOUND = "http://mylyn.org/notfound";
+	private final String URL_HTTPS_OK = TestConfiguration.getUrlServicesCiDefault().toString() + "/";
 
-	private final String URL_HTTP_CONNECTION_REFUSED = "http://mylyn.org:9999/";
+	private final String URL_HTTP_OK = URL_HTTPS_OK;
+
+	private final String URL_HTTP_404_NOT_FOUND = URL_HTTPS_OK + "notfound";
+
+	private final String URL_HTTP_CONNECTION_REFUSED = TestConfiguration.getUrlServicesCiDefault().toString()
+			+ ":9999/";
 
 	private final String URL_HTTP_CONNECTION_TIMEOUT = "http://google.com:9999/";
 
-	private final String URL_HTTP_OK = "http://mylyn.org/";
-
 	private final String URL_HTTP_UNKNOWN_HOST = "http://nonexistant.mylyn.org";
 
-	private final String URL_HTTPS_OK = "https://mylyn.org/";
 
 	private final String host;
 
@@ -81,8 +86,8 @@ public class TestUrl {
 			url = url.replace("mylyn.org", host);
 		}
 		try {
-			return new URL(url);
-		} catch (MalformedURLException e) {
+			return new URI(url).toURL();
+		} catch (MalformedURLException | URISyntaxException e) {
 			throw new RuntimeException(e);
 		}
 	}

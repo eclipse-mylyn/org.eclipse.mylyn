@@ -9,22 +9,26 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.core;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Iterator;
 
 import org.eclipse.mylyn.commons.core.CommonListenerList;
 import org.eclipse.mylyn.commons.core.CommonListenerList.Notifier;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class CommonListenerListTest extends TestCase {
+public class CommonListenerListTest {
 
 	private static class Listener {
 
@@ -32,6 +36,7 @@ public class CommonListenerListTest extends TestCase {
 
 	}
 
+	@Test
 	public void testAddRemove() {
 		final Listener addedListener = new Listener();
 		CommonListenerList<Listener> list = new CommonListenerList<>("a");
@@ -44,6 +49,7 @@ public class CommonListenerListTest extends TestCase {
 		assertFalse(list.iterator().hasNext());
 	}
 
+	@Test
 	public void testAddTwice() {
 		final Listener addedListener = new Listener();
 		CommonListenerList<Listener> list = new CommonListenerList<>("a");
@@ -56,6 +62,7 @@ public class CommonListenerListTest extends TestCase {
 		assertFalse(iterator.hasNext());
 	}
 
+	@Test
 	public void testIterator() {
 		final Listener listener1 = new Listener();
 		final Listener listener2 = new Listener();
@@ -72,6 +79,7 @@ public class CommonListenerListTest extends TestCase {
 		assertSame(listener3, iterator.next());
 	}
 
+	@Test
 	public void testNotify() {
 		final Listener addedListener = new Listener();
 		CommonListenerList<Listener> list = new CommonListenerList<>("a");
@@ -87,6 +95,7 @@ public class CommonListenerListTest extends TestCase {
 		assertTrue(addedListener.notified);
 	}
 
+	@Test
 	public void testNotifyException() {
 		final Listener addedListener = new Listener();
 		CommonListenerList<Listener> list = new CommonListenerList<>("a");

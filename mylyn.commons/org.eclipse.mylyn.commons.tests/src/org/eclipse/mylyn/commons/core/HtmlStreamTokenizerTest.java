@@ -9,19 +9,24 @@
  *
  *     Frank Becker - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.core;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.text.ParseException;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
-public class HtmlStreamTokenizerTest extends TestCase {
+public class HtmlStreamTokenizerTest {
 
+	@Test
 	public void testDivSelfTerminatingNoSpace() throws IOException, ParseException {
 		HtmlStreamTokenizer htmlStreamTokenizer = new HtmlStreamTokenizer(new StringReader("<div/>"), null);
 		HtmlStreamTokenizer.Token token = htmlStreamTokenizer.nextToken();
@@ -29,6 +34,7 @@ public class HtmlStreamTokenizerTest extends TestCase {
 		assertTrue(((HtmlTag) token.getValue()).isSelfTerminating());
 	}
 
+	@Test
 	public void testDivSelfTerminatingLeadingSpace() throws IOException, ParseException {
 		HtmlStreamTokenizer htmlStreamTokenizer = new HtmlStreamTokenizer(new StringReader("<div />"), null);
 		HtmlStreamTokenizer.Token token = htmlStreamTokenizer.nextToken();
@@ -36,6 +42,7 @@ public class HtmlStreamTokenizerTest extends TestCase {
 		assertTrue(((HtmlTag) token.getValue()).isSelfTerminating());
 	}
 
+	@Test
 	public void testDivSelfTerminatingLeadingSpacePendingSpace() throws IOException, ParseException {
 		HtmlStreamTokenizer htmlStreamTokenizer = new HtmlStreamTokenizer(new StringReader("<div / >"), null);
 		HtmlStreamTokenizer.Token token = htmlStreamTokenizer.nextToken();
@@ -43,6 +50,7 @@ public class HtmlStreamTokenizerTest extends TestCase {
 		assertTrue(((HtmlTag) token.getValue()).isSelfTerminating());
 	}
 
+	@Test
 	public void testDivSelfTerminatingPendingSpace() throws IOException, ParseException {
 		HtmlStreamTokenizer htmlStreamTokenizer = new HtmlStreamTokenizer(new StringReader("<div/ >"), null);
 		HtmlStreamTokenizer.Token token = htmlStreamTokenizer.nextToken();
@@ -50,6 +58,7 @@ public class HtmlStreamTokenizerTest extends TestCase {
 		assertTrue(((HtmlTag) token.getValue()).isSelfTerminating());
 	}
 
+	@Test
 	public void testImgSelfTerminatingNoSpace() throws IOException, ParseException {
 		HtmlStreamTokenizer htmlStreamTokenizer = new HtmlStreamTokenizer(new StringReader("<img src=\"test.png\"/>"),
 				null);
@@ -58,6 +67,7 @@ public class HtmlStreamTokenizerTest extends TestCase {
 		assertTrue(((HtmlTag) token.getValue()).isSelfTerminating());
 	}
 
+	@Test
 	public void testImgSelfTerminatingLeadingSpace() throws IOException, ParseException {
 		HtmlStreamTokenizer htmlStreamTokenizer = new HtmlStreamTokenizer(new StringReader("<img src=\"test.png\" />"),
 				null);
@@ -66,6 +76,7 @@ public class HtmlStreamTokenizerTest extends TestCase {
 		assertTrue(((HtmlTag) token.getValue()).isSelfTerminating());
 	}
 
+	@Test
 	public void testImgSelfTerminatingLeadingSpacePendingSpace() throws IOException, ParseException {
 		HtmlStreamTokenizer htmlStreamTokenizer = new HtmlStreamTokenizer(new StringReader("<img src=\"test.png\" / >"),
 				null);
@@ -74,6 +85,7 @@ public class HtmlStreamTokenizerTest extends TestCase {
 		assertTrue(((HtmlTag) token.getValue()).isSelfTerminating());
 	}
 
+	@Test
 	public void testImgSelfTerminatingPendingSpace() throws IOException, ParseException {
 		HtmlStreamTokenizer htmlStreamTokenizer = new HtmlStreamTokenizer(new StringReader("<img src=\"test.png\"/ >"),
 				null);

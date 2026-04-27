@@ -8,13 +8,15 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Frank Becker - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.repositories.tests.ui;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.commons.repositories.ui.RepositoryUi;
@@ -23,22 +25,22 @@ import org.eclipse.mylyn.internal.commons.repositories.ui.EmptyRepositoryCategor
 import org.eclipse.mylyn.internal.commons.repositories.ui.RepositoriesView;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Frank Becker
  */
 public class RepositoriesViewTest {
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		WorkbenchUtil.showViewInActiveWindow(RepositoryUi.ID_VIEW_REPOSITORIES);
 	}
 
-	@After
-	public void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		WorkbenchUtil.closeViewInActiveWindow(RepositoryUi.ID_VIEW_REPOSITORIES);
 	}
 

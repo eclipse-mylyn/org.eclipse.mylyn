@@ -8,12 +8,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Steffen Pingel - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.xmlrpc;
 
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.TimeZone;
 
 import org.apache.commons.httpclient.Credentials;
@@ -172,8 +174,8 @@ public class CommonXmlRpcClient {
 		xmlrpc.setTransportFactory(factory);
 
 		try {
-			config.setServerURL(new URL(location.getUrl()));
-		} catch (MalformedURLException e) {
+			config.setServerURL(new URI(location.getUrl()).toURL());
+		} catch (MalformedURLException | URISyntaxException e) {
 			throw new RuntimeException(e);
 		}
 	}

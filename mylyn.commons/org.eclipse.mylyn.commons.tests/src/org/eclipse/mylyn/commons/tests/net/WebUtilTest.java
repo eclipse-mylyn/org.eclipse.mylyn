@@ -15,14 +15,16 @@ package org.eclipse.mylyn.commons.tests.net;
 
 import static org.eclipse.mylyn.commons.tests.net.NetUtilTest.MAX_HTTP_HOST_CONNECTIONS_DEFAULT;
 import static org.eclipse.mylyn.commons.tests.net.NetUtilTest.MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.InterruptedIOException;
-import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Proxy.Type;
@@ -52,15 +54,16 @@ import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.MockServer;
 import org.eclipse.mylyn.commons.sdk.util.MockServer.Message;
 import org.eclipse.mylyn.commons.sdk.util.TestUrl;
+import org.eclipse.mylyn.commons.sdk.util.junit5.EnabledIfCI;
 import org.eclipse.mylyn.internal.commons.net.AuthenticatedProxy;
 import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 import org.eclipse.mylyn.internal.commons.net.PollingInputStream;
 import org.eclipse.mylyn.internal.commons.net.PollingSslProtocolSocketFactory;
 import org.eclipse.mylyn.internal.commons.net.TimeoutInputStream;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
@@ -117,8 +120,8 @@ public class WebUtilTest {
 	public WebUtilTest() {
 	}
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		server = new MockServer();
 		int proxyPort = server.startAndWait();
 		assert proxyPort > 0;
@@ -127,38 +130,34 @@ public class WebUtilTest {
 		client = new HttpClient();
 	}
 
-	@After
-	public void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		server.stop();
 	}
 
 	@Test
-	public void testConnectCancelStalledConnect() throws Exception {
+	public void testConnectCancelStalledConnect() {
 		final StubProgressMonitor monitor = new StubProgressMonitor();
 		String host = "google.com";
 		int port = 9999;
 
-		try {
-			Runnable runner = () -> {
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-				}
-				monitor.canceled = true;
-			};
-			new Thread(runner).start();
-			WebUtil.connect(new Socket(), new InetSocketAddress(host, port), 5000, monitor);
-			fail("Expected OperationCanceledException");
-		} catch (OperationCanceledException expected) {
-			assertTrue(monitor.isCanceled());
-		} catch (ConnectException ignored) {
-			System.err.println("Skipping testConnectCancelStalledConnect() due to blocking firewall");
-		}
+		Runnable runner = () -> {
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+			}
+			monitor.canceled = true;
+		};
+		new Thread(runner).start();
+		assertThrows(OperationCanceledException.class,
+				() -> WebUtil.connect(new Socket(), new InetSocketAddress(host, port), 5000, monitor));
+		assertTrue(monitor.isCanceled());
 	}
 
 	@Test
-	public void testConfigureClient() throws Exception {
-		WebLocation location = new WebLocation(TestUrl.DEFAULT.getHttpOk().toString());
+	@EnabledIfCI
+	public void testConfigureClient() {
+		WebLocation location = new WebLocation(TestUrl.DEFAULT.getHttpsOk().toString());
 
 		WebUtil.createHostConfiguration(client, location, null /*monitor*/);
 
@@ -168,12 +167,12 @@ public class WebUtilTest {
 		assertEquals(CoreUtil.TEST_MODE ? 20 : MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT, params.getMaxTotalConnections());
 	}
 
-	@Ignore("No CI Server")
 	@Test
+	@EnabledIfCI
 	public void testExecute() throws Exception {
 		StubProgressMonitor monitor = new StubProgressMonitor();
 		HttpClient client = new HttpClient();
-		WebLocation location = new WebLocation(TestUrl.DEFAULT.getHttpOk().toString());
+		WebLocation location = new WebLocation(TestUrl.DEFAULT.getHttpsOk().toString() + "mylyn_idx/service");
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, monitor);
 
 		GetMethod method = new GetMethod(location.getUrl());
@@ -186,7 +185,7 @@ public class WebUtilTest {
 	}
 
 	@Test
-	public void testExecuteCancelStalledConnect() throws Exception {
+	public void testExecuteCancelStalledConnect() {
 		final StubProgressMonitor monitor = new StubProgressMonitor();
 		HttpClient client = new HttpClient();
 		WebLocation location = new WebLocation(TestUrl.DEFAULT.getConnectionTimeout().toString());
@@ -202,31 +201,28 @@ public class WebUtilTest {
 				monitor.canceled = true;
 			};
 			new Thread(runner).start();
-			WebUtil.execute(client, hostConfiguration, method, monitor);
-			client.executeMethod(method);
-			fail("Expected OperationCanceledException");
-		} catch (OperationCanceledException expected) {
-			assertTrue(monitor.isCanceled());
-		} catch (ConnectException ignored) {
-			System.err.println("Skipping testExecuteCancelStalledConnect() due to blocking firewall");
+			assertThrows(OperationCanceledException.class, () -> {
+				WebUtil.execute(client, hostConfiguration, method, monitor);
+				client.executeMethod(method);
+			});
 		} finally {
 			WebUtil.releaseConnection(method, monitor);
 		}
 	}
 
 	@Test
-	public void testExecuteAlreadyCancelled() throws Exception {
+	@EnabledIfCI
+	public void testExecuteAlreadyCancelled() {
 		StubProgressMonitor monitor = new StubProgressMonitor();
 		HttpClient client = new HttpClient();
-		WebLocation location = new WebLocation(TestUrl.DEFAULT.getHttpOk().toString());
+		WebLocation location = new WebLocation(TestUrl.DEFAULT.getHttpsOk().toString());
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, monitor);
 
 		GetMethod method = new GetMethod(location.getUrl());
 		try {
 			monitor.canceled = true;
-			WebUtil.execute(client, hostConfiguration, method, monitor);
-			fail("Expected InterruptedIOException");
-		} catch (OperationCanceledException expected) {
+			assertThrows(OperationCanceledException.class,
+					() -> WebUtil.execute(client, hostConfiguration, method, monitor));
 		} finally {
 			WebUtil.releaseConnection(method, monitor);
 		}
@@ -249,14 +245,10 @@ public class WebUtilTest {
 	}
 
 	@Test
+	@EnabledIfCI
 	public void testCreateHostConfigurationProxy() throws Exception {
 		StubProgressMonitor monitor = new StubProgressMonitor();
 		HttpClient client = new HttpClient();
-		WebUtil.createHostConfiguration(client,
-				new WebLocation(TestUrl.DEFAULT.getHttpOk().toString(), null, null, (host, proxyType) -> {
-					assertEquals(IProxyData.HTTP_PROXY_TYPE, proxyType);
-					return null;
-				}), monitor);
 		WebUtil.createHostConfiguration(client,
 				new WebLocation(TestUrl.DEFAULT.getHttpsOk().toString(), null, null, (host, proxyType) -> {
 					assertEquals(IProxyData.HTTPS_PROXY_TYPE, proxyType);
@@ -264,7 +256,6 @@ public class WebUtilTest {
 				}), monitor);
 	}
 
-	@Ignore("No CI Server")
 	@Test
 	public void testReadTimeout() throws Exception {
 		// wait 5 seconds for thread pool to be idle
@@ -290,10 +281,7 @@ public class WebUtilTest {
 		try (PollingInputStream in = new PollingInputStream(
 				new TimeoutInputStream(method.getResponseBodyAsStream(), 8192, 500L, -1), 1,
 				new NullProgressMonitor())) {
-			in.read();
-			fail("expected InterruptedIOException");
-		} catch (InterruptedIOException e) {
-			// expected
+			assertThrows(InterruptedIOException.class, () -> in.read());
 		}
 		Thread.sleep(500);
 		assertEquals(0, ((ThreadPoolExecutor) CommonsNetPlugin.getExecutorService()).getActiveCount());
@@ -401,7 +389,7 @@ public class WebUtilTest {
 		Message request = server.getRequest();
 		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
 
-		assertFalse("Expected HttpClient to close connection", server.hasRequest());
+		assertFalse(server.hasRequest(), "Expected HttpClient to close connection");
 	}
 
 	@Test
@@ -504,7 +492,7 @@ public class WebUtilTest {
 		Message request = server.getRequest();
 		assertEquals("CONNECT foo:443 HTTP/1.1", request.request);
 
-		assertFalse("Expected HttpClient to close connection", server.hasRequest());
+		assertFalse(server.hasRequest(), "Expected HttpClient to close connection");
 	}
 
 	@Test
@@ -518,7 +506,9 @@ public class WebUtilTest {
 
 		GetMethod method = new GetMethod("/");
 		// avoid second attempt to connect to proxy to get exception right away
-		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, (HttpMethodRetryHandler) (method1, exception, executionCount) -> false);
+		method.getParams()
+		.setParameter(HttpMethodParams.RETRY_HANDLER,
+				(HttpMethodRetryHandler) (method1, exception, executionCount) -> false);
 		try {
 			int statusCode = client.executeMethod(hostConfiguration, method);
 			fail("Expected SSLHandshakeException, got status: " + statusCode);
@@ -532,17 +522,15 @@ public class WebUtilTest {
 
 	@Test
 	public void testLocationConnectSslClientCert() throws Exception {
-		if (CommonTestUtil.isCertificateAuthBroken()) {
-			return; // skip test
-		}
+		assumeFalse(CommonTestUtil.isCertificateAuthBroken());
 
-		String url = "https://mylyn.org/secure/";
+		String url = TestUrl.DEFAULT.getHttpsOk().toString();
 		AbstractWebLocation location = new WebLocation(url);
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 
-		if (!((PollingSslProtocolSocketFactory) hostConfiguration.getProtocol().getSocketFactory()).hasKeyManager()) {
-			return; // skip test if keystore property is not set
-		}
+		assumeTrue(
+				((PollingSslProtocolSocketFactory) hostConfiguration.getProtocol().getSocketFactory()).hasKeyManager(),
+				"keystore property is not set");
 
 		GetMethod method = new GetMethod(WebUtil.getRequestPath(url));
 		int statusCode = client.executeMethod(hostConfiguration, method);
@@ -609,11 +597,11 @@ public class WebUtilTest {
 				WebUtil.getRequestPath(url));
 	}
 
-	@Ignore("No CI Server")
 	@Test
+	@EnabledIfCI
 	public void testGetTitleFromUrl() throws Exception {
-		assertEquals("Eclipse Mylyn Open Source Project",
-				WebUtil.getTitleFromUrl(new WebLocation(TestUrl.DEFAULT.getHttpOk().toString()), null));
+		assertEquals("Mylyn Service Index Mac mini M4",
+				WebUtil.getTitleFromUrl(new WebLocation(TestUrl.DEFAULT.getHttpsOk().toString() + "mylyn_idx"), null));
 		// disabled: fails in environments where the DNS resolver redirects for unknown hosts
 		//		try {
 //			String title = WebUtil.getTitleFromUrl(new WebLocation("http://invalidurl"), null);
@@ -648,9 +636,16 @@ public class WebUtilTest {
 		}, null));
 	}
 
+	@Test
+	public void testSystemInfo() {
+		CommonTestUtil.dumpSystemInfo(System.out);
+//		assertTrue(info.contains("Java: " + System.getProperty("java.version")));
+//		assertTrue(info.contains("OS: " + System.getProperty("os.name") + " " + System.getProperty("os.version")));
+	}
+
 	// FIXME
 	@Test
-	@Ignore
+	@Disabled
 	public void testGetPlatformProxyDefault() {
 //		assertNull(WebUtil.getProxy("mylyn.eclipse.org", Type.HTTP));
 //		assertNull(WebUtil.getProxy("mylyn.eclipse.org", Type.DIRECT));
@@ -658,7 +653,7 @@ public class WebUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void testGetPlatformProxy() {
 //		IProxyService defaultProxyService = WebUtil.getProxyService();
 //		try {

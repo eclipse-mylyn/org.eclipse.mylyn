@@ -17,14 +17,19 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 /**
  * Simple test class to test the new junit5 setup.
  */
 @Timeout(value = 1, unit = TimeUnit.SECONDS) // overall timeout for each test
 @MylynTestSetup
+@TestMethodOrder(MethodOrderer.MethodName.class)
 @SuppressWarnings("nls")
 public class SimpleTester {
 	@Test
@@ -58,4 +63,9 @@ public class SimpleTester {
 		assumeTrue(false, "Dynamically disabled");
 	}
 
+	@Test
+	@EnabledOnOs(value = OS.AIX, disabledReason = "This test is enabled on AIX")
+	public void disabledOnAix() {
+		System.out.println("Unlikely to run since AIX is not common");
+	}
 }

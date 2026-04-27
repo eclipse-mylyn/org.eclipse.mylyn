@@ -14,9 +14,10 @@
 
 package org.eclipse.mylyn.commons.notifications.tests.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,8 +34,8 @@ import org.eclipse.mylyn.commons.notifications.core.IFilterable;
 import org.eclipse.mylyn.commons.notifications.core.NotificationEnvironment;
 import org.eclipse.mylyn.internal.commons.notifications.feed.FeedEntry;
 import org.eclipse.osgi.service.resolver.VersionRange;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.osgi.framework.Version;
 
 /**
@@ -80,7 +81,7 @@ public class NotificationEnvironmentTest {
 
 	Set<String> installedFeatures;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		installedFeatures = new HashSet<>();
 		System.setProperty("EnvironmentTest", "2");
@@ -95,16 +96,16 @@ public class NotificationEnvironmentTest {
 	@Test
 	public void testGetRuntimeVersion() {
 		Version runtimeVersion = environment.getRuntimeVersion();
-		assertTrue("Expected value between 17.0-25.0, got " + runtimeVersion,
-				new VersionRange("[17.0.0,25.0.0)").isIncluded(runtimeVersion));
+		assertTrue(new VersionRange("[17.0.0,25.0.0)").isIncluded(runtimeVersion),
+				"Expected value between 17.0-25.0, got " + runtimeVersion);
 	}
 
 	@Test
 	public void testGetPlatformVersion() {
 		Version platformVersion = environment.getPlatformVersion();
 		if (Platform.isRunning()) {
-			assertTrue("Expected value between 3.3-5.0, got " + platformVersion,
-					new VersionRange("[3.3.0,5.0.0)").isIncluded(platformVersion));
+			assertTrue(new VersionRange("[3.3.0,5.0.0)").isIncluded(platformVersion),
+					"Expected value between 3.3-5.0, got " + platformVersion);
 		} else {
 			assertEquals(Version.emptyVersion, platformVersion);
 		}
@@ -114,8 +115,8 @@ public class NotificationEnvironmentTest {
 	public void testGetFrameworkVersion() {
 		Version frameworkVersion = environment.getFrameworkVersion();
 		if (Platform.isRunning()) {
-			assertTrue("Expected value > 4.0, got " + frameworkVersion,
-					new VersionRange("4.0.0").isIncluded(frameworkVersion));
+			assertTrue(new VersionRange("4.0.0").isIncluded(frameworkVersion),
+					"Expected value > 4.0, got " + frameworkVersion);
 		} else {
 			assertEquals(CoreUtil.getFrameworkVersion(), frameworkVersion);
 		}

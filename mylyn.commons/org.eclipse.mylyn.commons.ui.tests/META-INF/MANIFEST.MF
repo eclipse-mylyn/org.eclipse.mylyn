@@ -7,8 +7,13 @@ Bundle-Version: 4.11.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.commons.ui;bundle-version="4.4.0"
 Import-Package: net.bytebuddy;version="1.18.5",
- net.bytebuddy.agent;version="[1.18.0,2.0.0)"
-Require-Bundle: org.junit;bundle-version="4.13.2",
- org.mockito.mockito-core;bundle-version="4.8.1"
+ net.bytebuddy.agent;version="[1.18.0,2.0.0)",
+ org.junit.jupiter.api;version="[5.14.0,6.0.0)",
+ org.junit.jupiter.api.condition;version="[5.14.0,6.0.0)",
+ org.junit.platform.launcher;version="[1.14.0,2.0.0)",
+ org.junit.platform.launcher.listeners;version="[1.14.0,2.0.0)",
+ org.mockito;version="[5.23.0,6.0.0)",
+ org.mockito.stubbing;version="[5.23.0,6.0.0)"
+Require-Bundle: org.eclipse.mylyn.commons.sdk.util.junit5;bundle-version="4.11.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: org.eclipse.mylyn.commons.ui

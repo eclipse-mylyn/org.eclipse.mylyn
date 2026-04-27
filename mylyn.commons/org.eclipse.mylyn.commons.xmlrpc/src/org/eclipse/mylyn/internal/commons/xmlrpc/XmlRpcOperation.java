@@ -8,11 +8,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Steffen Pingel - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.xmlrpc;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -157,8 +160,8 @@ public abstract class XmlRpcOperation<T> {
 
 	protected URL getXmlRpcUrl(AuthenticationCredentials credentials) {
 		try {
-			return new URL(client.getLocation().getUrl());
-		} catch (MalformedURLException e) {
+			return new URI(client.getLocation().getUrl()).toURL();
+		} catch (MalformedURLException | URISyntaxException e) {
 			throw new RuntimeException("Encoding of URL failed", e); //$NON-NLS-1$
 		}
 	}

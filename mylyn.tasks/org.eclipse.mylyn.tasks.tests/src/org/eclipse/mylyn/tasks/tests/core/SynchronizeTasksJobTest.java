@@ -192,7 +192,7 @@ public class SynchronizeTasksJobTest {
 		SynchronizeTasksJob job = createSyncJob(connector, tasks);
 		AssertionProgressMonitor monitor = new AssertionProgressMonitor();
 		job.run(monitor);
-		assertEquals("beginTask|subTask|subTask|done", monitor.getProgressLog());
+		assertEquals("beginTask|beginTask|subTask|beginTask|subTask|done", monitor.getProgressLog());
 	}
 
 	@Test
@@ -239,7 +239,7 @@ public class SynchronizeTasksJobTest {
 		SynchronizeTasksJob job = createSyncJob(connector, tasks);
 		AssertionProgressMonitor monitor = new AssertionProgressMonitor();
 		job.run(monitor);
-		assertEquals("beginTask|subTask|done", monitor.getProgressLog());
+		assertEquals("beginTask|beginTask|subTask|done", monitor.getProgressLog());
 	}
 
 	@Test
@@ -665,7 +665,6 @@ public class SynchronizeTasksJobTest {
 		log.removeLogListener(listener);
 	}
 
-	@EnabledIfCI
 	@Test
 	public void testTasksForSeveralRepositories() throws Exception {
 		final List<String> requestedTaskIds = new ArrayList<>();
@@ -714,7 +713,7 @@ public class SynchronizeTasksJobTest {
 				progressLog.append("subTask|");
 			}
 		});
-		assertEquals("beginTask|subTask|subTask|subTask|subTask|done", progressLog.toString());
+		assertEquals("beginTask|beginTask|subTask|beginTask|subTask|done", progressLog.toString());
 
 		assertTrue(requestedTaskIds.contains("1 on " + MockRepositoryConnector.REPOSITORY_URL));
 		assertTrue(requestedTaskIds.contains("5 on " + MockRepositoryConnector.REPOSITORY_URL + "2"));

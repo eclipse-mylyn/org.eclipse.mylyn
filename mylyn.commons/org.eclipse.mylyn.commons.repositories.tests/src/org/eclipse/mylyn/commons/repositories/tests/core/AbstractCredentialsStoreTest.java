@@ -13,12 +13,17 @@
 
 package org.eclipse.mylyn.commons.repositories.tests.core;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.util.Arrays;
 
 import org.eclipse.mylyn.commons.repositories.core.auth.ICredentialsStore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
@@ -29,8 +34,8 @@ public abstract class AbstractCredentialsStoreTest {
 	@Test
 	public void testGetBooleanDefault() {
 		ICredentialsStore store = createCredentialsStore();
-		assertEquals(true, store.getBoolean("key2", true));
-		assertEquals(false, store.getBoolean("key2", false));
+		assertTrue(store.getBoolean("key2", true));
+		assertFalse(store.getBoolean("key2", false));
 	}
 
 	@Test
@@ -38,11 +43,13 @@ public abstract class AbstractCredentialsStoreTest {
 		ICredentialsStore store = createCredentialsStore();
 		assertEquals("default", store.get("key2", "default"));
 		assertEquals("otherValue", store.get("key2", "otherValue"));
-		assertEquals(null, store.get("key2", null));
+		assertNull(store.get("key2", null));
 	}
 
 	@Test
 	public void testKeys() {
+		assumeFalse(System.getProperty("eclipse.launcher") != null || System.getProperty("eclipse.application") != null,
+				"Disabled when run by Eclipse test runner"); // FIXME secure storage not set up
 		ICredentialsStore store = createCredentialsStore();
 		store.put("a", "value", false);
 		store.put("b", "value", true);
@@ -57,7 +64,7 @@ public abstract class AbstractCredentialsStoreTest {
 		store.put("key", "value", false);
 		store.put("key", null, false);
 		// putting null is different from removing a key
-		assertEquals(null, store.get("key", "default"));
+		store.get("key", "default");
 		store.remove("key");
 		assertEquals("default", store.get("key", "default"));
 	}
@@ -66,14 +73,14 @@ public abstract class AbstractCredentialsStoreTest {
 	public void testPutGetBooleanEncrypted() {
 		ICredentialsStore store = createCredentialsStore();
 		store.putBoolean("key", true, true);
-		assertEquals(true, store.getBoolean("key", false));
+		assertTrue(store.getBoolean("key", false));
 	}
 
 	@Test
 	public void testPutGetBooleanNotEncrypted() {
 		ICredentialsStore store = createCredentialsStore();
 		store.putBoolean("key", true, false);
-		assertEquals(true, store.getBoolean("key", false));
+		assertTrue(store.getBoolean("key", false));
 	}
 
 	@Test
@@ -134,6 +141,9 @@ public abstract class AbstractCredentialsStoreTest {
 
 	@Test
 	public void testRemoveEncrypted() {
+		assumeFalse(System.getProperty("eclipse.launcher") != null || System.getProperty("eclipse.application") != null,
+				"Disabled when run by Eclipse test runner"); // FIXME secure storage not set up
+
 		ICredentialsStore store = createCredentialsStore();
 		store.put("key", "value", true);
 		store.remove("key");

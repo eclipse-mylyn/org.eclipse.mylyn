@@ -8,11 +8,12 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.commons.ui;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -26,8 +27,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 public class ShellDragSupportTest {
@@ -37,8 +38,8 @@ public class ShellDragSupportTest {
 
 	private ShellDragSupport support;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		shell.setLocation(100, 150);
 		when(composite.getShell()).thenReturn(shell);
 		when(composite.getDisplay()).thenReturn(Display.getDefault());

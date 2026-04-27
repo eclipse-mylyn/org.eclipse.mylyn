@@ -7,21 +7,28 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.activity.tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 
 import org.eclipse.mylyn.commons.activity.ui.spi.AbstractUserActivityMonitor;
 import org.eclipse.mylyn.internal.commons.activity.ui.UserActivityManager;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
  */
-public class UserActivityManagerTest extends TestCase {
+public class UserActivityManagerTest {
 
 	private class StubUserActivityMonitor extends AbstractUserActivityMonitor {
 
@@ -73,20 +80,21 @@ public class UserActivityManagerTest extends TestCase {
 
 	private UserActivityManager manager;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		monitor1 = new StubUserActivityMonitor(0);
 		monitor2 = new StubUserActivityMonitor(1);
 		manager = new UserActivityManager(Arrays.asList(monitor1, monitor2));
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		if (manager != null) {
 			manager.stop();
 		}
 	}
 
+	@Test
 	public void testStartStop() {
 		manager.start();
 		assertTrue(monitor1.started);
@@ -96,6 +104,7 @@ public class UserActivityManagerTest extends TestCase {
 		assertFalse(monitor2.started);
 	}
 
+	@Test
 	public void testGetInactivityTimeout() {
 		monitor1.setLastEventTime(1);
 		monitor2.setLastEventTime(2);
@@ -103,6 +112,7 @@ public class UserActivityManagerTest extends TestCase {
 		assertEquals(1, manager.getLastInteractionTime());
 	}
 
+	@Test
 	public void testGetInactivityTimeoutFailure() {
 		monitor1.setLastEventTime(1);
 		monitor2.setLastEventTime(2);
@@ -116,6 +126,7 @@ public class UserActivityManagerTest extends TestCase {
 		assertFalse(monitor2.started);
 	}
 
+	@Test
 	public void testEnabled() {
 		monitor1.enabled = false;
 		monitor1.setLastEventTime(1);

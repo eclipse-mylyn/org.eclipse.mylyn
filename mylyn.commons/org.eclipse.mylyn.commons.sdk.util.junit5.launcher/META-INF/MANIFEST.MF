@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylyn Commons SDK JUnit 5 Launcher Fragment
+Bundle-SymbolicName: org.eclipse.mylyn.commons.sdk.util.junit5.launcher
+Bundle-Version: 4.11.0.qualifier
+Fragment-Host: junit-platform-launcher
+Import-Package: org.eclipse.mylyn.commons.sdk.util.junit5.listener
+Bundle-Vendor: Eclipse Mylyn

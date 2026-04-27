@@ -13,7 +13,8 @@
 
 package org.eclipse.mylyn.commons.repositories.http.tests;
 
-import static org.junit.Assert.fail;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.InputStream;
 
@@ -26,17 +27,17 @@ import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.TestUrl;
+import org.eclipse.mylyn.commons.sdk.util.junit5.EnabledIfCI;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
-@SuppressWarnings("nls")
+@EnabledIfCI
 public class CommonHttpResponseTest {
 
 	private final TestUrl urls = TestUrl.DEFAULT;
@@ -47,18 +48,18 @@ public class CommonHttpResponseTest {
 
 	private final CancellableOperationMonitorThread monitorThread = new CancellableOperationMonitorThread();
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUpClass() {
 		if (CommonTestUtil.fixProxyConfiguration()) {
 			CommonTestUtil.dumpSystemInfo(System.err);
 		}
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		monitor = new NullOperationMonitor();
 		RepositoryLocation location = new RepositoryLocation();
-		location.setUrl(urls.getHttpOk().toString());
+		location.setUrl(urls.getHttpsOk().toString());
 
 		HttpGet request = new HttpGet(location.getUrl());
 		CommonHttpClient client = new CommonHttpClient(location);
@@ -66,7 +67,7 @@ public class CommonHttpResponseTest {
 		response = new CommonHttpResponse(request, clientResponse, monitorThread, monitor);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		if (response != null) {
 			response.release();
@@ -74,32 +75,20 @@ public class CommonHttpResponseTest {
 	}
 
 	@Test
-	@Ignore("No CI Server")
 	public void testCancel() throws Exception {
 		monitor.setCanceled(true);
 		InputStream in = response.getResponseEntityAsStream();
 		monitorThread.processOperations();
-		try {
-			in.read();
-			fail("Expected OperationCancelledException");
-		} catch (OperationCanceledException e) {
-			// ignore
-		}
+		assertThrows(OperationCanceledException.class, () -> in.read());
 	}
 
 	@Test
-	@Ignore("No CI Server")
 	public void testCancelAfterRead() throws Exception {
 		InputStream in = response.getResponseEntityAsStream();
 		in.read();
 		monitor.setCanceled(true);
 		monitorThread.processOperations();
-		try {
-			in.read();
-			fail("Expected OperationCancelledException");
-		} catch (OperationCanceledException e) {
-			// ignore
-		}
+		assertThrows(OperationCanceledException.class, () -> in.read());
 	}
 
 }

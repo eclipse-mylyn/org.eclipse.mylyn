@@ -9,13 +9,17 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.repositories.http.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
@@ -43,18 +47,26 @@ import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpRequestProcessor;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.TestUrl;
+import org.eclipse.mylyn.commons.sdk.util.junit5.EnabledIfCI;
 import org.eclipse.mylyn.internal.commons.repositories.http.core.PollingSslProtocolSocketFactory;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
-@SuppressWarnings("nls")
+@SuppressWarnings({ "nls" })
 public class CommonHttpClientTest {
 
-	@BeforeClass
+	private static final String HOST_URL = TestUrl.DEFAULT.getHttpsOk().toString(); //"https://mylyn.org/secure/index.txt";
+
+	private static final String MYLYN_URL = HOST_URL + "mylyn_idx";
+
+	private static final String SERVICE_URL = MYLYN_URL + "/service";
+
+	@BeforeAll
 	public static void setUpClass() {
 		if (CommonTestUtil.fixProxyConfiguration()) {
 			CommonTestUtil.dumpSystemInfo(System.err);
@@ -62,21 +74,14 @@ public class CommonHttpClientTest {
 	}
 
 	@Test
-	@Ignore
+	@EnabledIfCI
+	@Disabled("Requires authentication that is not available in CI environment") // FIXME
 	public void testCertificateAuthenticationCertificate() throws Exception {
-		if (CommonTestUtil.isCertificateAuthBroken() || CommonTestUtil.isBehindProxy()) {
-			System.err.println(
-					"Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to incompatible JVM");
-			return; // skip test
-		}
-		if (!CommonTestUtil.hasCertificateCredentials()) {
-			System.err.println(
-					"Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to missing credentials");
-			return; // skip test
-		}
+		assumeFalse(CommonTestUtil.isCertificateAuthBroken() || CommonTestUtil.isBehindProxy(), "incompatible JVM"); // TODO is this still an issue with Java 21+?
+		assumeTrue(CommonTestUtil.hasCertificateCredentials(), "missing credentials");
 
 		RepositoryLocation location = new RepositoryLocation();
-		location.setUrl("https://mylyn.org/secure/index.txt");
+		location.setUrl(SERVICE_URL);
 		location.setCredentials(AuthenticationType.CERTIFICATE, CommonTestUtil.getCertificateCredentials());
 
 		HttpGet request = new HttpGet(location.getUrl());
@@ -90,23 +95,14 @@ public class CommonHttpClientTest {
 		}
 	}
 
-	@Test(expected = SSLException.class)
-	@Ignore
+	@Test
+	@EnabledIfCI
 	public void testCertificateAuthenticationCertificateReset() throws Exception {
-		if (CommonTestUtil.isCertificateAuthBroken() || CommonTestUtil.isBehindProxy()) {
-			// bug 369805
-			System.err.println(
-					"Skipped CommonHttpClientTest.testCertificateAuthenticationCertificateReset due to incompatible JVM");
-			throw new SSLException(""); // skip test
-		}
-		if (!CommonTestUtil.hasCertificateCredentials()) {
-			System.err.println(
-					"Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to missing credentials");
-			throw new SSLException(""); // skip test
-		}
+		assumeFalse(CommonTestUtil.isCertificateAuthBroken() || CommonTestUtil.isBehindProxy(), "incompatible JVM"); // TODO is this still an issue with Java 21+?
+		assumeTrue(CommonTestUtil.hasCertificateCredentials(), "missing credentials");
 
 		RepositoryLocation location = new RepositoryLocation();
-		location.setUrl("https://mylyn.org/secure/index.txt");
+		location.setUrl(SERVICE_URL);
 		location.setCredentials(AuthenticationType.CERTIFICATE, CommonTestUtil.getCertificateCredentials());
 
 		HttpGet request = new HttpGet(location.getUrl());
@@ -135,17 +131,13 @@ public class CommonHttpClientTest {
 		}
 	}
 
-	@Test(expected = SSLException.class)
-	@Ignore("No CI Server")
+	@Test
+	@EnabledIfCI
 	public void testCertificateAuthenticationNoCertificate() throws Exception {
-		if (!CommonTestUtil.isHttpsProxyBroken()) {
-			System.err.println(
-					"Skipped CommonHttpClientTest.testCertificateAuthenticationNoCertificate() due to broken https proxy");
-			throw new SSLException(""); // skip test
-		}
+		assumeTrue(CommonTestUtil.isHttpsProxyBroken(), "broken https proxy");
 
 		RepositoryLocation location = new RepositoryLocation();
-		location.setUrl("https://mylyn.org/secure/index.txt");
+		location.setUrl(SERVICE_URL);
 
 		HttpGet request = new HttpGet(location.getUrl());
 		CommonHttpClient client = new CommonHttpClient(location);
@@ -160,9 +152,9 @@ public class CommonHttpClientTest {
 	}
 
 	@Test
-	@Ignore("No CI Server")
+	@EnabledIfCI
 	public void testExecuteGet() throws IOException {
-		RepositoryLocation location = new RepositoryLocation("http://mylyn.org");
+		RepositoryLocation location = new RepositoryLocation(MYLYN_URL);
 		CommonHttpClient client = new CommonHttpClient(location);
 		Integer result = client.executeGet("/", null, new HttpRequestProcessor<Integer>() {
 			@Override
@@ -174,10 +166,10 @@ public class CommonHttpClientTest {
 	}
 
 	@Test
-	@Ignore("No CI Server")
+	@EnabledIfCI
 	public void testGetRequest() throws Exception {
 		RepositoryLocation location = new RepositoryLocation();
-		location.setUrl("http://mylyn.org/");
+		location.setUrl(SERVICE_URL);
 
 		HttpGet request = new HttpGet(location.getUrl());
 		CommonHttpClient client = new CommonHttpClient(location);
@@ -190,10 +182,11 @@ public class CommonHttpClientTest {
 	}
 
 	@Test
-	@Ignore("No CI Server")
+	@EnabledIfCI
+	@Disabled("Requires authentication that is not available in CI environment") // FIXME
 	public void testHttpAuthenticationTypeHttp() throws Exception {
 		RepositoryLocation location = new RepositoryLocation();
-		location.setUrl("http://mylyn.org/");
+		location.setUrl(TestUrl.DEFAULT.getHttpsOk().toString());
 		location.setCredentials(AuthenticationType.HTTP, new UserCredentials("username", "password"));
 
 		HttpGet request = new HttpGet(location.getUrl());
@@ -209,10 +202,11 @@ public class CommonHttpClientTest {
 	}
 
 	@Test
-	@Ignore("No CI Server")
+	@EnabledIfCI
+	@Disabled("Requires authentication that is not available in CI environment") // FIXME
 	public void testHttpAuthenticationTypeRepository() throws Exception {
 		RepositoryLocation location = new RepositoryLocation();
-		location.setUrl("http://mylyn.org/");
+		location.setUrl(TestUrl.DEFAULT.getHttpsOk().toString());
 		location.setCredentials(AuthenticationType.REPOSITORY, new UserCredentials("username", "password"));
 
 		HttpGet request = new HttpGet(location.getUrl());
@@ -240,8 +234,9 @@ public class CommonHttpClientTest {
 	}
 
 	@Test
+	@EnabledIfCI
 	public void testHttpContextPerThread() throws Exception {
-		RepositoryLocation location = new RepositoryLocation("http://mylyn.org/");
+		RepositoryLocation location = new RepositoryLocation(HOST_URL);
 		final CommonHttpClient client = new CommonHttpClient(location);
 		final AtomicReference<HttpContext> otherThreadContext = new AtomicReference<>();
 		Thread t = new Thread() {
@@ -257,7 +252,7 @@ public class CommonHttpClientTest {
 		assertFalse(otherThreadContext.get() == client.getContext());
 	}
 
-	private Scheme setUpDefaultFactory(CommonHttpClient client) {
+	private static Scheme setUpDefaultFactory(CommonHttpClient client) {
 		PollingSslProtocolSocketFactory factory = new PollingSslProtocolSocketFactory(
 				new SslSupport(new TrustManager[] { new TrustAllTrustManager() }, null, null, null));
 		Scheme oldScheme = client.getHttpClient()

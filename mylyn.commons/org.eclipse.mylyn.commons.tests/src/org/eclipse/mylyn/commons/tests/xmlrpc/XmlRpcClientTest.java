@@ -9,50 +9,57 @@
  *
  *     Steffen Pingel - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.xmlrpc;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.commons.xmlrpc.CommonXmlRpcClient;
 import org.eclipse.mylyn.internal.commons.xmlrpc.XmlRpcNoSuchMethodException;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class XmlRpcClientTest extends TestCase {
+public class XmlRpcClientTest {
 
 	private CommonXmlRpcClient client;
 
 	private int port;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		port = XmlRpcTestServer.start();
 		client = new CommonXmlRpcClient(new WebLocation("http://localhost:" + port + "/xmlrpc"));
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		//webServer.shutdown();
 	}
 
+	@Test
 	public void testCall() throws Exception {
 		int i = (Integer) client.call(new NullProgressMonitor(), "Test.identity", 5);
 		assertEquals(5, i);
 	}
 
+	@Test
 	public void testNoSuchMethod() throws Exception {
-		try {
-			Object response = client.call(new NullProgressMonitor(), "Test.noSuchMethod", 5);
-			fail("Expected XmlRpcNoSuchMethodExecption, got " + response);
-		} catch (XmlRpcNoSuchMethodException e) {
-			// expected
-		}
+		AtomicReference<Object> response = new AtomicReference<>();
+		assertThrows(XmlRpcNoSuchMethodException.class,
+				() -> response.set(client.call(new NullProgressMonitor(), "Test.noSuchMethod", 5)),
+				() -> "Expected XmlRpcNoSuchMethodException, got " + response.get());
 	}
 
 }
