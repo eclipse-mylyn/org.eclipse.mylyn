@@ -68,9 +68,21 @@ public class ParagraphBlock extends Block {
 	@Override
 	public void setClosed(boolean closed) {
 		if (closed && !isClosed()) {
-			builder.endBlock();
+			performClosing();
 			builder.characters("\n"); //$NON-NLS-1$
 		}
 		super.setClosed(closed);
+	}
+
+	protected void performClosing() {
+		builder.endBlock();
+	}
+
+	public int getBlockLineCount() {
+		return blockLineCount;
+	}
+
+	protected final void incrementBlockLineCount() {
+		blockLineCount++;
 	}
 }
