@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for hudson.model.Job complex type.
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="hudson.model.Job">
  *   &lt;complexContent>
@@ -115,7 +115,7 @@ public class HudsonModelJob extends HudsonModelAbstractItem {
 	 * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the build property.
 	 * <p>
 	 * For example, to add a new item, do as follows:
-	 * 
+	 *
 	 * <pre>
 	 * getBuild().add(newItem);
 	 * </pre>
@@ -131,7 +131,7 @@ public class HudsonModelJob extends HudsonModelAbstractItem {
 
 	/**
 	 * Gets the value of the color property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelBallColor }
 	 */
 	public HudsonModelBallColor getColor() {
@@ -140,7 +140,7 @@ public class HudsonModelJob extends HudsonModelAbstractItem {
 
 	/**
 	 * Sets the value of the color property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelBallColor }
 	 */
@@ -150,7 +150,7 @@ public class HudsonModelJob extends HudsonModelAbstractItem {
 
 	/**
 	 * Gets the value of the firstBuild property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelRun }
 	 */
 	public HudsonModelRun getFirstBuild() {
@@ -159,7 +159,7 @@ public class HudsonModelJob extends HudsonModelAbstractItem {
 
 	/**
 	 * Sets the value of the firstBuild property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelRun }
 	 */
@@ -174,7 +174,7 @@ public class HudsonModelJob extends HudsonModelAbstractItem {
 	 * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the healthReport property.
 	 * <p>
 	 * For example, to add a new item, do as follows:
-	 * 
+	 *
 	 * <pre>
 	 * getHealthReport().add(newItem);
 	 * </pre>
@@ -218,7 +218,7 @@ public class HudsonModelJob extends HudsonModelAbstractItem {
 
 	/**
 	 * Gets the value of the lastBuild property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelRun }
 	 */
 	public HudsonModelRun getLastBuild() {
@@ -227,7 +227,7 @@ public class HudsonModelJob extends HudsonModelAbstractItem {
 
 	/**
 	 * Sets the value of the lastBuild property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelRun }
 	 */
@@ -237,7 +237,7 @@ public class HudsonModelJob extends HudsonModelAbstractItem {
 
 	/**
 	 * Gets the value of the lastCompletedBuild property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelRun }
 	 */
 	public HudsonModelRun getLastCompletedBuild() {
@@ -246,7 +246,7 @@ public class HudsonModelJob extends HudsonModelAbstractItem {
 
 	/**
 	 * Sets the value of the lastCompletedBuild property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelRun }
 	 */
@@ -256,7 +256,7 @@ public class HudsonModelJob extends HudsonModelAbstractItem {
 
 	/**
 	 * Gets the value of the lastFailedBuild property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelRun }
 	 */
 	public HudsonModelRun getLastFailedBuild() {
@@ -265,7 +265,7 @@ public class HudsonModelJob extends HudsonModelAbstractItem {
 
 	/**
 	 * Sets the value of the lastFailedBuild property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelRun }
 	 */
@@ -275,7 +275,7 @@ public class HudsonModelJob extends HudsonModelAbstractItem {
 
 	/**
 	 * Gets the value of the lastStableBuild property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelRun }
 	 */
 	public HudsonModelRun getLastStableBuild() {
@@ -284,7 +284,7 @@ public class HudsonModelJob extends HudsonModelAbstractItem {
 
 	/**
 	 * Sets the value of the lastStableBuild property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelRun }
 	 */
@@ -294,7 +294,7 @@ public class HudsonModelJob extends HudsonModelAbstractItem {
 
 	/**
 	 * Gets the value of the lastSuccessfulBuild property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelRun }
 	 */
 	public HudsonModelRun getLastSuccessfulBuild() {
@@ -303,7 +303,7 @@ public class HudsonModelJob extends HudsonModelAbstractItem {
 
 	/**
 	 * Sets the value of the lastSuccessfulBuild property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelRun }
 	 */
@@ -332,7 +332,7 @@ public class HudsonModelJob extends HudsonModelAbstractItem {
 	 * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the property property.
 	 * <p>
 	 * For example, to add a new item, do as follows:
-	 * 
+	 *
 	 * <pre>
 	 * getProperty().add(newItem);
 	 * </pre>
@@ -348,7 +348,7 @@ public class HudsonModelJob extends HudsonModelAbstractItem {
 
 	/**
 	 * Gets the value of the queueItem property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelQueueItem }
 	 */
 	public HudsonModelQueueItem getQueueItem() {
@@ -357,7 +357,7 @@ public class HudsonModelJob extends HudsonModelAbstractItem {
 
 	/**
 	 * Sets the value of the queueItem property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelQueueItem }
 	 */
