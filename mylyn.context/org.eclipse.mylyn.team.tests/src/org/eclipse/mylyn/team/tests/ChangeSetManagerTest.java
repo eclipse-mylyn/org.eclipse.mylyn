@@ -49,6 +49,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 
 	private ContextActiveChangeSetManager changeSetManager;
 
+	@Override
 	@BeforeEach
 	void setUp() throws Exception {
 		assertNotNull(IdeUiBridgePlugin.getDefault());
