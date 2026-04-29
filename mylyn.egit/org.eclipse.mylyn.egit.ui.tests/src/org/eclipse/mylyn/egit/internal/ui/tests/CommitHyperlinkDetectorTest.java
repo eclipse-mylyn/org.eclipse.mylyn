@@ -12,8 +12,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.egit.internal.ui.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.Region;
@@ -22,13 +23,10 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylyn.egit.internal.ui.CommitHyperlinkDetector;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
-@RunWith(BlockJUnit4ClassRunner.class)
 public class CommitHyperlinkDetectorTest {
 
 	private static final String OTHER_EXAMPLE_ID = "3de38c8898c74b867cb6f06f7907e0719d9d4c0c";
@@ -159,8 +157,8 @@ public class CommitHyperlinkDetectorTest {
 		textViewer.getDocument().set(text);
 	}
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		detector = new CommitHyperlinkDetector();
 		Shell shell = new Shell();
 		textViewer = new TextViewer(shell, SWT.NONE);

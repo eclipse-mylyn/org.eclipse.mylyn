@@ -7,19 +7,24 @@
  * https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
+ * Contributors:
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.egit.internal.ui.tests;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
 
 /**
  * Simple test to guard against build setup errors such as --release not being effective.
  */
+
+// FIXME Not needed
 public class BreeSmokeTest {
 
 	@Test
