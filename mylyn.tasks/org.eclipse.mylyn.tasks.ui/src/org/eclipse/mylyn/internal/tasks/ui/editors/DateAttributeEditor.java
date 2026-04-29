@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -96,7 +97,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 
 			});
 
-			GridDataFactory.fillDefaults().hint(120, SWT.DEFAULT).grab(false, false).applyTo(datePicker);
+			GridDataFactory.fillDefaults().hint(120, SWT.DEFAULT).grab(true, false).applyTo(datePicker);
 			datePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 			toolkit.adapt(datePicker, false, false);
 

@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -88,8 +89,6 @@ public class PlanningPart extends AbstractLocalEditorPart {
 	private String notesString;
 
 	private RichTextEditor noteEditor;
-
-	private static final int CONTROL_WIDTH = 120;
 
 	private DatePicker dueDatePicker;
 
@@ -225,10 +224,10 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		if (scheduleDatePicker != null && scheduleDatePicker.getScheduledDate() != null) {
 			if (getTask().getScheduledForDate() == null
 					|| getTask().getScheduledForDate() != null
-							&& !scheduleDatePicker.getScheduledDate().equals(getTask().getScheduledForDate())
+					&& !scheduleDatePicker.getScheduledDate().equals(getTask().getScheduledForDate())
 					|| getTask().getScheduledForDate() instanceof DayDateRange) {
 				TasksUiPlugin.getTaskActivityManager()
-						.setScheduledFor(getTask(), scheduleDatePicker.getScheduledDate());
+				.setScheduledFor(getTask(), scheduleDatePicker.getScheduledDate());
 				getTask().setReminded(false);
 			}
 		} else {
@@ -342,7 +341,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		noteEditor.setText(notesString);
 
 		noteEditor.getControl()
-				.setLayoutData(EditorUtil.getTextControlLayoutData(page, noteEditor.getViewer().getControl(), true));
+		.setLayoutData(EditorUtil.getTextControlLayoutData(page, noteEditor.getViewer().getControl(), true));
 		noteEditor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		noteEditor.setReadOnly(false);
 		if (textSupport != null) {
@@ -388,8 +387,8 @@ public class PlanningPart extends AbstractLocalEditorPart {
 			noteEditor.setText(notesString);
 			if (noteEditor.getViewer() != null) {
 				noteEditor.getViewer()
-						.getTextWidget()
-						.setForeground(composite.getShell().getDisplay().getSystemColor(SWT.COLOR_GRAY));
+				.getTextWidget()
+				.setForeground(composite.getShell().getDisplay().getSystemColor(SWT.COLOR_GRAY));
 			}
 		}
 	}
@@ -440,7 +439,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 						Messages.TaskEditorPlanningPart_Confirm_Activity_Time_Deletion,
 						Messages.TaskEditorPlanningPart_Do_you_wish_to_reset_your_activity_time_on_this_task_)) {
 					MonitorUi.getActivityContextManager()
-							.removeActivityTime(getTask().getHandleIdentifier(), 0l, System.currentTimeMillis());
+					.removeActivityTime(getTask().getHandleIdentifier(), 0l, System.currentTimeMillis());
 				}
 			}
 		});
@@ -489,7 +488,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		Composite composite = createComposite(parent, 1, toolkit);
 
 		dueDatePicker = new DatePicker(composite, SWT.FLAT, DatePicker.LABEL_CHOOSE, true, 0);
-		GridDataFactory.fillDefaults().hint(CONTROL_WIDTH, SWT.DEFAULT).applyTo(dueDatePicker);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(dueDatePicker);
 		dueDatePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		dueDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		if (getTask().getDueDate() != null) {
@@ -550,7 +549,6 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		Composite composite = createComposite(parent, 2, toolkit);
 
 		scheduleDatePicker = new ScheduleDatePicker(composite, getTask(), SWT.FLAT);
-		GridDataFactory.fillDefaults().hint(CONTROL_WIDTH, SWT.DEFAULT).applyTo(scheduleDatePicker);
 		scheduleDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		toolkit.adapt(scheduleDatePicker, false, false);
 		toolkit.paintBordersFor(composite);
@@ -632,7 +630,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 				if (date != null) {
 					scheduledLabel.setText(getLabel(date));
 					scheduledLabel
-							.setToolTipText(NLS.bind(Messages.PlanningPart_Scheduled_for_X_Tooltip, date.toString()));
+					.setToolTipText(NLS.bind(Messages.PlanningPart_Scheduled_for_X_Tooltip, date.toString()));
 				} else {
 					scheduledLabel.setText(""); //$NON-NLS-1$
 					scheduledLabel.setToolTipText(null);
