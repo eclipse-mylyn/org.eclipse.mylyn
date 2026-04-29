@@ -45,6 +45,7 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
 
 	private TreeViewer viewer;
 
+	@Override
 	@BeforeEach
 	void setUp() throws Exception {
 		view = PackageExplorerPart.openInActivePerspective();

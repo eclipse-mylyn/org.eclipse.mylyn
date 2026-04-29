@@ -35,12 +35,14 @@ public class TypeHistoryManagerTest extends AbstractJavaContextTest {
 
 	private TypeHistoryManager manager;
 
+	@Override
 	@BeforeEach
 	void setUp() throws Exception {
 		manager = new TypeHistoryManager();
 //		ContextCorePlugin.getContextManager().addListener(manager);
 	}
 
+	@Override
 	@AfterEach
 	protected void tearDown() throws Exception {
 //		ContextCorePlugin.getContextManager().removeListener(manager);

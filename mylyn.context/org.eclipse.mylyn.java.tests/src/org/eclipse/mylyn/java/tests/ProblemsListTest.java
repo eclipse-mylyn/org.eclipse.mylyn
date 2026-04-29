@@ -13,8 +13,6 @@
 
 package org.eclipse.mylyn.java.tests;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;

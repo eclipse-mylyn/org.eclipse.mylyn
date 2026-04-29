@@ -70,6 +70,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 
 	private LocalContextStore contextStore;
 
+	@Override
 	@BeforeEach
 	void setUp() throws Exception {
 		explorer = PackageExplorerPart.openInActivePerspective();
