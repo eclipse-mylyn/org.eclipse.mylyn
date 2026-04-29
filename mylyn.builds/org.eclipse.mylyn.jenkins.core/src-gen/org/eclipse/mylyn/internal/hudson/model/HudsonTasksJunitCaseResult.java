@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for hudson.tasks.junit.CaseResult complex type.
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="hudson.tasks.junit.CaseResult">
  *   &lt;complexContent>
@@ -94,7 +94,7 @@ public class HudsonTasksJunitCaseResult extends HudsonTasksTestTestResult {
 
 	/**
 	 * Gets the value of the className property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getClassName() {
@@ -103,7 +103,7 @@ public class HudsonTasksJunitCaseResult extends HudsonTasksTestTestResult {
 
 	/**
 	 * Sets the value of the className property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
@@ -113,7 +113,7 @@ public class HudsonTasksJunitCaseResult extends HudsonTasksTestTestResult {
 
 	/**
 	 * Gets the value of the duration property.
-	 * 
+	 *
 	 * @return possible object is {@link Object }
 	 */
 	public Object getDuration() {
@@ -122,7 +122,7 @@ public class HudsonTasksJunitCaseResult extends HudsonTasksTestTestResult {
 
 	/**
 	 * Sets the value of the duration property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link Object }
 	 */
@@ -132,7 +132,7 @@ public class HudsonTasksJunitCaseResult extends HudsonTasksTestTestResult {
 
 	/**
 	 * Gets the value of the errorDetails property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getErrorDetails() {
@@ -141,7 +141,7 @@ public class HudsonTasksJunitCaseResult extends HudsonTasksTestTestResult {
 
 	/**
 	 * Sets the value of the errorDetails property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
@@ -151,7 +151,7 @@ public class HudsonTasksJunitCaseResult extends HudsonTasksTestTestResult {
 
 	/**
 	 * Gets the value of the errorStackTrace property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getErrorStackTrace() {
@@ -160,7 +160,7 @@ public class HudsonTasksJunitCaseResult extends HudsonTasksTestTestResult {
 
 	/**
 	 * Sets the value of the errorStackTrace property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
@@ -184,7 +184,7 @@ public class HudsonTasksJunitCaseResult extends HudsonTasksTestTestResult {
 
 	/**
 	 * Gets the value of the name property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getName() {
@@ -193,7 +193,7 @@ public class HudsonTasksJunitCaseResult extends HudsonTasksTestTestResult {
 
 	/**
 	 * Sets the value of the name property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
@@ -217,7 +217,7 @@ public class HudsonTasksJunitCaseResult extends HudsonTasksTestTestResult {
 
 	/**
 	 * Gets the value of the status property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonTasksJunitCaseResultStatus }
 	 */
 	public HudsonTasksJunitCaseResultStatus getStatus() {
@@ -226,7 +226,7 @@ public class HudsonTasksJunitCaseResult extends HudsonTasksTestTestResult {
 
 	/**
 	 * Sets the value of the status property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonTasksJunitCaseResultStatus }
 	 */
@@ -236,7 +236,7 @@ public class HudsonTasksJunitCaseResult extends HudsonTasksTestTestResult {
 
 	/**
 	 * Gets the value of the stderr property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getStderr() {
@@ -245,7 +245,7 @@ public class HudsonTasksJunitCaseResult extends HudsonTasksTestTestResult {
 
 	/**
 	 * Sets the value of the stderr property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
@@ -255,7 +255,7 @@ public class HudsonTasksJunitCaseResult extends HudsonTasksTestTestResult {
 
 	/**
 	 * Gets the value of the stdout property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getStdout() {
@@ -264,7 +264,7 @@ public class HudsonTasksJunitCaseResult extends HudsonTasksTestTestResult {
 
 	/**
 	 * Sets the value of the stdout property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
