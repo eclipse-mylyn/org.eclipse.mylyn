@@ -84,8 +84,6 @@ import com.google.gson.reflect.TypeToken;
 
 public class GerritClient212 extends GerritClient29 {
 
-	private final String SELF_ACCOUNT_ID = "self"; //$NON-NLS-1$
-
 	protected GerritClient212(TaskRepository repository, Version version) {
 		super(repository, version);
 	}
