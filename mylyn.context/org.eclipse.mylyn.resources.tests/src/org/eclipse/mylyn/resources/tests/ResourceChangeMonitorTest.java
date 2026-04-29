@@ -102,6 +102,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 
 	private IFile file;
 
+	@Override
 	@BeforeEach
 	void setUp() throws Exception {
 		changeMonitor = new ResourceChangeMonitor();
@@ -129,6 +130,7 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 
 	}
 
+	@Override
 	@AfterEach
 	void tearDown() throws Exception {
 		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(false);
