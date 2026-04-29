@@ -52,6 +52,7 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("nls")
 public class ResourceContextTest extends AbstractResourceContextTest {
 
+	@Override
 	@BeforeEach
 	void setUp() throws Exception {
 //		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(true);
@@ -64,6 +65,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		.setValue(ResourcesUiPreferenceInitializer.PREF_MODIFIED_DATE_EXCLUSIONS, false);
 	}
 
+	@Override
 	@AfterEach
 	void tearDown() throws Exception {
 		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(false);

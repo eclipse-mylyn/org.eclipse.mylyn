@@ -45,6 +45,7 @@ public class ResourceModificationDateExclusionStrategyTest extends AbstractResou
 
 	private IFile file;
 
+	@Override
 	@SuppressWarnings("deprecation")
 	@BeforeEach
 	void setUp() throws Exception {
@@ -85,6 +86,7 @@ public class ResourceModificationDateExclusionStrategyTest extends AbstractResou
 		manager.internalActivateContext(context);
 	}
 
+	@Override
 	@AfterEach
 	void tearDown() throws Exception {
 		exclusionStrategy.dispose();

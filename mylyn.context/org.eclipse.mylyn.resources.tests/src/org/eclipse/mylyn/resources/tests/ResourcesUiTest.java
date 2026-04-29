@@ -40,6 +40,7 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("nls")
 public class ResourcesUiTest extends AbstractResourceContextTest {
 
+	@Override
 	@BeforeEach
 	void setUp() throws Exception {
 //		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(true);
