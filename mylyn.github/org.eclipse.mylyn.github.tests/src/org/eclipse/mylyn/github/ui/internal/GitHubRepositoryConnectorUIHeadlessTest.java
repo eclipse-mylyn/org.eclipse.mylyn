@@ -14,16 +14,17 @@
  *******************************************************************************/
 package org.eclipse.mylyn.github.ui.internal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.ui.issue.IssueConnectorUi;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Headless test for {@link IssueConnectorUi}
@@ -37,8 +38,8 @@ public class GitHubRepositoryConnectorUIHeadlessTest {
 
 	private TaskRepository repository;
 
-	@Before
-	public void before() {
+	@BeforeEach
+	void before() {
 		connectorUI = new IssueConnectorUi();
 		repository = new TaskRepository(GitHub.CONNECTOR_KIND, GitHub.createGitHubUrl("foo", "bar")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
