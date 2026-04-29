@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -13,6 +13,10 @@
 
 package org.eclipse.mylyn.gerrit.tests.core.client.rest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -20,14 +24,13 @@ import java.util.Map;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ProjectInfo;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.gson.reflect.TypeToken;
 
-import junit.framework.TestCase;
 
 @SuppressWarnings("nls")
-public class ProjectInfoTest extends TestCase {
+public class ProjectInfoTest {
 	@Test
 	public void testFromEmptyJson() throws Exception {
 		ProjectInfo projectInfo = parseFile("testdata/EmptyWithMagic.json");

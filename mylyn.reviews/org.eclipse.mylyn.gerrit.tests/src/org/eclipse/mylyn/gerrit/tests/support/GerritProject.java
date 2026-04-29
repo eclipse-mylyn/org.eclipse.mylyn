@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -32,7 +32,6 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
-import org.junit.Test;
 
 /**
  * @author Steffen Pingel
@@ -42,20 +41,6 @@ import org.junit.Test;
 public class GerritProject {
 
 	public static final String PROP_ALTERNATE_PUSH = "org.eclipse.mylyn.gerrit.tests.alternate.push";
-
-	public static class GerritProjectTest {
-
-		@Test
-		public void testCommitAndPushFile() throws Exception {
-			GerritProject project = new GerritProject(GerritFixture.current());
-			try {
-				project.commitAndPushFile("test");
-			} finally {
-				System.err.println(project.getFolder());
-			}
-		}
-
-	}
 
 	public static final String PROJECT = "org.eclipse.mylyn.test"; //$NON-NLS-1$
 

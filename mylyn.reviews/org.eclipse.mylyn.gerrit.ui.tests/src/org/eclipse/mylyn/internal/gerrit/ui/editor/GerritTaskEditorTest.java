@@ -13,7 +13,8 @@
 
 package org.eclipse.mylyn.internal.gerrit.ui.editor;
 
-import static org.junit.Assert.assertFalse;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,9 +33,9 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.PlatformUI;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class GerritTaskEditorTest {
@@ -43,16 +44,16 @@ public class GerritTaskEditorTest {
 
 	private TasksUiLogListener listener;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "url");
 		TasksUi.getRepositoryManager().addRepository(repository);
 		task = TasksUi.getRepositoryModel().createTask(repository, "1");
 		addLogListener();
 	}
 
-	@After
-	public void tearDown() {
+	@AfterEach
+	void tearDown() {
 		removeLogListener();
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
 	}

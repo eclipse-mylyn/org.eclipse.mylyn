@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -15,14 +15,16 @@ package org.eclipse.mylyn.gerrit.tests.core.client;
 
 import static org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion.isVersion2112OrLater;
 import static org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion.parseGerritVersion;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.osgi.framework.Version;
 
-import junit.framework.TestCase;
-
 @SuppressWarnings("nls")
-public class GerritVersionTest extends TestCase {
+public class GerritVersionTest {
 
 	@Test
 	public void testParse_null() throws Exception {

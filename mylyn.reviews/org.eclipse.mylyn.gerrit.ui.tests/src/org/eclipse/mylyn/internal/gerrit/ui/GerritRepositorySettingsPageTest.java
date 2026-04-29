@@ -13,22 +13,23 @@
 
 package org.eclipse.mylyn.internal.gerrit.ui;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class GerritRepositorySettingsPageTest {
 
 	private GerritRepositorySettingsPage page;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://localhost"); //$NON-NLS-1$
 		page = new GerritRepositorySettingsPage(repository);

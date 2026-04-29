@@ -9,23 +9,23 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     Guy Perron 423242: Add ability to edit comment from compare navigator popup
-
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.reviews.tests.ui;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.eclipse.mylyn.reviews.tests.util.MockReviewBehavior;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.mylyn.reviews.ui.ReviewUi;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  * @author Guy Perron
  */
-public class ReviewUiTest extends TestCase {
+public class ReviewUiTest {
 
 	@Test
 	public void testGetActiveReview() {

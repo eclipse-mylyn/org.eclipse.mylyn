@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -12,6 +12,12 @@
  *******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.tests.ui;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.util.concurrent.TimeUnit;
 
@@ -21,6 +27,7 @@ import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.commons.workbench.EditorHandle;
 import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
+import org.eclipse.mylyn.gerrit.tests.AbstractGerritFixtureTest;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -29,28 +36,36 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class GerritUrlHandlerTest extends TestCase {
+@Disabled("No gerrit instance available")
+public class GerritUrlHandlerTest extends AbstractGerritFixtureTest {
+	@BeforeEach
+	void skipIfExcluded() {
+		assumeFalse(fixture.isExcluded(), "Fixture is excluded");
+	}
 
 	private IWorkbenchPage activePage;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		assertNotNull(activePage);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		TestFixture.resetTaskListAndRepositories();
 	}
 
+	@Test
 	public void testOpenUrl() throws Exception {
 		// needs to be a repository that is not protected by HTTP auth to avoid browser popup in case of test failure
 		if (!GerritFixture.current().supportsAnonymousAccess()) {
@@ -60,7 +75,7 @@ public class GerritUrlHandlerTest extends TestCase {
 		TaskRepository repository = GerritFixture.current().singleRepository();
 		repository.setCredentials(AuthenticationType.REPOSITORY, null, false);
 		EditorHandle handler = BrowserUtil.openUrl(activePage, repository.getUrl() + "/1", 0); //$NON-NLS-1$
-		assertNull("Expected an editor instance, got a browser instance", handler.getAdapter(IWebBrowser.class));
+		assertNull(handler.getAdapter(IWebBrowser.class), "Expected an editor instance, got a browser instance");
 
 		long startTime = System.currentTimeMillis();
 		Display display = PlatformUI.getWorkbench().getDisplay();
@@ -69,8 +84,8 @@ public class GerritUrlHandlerTest extends TestCase {
 				if (handler.await(500, TimeUnit.MILLISECONDS)) {
 					break;
 				}
-				assertTrue("Expected editor did not open within 30 seconds",
-						System.currentTimeMillis() - startTime < 30 * 1000);
+				assertTrue(System.currentTimeMillis() - startTime < 30 * 1000,
+						"Expected editor did not open within 30 seconds");
 			}
 		}
 
@@ -78,6 +93,7 @@ public class GerritUrlHandlerTest extends TestCase {
 		assertEquals(TaskEditor.class, activePage.getActiveEditor().getClass());
 	}
 
+	@Test
 	public void testOpenUrlInvalid() throws Exception {
 		if (!PlatformUiUtil.hasInternalBrowser()) {
 			System.err.println("Skipping GerritUrlHandlerTest.testOpenUrlInvalid() due to lack of browser support");
@@ -90,7 +106,7 @@ public class GerritUrlHandlerTest extends TestCase {
 		// needs to be a repository that is not protected by HTTP auth to avoid browser popup
 		TaskRepository repository = GerritFixture.GERRIT_NON_EXISTANT.singleRepository();
 		EditorHandle handler = BrowserUtil.openUrl(activePage, repository.getUrl() + "/abc", 0); //$NON-NLS-1$
-		assertNotNull("Expected a browser instance, got: " + handler.getClass(), handler.getAdapter(IWebBrowser.class));
+		assertNotNull(handler.getAdapter(IWebBrowser.class), "Expected a browser instance, got: " + handler.getClass());
 		assertEquals(Status.OK_STATUS, handler.getStatus());
 	}
 

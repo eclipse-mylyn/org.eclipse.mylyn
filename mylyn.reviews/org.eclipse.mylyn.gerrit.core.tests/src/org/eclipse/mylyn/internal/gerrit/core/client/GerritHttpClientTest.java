@@ -15,8 +15,9 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.inOrder;
@@ -41,11 +42,11 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.JsonEntity;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.Request;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.Request.HttpMethod;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -55,7 +56,7 @@ import com.google.gson.reflect.TypeToken;
  * @author Christian Trutz
  */
 @SuppressWarnings("nls")
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class GerritHttpClientTest {
 	public class TestGerritHttpClient extends GerritHttpClient {
 		private final int code;
@@ -91,34 +92,36 @@ public class GerritHttpClientTest {
 	/**
 	 * Test {@link GerritHttpClient} constructor with {@code null} argument.
 	 */
-	@Test(expected = AssertionFailedException.class)
+	@Test
 	public void constructorNull() {
-		new GerritHttpClient((AbstractWebLocation) null, GerritCapabilities.MAXIMUM_SUPPORTED_VERSION);
+		assertThrows(AssertionFailedException.class,
+				() -> new GerritHttpClient((AbstractWebLocation) null, GerritCapabilities.MAXIMUM_SUPPORTED_VERSION));
 	}
 
 	/**
 	 * Test {@link GerritHttpClient#postJsonRequest(String, JsonEntity, IProgressMonitor)} with {@code null} service URI argument.
 	 */
-	@Test(expected = AssertionFailedException.class)
+	@Test
 	public void postJsonRequestNullServiceUri() throws IOException, GerritException {
 		GerritHttpClient gerritHttpClient = new GerritHttpClient(abstractWebLocation,
 				GerritCapabilities.MAXIMUM_SUPPORTED_VERSION);
-		gerritHttpClient.postJsonRequest(null, new JsonEntity() {
-			@Override
-			public String getContent() {
-				return "[]"; //$NON-NLS-1$
-			}
-		}, progressMonitor);
+		assertThrows(AssertionFailedException.class, () -> gerritHttpClient.postJsonRequest(null, new JsonEntity() {
+					@Override
+					public String getContent() {
+						return "[]"; //$NON-NLS-1$
+					}
+				}, progressMonitor));
 	}
 
 	/**
 	 * Test {@link GerritHttpClient#postJsonRequest(String, JsonEntity, IProgressMonitor)} with {@code null} {@link JsonEntity} argument.
 	 */
-	@Test(expected = AssertionFailedException.class)
+	@Test
 	public void postJsonRequestNullJsonEntity() throws IOException, GerritException {
 		GerritHttpClient gerritHttpClient = new GerritHttpClient(abstractWebLocation,
 				GerritCapabilities.MAXIMUM_SUPPORTED_VERSION);
-		gerritHttpClient.postJsonRequest("not null", null, progressMonitor); //$NON-NLS-1$
+		assertThrows(AssertionFailedException.class,
+				() -> gerritHttpClient.postJsonRequest("not null", null, progressMonitor)); //$NON-NLS-1$
 	}
 
 	@Test

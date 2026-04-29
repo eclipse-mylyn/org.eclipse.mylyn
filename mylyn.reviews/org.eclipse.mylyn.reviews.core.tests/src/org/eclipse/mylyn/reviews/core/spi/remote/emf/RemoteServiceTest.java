@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteConsumer;
 import org.eclipse.mylyn.reviews.core.spi.remote.JobRemoteService;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Miles Parker

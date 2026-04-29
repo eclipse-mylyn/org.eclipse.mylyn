@@ -14,8 +14,8 @@
 
 package org.eclipse.mylyn.internal.gerrit.ui;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -40,15 +40,15 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 //FIXME: AF: enable tests
 //https://github.com/eclipse-mylyn/org.eclipse.mylyn.reviews/issues/5
-@Ignore
+@Disabled
 @SuppressWarnings({ "nls", "restriction" })
 public class GerritUrlHandlerTest {
 

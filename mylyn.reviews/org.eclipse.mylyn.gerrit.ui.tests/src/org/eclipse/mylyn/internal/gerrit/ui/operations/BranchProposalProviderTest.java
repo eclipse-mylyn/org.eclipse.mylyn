@@ -8,19 +8,22 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.ui.operations;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.eclipse.jface.fieldassist.IContentProposal;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class BranchProposalProviderTest {
@@ -29,19 +32,19 @@ public class BranchProposalProviderTest {
 
 	private BranchProposalProvider provider;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		setUpProvider("a", "b", "c");
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testGetProposalsNullContents() {
-		provider.getProposals(null, 0);
+		assertThrows(IllegalArgumentException.class, () -> provider.getProposals(null, 0));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testGetProposalsNegativeCursorPosition() {
-		provider.getProposals("", -1);
+		assertThrows(IllegalArgumentException.class, () -> provider.getProposals("", -1));
 	}
 
 	@Test

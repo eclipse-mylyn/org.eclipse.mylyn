@@ -9,15 +9,18 @@
  *
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Sascha Scholz (SAP) - improvements
+ *      See git history
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mikael Kober

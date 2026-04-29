@@ -14,26 +14,19 @@ package org.eclipse.mylyn.reviews.tests;
 
 import org.eclipse.mylyn.reviews.spi.edit.remote.AbstractRemoteEditFactoryProviderTest;
 import org.eclipse.mylyn.reviews.tests.ui.ReviewAnnotationModelTest;
+import org.eclipse.mylyn.reviews.tests.ui.ReviewColumnLabelProviderTest;
 import org.eclipse.mylyn.reviews.tests.ui.ReviewCompareAnnotationSupportTest;
 import org.eclipse.mylyn.reviews.tests.ui.ReviewUiTest;
 import org.eclipse.mylyn.reviews.tests.ui.UiDataLocatorTest;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Steffen Pingel
  */
+@Suite
+@SelectClasses({ ReviewUiTest.class, UiDataLocatorTest.class, AbstractRemoteEditFactoryProviderTest.class,
+		ReviewAnnotationModelTest.class, ReviewCompareAnnotationSupportTest.class,
+		ReviewColumnLabelProviderTest.class })
 public class AllReviewsTests {
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite(AllReviewsTests.class.getName());
-		suite.addTestSuite(ReviewUiTest.class);
-		suite.addTestSuite(UiDataLocatorTest.class);
-		suite.addTestSuite(AbstractRemoteEditFactoryProviderTest.class);
-		suite.addTestSuite(ReviewAnnotationModelTest.class);
-		suite.addTestSuite(ReviewCompareAnnotationSupportTest.class);
-		return suite;
-	}
-
 }

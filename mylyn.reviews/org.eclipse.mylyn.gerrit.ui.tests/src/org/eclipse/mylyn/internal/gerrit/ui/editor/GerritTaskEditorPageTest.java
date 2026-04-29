@@ -15,6 +15,9 @@ package org.eclipse.mylyn.internal.gerrit.ui.editor;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -43,11 +46,11 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.handlers.IHandlerService;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
-public class GerritTaskEditorPageTest extends TestCase {
+public class GerritTaskEditorPageTest {
 
 	private static class TestGerritTaskEditorPage extends GerritTaskEditorPage {
 
@@ -89,12 +92,13 @@ public class GerritTaskEditorPageTest extends TestCase {
 
 	private ArrayList<TaskEditorPartDescriptor> descriptors;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		page = new TestGerritTaskEditorPage();
 		descriptors = new ArrayList<>(page.createPartDescriptors());
 	}
 
+	@Test
 	public void testCreatePartDescriptorsCustomOrder() {
 		List<Class<?>> partClasses = List.copyOf(descriptors.subList(descriptors.size() - 4, descriptors.size())
 				.stream()
@@ -103,9 +107,10 @@ public class GerritTaskEditorPageTest extends TestCase {
 		assertEquals(List.of(GerritReviewDetailSection.class, PatchSetSection.class, TaskEditorCommentPart.class,
 				TaskEditorNewCommentPart.class), partClasses);
 		List<String> ids = descriptors.stream().map(TaskEditorPartDescriptor::getId).collect(Collectors.toList());
-		assertTrue("Missing descriptors. Found " + ids, descriptors.size() >= 7);
+		assertTrue(descriptors.size() >= 7, "Missing descriptors. Found " + ids);
 	}
 
+	@Test
 	public void testCreateAttributesSectionOverlayAttributes() {
 		TaskEditorPartDescriptor descriptor = findById(descriptors, AbstractTaskEditorPage.ID_PART_ATTRIBUTES).get();
 		AbstractTaskEditorPart part = descriptor.createPart();
@@ -118,6 +123,7 @@ public class GerritTaskEditorPageTest extends TestCase {
 		assertEquals(GerritQueryResultSchema.getDefault().BRANCH.getKey(), overlayAttributes.get(1).getId());
 	}
 
+	@Test
 	public void testRemoveUnneededSections() {
 		Optional<TaskEditorPartDescriptor> descriptor = findByPath(descriptors, AbstractTaskEditorPage.PATH_ACTIONS);
 		assertFalse(descriptor.isPresent());
@@ -135,6 +141,7 @@ public class GerritTaskEditorPageTest extends TestCase {
 		return descriptors.stream().filter(descriptor -> descriptor.getId().equals(id)).findFirst();
 	}
 
+	@Test
 	public void testCreatePersonAttribute() throws Exception {
 		TaskAttribute assigneeAttribute = page.getModel()
 				.getTaskData()

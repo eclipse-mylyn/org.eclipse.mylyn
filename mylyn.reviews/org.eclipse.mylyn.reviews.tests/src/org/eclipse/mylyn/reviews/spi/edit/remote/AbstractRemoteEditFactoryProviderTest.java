@@ -29,7 +29,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
@@ -43,17 +42,15 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.mylyn.reviews.core.spi.remote.AbstractDataLocator;
 import org.eclipse.mylyn.reviews.core.spi.remote.JobRemoteService;
-import org.junit.Before;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Miles Parker
  */
 
 @SuppressWarnings("nls")
-public class AbstractRemoteEditFactoryProviderTest extends TestCase {
+public class AbstractRemoteEditFactoryProviderTest { //XXX why abstract? Not used by any classes
 
 	class TestEditFactoryProvider extends AbstractRemoteEditFactoryProvider<EPackage, EClass> {
 		public TestEditFactoryProvider() {
@@ -89,8 +86,7 @@ public class AbstractRemoteEditFactoryProviderTest extends TestCase {
 		}
 	};
 
-	@Override
-	@Before
+	@BeforeEach
 	protected void setUp() throws Exception {
 		File rootDir = new File(testDataLocator.getModelPath().removeLastSegments(1).toPortableString());
 		FileUtils.deleteDirectory(rootDir);
@@ -234,7 +230,7 @@ public class AbstractRemoteEditFactoryProviderTest extends TestCase {
 		provider.setService(new JobRemoteService());
 		String osString = testSpaceDataLocator.getModelPath().toOSString();
 		assertThat(osString.endsWith("RemoteEditFactoryTest Spaces"), is(true));
-		String spacesOsString = StringUtils.replace(osString, " ", "%20");
+		String spacesOsString = osString.replace(" ", "%20");
 		assertThat(spacesOsString.endsWith("RemoteEditFactoryTest%20Spaces"), is(true));
 
 		String filePath = osString + File.separator + "Container" + File.separator + "EClass" + File.separator

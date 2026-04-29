@@ -16,6 +16,7 @@ package org.eclipse.mylyn.reviews.tests.ui;
 
 import static org.eclipse.mylyn.internal.reviews.ui.compare.ReviewCompareAnnotationSupport.Side.LEFT_SIDE;
 import static org.eclipse.mylyn.internal.reviews.ui.compare.ReviewCompareAnnotationSupport.Side.RIGHT_SIDE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
@@ -26,25 +27,23 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.mylyn.internal.reviews.ui.compare.Direction;
 import org.eclipse.mylyn.internal.reviews.ui.compare.ReviewCompareAnnotationSupport;
 import org.eclipse.mylyn.internal.reviews.ui.compare.ReviewCompareAnnotationSupport.Side;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-
-import junit.framework.TestCase;
 
 /**
  * @author Guy Perron
  */
 @SuppressWarnings("restriction")
-public class ReviewCompareAnnotationSupportTest extends TestCase {
+public class ReviewCompareAnnotationSupportTest {
 
 	@Spy
 	private final ReviewCompareAnnotationSupport rcaSupportspy = new ReviewCompareAnnotationSupport(
 			mock(ListViewer.class));
 
-	@Override
-	public void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		doNothing().when(rcaSupportspy)
 		.moveToAnnotation((MergeSourceViewer) any(), (MergeSourceViewer) any(), (Position) any());
