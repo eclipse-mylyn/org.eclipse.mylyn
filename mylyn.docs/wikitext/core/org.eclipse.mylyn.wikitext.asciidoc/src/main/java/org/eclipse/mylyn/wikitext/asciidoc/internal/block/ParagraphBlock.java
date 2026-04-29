@@ -26,7 +26,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.Block;
  */
 public class ParagraphBlock extends Block {
 
-	private int blockLineCount = 0;
+	protected int blockLineCount = 0;
 
 	@Override
 	public boolean canStart(String line, int lineOffset) {
@@ -68,9 +68,13 @@ public class ParagraphBlock extends Block {
 	@Override
 	public void setClosed(boolean closed) {
 		if (closed && !isClosed()) {
-			builder.endBlock();
+			performClosing();
 			builder.characters("\n"); //$NON-NLS-1$
 		}
 		super.setClosed(closed);
+	}
+
+	protected void performClosing() {
+		builder.endBlock();
 	}
 }
