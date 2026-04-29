@@ -54,6 +54,7 @@ public class FocusViewActionTest extends AbstractJavaContextTest {
 
 	private FocusOutlineAction action;
 
+	@Override
 	@BeforeEach
 	void setUp() throws Exception {
 		view = UiTestUtil.openView(FocusOutlineAction.ID_CONTENT_OUTLINE);

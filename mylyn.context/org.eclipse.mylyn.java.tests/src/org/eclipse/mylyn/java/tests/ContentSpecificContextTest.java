@@ -13,8 +13,6 @@
 
 package org.eclipse.mylyn.java.tests;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.sdk.util.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;

@@ -48,6 +48,7 @@ public class InterestFilterTest extends AbstractJavaContextTest {
 
 	private AbstractFocusViewAction applyAction;
 
+	@Override
 	@BeforeEach
 	void setUp() throws Exception {
 		explorer = PackageExplorerPart.openInActivePerspective();

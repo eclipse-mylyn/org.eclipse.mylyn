@@ -45,12 +45,14 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("nls")
 public class ResourceStructureMappingTest extends AbstractJavaContextTest {
 
+	@Override
 	@BeforeEach
 	void setUp() throws Exception {
 		// make sure some part is active
 		IdeUiUtil.getNavigatorFromActivePage();
 	}
 
+	@Override
 	@AfterEach
 	void tearDown() throws Exception {
 		IWorkingSetManager workingSetManager = PlatformUI.getWorkbench().getWorkingSetManager();

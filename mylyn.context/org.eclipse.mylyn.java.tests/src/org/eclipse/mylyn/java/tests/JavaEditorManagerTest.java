@@ -60,6 +60,7 @@ public class JavaEditorManagerTest extends AbstractJavaContextTest {
 
 	private IViewPart view;
 
+	@Override
 	@BeforeEach
 	void setUp() throws Exception {
 		page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -77,6 +78,7 @@ public class JavaEditorManagerTest extends AbstractJavaContextTest {
 		UiTestUtil.closeAllEditors();
 	}
 
+	@Override
 	@AfterEach
 	void tearDown() throws Exception {
 		UiTestUtil.closeAllEditors();

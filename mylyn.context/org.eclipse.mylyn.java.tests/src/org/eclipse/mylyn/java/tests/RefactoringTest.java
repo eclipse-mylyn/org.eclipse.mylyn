@@ -42,6 +42,7 @@ public class RefactoringTest extends AbstractJavaContextTest {
 
 	private IViewPart view;
 
+	@Override
 	@BeforeEach
 	void setUp() throws Exception {
 		view = PackageExplorerPart.openInActivePerspective();

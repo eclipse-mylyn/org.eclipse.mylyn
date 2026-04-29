@@ -69,6 +69,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 
 	private ResourceInteractionMonitor resourceMonitor;
 
+	@Override
 	@BeforeEach
 	void setUp() throws Exception {
 		javaMethod = type1.createMethod("void testDecrement() { }", null, true, null);
@@ -79,6 +80,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		resourceMonitor = new ResourceInteractionMonitor();
 	}
 
+	@Override
 	@AfterEach
 	void tearDown() throws Exception {
 		monitor.dispose();
