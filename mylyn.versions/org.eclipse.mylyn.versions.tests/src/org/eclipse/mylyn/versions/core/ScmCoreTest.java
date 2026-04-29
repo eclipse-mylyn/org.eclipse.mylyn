@@ -13,8 +13,10 @@
 
 package org.eclipse.mylyn.versions.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,8 +33,7 @@ import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.versions.core.spi.ScmConnector;
 import org.eclipse.mylyn.versions.tests.support.MockRepositoryProvider;
 import org.eclipse.mylyn.versions.tests.support.MockScmConnector;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
@@ -49,7 +50,7 @@ public class ScmCoreTest {
 				return;
 			}
 		}
-		Assert.fail("Expected MockScmConnector in " + connectors.toString());
+		fail("Expected MockScmConnector in " + connectors.toString());
 	}
 
 	@Test
