@@ -18,6 +18,12 @@
 
 package org.eclipse.mylyn.gerrit.tests.core.client;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -39,6 +45,7 @@ import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.gerrit.tests.AbstractGerritFixtureTest;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.support.GerritHarness;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
@@ -51,17 +58,16 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchScriptX;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.mockito.verification.VerificationMode;
 
 import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.Patch.ChangeType;
 import com.google.gerrit.reviewdb.Patch.Key;
 import com.google.gerrit.reviewdb.PatchSet.Id;
-
-import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -71,7 +77,14 @@ import junit.framework.TestCase;
  */
 
 @SuppressWarnings("nls")
-public class GerritClientTest extends TestCase {
+@Disabled("No gerrit instance available")
+
+public class GerritClientTest extends AbstractGerritFixtureTest {
+	@BeforeEach
+	void skipIfExcluded() {
+		assumeFalse(fixture.isExcluded(), "Fixture is excluded");
+	}
+
 	public class TestGerritClient extends GerritClient212 {
 
 		public TestGerritClient(TaskRepository repository, AbstractWebLocation location) {
@@ -115,16 +128,14 @@ public class GerritClientTest extends TestCase {
 
 	private GerritClient client;
 
-	@Override
-	@Before
-	public void setUp() throws Exception {
-		harness = GerritFixture.current().harness();
+	@BeforeEach
+	void setUp() throws Exception {
+		harness = fixture.harness();
 		client = harness.client();
 	}
 
-	@Override
-	@After
-	public void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		harness.dispose();
 	}
 

@@ -1,16 +1,22 @@
 /*******************************************************************************
  * Copyright (c) 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.tests.core.client.rest;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,21 +24,14 @@ import java.io.IOException;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.AbandonInput;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
-public class AbandonInputTest extends TestCase {
+public class AbandonInputTest {
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testFromNull() throws Exception {
-		try {
-			new AbandonInput(null);
-			fail("Expected IllegalArgumentException");
-		} catch (IllegalArgumentException e) {
-			// expected
-		}
+		assertThrows(IllegalArgumentException.class, () -> new AbandonInput(null));
 	}
 
 	@Test

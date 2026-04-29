@@ -26,6 +26,12 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.core.IsNot.not;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -64,7 +70,8 @@ import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
 import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import com.google.gerrit.common.data.ApprovalDetail;
 import com.google.gerrit.common.data.ChangeDetail;
@@ -84,8 +91,10 @@ import com.google.gerrit.reviewdb.Project.NameKey;
  * @author Miles Parker
  */
 @SuppressWarnings("nls")
+@Disabled("No gerrit instance available")
 public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 
+	@Test
 	public void testGlobalComments() throws Exception {
 		String message1 = "new comment, time: " + System.currentTimeMillis(); //$NON-NLS-1$
 		reviewHarness.getClient()
@@ -258,6 +267,7 @@ public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 		}
 	}
 
+	@Test
 	public void testCannotSubmitChange() throws Exception {
 		try {
 			reviewHarness.getClient().submit(reviewHarness.getShortId(), 1, new NullProgressMonitor());

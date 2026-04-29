@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  */
 package org.eclipse.mylyn.reviews.core.model;
 
@@ -20,8 +21,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsFactory;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class IndexedTest {
 
@@ -29,8 +30,8 @@ public class IndexedTest {
 
 	private ILineLocation l2;
 
-	@Before
-	public void setup() {
+	@BeforeEach
+	void setup() {
 		l1 = ReviewsFactory.eINSTANCE.createLineLocation();
 		ILineRange l1r1 = ReviewsFactory.eINSTANCE.createLineRange();
 		l1r1.setStart(100);

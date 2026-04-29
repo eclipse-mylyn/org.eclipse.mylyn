@@ -14,9 +14,9 @@
 
 package org.eclipse.mylyn.reviews.internal.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -37,8 +37,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 
 @SuppressWarnings({ "nls", "restriction" })
@@ -89,8 +89,8 @@ public class TaskReviewMappingStoreTest {
 
 	private TaskDataManager taskDataManager;
 
-	@Before
-	public void setup() {
+	@BeforeEach
+	void setup() {
 		review1 = new TaskTask("reviewKind", reviewUrl1, "3");
 		review1.setUrl(reviewUrl1);
 

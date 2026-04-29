@@ -6,10 +6,12 @@ Bundle-SymbolicName: org.eclipse.mylyn.reviews.ui.tests;singleton:=true
 Bundle-Version: 4.11.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.reviews.ui
+Import-Package: org.junit.jupiter.api;version="[5.14.3,6.0.0)",
+ org.junit.platform.suite.api;version="[1.14.0,2.0.0)",
+ org.mockito;version="[5.23.0,6.0.0)",
+ org.mockito.stubbing;version="[5.23.0,6.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: org.eclipse.mylyn.internal.reviews.ui.annotations;x-internal:=true,
  org.eclipse.mylyn.reviews.ui.tests
-Require-Bundle: org.eclipse.mylyn.gerrit.ui;bundle-version="4.4.0",
- org.junit;bundle-version="4.13.2",
- org.mockito.mockito-core;bundle-version="4.8.1"
+Require-Bundle: org.eclipse.mylyn.gerrit.ui;bundle-version="4.4.0"
 

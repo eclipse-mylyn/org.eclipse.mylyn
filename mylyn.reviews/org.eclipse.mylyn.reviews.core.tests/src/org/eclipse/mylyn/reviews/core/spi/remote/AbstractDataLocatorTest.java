@@ -9,6 +9,7 @@
  *
  *     GitHub Inc. - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.reviews.core.spi.remote;
 
@@ -19,7 +20,7 @@ import java.io.File;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Miles Parker

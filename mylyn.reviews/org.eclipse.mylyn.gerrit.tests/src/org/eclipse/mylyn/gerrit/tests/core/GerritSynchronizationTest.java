@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -18,6 +18,11 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.io.File;
 import java.util.Collections;
@@ -27,6 +32,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
+import org.eclipse.mylyn.gerrit.tests.AbstractGerritFixtureTest;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.support.GerritHarness;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
@@ -57,20 +63,24 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestFixture;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
 import com.google.gerrit.reviewdb.Project;
-
-import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class GerritSynchronizationTest extends TestCase {
+@Disabled("No gerrit instance available")
+public class GerritSynchronizationTest extends AbstractGerritFixtureTest {
+	@BeforeEach
+	void skipIfExcluded() {
+		assumeFalse(fixture.isExcluded(), "Fixture is excluded");
+	}
 
 	private GerritHarness harness;
 
@@ -82,9 +92,8 @@ public class GerritSynchronizationTest extends TestCase {
 
 	private GerritClient client;
 
-	@Override
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 //		RemoteFactoryProviderConfigurer configurer = new TestFactoryProviderConfigurer();
 //
 //		GerritCorePlugin.getDefault().getConnector().setFactoryProviderConfigurer(configurer);
@@ -117,9 +126,8 @@ public class GerritSynchronizationTest extends TestCase {
 		harness.ensureOneReviewExists();
 	}
 
-	@After
-	@Override
-	public void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		harness.dispose();
 		TestFixture.resetTaskListAndRepositories();
 		TasksUiPlugin.getRepositoryModel().clear();

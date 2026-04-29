@@ -13,10 +13,11 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+
 import java.util.Arrays;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.gerrit.reviewdb.Project;
 import com.google.gerrit.reviewdb.Project.NameKey;
@@ -34,7 +35,7 @@ public class ProjectByNameComparatorTest {
 
 		Project[] projects = fromNames(initialOrder);
 		Arrays.sort(projects, new ProjectByNameComparator());
-		Assert.assertArrayEquals(expectedOrder, fromProjects(projects));
+		assertArrayEquals(expectedOrder, fromProjects(projects));
 	}
 
 	private static Project[] fromNames(String... names) {

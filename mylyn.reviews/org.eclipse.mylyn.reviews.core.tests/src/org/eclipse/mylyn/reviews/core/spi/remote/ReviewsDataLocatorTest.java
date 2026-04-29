@@ -22,7 +22,7 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Miles Parker

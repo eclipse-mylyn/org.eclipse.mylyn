@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -12,6 +12,13 @@
  *******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.tests.core.client.compat;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,16 +34,14 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritConfigX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.SubmitRecord;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.SubmitRecord.Label;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.gerrit.common.data.ApprovalType;
 import com.google.gerrit.common.data.ApprovalTypes;
 import com.google.gerrit.reviewdb.ChangeMessage;
 
-import junit.framework.TestCase;
-
 @SuppressWarnings("nls")
-public class ChangeDetailXTest extends TestCase {
+public class ChangeDetailXTest {
 	@Test
 	public void testCustomLabel() throws Exception {
 		ChangeDetailXAsResult result = parseFile("testdata/ChangeDetailX.json");

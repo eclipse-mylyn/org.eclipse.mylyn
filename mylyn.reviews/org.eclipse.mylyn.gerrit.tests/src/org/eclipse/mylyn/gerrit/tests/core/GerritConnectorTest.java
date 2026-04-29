@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2015 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -13,6 +13,12 @@
 
 package org.eclipse.mylyn.gerrit.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -20,6 +26,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.gerrit.tests.AbstractGerritFixtureTest;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.support.GerritHarness;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
@@ -31,17 +38,21 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tests.util.InMemoryTaskDataCollector;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class GerritConnectorTest extends TestCase {
+@Disabled("No gerrit instance available")
+public class GerritConnectorTest extends AbstractGerritFixtureTest {
+	@BeforeEach
+	void skipIfExcluded() {
+		assumeFalse(fixture.isExcluded(), "Fixture is excluded");
+	}
 
 	private GerritHarness harness;
 
@@ -49,9 +60,8 @@ public class GerritConnectorTest extends TestCase {
 
 	private TaskRepository repository;
 
-	@Override
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		harness = GerritFixture.current().harness();
 		connector = new GerritConnector();
 		repository = GerritFixture.current().singleRepository();
@@ -59,9 +69,8 @@ public class GerritConnectorTest extends TestCase {
 		harness.ensureOneReviewExists();
 	}
 
-	@Override
-	@After
-	public void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		harness.dispose();
 	}
 

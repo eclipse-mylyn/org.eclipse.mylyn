@@ -20,14 +20,14 @@ import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritCapabilities;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion;
-import org.eclipse.mylyn.tests.util.junit4.TestFixtureJunit4;
+import org.eclipse.mylyn.tests.util.junit5.TestFixtureJunit5;
 import org.osgi.framework.Version;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class GerritFixture extends TestFixtureJunit4 {
+public class GerritFixture extends TestFixtureJunit5 {
 
 	@Deprecated
 	public static GerritFixture GERRIT_ECLIPSE_ORG = new GerritFixture("https://git.eclipse.org/r", "2.2.2", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

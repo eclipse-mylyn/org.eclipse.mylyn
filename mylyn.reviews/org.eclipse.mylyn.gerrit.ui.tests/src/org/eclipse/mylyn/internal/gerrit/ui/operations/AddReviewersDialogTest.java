@@ -8,11 +8,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.ui.operations;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,9 +24,9 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.widgets.Shell;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
@@ -36,8 +38,8 @@ public class AddReviewersDialogTest {
 
 	private AddReviewersDialog dialog;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		shell = new Shell();
 
 		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "url");
@@ -47,8 +49,8 @@ public class AddReviewersDialogTest {
 		dialog.create();
 	}
 
-	@After
-	public void tearDown() {
+	@AfterEach
+	void tearDown() {
 		shell.dispose();
 	}
 
