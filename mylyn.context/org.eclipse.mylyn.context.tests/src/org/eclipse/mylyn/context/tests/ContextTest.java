@@ -37,6 +37,7 @@ public class ContextTest extends AbstractContextTest {
 
 	private InteractionContextScaling scaling;
 
+	@Override
 	@BeforeEach
 	void setUp() throws Exception {
 		scaling = new InteractionContextScaling();

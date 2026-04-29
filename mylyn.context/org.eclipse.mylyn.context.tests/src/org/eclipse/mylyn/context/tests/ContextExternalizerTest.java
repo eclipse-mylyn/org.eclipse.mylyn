@@ -67,6 +67,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 
 	private AbstractContextContributor contributor;
 
+	@Override
 	@BeforeEach
 	void setUp() throws Exception {
 		scaling = ContextCore.getCommonContextScaling();
@@ -74,6 +75,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertNotNull(ContextCore.getContextManager());
 	}
 
+	@Override
 	@AfterEach
 	void tearDown() throws Exception {
 		if (contextFile != null && contextFile.exists()) {
