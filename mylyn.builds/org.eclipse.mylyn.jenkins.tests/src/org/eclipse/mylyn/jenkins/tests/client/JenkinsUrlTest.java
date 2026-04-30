@@ -13,26 +13,24 @@
 
 package org.eclipse.mylyn.jenkins.tests.client;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 
 import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsUrl;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
-public class JenkinsUrlTest extends TestCase {
+public class JenkinsUrlTest {
 
+	@Test
 	public void testQuotes() throws Exception {
 		assertEquals(getExpectedUrl("%27example%27"), createHudsonUrl("example"));
 		assertEquals(getExpectedUrl("%22exampleWithSingle%27Quote%22"), createHudsonUrl("exampleWithSingle'Quote"));
 		assertEquals(getExpectedUrl("%27exampleWithDouble%22Quote%27"), createHudsonUrl("exampleWithDouble\"Quote"));
-		try {
-			createHudsonUrl("exampleWithSingle'AndDouble\"Quote");
-			fail("Expected IllegalArgumentException");
-		} catch (IllegalArgumentException e) {// expected
-		}
-
+		assertThrows(IllegalArgumentException.class, () -> createHudsonUrl("exampleWithSingle'AndDouble\"Quote"));
 	}
 
 	private String createHudsonUrl(String buildName) throws UnsupportedEncodingException {

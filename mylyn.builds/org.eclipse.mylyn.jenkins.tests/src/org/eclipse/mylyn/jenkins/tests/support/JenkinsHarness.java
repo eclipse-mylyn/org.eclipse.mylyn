@@ -13,7 +13,8 @@
 
 package org.eclipse.mylyn.jenkins.tests.support;
 
-import static org.junit.Assert.assertNotNull;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;

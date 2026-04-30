@@ -13,27 +13,32 @@
 
 package org.eclipse.mylyn.jenkins.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.internal.core.BuildFactory;
 import org.eclipse.mylyn.internal.jenkins.core.JenkinsConnector;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class JenkinsConnectorTest extends TestCase {
+public class JenkinsConnectorTest {
 
+	@Test
 	public void testBuildElementFromUrlJobUrl() throws Exception {
 		IBuildServer server = BuildFactory.eINSTANCE.createBuildServer();
 		server.setUrl("http://server/");
 		JenkinsConnector connector = new JenkinsConnector();
 		IBuildElement element = connector.getBuildElementFromUrl(server, "http://server/job/my-plan/3/");
 		assertNotNull(element);
-		assertTrue("Expected IBuild, got " + element.getClass(), element instanceof IBuild);
+		assertInstanceOf(IBuild.class, element, "Expected IBuild, got " + element.getClass());
 		IBuild build = (IBuild) element;
 		assertEquals("3", build.getId());
 		assertEquals("my-plan", build.getPlan().getId());
@@ -41,13 +46,14 @@ public class JenkinsConnectorTest extends TestCase {
 		assertEquals("http://server/job/my-plan/", build.getPlan().getUrl());
 	}
 
+	@Test
 	public void testBuildElementFromUrlViewsUrl() throws Exception {
 		IBuildServer server = BuildFactory.eINSTANCE.createBuildServer();
 		server.setUrl("http://server/");
 		JenkinsConnector connector = new JenkinsConnector();
 		IBuildElement element = connector.getBuildElementFromUrl(server, "http://server/me/my-view/All/job/my-plan/3/");
 		assertNotNull(element);
-		assertTrue("Expected IBuild, got " + element.getClass(), element instanceof IBuild);
+		assertInstanceOf(IBuild.class, element, "Expected IBuild, got " + element.getClass());
 		IBuild build = (IBuild) element;
 		assertEquals("3", build.getId());
 		assertEquals("my-plan", build.getPlan().getId());
@@ -55,6 +61,7 @@ public class JenkinsConnectorTest extends TestCase {
 		assertEquals("http://server/me/my-view/All/job/my-plan/", build.getPlan().getUrl());
 	}
 
+	@Test
 	public void testBuildElementFromUrlUserUrl() throws Exception {
 		IBuildServer server = BuildFactory.eINSTANCE.createBuildServer();
 		server.setUrl("http://server/");
@@ -63,6 +70,7 @@ public class JenkinsConnectorTest extends TestCase {
 		assertNull(element);
 	}
 
+	@Test
 	public void testBuildElementFromUrlNotMatching() throws Exception {
 		IBuildServer server = BuildFactory.eINSTANCE.createBuildServer();
 		server.setUrl("http://server/");

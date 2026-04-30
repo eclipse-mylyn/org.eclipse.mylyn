@@ -17,27 +17,14 @@ import org.eclipse.mylyn.builds.tests.operations.RefreshOperationTest;
 import org.eclipse.mylyn.builds.tests.ui.BuildsViewTest;
 import org.eclipse.mylyn.builds.tests.util.BuildsUrlHandlerTest;
 import org.eclipse.mylyn.builds.tests.util.JUnitResultGeneratorTest;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Steffen Pingel
  */
+@Suite
+@SelectClasses({ BuildModelManagerTest.class, JUnitResultGeneratorTest.class, RefreshOperationTest.class,
+	BuildsUrlHandlerTest.class, BuildsViewTest.class })
 public class AllBuildsTests {
-
-	public static Test suite() {
-		return suite(false);
-	}
-
-	public static Test suite(boolean defaultOnly) {
-		TestSuite suite = new TestSuite(AllBuildsTests.class.getName());
-		suite.addTestSuite(BuildModelManagerTest.class);
-		suite.addTestSuite(JUnitResultGeneratorTest.class);
-		suite.addTestSuite(RefreshOperationTest.class);
-		suite.addTestSuite(BuildsUrlHandlerTest.class);
-		suite.addTestSuite(BuildsViewTest.class);
-		return suite;
-	}
-
 }
