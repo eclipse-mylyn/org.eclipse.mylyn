@@ -10,13 +10,15 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.ui.annotation;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.mylyn.wikitext.tests.HeadRequired;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author David Green

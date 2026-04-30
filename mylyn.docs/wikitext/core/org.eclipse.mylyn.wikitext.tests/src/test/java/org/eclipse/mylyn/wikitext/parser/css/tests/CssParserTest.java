@@ -10,14 +10,16 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.css.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,8 +39,8 @@ import org.eclipse.mylyn.wikitext.parser.css.IdSelector;
 import org.eclipse.mylyn.wikitext.parser.css.NameSelector;
 import org.eclipse.mylyn.wikitext.parser.css.Selector;
 import org.eclipse.mylyn.wikitext.parser.css.Stylesheet;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author David Green
@@ -47,8 +49,8 @@ import org.junit.Test;
 public class CssParserTest {
 	private CssParser parser;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		parser = new CssParser();
 	}
 

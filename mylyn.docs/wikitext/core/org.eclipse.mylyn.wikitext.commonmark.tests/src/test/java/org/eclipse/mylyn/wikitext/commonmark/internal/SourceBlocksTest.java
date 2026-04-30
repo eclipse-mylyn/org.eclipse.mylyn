@@ -10,13 +10,15 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +31,7 @@ import org.eclipse.mylyn.wikitext.parser.builder.event.BeginBlockEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.CharactersEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.EndBlockEvent;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class SourceBlocksTest {
@@ -40,14 +42,14 @@ public class SourceBlocksTest {
 
 	private final SourceBlocks sourceBlocks = new SourceBlocks(block1, block2);
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void requiresBlocks() {
-		assertNotNull(new SourceBlocks((SourceBlock[]) null));
+		assertThrows(NullPointerException.class, () -> new SourceBlocks((SourceBlock[]) null));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void requiresBlocksCollection() {
-		assertNotNull(new SourceBlocks((List<SourceBlock>) null));
+		assertThrows(NullPointerException.class, () -> new SourceBlocks((List<SourceBlock>) null));
 	}
 
 	@Test
@@ -72,13 +74,13 @@ public class SourceBlocksTest {
 				new BeginBlockEvent(BlockType.PARAGRAPH, new Attributes()), //
 				new CharactersEvent("b2"), //
 				new EndBlockEvent());
-		assertEquals(
+		assertEquals(expectedEvents, builder.getDocumentBuilderEvents().getEvents(),
 				builder.getDocumentBuilderEvents()
 				.getEvents()
 				.stream()
 				.map(DocumentBuilderEvent::toString)
-				.collect(Collectors.joining("\n")),
-				expectedEvents, builder.getDocumentBuilderEvents().getEvents());
+				.collect(Collectors.joining("\n"))
+				);
 	}
 
 	private SourceBlock mockBlock(final BlockType blockType, final String startString) {

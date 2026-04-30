@@ -15,10 +15,11 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.mediawiki.internal.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -41,9 +42,9 @@ import org.eclipse.mylyn.wikitext.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.toolkit.AbstractMarkupGenerationTest;
 import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author David Green
@@ -58,14 +59,14 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 		return new MediaWikiLanguage();
 	}
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		locale = Locale.getDefault();
 		Locale.setDefault(Locale.ENGLISH);
 	}
 
-	@After
-	public void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		Locale.setDefault(locale);
 	}
 
@@ -1204,15 +1205,15 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 			assertTrue(testEntity.endsWith(";"));
 
 			String html = parser.parseToHtml(testEntity);
-			assertTrue(testEntity + " in " + html, html.contains(testEntity));
+			assertTrue(html.contains(testEntity), testEntity + " in " + html);
 			html = parser.parseToHtml(testEntity + " trailing text");
-			assertTrue(testEntity + " in " + html, html.contains(testEntity));
+			assertTrue(html.contains(testEntity), testEntity + " in " + html);
 			html = parser.parseToHtml(testEntity + "trailing text");
-			assertTrue(testEntity + " in " + html, html.contains(testEntity));
+			assertTrue(html.contains(testEntity), testEntity + " in " + html);
 			html = parser.parseToHtml("leading text " + testEntity);
-			assertTrue(testEntity + " in " + html, html.contains(testEntity));
+			assertTrue(html.contains(testEntity), testEntity + " in " + html);
 			html = parser.parseToHtml("leading text" + testEntity);
-			assertTrue(testEntity + " in " + html, html.contains(testEntity));
+			assertTrue(html.contains(testEntity), testEntity + " in " + html);
 		}
 	}
 
@@ -1331,7 +1332,7 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 		}
 		assertEquals(children.size(), topLevelIds.size());
 		assertEquals(children.size(), topLevelLabels.size());
-		assertTrue("Top-level labels: " + topLevelLabels, topLevelLabels.contains("Task-Focused UI"));
+		assertTrue(topLevelLabels.contains("Task-Focused UI"), "Top-level labels: " + topLevelLabels);
 	}
 
 	@Test

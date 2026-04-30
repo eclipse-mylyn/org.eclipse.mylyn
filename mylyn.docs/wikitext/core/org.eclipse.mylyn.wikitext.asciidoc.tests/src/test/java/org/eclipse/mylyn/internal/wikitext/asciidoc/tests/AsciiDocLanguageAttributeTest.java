@@ -10,13 +10,14 @@
  * Contributors:
  *     Max Rydahl Andersen - copied from markdown to get base for asciidoc
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for asciidoc overview and miscellaneous.
@@ -26,12 +27,14 @@ import org.junit.Test;
 @SuppressWarnings("nls")
 public class AsciiDocLanguageAttributeTest extends AsciiDocLanguageTestBase {
 
-	static final String MARKUP_FOR_DEFAULT = "Some default values\n\n" + //
-			" - idprefix: {idprefix}\n" + //
-			" - idseparator: {idseparator}\n" + //
-			" - imagesdir: {imagesdir}\n" + //
-			" - leveloffset: {leveloffset}\n" + //
-			"";
+	static final String MARKUP_FOR_DEFAULT = """
+			Some default values
+
+			 - idprefix: {idprefix}
+			 - idseparator: {idseparator}
+			 - imagesdir: {imagesdir}
+			 - leveloffset: {leveloffset}
+			""";
 
 	@Test
 	public void testDefault() {
@@ -104,12 +107,15 @@ public class AsciiDocLanguageAttributeTest extends AsciiDocLanguageTestBase {
 
 	@Test
 	public void multipleAttributeDefinition() {
-		String markup = ":one: lorem\n" + //
-				":two: {one} ipsum\n" + //
-				"Test {one} and {two}.\n\n" + //
-				":one: LOREM\n" + //
-				"Repeat: Test {one} and {two}.\n\n" + //
-				"";
+		String markup = """
+				:one: lorem
+				:two: {one} ipsum
+				Test {one} and {two}.
+
+				:one: LOREM
+				Repeat: Test {one} and {two}.
+
+				""";
 		String html = parseToHtml(markup);
 
 		String expected = "<p>Test lorem and lorem ipsum.</p>\n" + //
@@ -125,11 +131,15 @@ public class AsciiDocLanguageAttributeTest extends AsciiDocLanguageTestBase {
 
 	@Test
 	public void attributeUnassign() {
-		String markup = ":number: three\n" + //
-				"Is {number} higher ?\n\n" + //
-				":number!: three\n\n" + //
-				"Repeat: is {number} higher ?\n\n" + //
-				"";
+		String markup = """
+				:number: three
+				Is {number} higher ?
+
+				:number!: three
+
+				Repeat: is {number} higher ?
+
+				""";
 		String html = parseToHtml(markup);
 
 		String expected = "<p>Is three higher ?</p>\n" + //
@@ -139,11 +149,13 @@ public class AsciiDocLanguageAttributeTest extends AsciiDocLanguageTestBase {
 
 	@Test
 	public void attributeUnassignWithSpace() {
-		String markup = ":number   : three\n" + //
-				"Is {number} higher ?\n\n" + //
-				":number  !:\n\n" + //
-				"Repeat: is {number} higher ?" + //
-				"";
+		String markup = """
+				:number   : three
+				Is {number} higher ?
+
+				:number  !:
+
+				Repeat: is {number} higher ?""";
 		String html = parseToHtml(markup);
 
 		String expected = "<p>Is three higher ?</p>\n" + //

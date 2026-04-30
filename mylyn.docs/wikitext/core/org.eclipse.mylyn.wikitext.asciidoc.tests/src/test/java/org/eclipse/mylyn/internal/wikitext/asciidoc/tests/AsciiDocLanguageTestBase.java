@@ -10,11 +10,13 @@
  * Contributors:
  *     Max Rydahl Andersen - copied from markdown to get base for asciidoc, Bug 474084
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.StringWriter;
 import java.util.List;
@@ -27,7 +29,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder;
 import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder.Event;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * Test base for asciidoc language tests. provides base set-up functionalities, like parsing markup to html
@@ -39,8 +41,8 @@ public abstract class AsciiDocLanguageTestBase {
 
 	private MarkupParser parser;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	public void _setUp() throws Exception {
 		parser = createParserWithConfiguration(null);
 	}
 

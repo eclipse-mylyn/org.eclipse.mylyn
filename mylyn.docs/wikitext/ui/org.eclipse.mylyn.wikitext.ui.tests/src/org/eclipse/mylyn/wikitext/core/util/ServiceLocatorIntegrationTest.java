@@ -10,15 +10,17 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.core.util;
 
-import static org.junit.Assert.assertNotNull;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class ServiceLocatorIntegrationTest {

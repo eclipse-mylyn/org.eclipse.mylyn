@@ -10,29 +10,31 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.validation.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 
 import org.eclipse.mylyn.wikitext.validation.StandaloneMarkupValidator;
 import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
 import org.eclipse.mylyn.wikitext.validation.ValidationProblem.Severity;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class StandaloneMarkupValidatorTest {
 
 	private StandaloneMarkupValidator validator;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		validator = new StandaloneMarkupValidator();
 		validator.setClassLoader(StandaloneMarkupValidatorTest.class.getClassLoader());
 		validator.computeRules("TestMarkupLanguage",

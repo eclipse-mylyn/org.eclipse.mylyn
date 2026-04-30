@@ -10,16 +10,17 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.html.internal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -31,8 +32,8 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class HtmlSubsetDocumentBuilderTest {
@@ -43,7 +44,7 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	private HtmlDocumentBuilder delegate;
 
-	@Before
+	@BeforeEach
 	public void before() {
 		writer = new StringWriter();
 		delegate = new HtmlDocumentBuilder(writer);
@@ -174,9 +175,9 @@ public class HtmlSubsetDocumentBuilderTest {
 		assertContent("<b>test</b>");
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void setSupportedBlockTypesNull() {
-		builder.setSupportedBlockTypes(null);
+		assertThrows(NullPointerException.class, () -> builder.setSupportedBlockTypes(null));
 	}
 
 	@Test

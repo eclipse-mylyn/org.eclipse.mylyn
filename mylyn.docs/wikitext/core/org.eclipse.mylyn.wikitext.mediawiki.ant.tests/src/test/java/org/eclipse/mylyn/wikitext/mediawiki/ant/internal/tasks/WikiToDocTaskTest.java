@@ -10,12 +10,14 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -26,22 +28,21 @@ import java.util.Map;
 
 import org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks.WikiToDocTask.Path;
 import org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks.WikiToDocTask.Stylesheet;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 @SuppressWarnings("nls")
 public class WikiToDocTaskTest {
 
-	@Rule
-	public final TemporaryFolder temporaryFolder = new TemporaryFolder();
+	@TempDir
+	public File temporaryFolder;
 
 	private TestWikiToDocTask task;
 
-	@Before
-	public void before() {
+	@BeforeEach
+	void before() {
 		task = new TestWikiToDocTask();
 		HashMap<String, String> serverContent = new HashMap<>();
 		serverContent.put(
@@ -51,7 +52,7 @@ public class WikiToDocTaskTest {
 				"http://wiki.eclipse.org/api.php?action=query&titles=Mylyn%2FFAQ&generator=images&prop=imageinfo&iiprop=url&format=xml",
 				"<api batchcomplete=\"\"><query><pages></pages></query></api>");
 		task.setImageServerContent(serverContent);
-		task.setDest(temporaryFolder.getRoot());
+		task.setDest(temporaryFolder);
 	}
 
 	@Test
@@ -70,7 +71,7 @@ public class WikiToDocTaskTest {
 		assertEquals("http://example.com/a/b.css", task.createBuilderStylesheet(task.getDest(), stylesheet).getUrl());
 	}
 
-	@Ignore
+	@Disabled
 	@Test
 	public void testMapPageNameToHref() throws Exception {
 		//Bug 467067
@@ -102,7 +103,7 @@ public class WikiToDocTaskTest {
 				"<p>Link to <a href=\"#IActivatable\" title=\"GEF/GEF4/Common#IActivatable\">IActivatable</a> is here</p>"));
 	}
 
-	@Ignore
+	@Disabled
 	@Test
 	public void testLink() throws Exception {
 		//Bug 444459
@@ -136,11 +137,11 @@ public class WikiToDocTaskTest {
 		task.execute();
 
 		File mainPage = task.computeHtmlOutputFile(path);
-		assertEquals("main page exists", true, mainPage.exists());
+		assertTrue(mainPage.exists(), "main page exists");
 		File installationPage = new File(mainPage.getParentFile(), "Installation.html");
-		assertEquals("'Installation.html' page exists", true, installationPage.exists());
+		assertTrue(installationPage.exists(), "'Installation.html' page exists");
 		File taskListPage = new File(mainPage.getParentFile(), "Task-List.html");
-		assertEquals("'Task-List.html' page exists", true, taskListPage.exists());
+		assertTrue(taskListPage.exists(), "'Task-List.html' page exists");
 		String content = Files.readString(taskListPage.toPath(), StandardCharsets.UTF_8);
 		assertTrue(content.contains(
 				"<a href=\"Installation.html#Recommended_GTK_Setup_for_KDE\" title=\"Mylyn/FAQ#Recommended_GTK_Setup_for_KDE\">Recommended GTK Setup for KDE</a> section."));

@@ -10,18 +10,20 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.util.tests;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.StringWriter;
 
 import org.eclipse.mylyn.wikitext.util.DefaultXmlStreamWriter;
 import org.eclipse.mylyn.wikitext.util.FormattingXMLStreamWriter;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class FormattingXMLStreamWriterTest {
@@ -30,8 +32,8 @@ public class FormattingXMLStreamWriterTest {
 
 	private FormattingXMLStreamWriter writer;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		out = new StringWriter();
 		writer = new FormattingXMLStreamWriter(new DefaultXmlStreamWriter(out));
 	}

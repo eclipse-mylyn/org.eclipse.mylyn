@@ -3,15 +3,18 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn WikiText Core Tests
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.osgi.tests
 Fragment-Host: org.eclipse.mylyn.wikitext.osgi;bundle-version="4.4.0"
-Import-Package: org.apache.commons.lang3;version="3.14.0"
+Import-Package: net.bytebuddy;version="[1.18.0,2.0.0)",
+ net.bytebuddy.agent;version="[1.18.0,2.0.0)",
+ org.apache.commons.lang3;version="3.14.0",
+ org.junit.jupiter.api;version="[5.14.0,6.0.0)",
+ org.mockito;version="[5.23.0,6.0.0)",
+ org.mockito.configuration;version="[5.23.0,6.0.0)",
+ org.mockito.stubbing;version="[5.23.0,6.0.0)",
+ org.objenesis;version="[3.5.0,4.0.0)"
 Bundle-Version: 4.11.0.qualifier
 Bundle-Vendor: Eclipse.org
 Bundle-RequiredExecutionEnvironment: JavaSE-21
-Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="4.4.0",
- org.junit;bundle-version="4.8",
- org.mockito.mockito-core;bundle-version="[5.0.0,6.0.0)",
- net.bytebuddy.byte-buddy,
- org.objenesis;bundle-version="[3.0.0,4.0.0)"
+Require-Bundle: org.eclipse.mylyn.wikitext;bundle-version="4.4.0"
 Export-Package: org.eclipse.mylyn.wikitext.core.osgi;x-internal:=true
 Automatic-Module-Name: org.eclipse.mylyn.wikitext.osgi.tests
 

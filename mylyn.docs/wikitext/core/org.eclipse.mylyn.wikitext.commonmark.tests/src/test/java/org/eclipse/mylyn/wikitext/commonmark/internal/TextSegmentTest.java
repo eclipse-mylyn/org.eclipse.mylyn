@@ -15,20 +15,21 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class TextSegmentTest {
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void requiresLines() {
-		assertNotNull(new TextSegment(null));
+		assertThrows(NullPointerException.class, () -> new TextSegment(null));
 	}
 
 	@Test

@@ -12,12 +12,14 @@
  *     Holger Voormann - tests for bug 279029
  *     Jeremie Bresson - bug 389812, 390081, 249344
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.tracwiki.tests;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -27,8 +29,8 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.tracwiki.TracWikiLanguage;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author David Green
@@ -40,8 +42,8 @@ public class TracWikiLanguageTest {
 
 	private TracWikiLanguage markupLanguage;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		markupLanguage = new TracWikiLanguage();
 		parser = new MarkupParser(markupLanguage);
 	}
@@ -549,7 +551,12 @@ public class TracWikiLanguageTest {
 	@Test
 	public void testQuoteBlock() throws IOException {
 		String html = parser.parseToHtml(
-				"" + ">> second level\n" + ">> second level line 2\n" + "> first level\n" + "new para\n" + "");
+				"""
+				>> second level
+				>> second level line 2
+				> first level
+				new para
+				""");
 
 		assertTrue(Pattern.compile(
 				"<body><blockquote><blockquote><p>second level<br/>\\s*second level line 2</p></blockquote><p>first level</p></blockquote><p>new para</p></body>",
@@ -558,7 +565,11 @@ public class TracWikiLanguageTest {
 
 	@Test
 	public void testQuoteBlockFollowingPara() throws IOException {
-		String html = parser.parseToHtml("" + "normal para\n" + "> quoted\n" + "new para\n" + "");
+		String html = parser.parseToHtml("""
+				normal para
+				> quoted
+				new para
+				""");
 
 		assertTrue(
 				Pattern.compile("<body><p>normal para</p><blockquote><p>quoted</p></blockquote><p>new para</p></body>",
@@ -567,7 +578,12 @@ public class TracWikiLanguageTest {
 
 	@Test
 	public void testQuoteBlockWithSpaces() throws IOException {
-		String html = parser.parseToHtml("" + "normal para\n" + "  quoted\n" + "  first level\n" + "new para\n" + "");
+		String html = parser.parseToHtml("""
+				normal para
+				  quoted
+				  first level
+				new para
+				""");
 
 		assertTrue(Pattern.compile(
 				"<body><p>normal para</p><blockquote><p>quoted<br/>\\s*first level</p></blockquote><p>new para</p></body>",
@@ -576,8 +592,12 @@ public class TracWikiLanguageTest {
 
 	@Test
 	public void testTableBlock() {
-		String html = parser.parseToHtml("" + "normal para\n" + "||a table||row with three||columns||\n"
-				+ "||another||row||||\n" + "new para\n" + "");
+		String html = parser.parseToHtml("""
+				normal para
+				||a table||row with three||columns||
+				||another||row||||
+				new para
+				""");
 
 		assertTrue(
 				Pattern.compile(

@@ -26,9 +26,7 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
  org.eclipse.mylyn.wikitext.ui;bundle-version="4.4.0",
  org.eclipse.ui;bundle-version="0.0.0",
  org.eclipse.ui.ide;bundle-version="0.0.0",
- org.eclipse.ui.editors;bundle-version="0.0.0",
- org.junit;bundle-version="4.13.2",
- org.mockito.mockito-core;bundle-version="[5.0.0,6.0.0)"
+ org.eclipse.ui.editors;bundle-version="0.0.0"
 Export-Package: org.eclipse.mylyn.internal.wikitext.ui;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.resources;x-internal:=true,
@@ -46,6 +44,11 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.ui;x-internal:=true,
  org.eclipse.mylyn.wikitext.ui.annotation;x-internal:=true
 Import-Package: org.apache.commons.io;version="[2.16.0,3.0.0)",
  org.apache.commons.lang3;version="[3.14.0,4.0.0)",
- org.apache.commons.lang3.builder;version="[3.14.0,4.0.0)"
+ org.apache.commons.lang3.builder;version="[3.14.0,4.0.0)",
+ org.junit.jupiter.api;version="[5.14.0,6.0.0)",
+ org.junit.jupiter.api.function;version="[5.14.0,6.0.0)",
+ org.junit.jupiter.api.io;version="[5.14.0,6.0.0)",
+ org.mockito;version="[5.23.0,6.0.0)",
+ org.mockito.stubbing;version="[5.23.0,6.0.0)"
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy

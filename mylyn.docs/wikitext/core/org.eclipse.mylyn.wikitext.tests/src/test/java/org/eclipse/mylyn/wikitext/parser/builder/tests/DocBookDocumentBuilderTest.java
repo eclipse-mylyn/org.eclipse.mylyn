@@ -10,11 +10,13 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.parser.builder.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.StringWriter;
 
@@ -25,8 +27,8 @@ import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.parser.ListAttributes;
 import org.eclipse.mylyn.wikitext.parser.TableAttributes;
 import org.eclipse.mylyn.wikitext.parser.builder.DocBookDocumentBuilder;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author David Green
@@ -46,8 +48,8 @@ public class DocBookDocumentBuilderTest {
 
 	private DocBookDocumentBuilder builder;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		out = new StringWriter();
 		builder = new DocBookDocumentBuilder(out);
 

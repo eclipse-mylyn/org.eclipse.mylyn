@@ -10,11 +10,13 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.html.internal;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
@@ -23,14 +25,14 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.builder.EventDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.event.BeginSpanEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvent;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class SubstitutionWithoutCssSpanStrategyTest {
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void createNull() {
-		new SubstitutionWithoutCssSpanStrategy(null);
+		assertThrows(NullPointerException.class, () -> new SubstitutionWithoutCssSpanStrategy(null));
 	}
 
 	@Test

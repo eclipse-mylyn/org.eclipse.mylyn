@@ -15,9 +15,11 @@
 
 package org.eclipse.mylyn.wikitext.html.internal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,19 +27,19 @@ import java.util.HashSet;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class SpanStrategiesTest {
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void createNullElementTypes() {
-		new SpanStrategies(null, Collections.emptyList());
+		assertThrows(NullPointerException.class, () -> new SpanStrategies(null, Collections.emptyList()));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void createNullSpanStrategies() {
-		new SpanStrategies(Collections.emptySet(), null);
+		assertThrows(NullPointerException.class, () -> new SpanStrategies(Collections.emptySet(), null));
 	}
 
 	@Test

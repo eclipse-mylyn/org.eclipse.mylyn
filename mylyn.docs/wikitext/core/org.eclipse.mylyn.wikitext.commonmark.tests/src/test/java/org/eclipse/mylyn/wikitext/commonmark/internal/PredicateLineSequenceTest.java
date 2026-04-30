@@ -10,29 +10,31 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.function.Predicate;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class PredicateLineSequenceTest {
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void requiresDelegate() {
-		assertNotNull(new PredicateLineSequence(null, x -> true));
+		assertThrows(NullPointerException.class, () -> new PredicateLineSequence(null, x -> true));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void requiresPredicate() {
-		assertNotNull(new PredicateLineSequence(LineSequence.create(""), null));
+		assertThrows(NullPointerException.class, () -> new PredicateLineSequence(LineSequence.create(""), null));
 	}
 
 	@Test

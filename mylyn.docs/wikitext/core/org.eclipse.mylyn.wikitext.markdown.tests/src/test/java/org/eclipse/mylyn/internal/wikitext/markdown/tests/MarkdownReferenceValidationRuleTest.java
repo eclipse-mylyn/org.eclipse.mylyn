@@ -10,13 +10,15 @@
  * Contributors:
  *     Stefan Seelmann - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -24,8 +26,8 @@ import org.eclipse.mylyn.wikitext.markdown.internal.validation.MarkdownReference
 import org.eclipse.mylyn.wikitext.validation.MarkupValidator;
 import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
 import org.eclipse.mylyn.wikitext.validation.ValidationProblem.Severity;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class MarkdownReferenceValidationRuleTest {
@@ -34,8 +36,8 @@ public class MarkdownReferenceValidationRuleTest {
 
 	private MarkupValidator validator;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		rule = new MarkdownReferenceValidationRule();
 		validator = new MarkupValidator();
 		validator.getRules().add(rule);

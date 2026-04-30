@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.tests;
@@ -28,38 +29,29 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.mylyn.internal.wikitext.ui.ScreenshotOnTimeoutRule;
-import org.eclipse.mylyn.wikitext.toolkit.StackDumpOnTimeoutRule;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.io.TempDir;
 
 @HeadRequired
-@SuppressWarnings({ "nls", "restriction" })
+@SuppressWarnings({ "nls" })
 public abstract class AbstractTestInWorkspace {
 
-	@Rule
-	public final StackDumpOnTimeoutRule stackDumpOnTimeoutRule = new StackDumpOnTimeoutRule();
-
-	@Rule
-	public final ScreenshotOnTimeoutRule screenshotRule = new ScreenshotOnTimeoutRule();
-
-	@Rule
-	public final TemporaryFolder temporaryFolder = new TemporaryFolder();
+	@TempDir
+	public File temporaryFolder;
 
 	private final List<IProject> temporaryProjects = new ArrayList<>();
 
-	@Before
-	public void before() {
+	@BeforeEach
+	public void _before() {
 		refreshWorkspace();
 	}
 
 	/**
 	 * Overriding classes should call super.tearDown()
 	 */
-	@After
-	public void tearDown() throws Exception {
+	@AfterEach
+	public void _tearDown() throws Exception {
 		if (!temporaryProjects.isEmpty()) {
 			NullProgressMonitor monitor = new NullProgressMonitor();
 			monitor.beginTask("Removing " + temporaryProjects.size() + " temporary projects",
@@ -80,9 +72,7 @@ public abstract class AbstractTestInWorkspace {
 
 		String projectName = "test" + Long.toHexString(seed) + Long.toHexString(new Random().nextLong());
 
-		File folderParent = temporaryFolder.getRoot();
-
-		URI location = new File(folderParent, projectName).toURI();
+		URI location = new File(temporaryFolder, projectName).toURI();
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		final IProjectDescription description = workspace.newProjectDescription(projectName);
 		description.setLocationURI(location);

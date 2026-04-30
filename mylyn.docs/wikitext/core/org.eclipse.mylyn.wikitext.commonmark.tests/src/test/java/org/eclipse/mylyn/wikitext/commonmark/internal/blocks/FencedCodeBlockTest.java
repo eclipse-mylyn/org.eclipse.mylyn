@@ -10,16 +10,17 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.blocks;
 
 import static org.eclipse.mylyn.wikitext.commonmark.internal.CommonMarkAsserts.assertContent;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class FencedCodeBlockTest {
@@ -70,10 +71,10 @@ public class FencedCodeBlockTest {
 	}
 
 	private void assertCanStartFalse(String content) {
-		assertFalse(content, block.canStart(LineSequence.create(content)));
+		assertFalse(block.canStart(LineSequence.create(content)), content);
 	}
 
 	private void assertCanStart(String content) {
-		assertTrue(content, block.canStart(LineSequence.create(content)));
+		assertTrue(block.canStart(LineSequence.create(content)), content);
 	}
 }

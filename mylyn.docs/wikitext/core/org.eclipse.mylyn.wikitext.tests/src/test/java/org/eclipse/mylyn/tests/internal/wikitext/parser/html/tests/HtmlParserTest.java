@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tests.internal.wikitext.parser.html.tests;
@@ -19,7 +20,7 @@ import java.io.IOException;
 import org.eclipse.mylyn.wikitext.internal.parser.html.AbstractSaxHtmlParser;
 import org.eclipse.mylyn.wikitext.internal.parser.html.HtmlCleaner;
 import org.eclipse.mylyn.wikitext.internal.parser.html.HtmlParser;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 /**

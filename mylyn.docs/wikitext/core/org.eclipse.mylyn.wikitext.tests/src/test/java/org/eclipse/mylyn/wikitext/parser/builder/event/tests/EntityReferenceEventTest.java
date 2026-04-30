@@ -10,16 +10,17 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.builder.event.tests;
 
 import static org.eclipse.mylyn.wikitext.test.EqualityAsserts.assertEquality;
 import static org.eclipse.mylyn.wikitext.test.EqualityAsserts.assertInequality;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.mylyn.wikitext.parser.builder.event.EntityReferenceEvent;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class EntityReferenceEventTest {

@@ -14,14 +14,15 @@
 package org.eclipse.mylyn.wikitext.core.osgi;
 
 import static java.text.MessageFormat.format;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,7 +31,7 @@ import java.util.Set;
 
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
@@ -102,7 +103,7 @@ public class OsgiServiceLocatorTest {
 	private Bundle createBundleWithLanguage(String servicesFolder, Class<? extends MarkupLanguage> markupLanguage) {
 		Bundle bundle = mock(Bundle.class);
 		try {
-			URL url = new URL("file:" + markupLanguage.getName());
+			URL url = new URI("file:" + markupLanguage.getName()).toURL();
 			List<URL> resources = Collections.singletonList(url);
 			doReturn(Collections.enumeration(resources)).when(bundle)
 			.findEntries(eq(servicesFolder), eq(MarkupLanguage.class.getName()), eq(false));

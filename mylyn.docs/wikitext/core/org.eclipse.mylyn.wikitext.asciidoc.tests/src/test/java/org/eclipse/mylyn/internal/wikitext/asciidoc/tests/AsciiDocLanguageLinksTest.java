@@ -10,13 +10,15 @@
  * Contributors:
  *     Max Rydahl Andersen - copied from markdown to get base for asciidoc
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
 
 /**
  * Tests for asciidoc overview and miscellaneous.

@@ -14,9 +14,10 @@
 
 package org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +30,8 @@ import org.eclipse.mylyn.wikitext.tests.HeadRequired;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @HeadRequired
 @SuppressWarnings({ "nls", "restriction" })
@@ -38,8 +39,8 @@ public class MarkupTokenScannerTest extends AbstractDocumentTest {
 
 	private MarkupTokenScanner tokenScanner;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		Font normalFont = new Font(null, new FontData[] { new FontData("normalFont", 12, 0) });
 		Font monospaceFont = new Font(null, new FontData[] { new FontData("monoFont", 12, 0) });
 		tokenScanner = new MarkupTokenScanner(normalFont, monospaceFont);

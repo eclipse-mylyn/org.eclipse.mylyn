@@ -10,23 +10,25 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.mediawiki.internal.tests;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.mylyn.wikitext.mediawiki.internal.MediaWikiIdGenerationStrategy;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class MediaWikiIdGenerationStrategyTest {
 
 	MediaWikiIdGenerationStrategy generationStrategy;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		generationStrategy = new MediaWikiIdGenerationStrategy();
 	}
 

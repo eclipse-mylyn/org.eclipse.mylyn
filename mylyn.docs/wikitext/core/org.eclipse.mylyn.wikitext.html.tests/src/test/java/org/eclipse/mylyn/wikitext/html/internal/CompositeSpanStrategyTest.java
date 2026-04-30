@@ -10,11 +10,13 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.html.internal;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,14 +28,14 @@ import org.eclipse.mylyn.wikitext.parser.builder.EventDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.event.BeginSpanEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvents;
 import org.eclipse.mylyn.wikitext.parser.builder.event.EndSpanEvent;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("restriction")
 public class CompositeSpanStrategyTest {
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void createNull() {
-		new CompositeSpanStrategy(null);
+		assertThrows(NullPointerException.class, () -> new CompositeSpanStrategy(null));
 	}
 
 	@Test

@@ -10,12 +10,15 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.parser.builder.tests;
 
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -23,8 +26,8 @@ import java.net.URISyntaxException;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author David Green
@@ -38,8 +41,8 @@ public class HtmlDocumentBuilderIntegrationTest {
 
 	private HtmlDocumentBuilder builder;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		parser = new MarkupParser();
 		parser.setMarkupLanguage(new TextileLanguage());
 		out = new StringWriter();
@@ -73,7 +76,7 @@ public class HtmlDocumentBuilderIntegrationTest {
 		String html = out.toString();
 
 		String expected = "<a href=\"" + uri.toString() + "/foo/bar.html\">An URL</a>";
-		assertTrue("Expected " + expected, html.contains(expected));
+		assertTrue(html.contains(expected), "Expected " + expected);
 	}
 
 	@Test
@@ -83,26 +86,30 @@ public class HtmlDocumentBuilderIntegrationTest {
 		String html = out.toString();
 
 		String expected = "<!-- Copyright notice here -->";
-		assertTrue("Expected " + expected + " but received " + html, html.contains(expected));
+		assertTrue(html.contains(expected), "Expected " + expected + " but received " + html);
 		String metaExpected = "<meta name=\"copyright\" content=\"Copyright notice here\"/>";
-		assertTrue("Expected " + metaExpected + " but received " + html, html.contains(metaExpected));
+		assertTrue(html.contains(metaExpected), "Expected " + metaExpected + " but received " + html);
 	}
 
 	@Test
 	public void testCopyrightNoticeFormatted() {
-		out = new StringWriter();
-		builder = new HtmlDocumentBuilder(out, true);
-		parser.setBuilder(builder);
+		try (StringWriter out = new StringWriter()) {
+			builder = new HtmlDocumentBuilder(out, true);
+			parser.setBuilder(builder);
 
-		builder.setCopyrightNotice("Copyright notice here");
-		parser.parse("content");
-		String html = out.toString();
+			builder.setCopyrightNotice("Copyright notice here");
+			parser.parse("content");
+			String html = out.toString();
 
-		String expected = "<!-- Copyright notice here -->";
-		assertTrue("Expected " + expected + " but received " + html, html.startsWith(
-				"""
-				<?xml version='1.0' encoding='utf-8' ?>
-				<!-- Copyright notice here -->
-				<html"""));
+			String expected = "<!-- Copyright notice here -->";
+			assertTrue(html.startsWith(
+					"""
+					<?xml version='1.0' encoding='utf-8' ?>
+					<!-- Copyright notice here -->
+					<html"""), "Expected " + expected + " but received\n" + html);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

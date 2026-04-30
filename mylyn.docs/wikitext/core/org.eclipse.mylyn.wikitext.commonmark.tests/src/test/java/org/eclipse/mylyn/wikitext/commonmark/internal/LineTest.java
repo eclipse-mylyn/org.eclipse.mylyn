@@ -15,30 +15,32 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.mylyn.wikitext.parser.Locator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class LineTest {
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void requiresText() {
-		assertNotNull(new Line(0, 0, null));
+		assertThrows(NullPointerException.class, () -> new Line(0, 0, null));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void requiresNonNegativeLineOffset() {
-		assertNotNull(new Line(1, -1, "test"));
+		assertThrows(IllegalArgumentException.class, () -> new Line(1, -1, "test"));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void requiresNonNegativeLineNumber() {
-		assertNotNull(new Line(-1, 1, "test"));
+		assertThrows(IllegalArgumentException.class, () -> new Line(-1, 1, "test"));
 	}
 
 	@Test
@@ -95,10 +97,10 @@ public class LineTest {
 	}
 
 	private void assertNotEmpty(String string) {
-		assertFalse(string, new Line(0, 0, string).isEmpty());
+		assertFalse(new Line(0, 0, string).isEmpty(), string);
 	}
 
 	private void assertEmpty(String string) {
-		assertTrue(string, new Line(0, 0, string).isEmpty());
+		assertTrue(new Line(0, 0, string).isEmpty(), string);
 	}
 }

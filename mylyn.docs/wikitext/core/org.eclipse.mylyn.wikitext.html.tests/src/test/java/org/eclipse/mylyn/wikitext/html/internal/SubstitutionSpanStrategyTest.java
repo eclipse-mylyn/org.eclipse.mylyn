@@ -10,19 +10,20 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.html.internal;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.StringWriter;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class SubstitutionSpanStrategyTest {
@@ -31,8 +32,8 @@ public class SubstitutionSpanStrategyTest {
 
 	private StringWriter writer;
 
-	@Before
-	public void before() {
+	@BeforeEach
+	void before() {
 		writer = new StringWriter();
 		builder = new HtmlDocumentBuilder(writer);
 		builder.setEmitAsDocument(false);

@@ -10,13 +10,14 @@
  * Contributors:
  *     Jeremie Bresson - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks;
 
 import static java.text.MessageFormat.format;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,14 +66,14 @@ class MediaWikiMockFixture {
 	}
 
 	public void assertImageFiles(File imagesFolder) {
-		assertTrue(imagesFolder.getPath(), imagesFolder.exists() && imagesFolder.isDirectory());
+		assertTrue(imagesFolder.exists() && imagesFolder.isDirectory(), imagesFolder.getPath());
 
 		File[] images = imagesFolder.listFiles();
-		assertNotNull(format("{0} should have files", imagesFolder), images);
+		assertNotNull(images, format("{0} should have files", imagesFolder));
 		for (String name : IMG_FILE_NAMES) {
 			File imageFile = new File(imagesFolder, name);
-			assertTrue(format("Expected to find an image file {0} in folder {1}.", name, imagesFolder),
-					imageFile.exists());
+			assertTrue(imageFile.exists(),
+					format("Expected to find an image file {0} in folder {1}.", name, imagesFolder));
 		}
 	}
 }

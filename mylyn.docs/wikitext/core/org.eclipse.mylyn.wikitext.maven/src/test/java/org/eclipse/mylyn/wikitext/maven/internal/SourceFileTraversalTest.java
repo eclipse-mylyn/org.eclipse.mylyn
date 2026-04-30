@@ -14,6 +14,7 @@
 
 package org.eclipse.mylyn.wikitext.maven.internal;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.doReturn;
@@ -24,14 +25,14 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import java.io.File;
 
 import org.eclipse.mylyn.wikitext.maven.internal.SourceFileTraversal.Visitor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class SourceFileTraversalTest {
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void createNullRoot() {
-		new SourceFileTraversal(null);
+		assertThrows(NullPointerException.class, () -> new SourceFileTraversal(null));
 	}
 
 	@Test

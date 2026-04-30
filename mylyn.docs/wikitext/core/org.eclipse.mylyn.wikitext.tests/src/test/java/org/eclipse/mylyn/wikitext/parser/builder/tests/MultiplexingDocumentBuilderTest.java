@@ -11,13 +11,15 @@
  *     Benjamin Muskalla - initial API and implementation
  *     David Green - bug 457648
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.builder.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,7 +55,7 @@ import org.eclipse.mylyn.wikitext.parser.builder.event.ImageLinkEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.LineBreakEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.LinkEvent;
 import org.eclipse.mylyn.wikitext.parser.markup.ContentState;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class MultiplexingDocumentBuilderTest {

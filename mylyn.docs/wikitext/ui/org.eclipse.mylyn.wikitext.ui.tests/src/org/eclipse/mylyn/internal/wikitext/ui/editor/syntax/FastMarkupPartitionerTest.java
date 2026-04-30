@@ -10,10 +10,12 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 
@@ -22,7 +24,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.mylyn.wikitext.confluence.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author David Green
@@ -199,12 +201,10 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		assertEquals(expected.length, partitioning.length);
 		for (int x = 0; x < expected.length; ++x) {
 			ITypedRegion region = partitioning[x];
-			assertEquals(
-					String.format("partition %s offset expected %s but got %s", x, expected[x][0], region.getOffset()),
-					expected[x][0], region.getOffset());
-			assertEquals(
-					String.format("partition %s length expected %s but got %s", x, expected[x][1], region.getLength()),
-					expected[x][1], region.getLength());
+			assertEquals(expected[x][0], region.getOffset(),
+					String.format("partition %s offset expected %s but got %s", x, expected[x][0], region.getOffset()));
+			assertEquals(expected[x][1], region.getLength(),
+					String.format("partition %s length expected %s but got %s", x, expected[x][1], region.getLength()));
 		}
 	}
 

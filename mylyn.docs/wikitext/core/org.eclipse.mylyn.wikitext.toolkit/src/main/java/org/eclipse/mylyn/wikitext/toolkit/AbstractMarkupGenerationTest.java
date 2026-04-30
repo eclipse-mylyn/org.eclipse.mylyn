@@ -10,11 +10,13 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.toolkit;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.StringWriter;
 import java.io.Writer;
@@ -22,7 +24,7 @@ import java.io.Writer;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  *
@@ -35,8 +37,8 @@ public abstract class AbstractMarkupGenerationTest<L extends MarkupLanguage> {
 
 	protected L markupLanguage;
 
-	@Before
-	public void initParser() {
+	@BeforeEach
+	protected void initParser() {
 		parser = new MarkupParser();
 		markupLanguage = createMarkupLanguage();
 		parser.setMarkupLanguage(markupLanguage);

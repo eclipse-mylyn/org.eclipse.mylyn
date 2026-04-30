@@ -10,12 +10,14 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.util.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -29,7 +31,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.eclipse.mylyn.wikitext.util.DefaultXmlStreamWriter;
 import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class XmlStreamWriterAdapterTest {

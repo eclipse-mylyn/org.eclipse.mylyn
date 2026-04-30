@@ -11,12 +11,14 @@
  *     David Green - initial API and implementation
  *     Jeremie Bresson - Bug 379783
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.mediawiki.internal.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,16 +27,16 @@ import org.eclipse.mylyn.wikitext.mediawiki.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.mediawiki.Template;
 import org.eclipse.mylyn.wikitext.mediawiki.TemplateResolver;
 import org.eclipse.mylyn.wikitext.mediawiki.internal.TemplateProcessor;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class TemplateProcessorTest {
 
 	private MediaWikiLanguage markupLanguage;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		markupLanguage = new MediaWikiLanguage();
 	}
 
@@ -434,6 +436,6 @@ public class TemplateProcessorTest {
 	}
 
 	private void assertContains(Set<String> strings, String string) {
-		assertTrue(String.format("Expected %s but got %s", string, strings), strings.contains(string));
+		assertTrue(strings.contains(string), String.format("Expected %s but got %s", string, strings));
 	}
 }

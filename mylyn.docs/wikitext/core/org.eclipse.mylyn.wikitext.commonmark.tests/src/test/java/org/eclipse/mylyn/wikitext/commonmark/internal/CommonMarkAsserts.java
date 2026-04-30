@@ -10,11 +10,13 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -56,8 +58,7 @@ public class CommonMarkAsserts {
 		if (html == null) {
 			return null;
 		}
-		try {
-			StringWriter out = new StringWriter();
+		try (StringWriter out = new StringWriter()) {
 			DocumentBuilder builder = createDocumentBuilder(out);
 			HtmlParser.instance().parse(new InputSource(new StringReader(html)), builder);
 			return out.toString().trim();
@@ -67,15 +68,16 @@ public class CommonMarkAsserts {
 	}
 
 	private static String parseToHtml(MarkupLanguage markupLanguage, String input) {
-		StringWriter out = new StringWriter();
-		DocumentBuilder builder = createDocumentBuilder(out);
-		MarkupParser parser = new MarkupParser(markupLanguage, builder);
-		try {
+		try (StringWriter out = new StringWriter()) {
+			DocumentBuilder builder = createDocumentBuilder(out);
+			MarkupParser parser = new MarkupParser(markupLanguage, builder);
+
 			parser.parse(new StringReader(input));
+
+			return out.toString();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		return out.toString();
 	}
 
 	private static DocumentBuilder createDocumentBuilder(StringWriter out) {
