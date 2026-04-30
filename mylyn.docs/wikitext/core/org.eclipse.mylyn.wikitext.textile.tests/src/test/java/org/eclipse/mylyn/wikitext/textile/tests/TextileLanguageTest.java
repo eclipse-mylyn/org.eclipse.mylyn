@@ -10,14 +10,16 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.textile.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -38,7 +40,7 @@ import org.eclipse.mylyn.wikitext.toolkit.AbstractMarkupGenerationTest;
 import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder;
 import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder.Event;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * NOTE: most textile test cases can be found in {@link MarkupParserTest}
@@ -748,12 +750,12 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 			// test for false-positive
 			html = parser.parseToHtml("a paragraph with" + pair[0] + "content foo bar baz" + pair[0]);
 
-			assertFalse(pair[1], html.contains("<" + pair[1] + ">"));
-			assertFalse(pair[1], html.contains("</" + pair[1] + ">"));
+			assertFalse(html.contains("<" + pair[1] + ">"), pair[1]);
+			assertFalse(html.contains("</" + pair[1] + ">"), pair[1]);
 			html = parser.parseToHtml("a paragraph with " + pair[0] + "content foo bar baz" + pair[0] + "baz.");
 
-			assertFalse(pair[1], html.contains("<" + pair[1] + ">"));
-			assertFalse(pair[1], html.contains("</" + pair[1] + ">"));
+			assertFalse(html.contains("<" + pair[1] + ">"), pair[1]);
+			assertFalse(html.contains("</" + pair[1] + ">"), pair[1]);
 		}
 	}
 
@@ -783,7 +785,7 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 			String html = parser.parseToHtml(markup);
 
-			assertTrue("Expecting " + expectedHtml + " in HTML: " + html, html.contains(expectedHtml));
+			assertTrue(html.contains(expectedHtml), "Expecting " + expectedHtml + " in HTML: " + html);
 		}
 	}
 
@@ -1555,8 +1557,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 				textFound = true;
 			}
 		}
-		assertTrue("expected to find emphasis span", emphasisFound);
-		assertTrue("expected to find text", textFound);
+		assertTrue(emphasisFound, "expected to find emphasis span");
+		assertTrue(textFound, "expected to find text");
 	}
 
 	@Test

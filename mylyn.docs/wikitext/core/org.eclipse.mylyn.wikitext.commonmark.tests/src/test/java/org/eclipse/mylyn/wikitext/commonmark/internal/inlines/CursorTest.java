@@ -10,14 +10,16 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -26,14 +28,14 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
 import org.eclipse.mylyn.wikitext.commonmark.internal.TextSegment;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class CursorTest {
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void requiresTextSegment() {
-		assertNotNull(new Cursor(null));
+		assertThrows(NullPointerException.class, () -> new Cursor(null));
 	}
 
 	@Test
@@ -177,12 +179,12 @@ public class CursorTest {
 		assertEquals(12, cursor.getOffset(2));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void toCursorOffset() {
 		Cursor cursor = new Cursor(new TextSegment(List.of(new Line(1, 10, "abc"))));
 		assertEquals(0, cursor.toCursorOffset(10));
 		assertEquals(2, cursor.toCursorOffset(12));
-		cursor.toCursorOffset(9);
+		assertThrows(IllegalArgumentException.class, () -> cursor.toCursorOffset(9));
 	}
 
 	@Test

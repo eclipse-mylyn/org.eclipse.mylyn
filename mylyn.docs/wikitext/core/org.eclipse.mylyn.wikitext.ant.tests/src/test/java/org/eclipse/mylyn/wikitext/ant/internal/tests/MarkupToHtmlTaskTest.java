@@ -11,12 +11,14 @@
  *     David Green - initial API and implementation
  *     Torkild U. Resheim - Handle links when transforming file based wiki
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.ant.internal.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -27,9 +29,8 @@ import java.io.Writer;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.ant.internal.MarkupToHtmlTask;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 /**
  * @author David Green
  * @author Torkild U. Resheim
@@ -39,10 +40,8 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 
 	protected MarkupToHtmlTask task;
 
-	@Override
-	@Before
-	public void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		task = createTask();
 		task.setFormatOutput(true);
 		task.setMarkupLanguage(languageName);
@@ -239,23 +238,25 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 
 		String content = getContent(htmlFile);
 
-		assertTrue(content, content
-				.contains("<a href=\"index.html?org/eclipse/mylyn/wikitext/Test.html\" target=\"_javadoc\">Test</a>"));
+		assertTrue(
+				content.contains(
+						"<a href=\"index.html?org/eclipse/mylyn/wikitext/Test.html\" target=\"_javadoc\">Test</a>"),
+				content);
 	}
 
 	protected File createSimpleTextileMarkup() throws IOException {
-		StringWriter out = new StringWriter();
-		PrintWriter writer = new PrintWriter(out);
-		try (writer) {
-			writer.println("h1. First Heading");
-			writer.println();
-			writer.println("some content");
-			writer.println();
-			writer.println("h1. Second Heading");
-			writer.println();
-			writer.println("some more content");
+		try (StringWriter out = new StringWriter()) {
+			try (PrintWriter writer = new PrintWriter(out)) {
+				writer.println("h1. First Heading");
+				writer.println();
+				writer.println("some content");
+				writer.println();
+				writer.println("h1. Second Heading");
+				writer.println();
+				writer.println("some more content");
+			}
+			return createTextileMarkupFile(out.toString());
 		}
-		return createTextileMarkupFile(out.toString());
 	}
 
 	protected File createTextileMarkupFile(String content) throws IOException {

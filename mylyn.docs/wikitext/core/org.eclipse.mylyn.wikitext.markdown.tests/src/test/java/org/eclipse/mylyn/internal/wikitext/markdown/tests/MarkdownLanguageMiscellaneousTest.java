@@ -10,11 +10,12 @@
  * Contributors:
  *     Stefan Seelmann - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for Markdown overview and miscellaneous. Follows specification at

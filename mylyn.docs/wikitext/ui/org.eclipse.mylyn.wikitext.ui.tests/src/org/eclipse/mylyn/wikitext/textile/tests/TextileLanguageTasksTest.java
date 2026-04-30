@@ -26,8 +26,8 @@ import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * tests for Textile that involve the tasks plug-in and dependencies on the Eclipse runtime.
@@ -42,8 +42,8 @@ public class TextileLanguageTasksTest {
 
 	private TextileLanguage markupLanguage;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		initParser();
 	}
 

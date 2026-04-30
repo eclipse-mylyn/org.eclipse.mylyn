@@ -10,29 +10,22 @@
  * Contributors:
  *     Max Bureck (Fraunhofer FOKUS) - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
-import java.util.Arrays;
-import java.util.Collection;
-
 import org.eclipse.mylyn.wikitext.markdown.MarkdownLanguage;
 import org.eclipse.mylyn.wikitext.toolkit.AbstractMarkupGenerationTest;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedClass;
+import org.junit.jupiter.params.provider.ValueSource;
 
-@RunWith(Parameterized.class)
+@ParameterizedClass
+@ValueSource(strings = { "http://", "https://", "" })
 @SuppressWarnings({ "nls", "restriction" })
 public class MarkdownLanguageExtendedAutomaticLinkReplacementTest
 extends AbstractMarkupGenerationTest<MarkdownLanguage> {
-
-	@Parameters
-	public static Collection<Object[]> data() {
-		return Arrays.asList(new Object[][] { { "http://" }, { "https://" }, { "" } });
-	}
 
 	private final String urlPrefix;
 
@@ -40,18 +33,12 @@ extends AbstractMarkupGenerationTest<MarkdownLanguage> {
 
 	public MarkdownLanguageExtendedAutomaticLinkReplacementTest(String prefix) {
 		urlPrefix = prefix;
-		if (prefix.equals("")) {
-			hrefPrefix = "http://";
-		} else {
-			hrefPrefix = prefix;
-		}
+		hrefPrefix = prefix.isEmpty() ? "http://" : prefix;
 	}
 
 	@Test
 	public void testOnlyLink() {
 		String markdown = urlPrefix + "www.eclipse.org:80/p2%20update/!+*,';$[foo]/(bar)/~/_emf_/-?bar=baz&oomph#foo";
-		// note that in xhmtl attribute values are escaped, therefore
-		// ' is escaped as &apos; and & is escaped as &amp;
 		String expected = "<p><a href=\"" + hrefPrefix
 				+ "www.eclipse.org:80/p2%20update/!+*,&apos;;$[foo]/(bar)/~/_emf_/-?bar=baz&amp;oomph#foo\">"
 				+ urlPrefix

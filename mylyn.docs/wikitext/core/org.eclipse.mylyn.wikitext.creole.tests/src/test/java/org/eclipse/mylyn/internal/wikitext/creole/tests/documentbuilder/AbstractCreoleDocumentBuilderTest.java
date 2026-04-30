@@ -15,13 +15,14 @@
 
 package org.eclipse.mylyn.internal.wikitext.creole.tests.documentbuilder;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.StringWriter;
 
 import org.eclipse.mylyn.wikitext.creole.internal.CreoleDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * @author Kevin de Vlaming
@@ -32,8 +33,8 @@ public abstract class AbstractCreoleDocumentBuilderTest {
 
 	protected StringWriter out;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		out = new StringWriter();
 		builder = new CreoleDocumentBuilder(out);
 	}

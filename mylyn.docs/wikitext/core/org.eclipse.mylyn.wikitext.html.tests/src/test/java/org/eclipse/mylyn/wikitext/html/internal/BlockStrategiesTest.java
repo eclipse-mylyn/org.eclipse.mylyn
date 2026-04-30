@@ -15,10 +15,15 @@
 
 package org.eclipse.mylyn.wikitext.html.internal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -26,13 +31,13 @@ import java.util.List;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class BlockStrategiesTest {
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void createNull() {
-		new BlockStrategies(null);
+		assertThrows(NullPointerException.class, () -> new BlockStrategies(null));
 	}
 
 	@Test
@@ -55,7 +60,7 @@ public class BlockStrategiesTest {
 	@Test
 	public void alternatives() {
 		BlockStrategies strategies = new BlockStrategies(new HashSet<>(Arrays.asList(BlockType.PARAGRAPH)));
-		assertTrue(strategies.getStrategy(BlockType.CODE, new Attributes()) instanceof SubstitutionBlockStrategy);
+		assertInstanceOf(SubstitutionBlockStrategy.class, strategies.getStrategy(BlockType.CODE, new Attributes()));
 	}
 
 	@Test
@@ -144,17 +149,19 @@ public class BlockStrategiesTest {
 		BlockStrategies strategies = new BlockStrategies(new HashSet<>(Arrays.asList(supportedType)));
 		BlockStrategy strategy = strategies.getStrategy(blockType, new Attributes());
 		assertNotNull(strategy);
-		assertEquals(blockType.name(), SubstitutionBlockStrategy.class, strategy.getClass());
-		assertEquals(blockType.name(), supportedType, ((SubstitutionBlockStrategy) strategy).getBlockType());
+		assertEquals(SubstitutionBlockStrategy.class, strategy.getClass(), blockType.name());
+		assertEquals(supportedType, ((SubstitutionBlockStrategy) strategy).getBlockType(), blockType.name());
 	}
 
 	private void assertUnsupported(BlockStrategies strategies, BlockType blockType) {
 		BlockStrategy blockStrategy = strategies.getStrategy(blockType, new Attributes());
 		assertNotNull(blockStrategy);
 		assertFalse(blockStrategy instanceof SupportedBlockStrategy);
+		assertThat(blockStrategy, not(instanceOf(SupportedBlockStrategy.class)));
+
 	}
 
 	private void assertSupported(BlockStrategies strategies, BlockType blockType) {
-		assertTrue(strategies.getStrategy(blockType, new Attributes()) instanceof SupportedBlockStrategy);
+		assertInstanceOf(SupportedBlockStrategy.class, strategies.getStrategy(blockType, new Attributes()));
 	}
 }

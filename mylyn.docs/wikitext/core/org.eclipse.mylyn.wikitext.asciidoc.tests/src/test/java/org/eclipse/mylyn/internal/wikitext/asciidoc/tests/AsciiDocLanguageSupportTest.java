@@ -15,7 +15,8 @@
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +25,7 @@ import java.util.Map;
 
 import org.eclipse.mylyn.wikitext.asciidoc.internal.util.LanguageSupport;
 import org.eclipse.mylyn.wikitext.parser.TableCellAttributes;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit Tests for {@link LanguageSupport}
@@ -35,17 +36,17 @@ public class AsciiDocLanguageSupportTest extends AsciiDocLanguageTestBase {
 	@Test
 	public void testParseFormattingProperties() throws Exception {
 		Map<String, String> map = LanguageSupport.parseFormattingProperties("key=\"value\"", Collections.emptyList());
-		assertEquals("size", 1, map.size());
-		assertEquals("key", "value", map.get("key"));
+		assertEquals(1, map.size(), "size");
+		assertEquals("value", map.get("key"), "key");
 	}
 
 	@Test
 	public void testParseFormattingPropertiesWithComma() throws Exception {
 		Map<String, String> map = LanguageSupport.parseFormattingProperties("key1=\"v1,v2\",key2=\"val\"",
 				Collections.emptyList());
-		assertEquals("size", 2, map.size());
-		assertEquals("key1", "v1,v2", map.get("key1"));
-		assertEquals("key1", "val", map.get("key2"));
+		assertEquals(2, map.size(), "size");
+		assertEquals("v1,v2", map.get("key1"), "key1");
+		assertEquals("val", map.get("key2"), "key1");
 	}
 
 	@Test
@@ -55,58 +56,58 @@ public class AsciiDocLanguageSupportTest extends AsciiDocLanguageTestBase {
 		list.add("k2");
 		list.add("k3");
 		Map<String, String> map = LanguageSupport.parseFormattingProperties("10,20,30", list);
-		assertEquals("size", 3, map.size());
-		assertEquals("k1", "10", map.get("k1"));
-		assertEquals("k2", "20", map.get("k2"));
-		assertEquals("k3", "30", map.get("k3"));
+		assertEquals(3, map.size(), "size");
+		assertEquals("10", map.get("k1"), "k1");
+		assertEquals("20", map.get("k2"), "k2");
+		assertEquals("30", map.get("k3"), "k3");
 	}
 
 	@Test
 	public void testComputeColumnsAttributeListSimple() {
 		List<TableCellAttributes> columnsAttributeList = LanguageSupport.computeColumnsAttributeList("<,^,>");
-		assertEquals("size", 3, columnsAttributeList.size());
-		assertEquals("(0) align", "left", columnsAttributeList.get(0).getAlign());
-		assertEquals("(1) align", "center", columnsAttributeList.get(1).getAlign());
-		assertEquals("(2) align", "right", columnsAttributeList.get(2).getAlign());
+		assertEquals(3, columnsAttributeList.size(), "size");
+		assertEquals("left", columnsAttributeList.get(0).getAlign(), "(0) align");
+		assertEquals("center", columnsAttributeList.get(1).getAlign(), "(1) align");
+		assertEquals("right", columnsAttributeList.get(2).getAlign(), "(2) align");
 
 	}
 
 	@Test
 	public void testComputeColumnsAttributeListRepeat() {
 		List<TableCellAttributes> columnsAttributeList = LanguageSupport.computeColumnsAttributeList("3*");
-		assertEquals("size", 3, columnsAttributeList.size());
+		assertEquals(3, columnsAttributeList.size(), "size");
 	}
 
 	@Test
 	public void testComputeColumnsAttributeListMixed() {
 		List<TableCellAttributes> columnsAttributeList = LanguageSupport.computeColumnsAttributeList("2*<,.<");
-		assertEquals("size", 3, columnsAttributeList.size());
-		assertEquals("(0) align", "left", columnsAttributeList.get(0).getAlign());
-		assertEquals("(1) align", "left", columnsAttributeList.get(1).getAlign());
-		assertEquals("(2) vertical align", "top", columnsAttributeList.get(2).getValign());
+		assertEquals(3, columnsAttributeList.size(), "size");
+		assertEquals("left", columnsAttributeList.get(0).getAlign(), "(0) align");
+		assertEquals("left", columnsAttributeList.get(1).getAlign(), "(1) align");
+		assertEquals("top", columnsAttributeList.get(2).getValign(), "(2) vertical align");
 	}
 
 	@Test
 	public void testComputeColumnsAttributeListProportional() {
 		List<TableCellAttributes> columnsAttributeList = LanguageSupport.computeColumnsAttributeList("1,2,6");
-		assertEquals("size", 3, columnsAttributeList.size());
+		assertEquals(3, columnsAttributeList.size(), "size");
 	}
 
 	@Test
 	public void testComputeColumnsAttributeListPercentage() {
 		List<TableCellAttributes> columnsAttributeList = LanguageSupport.computeColumnsAttributeList("10,20,70");
-		assertEquals("size", 3, columnsAttributeList.size());
+		assertEquals(3, columnsAttributeList.size(), "size");
 	}
 
 	@Test
 	public void testComputeColumnsAttributeListCustomWidthsAndAlignments() {
 		List<TableCellAttributes> columnsAttributeList = LanguageSupport.computeColumnsAttributeList("<.<2,>.^5,^.>3");
-		assertEquals("size", 3, columnsAttributeList.size());
-		assertEquals("(0) align", "left", columnsAttributeList.get(0).getAlign());
-		assertEquals("(0) vertical align", "top", columnsAttributeList.get(0).getValign());
-		assertEquals("(1) align", "right", columnsAttributeList.get(1).getAlign());
-		assertEquals("(1) vertical align", "middle", columnsAttributeList.get(1).getValign());
-		assertEquals("(2) align", "center", columnsAttributeList.get(2).getAlign());
-		assertEquals("(2) vertical align", "bottom", columnsAttributeList.get(2).getValign());
+		assertEquals(3, columnsAttributeList.size(), "size");
+		assertEquals("left", columnsAttributeList.get(0).getAlign(), "(0) align");
+		assertEquals("top", columnsAttributeList.get(0).getValign(), "(0) vertical align");
+		assertEquals("right", columnsAttributeList.get(1).getAlign(), "(1) align");
+		assertEquals("middle", columnsAttributeList.get(1).getValign(), "(1) vertical align");
+		assertEquals("center", columnsAttributeList.get(2).getAlign(), "(2) align");
+		assertEquals("bottom", columnsAttributeList.get(2).getValign(), "(2) vertical align");
 	}
 }

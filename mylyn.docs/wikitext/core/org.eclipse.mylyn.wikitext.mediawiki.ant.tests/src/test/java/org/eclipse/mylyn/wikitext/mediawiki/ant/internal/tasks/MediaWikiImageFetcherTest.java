@@ -10,48 +10,50 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.apache.tools.ant.Project;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 @SuppressWarnings("nls")
 public class MediaWikiImageFetcherTest {
-	@Rule
-	public final TemporaryFolder temporaryFolder = new TemporaryFolder();
+	@TempDir
+	File temporaryFolder;
 
-	@Rule
-	public final TemporaryFolder serverTemporaryFolder = new TemporaryFolder();
+	@TempDir
+	File serverTemporaryFolder;
 
 	private final TestMediaWikiImageFetcher task = new TestMediaWikiImageFetcher();
 
-	@Before
+	@BeforeEach
 	public void before() {
-		task.setDest(temporaryFolder.getRoot());
+		task.setDest(temporaryFolder);
 		task.setProject(new Project());
 	}
 
 	@Test
-	public void processPageWithManyImages() throws IOException {
-		MediaWikiMockFixture mediaWikiMockFixture = new MediaWikiMockFixture(serverTemporaryFolder.getRoot());
+	public void processPageWithManyImages() throws IOException, URISyntaxException {
+		MediaWikiMockFixture mediaWikiMockFixture = new MediaWikiMockFixture(serverTemporaryFolder);
 		mediaWikiMockFixture.createImageFiles();
 		task.setImageServerContent(mediaWikiMockFixture.createImageServerContent("http"));
 
-		task.setUrl(new URL("http://wiki.eclipse.org/"));
+		task.setUrl(new URI("http://wiki.eclipse.org/").toURL());
 		String wikiPageName = "Some/My_Page";
 		task.setPageName(wikiPageName);
 
 		task.execute();
 
-		mediaWikiMockFixture.assertImageFiles(temporaryFolder.getRoot());
+		mediaWikiMockFixture.assertImageFiles(temporaryFolder);
 	}
 
 }

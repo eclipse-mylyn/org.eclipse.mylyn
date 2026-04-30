@@ -13,16 +13,18 @@
  *     Patrik Suzzi <psuzzi@gmail.com> - Bug 474084
  *     Jeremie Bresson - Bug 492301
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.regex.Pattern;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for asciidoc block elements.
@@ -648,15 +650,15 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 
 	@Test
 	public void testLastTileReset() {
-		String html = parseToHtml("" //
-				+ ".Title line\n" //
-				+ "----\n" //
-				+ "This block has a title\n" //
-				+ "----\n" //
-				+ "" //
-				+ "----\n" //
-				+ "A block without title\n" //
-				+ "----\n");
+		String html = parseToHtml("""
+				.Title line
+				----
+				This block has a title
+				----
+				----
+				A block without title
+				----
+				""");
 		assertEquals("""
 				<div class="listingblock">\
 				<div class="title">Title line</div>\
@@ -672,18 +674,18 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 
 	@Test
 	public void testLastTileResetWithCommentBlock() {
-		String html = parseToHtml("" //
-				+ ".Title line\n" //
-				+ "////\n" //
-				+ "comment blocks do not reset the title\n" //
-				+ "////\n" //
-				+ "----\n" //
-				+ "This block has a title\n" //
-				+ "----\n" //
-				+ "" //
-				+ "----\n" //
-				+ "A block without title\n" //
-				+ "----\n");
+		String html = parseToHtml("""
+				.Title line
+				////
+				comment blocks do not reset the title
+				////
+				----
+				This block has a title
+				----
+				----
+				A block without title
+				----
+				""");
 		assertEquals("""
 				<div class="listingblock">\
 				<div class="title">Title line</div>\

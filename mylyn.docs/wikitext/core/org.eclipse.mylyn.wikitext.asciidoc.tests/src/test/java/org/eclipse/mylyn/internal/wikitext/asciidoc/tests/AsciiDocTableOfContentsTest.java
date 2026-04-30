@@ -8,13 +8,14 @@
  * Contributors:
  *     Fabrizio Iannetti - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the Table Of Contents block.
@@ -55,7 +56,7 @@ public class AsciiDocTableOfContentsTest extends AsciiDocLanguageTestBase {
 				<h2 id="_section_1">section 1</h2>\
 				<h3 id="_section_1_1">section 1.1</h3>\
 				<h4 id="_section_1_1_1">section 1.1.1</h4>"""; //
-		assertEquals("toc property default", expectedHtml.trim(), html.trim());
+		assertEquals(expectedHtml.trim(), html.trim(), "toc property default");
 	}
 
 	@Test
@@ -91,7 +92,7 @@ public class AsciiDocTableOfContentsTest extends AsciiDocLanguageTestBase {
 				<h2 id="_section_1">section 1</h2>\
 				<h3 id="_section_1_1">section 1.1</h3>\
 				<h4 id="_section_1_1_1">section 1.1.1</h4>"""; //
-		assertEquals("toc property default", expectedHtml.trim(), html.trim());
+		assertEquals(expectedHtml.trim(), html.trim(), "toc property default");
 	}
 
 	@Test
@@ -145,7 +146,7 @@ public class AsciiDocTableOfContentsTest extends AsciiDocLanguageTestBase {
 				<h4 id="_section_1_1_1">section 1.1.1</h4>\
 				<h5 id="_section_1_1_1_1">section 1.1.1.1</h5>\
 				<h6 id="_section_1_1_1_1_1">section 1.1.1.1.1</h6>"""; //
-		assertEquals("toc property default", expectedHtml.trim(), html.trim());
+		assertEquals(expectedHtml.trim(), html.trim(), "toc property default");
 	}
 
 	@Test
@@ -182,7 +183,7 @@ public class AsciiDocTableOfContentsTest extends AsciiDocLanguageTestBase {
 				<h2 id="_section_1">section 1</h2>\
 				<h3 id="_section_1_1">section 1.1</h3>\
 				<h4 id="_section_1_1_1">section 1.1.1</h4>"""; //
-		assertEquals("toc property default", expectedHtml.trim(), html.trim());
+		assertEquals(expectedHtml.trim(), html.trim(), "toc property default");
 	}
 
 }

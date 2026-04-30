@@ -10,12 +10,15 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.core.parser.markup;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 
@@ -24,8 +27,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.ConfigurationBuilder;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.parser.markup.block.EclipseErrorDetailsBlock;
 import org.eclipse.mylyn.wikitext.parser.markup.block.JavaStackTraceBlock;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * test for {@link ConfigurationBuilder}
@@ -55,6 +57,6 @@ public class ConfigurationBuilderTest {
 				return;
 			}
 		}
-		Assert.fail("Expected instance of " + clazz.getName() + " but instead got " + blocks);
+		fail("Expected instance of " + clazz.getName() + " but instead got " + blocks);
 	}
 }

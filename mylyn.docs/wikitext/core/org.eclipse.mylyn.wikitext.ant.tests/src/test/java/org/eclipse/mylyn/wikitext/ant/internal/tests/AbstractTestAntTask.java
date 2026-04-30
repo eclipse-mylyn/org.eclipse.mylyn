@@ -26,8 +26,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ResourceBundle;
 
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 @SuppressWarnings({ "nls", "restriction" })
 public abstract class AbstractTestAntTask {
@@ -36,8 +36,8 @@ public abstract class AbstractTestAntTask {
 
 	protected String languageName = computeLanguageName();
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void _setUp() throws Exception {
 		tempFolder = File.createTempFile(getClass().getSimpleName(), ".tmp");
 		tempFolder.delete();
 		tempFolder.mkdirs();
@@ -51,8 +51,8 @@ public abstract class AbstractTestAntTask {
 		return TextileLanguage.class.getName();
 	}
 
-	@After
-	public void tearDown() throws Exception {
+	@AfterEach
+	void _tearDown() throws Exception {
 		delete(tempFolder);
 	}
 

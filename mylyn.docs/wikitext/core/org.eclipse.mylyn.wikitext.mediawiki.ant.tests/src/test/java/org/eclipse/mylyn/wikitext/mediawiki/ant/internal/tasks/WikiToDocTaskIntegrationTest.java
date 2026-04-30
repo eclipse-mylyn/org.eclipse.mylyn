@@ -10,11 +10,13 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks;
 
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -23,32 +25,31 @@ import java.util.Collections;
 import org.apache.tools.ant.Project;
 import org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks.WikiToDocTask.Path;
 import org.eclipse.mylyn.wikitext.toolkit.TestResources;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class WikiToDocTaskIntegrationTest {
 
-	@Rule
-	public final TemporaryFolder temporaryFolder = new TemporaryFolder();
+	@TempDir
+	public File temporaryFolder;
 
-	@Rule
-	public final TemporaryFolder serverTemporaryFolder = new TemporaryFolder();
+	@TempDir
+	public File serverTemporaryFolder;
 
 	private TestWikiToDocTask task;
 
-	@Before
+	@BeforeEach
 	public void before() {
 		task = new TestWikiToDocTask();
-		task.setDest(temporaryFolder.getRoot());
+		task.setDest(temporaryFolder);
 		task.setProject(new Project());
 	}
 
 	@Test
 	public void processPageWithManyImages() throws Exception {
-		MediaWikiMockFixture mediaWikiMockFixture = new MediaWikiMockFixture(serverTemporaryFolder.getRoot());
+		MediaWikiMockFixture mediaWikiMockFixture = new MediaWikiMockFixture(serverTemporaryFolder);
 		Files.createTempFile("image", "");
 
 		task.setServerContent(
@@ -73,7 +74,7 @@ public class WikiToDocTaskIntegrationTest {
 		task.setPaths(Collections.singletonList(path));
 		task.execute();
 
-		File wikiPageFolder = new File(temporaryFolder.getRoot(), wikiPageName);
+		File wikiPageFolder = new File(temporaryFolder, wikiPageName);
 
 		assertTrue(wikiPageFolder.exists());
 		mediaWikiMockFixture.assertImageFiles(new File(wikiPageFolder, "images"));

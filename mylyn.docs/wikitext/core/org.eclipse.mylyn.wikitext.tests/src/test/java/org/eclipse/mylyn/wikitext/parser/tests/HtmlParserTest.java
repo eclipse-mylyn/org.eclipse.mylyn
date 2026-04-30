@@ -10,12 +10,14 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -23,9 +25,8 @@ import java.io.StringWriter;
 
 import org.eclipse.mylyn.wikitext.parser.HtmlParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -46,11 +47,11 @@ public class HtmlParserTest {
 
 		String result = out.toString();
 
-		Assert.assertEquals("<p>test</p>", result.trim());
+		assertEquals("<p>test</p>", result.trim());
 	}
 
 	// FIXME: re-implement tests to avoid access to package-local members
-	@Ignore
+	@Disabled
 	@Test
 	public void instance() {
 		HtmlParser instance = HtmlParser.instance();
@@ -59,7 +60,7 @@ public class HtmlParserTest {
 	}
 
 	// FIXME: re-implement tests to avoid access to package-local members
-	@Ignore
+	@Disabled
 	@Test
 	public void instanceWithHtmlCleanupRules() {
 		HtmlParser instance = HtmlParser.instanceWithHtmlCleanupRules();
@@ -72,7 +73,7 @@ public class HtmlParserTest {
 	}
 
 	// FIXME: re-implement tests to avoid access to package-local members
-	@Ignore
+	@Disabled
 	@Test
 	public void jsoupNotAvailable() throws Exception {
 		HtmlParser parser = new HtmlParser() {

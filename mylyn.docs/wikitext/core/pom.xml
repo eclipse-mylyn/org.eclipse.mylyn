@@ -78,7 +78,8 @@
 						<Bundle-RequiredExecutionEnvironment>JavaSE-21</Bundle-RequiredExecutionEnvironment>
 						<Export-Package>
 							${project.artifactId}.internal*;x-internal:=true,${project.artifactId}*</Export-Package>
-						<Import-Package>!java.*, org.apache.commons.collections4*;
+						<Import-Package>!java.*,
+							org.apache.commons.collections4*;
 							version="[4.4.0,5.0.0)", *</Import-Package>
 						<Import-Package>!java.*, org.apache.commons.lang3*;
 							version="[3.14.0,4.0.0)", *</Import-Package>
@@ -129,9 +130,9 @@
 				<version>1.22.2</version>
 			</dependency>
 			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.13.2</version>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-api</artifactId>
+				<version>5.14.3</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>

@@ -10,18 +10,22 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.util.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
@@ -38,9 +42,9 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageProvider;
 import org.eclipse.mylyn.wikitext.parser.markup.tests.MockMarkupLanguageProvider;
 import org.eclipse.mylyn.wikitext.parser.tests.MockMarkupLanguage;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link ServiceLocator}
@@ -63,14 +67,14 @@ public class ServiceLocatorTest {
 
 	private ServiceLocator locator;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		ServiceLocator.setImplementation(null);
 		locator = ServiceLocator.getInstance(ServiceLocatorTest.class.getClassLoader());
 	}
 
 	// FIXME: re-implement tests to avoid access to package-local members
-	@Ignore
+	@Disabled
 	@Test
 	public void testKnownLanguageMetaInf() {
 		setupServiceLocatorWithMockMarkupLanguage(true);
@@ -78,7 +82,7 @@ public class ServiceLocatorTest {
 	}
 
 	// FIXME: re-implement tests to avoid access to package-local members
-	@Ignore
+	@Disabled
 	@Test
 	public void testKnownLanguageServices() {
 		setupServiceLocatorWithMockMarkupLanguage(false);
@@ -86,7 +90,7 @@ public class ServiceLocatorTest {
 	}
 
 	// FIXME: re-implement tests to avoid access to package-local members
-	@Ignore
+	@Disabled
 	@Test
 	public void testKnownLanguageProviderMetaInf() {
 		setupServiceLocatorWithMockMarkupLanguageProvider(true);
@@ -94,7 +98,7 @@ public class ServiceLocatorTest {
 	}
 
 	// FIXME: re-implement tests to avoid access to package-local members
-	@Ignore
+	@Disabled
 	@Test
 	public void testKnownLanguageProviderServices() {
 		setupServiceLocatorWithMockMarkupLanguageProvider(false);
@@ -102,8 +106,8 @@ public class ServiceLocatorTest {
 	}
 
 	@Test
-	public void testLoadClassNotFound() throws MalformedURLException {
-		final URL url = new URL("file://example");
+	public void testLoadClassNotFound() throws MalformedURLException, URISyntaxException {
+		final URL url = new URI("file://example").toURL();
 		final AtomicBoolean wasThrown = new AtomicBoolean();
 		locator = new ServiceLocator(ServiceLocatorTest.class.getClassLoader()) {
 			@Override
@@ -145,8 +149,13 @@ public class ServiceLocatorTest {
 				public Enumeration<URL> getResources(String name) throws IOException {
 					if (metaInf && name.equals("META-INF/services/" + MarkupLanguage.class.getName())
 							|| !metaInf && name.equals("services/" + MarkupLanguage.class.getName())) {
-						Collection<URL> resources = Collections
-								.singletonList(new URL("file:" + MockMarkupLanguage.class.getName()));
+						Collection<URL> resources;
+						try {
+							resources = Collections
+									.singletonList(new URI("file:" + MockMarkupLanguage.class.getName()).toURL());
+						} catch (MalformedURLException | URISyntaxException e) {
+							throw new IOException(e);
+						}
 						return Collections.enumeration(resources);
 					}
 					return Collections.enumeration(Collections.emptyList());
@@ -181,8 +190,13 @@ public class ServiceLocatorTest {
 				public Enumeration<URL> getResources(String name) throws IOException {
 					if (metaInf && name.equals("META-INF/services/" + MarkupLanguageProvider.class.getName())
 							|| !metaInf && name.equals("services/" + MarkupLanguageProvider.class.getName())) {
-						Collection<URL> resources = Collections
-								.singletonList(new URL("file:" + MockMarkupLanguageProvider.class.getName()));
+						Collection<URL> resources;
+						try {
+							resources = Collections.singletonList(
+									new URI("file:" + MockMarkupLanguageProvider.class.getName()).toURL());
+						} catch (MalformedURLException | URISyntaxException e) {
+							throw new IOException(e);
+						}
 						return Collections.enumeration(resources);
 					}
 					return Collections.enumeration(Collections.emptyList());
@@ -232,7 +246,7 @@ public class ServiceLocatorTest {
 	}
 
 	// FIXME: re-implement tests to avoid access to package-local members
-	@Ignore
+	@Disabled
 	@Test
 	public void getMarkupLanguageUnknown() {
 		setupServiceLocatorWithMockMarkupLanguage(true);
@@ -244,7 +258,7 @@ public class ServiceLocatorTest {
 	}
 
 	// FIXME: re-implement tests to avoid access to package-local members
-	@Ignore
+	@Disabled
 	@Test
 	public void readServicesFileNone() {
 //		List<String> names = locator.readServiceClassNames(createInput(""));
@@ -253,7 +267,7 @@ public class ServiceLocatorTest {
 	}
 
 	// FIXME: re-implement tests to avoid access to package-local members
-	@Ignore
+	@Disabled
 	@Test
 	public void readServicesFileCommentsAndEmptyLinesOnly() {
 //		List<String> names = locator.readServiceClassNames(createInput("#" + Object.class.getName() + "\n\n\n\n#last"));
@@ -262,7 +276,7 @@ public class ServiceLocatorTest {
 	}
 
 	// FIXME: re-implement tests to avoid access to package-local members
-	@Ignore
+	@Disabled
 	@Test
 	public void readServicesFile() {
 //		List<String> names = locator.readServiceClassNames(
@@ -274,7 +288,7 @@ public class ServiceLocatorTest {
 	}
 
 	// FIXME: re-implement tests to avoid access to package-local members
-	@Ignore
+	@Disabled
 	@Test
 	public void getClasspathServiceResourceNames() {
 //		List<String> names = locator.getClasspathServiceResourceNames();
@@ -284,7 +298,7 @@ public class ServiceLocatorTest {
 	}
 
 	// FIXME: re-implement tests to avoid access to package-local members
-	@Ignore
+	@Disabled
 	@Test
 	public void getAllMarkupLanguagesFiltersDuplicates() {
 //		final MarkupLanguage language1 = new TestMarkupLanguage("Language 1");

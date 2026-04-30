@@ -12,13 +12,15 @@
  *     Torkild U. Resheim - Handle links when transforming, bug 325006
  *     Jeremie Bresson - Bug 492302
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.parser.builder.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,8 +43,8 @@ import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder.Stylesheet;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author David Green
@@ -59,8 +61,8 @@ public class HtmlDocumentBuilder2Test {
 
 	private final Map<File, URL> fileToUrl = new HashMap<>();
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		parser = new MarkupParser();
 		parser.setMarkupLanguage(new TextileLanguage());
 		out = new StringWriter();

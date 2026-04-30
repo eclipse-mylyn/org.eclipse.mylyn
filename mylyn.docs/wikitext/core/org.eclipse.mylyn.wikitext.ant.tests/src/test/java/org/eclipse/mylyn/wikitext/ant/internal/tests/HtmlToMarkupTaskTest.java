@@ -10,12 +10,14 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.ant.internal.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -23,8 +25,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.eclipse.mylyn.wikitext.ant.internal.HtmlToMarkupTask;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author David Green
@@ -34,10 +36,8 @@ public class HtmlToMarkupTaskTest extends AbstractTestAntTask {
 
 	private HtmlToMarkupTask task;
 
-	@Override
-	@Before
-	public void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		task = createTask();
 		task.setMarkupLanguage(languageName);
 	}
@@ -55,7 +55,7 @@ public class HtmlToMarkupTaskTest extends AbstractTestAntTask {
 		listFiles();
 
 		File markupFile = new File(markup.getParentFile(), "markup.textile");
-		assertTrue("Expecting file: " + markupFile, markupFile.exists() && markupFile.isFile());
+		assertTrue(markupFile.exists() && markupFile.isFile(), "Expecting file: " + markupFile);
 
 		String content = getContent(markupFile);
 

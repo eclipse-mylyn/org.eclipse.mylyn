@@ -16,8 +16,8 @@
 package org.eclipse.mylyn.wikitext.parser.builder.tests;
 
 import static java.text.MessageFormat.format;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,16 +34,15 @@ import org.eclipse.mylyn.wikitext.splitter.SplitOutlineItem;
 import org.eclipse.mylyn.wikitext.splitter.SplittingHtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.splitter.SplittingOutlineParser;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class SplittingHtmlDocumentBuilderTest {
 
-	@Rule
-	public final TemporaryFolder temporaryFolderRule = new TemporaryFolder();
+	@TempDir
+	public File temporaryFolder;
 
 	private final SplittingHtmlDocumentBuilder builder = new SplittingHtmlDocumentBuilder();
 
@@ -51,9 +50,9 @@ public class SplittingHtmlDocumentBuilderTest {
 
 	private File outputFile;
 
-	@Before
-	public void before() throws IOException {
-		outputFile = temporaryFolderRule.newFile("index.html");
+	@BeforeEach
+	void before() throws IOException {
+		outputFile = new File(temporaryFolder, "index.html");
 	}
 
 	@Test
@@ -106,7 +105,7 @@ public class SplittingHtmlDocumentBuilderTest {
 		String resourceContents = convertToUnixLineEndings(IOUtils
 				.toString(SplittingHtmlDocumentBuilderTest.class.getResource(resourcePath), StandardCharsets.UTF_8));
 		String actualContents = IOUtils.toString(outputFile.toURI().toURL(), StandardCharsets.UTF_8);
-		assertEquals(format("Resource {0} differs", resourcePath), resourceContents, actualContents);
+		assertEquals(resourceContents, actualContents, format("Resource {0} differs", resourcePath));
 	}
 
 	private String convertToUnixLineEndings(String resource) {

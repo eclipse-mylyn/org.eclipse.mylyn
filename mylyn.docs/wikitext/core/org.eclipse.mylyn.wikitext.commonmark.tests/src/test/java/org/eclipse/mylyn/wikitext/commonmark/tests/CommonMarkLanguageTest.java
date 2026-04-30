@@ -10,17 +10,18 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.tests;
 
 import static java.text.MessageFormat.format;
 import static org.eclipse.mylyn.wikitext.commonmark.internal.CommonMarkAsserts.assertContent;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +40,7 @@ import org.eclipse.mylyn.wikitext.parser.builder.event.EndBlockEvent;
 import org.eclipse.mylyn.wikitext.parser.builder.event.EndDocumentEvent;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class CommonMarkLanguageTest {
@@ -131,8 +132,8 @@ public class CommonMarkLanguageTest {
 		parser.parse(content, asDocument);
 		List<DocumentBuilderEvent> expectedEvents = Arrays.asList(events);
 		List<DocumentBuilderEvent> actualEvents = builder.getDocumentBuilderEvents().getEvents();
-		assertEquals(format("Expected {0} but got {1}", toMessage(expectedEvents), toMessage(actualEvents)),
-				expectedEvents, actualEvents);
+		assertEquals(expectedEvents, actualEvents,
+				format("Expected {0} but got {1}", toMessage(expectedEvents), toMessage(actualEvents)));
 	}
 
 	private String toMessage(List<DocumentBuilderEvent> expectedEvents) {
