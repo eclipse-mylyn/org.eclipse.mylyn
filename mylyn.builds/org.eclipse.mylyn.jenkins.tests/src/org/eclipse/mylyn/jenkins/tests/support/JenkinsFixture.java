@@ -15,13 +15,9 @@
 
 package org.eclipse.mylyn.jenkins.tests.support;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
+import org.eclipse.mylyn.commons.sdk.util.AbstractTestFixture;
 import org.eclipse.mylyn.commons.sdk.util.FixtureConfiguration;
-import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
-import org.eclipse.mylyn.commons.sdk.util.junit4.RepositoryTestFixture;
 import org.eclipse.mylyn.internal.jenkins.core.JenkinsCorePlugin;
 import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsConfigurationCache;
 import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsServerInfo.Type;
@@ -32,29 +28,7 @@ import org.eclipse.mylyn.internal.jenkins.core.client.RestfulJenkinsClient;
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class JenkinsFixture extends RepositoryTestFixture {
-
-	public static final JenkinsFixture DEFAULT = discoverDefault();
-
-	private static JenkinsFixture discoverDefault() {
-		try {
-			return TestConfiguration.getDefault().discoverDefault(JenkinsFixture.class, "hudson");
-		} catch (RuntimeException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, JenkinsCorePlugin.ID_PLUGIN,
-					"No default hudson fixture found, will look for default jenkins fixture", e));
-		}
-		return TestConfiguration.getDefault().discoverDefault(JenkinsFixture.class, "jenkins");
-	}
-
-	private static JenkinsFixture current;
-
-	public static JenkinsFixture current() {
-		if (current == null) {
-			DEFAULT.activate();
-		}
-		return current;
-	}
-
+public class JenkinsFixture extends AbstractTestFixture {
 	private final String version;
 
 	private final Type type;
@@ -73,12 +47,6 @@ public class JenkinsFixture extends RepositoryTestFixture {
 				configuration.getInfo());
 	}
 
-	@Override
-	protected JenkinsFixture activate() {
-		current = this;
-		return this;
-	}
-
 	public JenkinsHarness createHarness() {
 		return new JenkinsHarness(this);
 	}
@@ -89,11 +57,6 @@ public class JenkinsFixture extends RepositoryTestFixture {
 
 	public static RestfulJenkinsClient connect(RepositoryLocation location) {
 		return new RestfulJenkinsClient(location, new JenkinsConfigurationCache());
-	}
-
-	@Override
-	protected JenkinsFixture getDefault() {
-		return DEFAULT;
 	}
 
 	public Type getType() {
@@ -109,8 +72,14 @@ public class JenkinsFixture extends RepositoryTestFixture {
 		return true;
 	}
 
+	@Deprecated(forRemoval = true)
 	public boolean isHudson() {
-		return Type.HUDSON == getType();
+		return false;
+	}
+
+	@Override
+	protected AbstractTestFixture getDefault() {
+		throw new UnsupportedOperationException("Not needed");
 	}
 
 }

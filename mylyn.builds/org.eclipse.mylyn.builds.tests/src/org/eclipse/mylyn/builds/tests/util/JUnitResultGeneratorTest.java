@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.builds.tests.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.ByteArrayOutputStream;
 
 import javax.xml.transform.TransformerFactory;
@@ -26,14 +28,14 @@ import org.eclipse.mylyn.builds.core.ITestResult;
 import org.eclipse.mylyn.builds.core.ITestSuite;
 import org.eclipse.mylyn.builds.internal.core.BuildFactory;
 import org.eclipse.mylyn.builds.internal.core.util.JUnitResultGenerator;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class JUnitResultGeneratorTest extends TestCase {
+public class JUnitResultGeneratorTest {
 
 	private ByteArrayOutputStream out;
 
@@ -45,8 +47,8 @@ public class JUnitResultGeneratorTest extends TestCase {
 
 	private TransformerHandler handler;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		out = new ByteArrayOutputStream();
 		StreamResult streamResult = new StreamResult(out);
 		SAXTransformerFactory factory = (SAXTransformerFactory) TransformerFactory.newInstance();
@@ -75,6 +77,7 @@ public class JUnitResultGeneratorTest extends TestCase {
 		suite.getCases().add(testCase);
 	}
 
+	@Test
 	public void testWrite() throws Exception {
 		JUnitResultGenerator generator = new JUnitResultGenerator(testResult);
 		generator.write(handler);
@@ -84,6 +87,7 @@ public class JUnitResultGeneratorTest extends TestCase {
 				out.toString());
 	}
 
+	@Test
 	public void testWriteWithChildSuite() throws Exception {
 		suite.setLabel("Suite1");
 

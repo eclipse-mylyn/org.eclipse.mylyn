@@ -13,6 +13,10 @@
 
 package org.eclipse.mylyn.builds.tests.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.runtime.Status;
@@ -24,14 +28,15 @@ import org.eclipse.mylyn.internal.builds.ui.editor.BuildEditor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class BuildsUrlHandlerTest extends TestCase {
+public class BuildsUrlHandlerTest {
 
 	private IWorkbenchPage activePage;
 
@@ -39,8 +44,8 @@ public class BuildsUrlHandlerTest extends TestCase {
 
 	private BuildServer server;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		assertNotNull(activePage);
 
@@ -48,11 +53,12 @@ public class BuildsUrlHandlerTest extends TestCase {
 		server = harness.createServer();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		harness.dispose();
 	}
 
+	@Test
 	public void testOpenUrl() throws Exception {
 		EditorHandle handler = BrowserUtil.openUrl(activePage, server.getUrl() + "/123", 0); //$NON-NLS-1$
 
@@ -63,8 +69,8 @@ public class BuildsUrlHandlerTest extends TestCase {
 				if (handler.await(500, TimeUnit.MILLISECONDS)) {
 					break;
 				}
-				assertTrue("Expected editor did not open within 10 seconds",
-						System.currentTimeMillis() - startTime < 10 * 1000);
+				assertTrue(System.currentTimeMillis() - startTime < 10 * 1000,
+						"Expected editor did not open within 10 seconds");
 			}
 		}
 

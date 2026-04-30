@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.builds.tests.operations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Collections;
 
 import org.eclipse.mylyn.builds.core.IBuild;
@@ -24,14 +26,15 @@ import org.eclipse.mylyn.builds.internal.core.operations.RefreshOperation;
 import org.eclipse.mylyn.builds.tests.support.BuildHarness;
 import org.eclipse.mylyn.builds.tests.support.MockBuildServerBehaviour;
 import org.eclipse.mylyn.commons.core.operations.OperationUtil;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class RefreshOperationTest extends TestCase {
+public class RefreshOperationTest {
 
 	private BuildHarness harness;
 
@@ -41,8 +44,8 @@ public class RefreshOperationTest extends TestCase {
 
 	private IBuildPlan plan;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		harness = new BuildHarness(IBuildFactory.INSTANCE.createBuildModel());
 
 		server = harness.createServer();
@@ -54,11 +57,12 @@ public class RefreshOperationTest extends TestCase {
 		plan.setLastBuild(existingBuild);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		harness.dispose();
 	}
 
+	@Test
 	public void testMergeExtendedAttributesBuild() throws Exception {
 		IBuild newBuild = harness.createBuild();
 		newBuild.getAttributes().put("key", "value2");
@@ -74,6 +78,7 @@ public class RefreshOperationTest extends TestCase {
 		assertEquals("value2", plan.getLastBuild().getAttributes().get("key"));
 	}
 
+	@Test
 	public void testMergeExtendedAttributesBuildPlan() throws Exception {
 		IBuildPlan plan2 = harness.createBuildPlan();
 		plan2.getAttributes().put("key", "value2");

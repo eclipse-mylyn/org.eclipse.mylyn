@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.jenkins.tests.support;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -21,7 +23,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsException;
-import org.junit.Assert;
 
 /**
  * @author Steffen Pingel
@@ -39,13 +40,13 @@ public class JenkinsTestUtil {
 				return;
 			}
 		}
-		Assert.fail("Expected '" + name + "' in " + jobs);
+		fail("Expected '" + name + "' in " + jobs);
 	}
 
 	public static void assertContainsNot(List<HudsonModelJob> jobs, String name) {
 		for (HudsonModelJob job : jobs) {
 			if (job.getName().equals(name)) {
-				Assert.fail("Not expected '" + name + "' in " + jobs);
+				fail("Not expected '" + name + "' in " + jobs);
 			}
 		}
 
@@ -57,7 +58,7 @@ public class JenkinsTestUtil {
 				return;
 			}
 		}
-		Assert.fail("Expected attribute 'healthReport' in " + jobs);
+		fail("Expected attribute 'healthReport' in " + jobs);
 	}
 
 	public static <T> T poll(Callable<T> callable) throws Exception {
