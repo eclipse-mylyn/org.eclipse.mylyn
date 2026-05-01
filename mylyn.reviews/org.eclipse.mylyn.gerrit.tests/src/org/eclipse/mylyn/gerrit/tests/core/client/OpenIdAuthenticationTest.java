@@ -41,7 +41,7 @@ import org.junit.jupiter.api.Test;
 public class OpenIdAuthenticationTest extends AbstractGerritFixtureTest
 {
 
-	private class StubRepositoryLocation extends WebLocation implements IOpenIdLocation {
+	private static class StubRepositoryLocation extends WebLocation implements IOpenIdLocation {
 
 		String providerUrl;
 

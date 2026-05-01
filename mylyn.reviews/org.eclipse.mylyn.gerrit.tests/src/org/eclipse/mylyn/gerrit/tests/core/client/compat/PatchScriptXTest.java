@@ -53,7 +53,7 @@ public class PatchScriptXTest {
 		return result.result;
 	}
 
-	private class PatchScriptXAsResult {
+	private static class PatchScriptXAsResult {
 		private String jsonrpc;
 
 		private int id;
