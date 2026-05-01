@@ -12,19 +12,16 @@
 
 package org.eclipse.mylyn.tests;
 
-import org.eclipse.mylyn.commons.sdk.util.junit4.ManagedSuite;
-import org.eclipse.mylyn.commons.sdk.util.junit4.ManagedSuite.TestConfigurationProperty;
 import org.eclipse.mylyn.tests.util.TestFixture;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Shawn Minto
  * @author Steffen Pingel
  * @author Frank Becker
  */
-@RunWith(ManagedSuite.class)
-@Suite.SuiteClasses({ //
+//@Suite
+//@SelectClasses({ //
 //FIXME: AF: enable tests back
 //https://github.com/eclipse-mylyn/.github/issues/3
 //	AllBugzillaRestCoreTests.class, //
@@ -33,10 +30,18 @@ import org.junit.runners.Suite;
 //		AllJenkinsTests.class, //
 //		AllGerritTests.class, //
 //		AllTracTests.class //
-})
-@TestConfigurationProperty()
+//})
 public class AllConnectorTests {
-	static {
+//	@BeforeSuite
+	static void suiteSetup() {
 		TestFixture.initializeTasksSettings();
+	}
+
+	/* * This dummy test is required to prevent JUnit from complaining about no tests found in this class.
+	 *
+	 */
+	@Test
+	public void dummy() {
+
 	}
 }

@@ -13,18 +13,17 @@
 
 package org.eclipse.mylyn.tests.misc;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  */
 @SuppressWarnings("nls")
-public class AssertionsEnabledTest extends TestCase {
+public class AssertionsEnabledTest {
 
-	public AssertionsEnabledTest(String name) {
-		super(name);
-	}
-
+	@Test
 	public void testAssertionsEnabled() {
 		try {
 			assert false;
