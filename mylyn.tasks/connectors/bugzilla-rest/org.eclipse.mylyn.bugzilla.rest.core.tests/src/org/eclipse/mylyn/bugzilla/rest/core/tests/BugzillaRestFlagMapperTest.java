@@ -24,8 +24,7 @@ import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
-import org.eclipse.mylyn.commons.sdk.util.junit4.ConditionalIgnoreRule;
-import org.eclipse.mylyn.commons.sdk.util.junit4.MustRunOnCIServerRule;
+import org.eclipse.mylyn.commons.sdk.util.junit5.EnabledIfCI;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestFlagMapper;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.IBugzillaRestConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -117,7 +116,7 @@ public class BugzillaRestFlagMapperTest {
 	}
 
 	@Test
-	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
+	@EnabledIfCI
 	public void testApplyToTaskAttribute() throws IOException {
 		String jsonElement = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.json"),
 				Charset.defaultCharset());
@@ -144,7 +143,7 @@ public class BugzillaRestFlagMapperTest {
 	}
 
 	@Test
-	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
+	@EnabledIfCI
 	public void testCreateFromTaskAttribute() throws IOException {
 		String jsonElement = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/flag.json"),
 				Charset.defaultCharset());
