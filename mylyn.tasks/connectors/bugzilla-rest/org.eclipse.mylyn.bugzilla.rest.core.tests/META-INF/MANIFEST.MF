@@ -6,9 +6,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.rest.core.tests;singleton:=true
 Bundle-Version: 4.11.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-21
-Require-Bundle: org.hamcrest;bundle-version="0.0.0",
- org.hamcrest;bundle-version="0.0.0",
- org.eclipse.core.runtime;bundle-version="0.0.0",
+Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.jdt.annotation;bundle-version="[2.0.0,3.0.0)";resolution:=optional,
  org.eclipse.mylyn.bugzilla.rest.core;bundle-version="4.4.0",
  org.eclipse.mylyn.commons.core;bundle-version="4.4.0",
@@ -18,11 +16,20 @@ Require-Bundle: org.hamcrest;bundle-version="0.0.0",
  org.eclipse.mylyn.commons.sdk.util;bundle-version="4.4.0",
  org.eclipse.mylyn.commons.sdk.util.junit4;bundle-version="4.11.0",
  org.eclipse.mylyn.tasks.core;bundle-version="4.4.0",
- org.junit;bundle-version="4.8.2"
+ org.eclipse.mylyn.commons.sdk.util.junit5;bundle-version="4.11.0",
+ org.eclipse.mylyn.tests.util.junit5;bundle-version="4.11.0"
 Export-Package: org.eclipse.mylyn.bugzilla.rest.core.tests;x-internal:=true,
  org.eclipse.mylyn.bugzilla.rest.test.support;x-internal:=true
 Import-Package: com.github.benmanes.caffeine.cache;version="3.1.8",
  com.google.gson;version="2.10.1",
  com.google.gson.reflect;version="2.10.1",
  com.google.gson.stream;version="2.10.1",
- org.apache.commons.io;version="2.8.0"
+ org.apache.commons.io;version="2.8.0",
+ org.hamcrest;version="[3.0.0,4.0.0)",
+ org.junit.jupiter.api;version="[5.14.0,6.0.0)",
+ org.junit.jupiter.api.extension;version="[5.14.0,6.0.0)",
+ org.junit.jupiter.api.function;version="[5.14.0,6.0.0)",
+ org.junit.jupiter.params;version="[5.14.0,6.0.0)",
+ org.junit.jupiter.params.provider;version="[5.14.0,6.0.0)",
+ org.junit.platform.suite.api;version="[1.14.0,2.0.0)",
+ org.opentest4j;version="[1.3.0,2.0.0)"
