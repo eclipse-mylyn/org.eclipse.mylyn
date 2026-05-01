@@ -13,6 +13,10 @@
 
 package org.eclipse.mylyn.tests.integration;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -25,8 +29,9 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests changes to the main data directory location.
@@ -35,7 +40,7 @@ import junit.framework.TestCase;
  * @author Mik Kersten (rewrites)
  */
 @SuppressWarnings("nls")
-public class ChangeDataDirTest extends TestCase {
+public class ChangeDataDirTest {
 
 	private String newDataDir;
 
@@ -43,8 +48,8 @@ public class ChangeDataDirTest extends TestCase {
 
 	private TaskList taskList;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		defaultDir = TasksUiPlugin.getDefault().getDefaultDataDirectory();
 
 		newDataDir = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/'
@@ -59,12 +64,13 @@ public class ChangeDataDirTest extends TestCase {
 		TaskTestUtil.resetTaskList();
 	}
 
-	@Override
+	@AfterEach
 	protected void tearDown() throws Exception {
 		TaskTestUtil.resetTaskList();
 		TasksUiPlugin.getDefault().setDataDirectory(defaultDir);
 	}
 
+	@Test
 	public void testDefaultDataDirectoryMove() throws Exception {
 		String workspaceRelativeDir = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/'
 				+ ".metadata" + '/' + ".mylyn";
@@ -77,6 +83,7 @@ public class ChangeDataDirTest extends TestCase {
 
 	}
 
+	@Test
 	public void testTaskMove() throws Exception {
 		AbstractTask task = TasksUiInternal.createNewLocalTask("label");
 		String handle = task.getHandleIdentifier();
