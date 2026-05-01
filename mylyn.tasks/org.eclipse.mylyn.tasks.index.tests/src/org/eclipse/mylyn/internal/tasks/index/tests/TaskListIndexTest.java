@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,7 +36,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-
+import org.apache.lucene.document.DateTools;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -185,8 +185,13 @@ public class TaskListIndexTest extends AbstractTaskListIndexTest {
 
 		assertFalse(index.matches(task, FIELD_DATE_CREATION.getIndexKey() + ":[20010101 TO 20010105]"));
 
-		String matchDate = new SimpleDateFormat("yyyyMMdd").format(creationDate);
-		matchDate = Integer.toString(Integer.parseInt(matchDate) + 2);
+		String matchDate = DateTools.dateToString(
+				Date.from(creationDate.toInstant()
+						.atZone(ZoneOffset.UTC)
+						.toLocalDateTime()
+						.plusDays(2)
+						.toInstant(ZoneOffset.UTC)),
+				DateTools.Resolution.HOUR); // Match TaskListIndex's default resolution for dates
 
 		String patternString = FIELD_DATE_CREATION.getIndexKey() + ":[20111019 TO " + matchDate + "]";
 
