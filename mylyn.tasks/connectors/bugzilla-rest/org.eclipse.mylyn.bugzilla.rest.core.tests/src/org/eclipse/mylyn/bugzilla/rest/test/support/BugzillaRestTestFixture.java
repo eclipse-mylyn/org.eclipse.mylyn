@@ -18,9 +18,9 @@ import java.util.Map;
 
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.commons.sdk.util.AbstractTestFixture;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
-import org.eclipse.mylyn.commons.sdk.util.junit4.RepositoryTestFixture;
 import org.eclipse.mylyn.commons.sdk.util.FixtureConfiguration;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
@@ -29,7 +29,7 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.IBugzillaRestConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 @SuppressWarnings({ "nls", "restriction" })
-public class BugzillaRestTestFixture extends RepositoryTestFixture {
+public class BugzillaRestTestFixture extends AbstractTestFixture {
 
 	private static final String API_KEY_ENABLED_PROPERTY = "api_key_enabled";
 
@@ -51,22 +51,9 @@ public class BugzillaRestTestFixture extends RepositoryTestFixture {
 
 	private static BugzillaRestTestFixture current;
 
-	public static BugzillaRestTestFixture current() {
-		if (current == null) {
-			DEFAULT.activate();
-		}
-		return current;
-	}
-
-	@Override
-	protected BugzillaRestTestFixture activate() {
-		current = this;
-		return this;
-	}
-
 	@Override
 	protected BugzillaRestTestFixture getDefault() {
-		return DEFAULT;
+		return this;
 	}
 
 	public BugzillaRestTestFixture(FixtureConfiguration configuration) {

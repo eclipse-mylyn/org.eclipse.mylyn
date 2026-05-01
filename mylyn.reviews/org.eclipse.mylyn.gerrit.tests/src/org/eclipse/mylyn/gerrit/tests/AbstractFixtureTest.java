@@ -55,8 +55,4 @@ public abstract class AbstractFixtureTest {
 		return discoveredFixtures[defaultOnly ? 1 : 0].stream()
 				.map(fixture -> Arguments.of(fixture, fixture.getInfo()));
 	}
-
-	/**
-	 * This is a dummy test so that classes with a single test method shows up in the JUnit view.
-	 */
 }
