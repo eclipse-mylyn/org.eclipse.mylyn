@@ -144,7 +144,7 @@ public class ChangeDetailXTest {
 		return new JSonSupport().parseResponse(content, ChangeDetailXAsResult.class);
 	}
 
-	private class ChangeDetailXAsResult {
+	private static class ChangeDetailXAsResult {
 		private String jsonrpc;
 
 		private int id;
