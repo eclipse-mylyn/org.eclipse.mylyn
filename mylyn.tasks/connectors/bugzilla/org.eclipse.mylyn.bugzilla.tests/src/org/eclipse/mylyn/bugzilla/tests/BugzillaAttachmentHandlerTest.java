@@ -326,12 +326,6 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 
 	@Test
 	public void testAttachmentWithUnicode() throws Exception {
-		// Skip if running against Bugzilla version > 5.1
-		assumeFalse(
-				fixture.getBugzillaVersion().compareTo(BugzillaVersion.BUGZILLA_5_1) > 0,
-				"Disabled with Bugzilla version > 5.1: Strange unicode characters in returned attachment filename"
-				); // FIXME Unicode characters in filename from Bugzilla  don't match
-
 		testAttachmentWithSpecialCharacters(
 				"\u00E7" + // LATIN SMALL LETTER C WITH CEDILLA
 						"\u00F1" + // LATIN SMALL LETTER N WITH TILDE
@@ -355,6 +349,14 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 	@Test
 	public void testAttachmentWithSpecialCharacters() throws Exception {
 		testAttachmentWithSpecialCharacters("~`!@#$%^&()_-+={[}];',");
+	}
+
+	@Test
+	public void testAttachmentWithNonMojibakedCharacters() throws Exception {
+		// A filename with genuine Latin-1 characters (not Mojibake): é (U+00E9) encodes as
+		// 0xE9 in Latin-1, which is an invalid UTF-8 start byte — conversion fails and the
+		// original is returned unchanged.
+		testAttachmentWithSpecialCharacters("résumé.txt");
 	}
 
 	private void testAttachmentWithSpecialCharacters(String specialCharacters) throws Exception {
