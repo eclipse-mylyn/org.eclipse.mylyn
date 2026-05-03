@@ -13,17 +13,20 @@
 
 package org.eclipse.mylyn.commons.tests.operations;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.mylyn.commons.core.operations.CancellableOperationMonitorThread;
 import org.eclipse.mylyn.commons.core.operations.ICancellableOperation;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
-@SuppressWarnings("nls")
-public class CancellableOperationMonitorThreadTest extends TestCase {
+public class CancellableOperationMonitorThreadTest {
 
 	private CancellableOperationMonitorThread thread;
 
@@ -45,54 +48,38 @@ public class CancellableOperationMonitorThreadTest extends TestCase {
 
 	}
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		thread = new CancellableOperationMonitorThread();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		thread.shutdown();
 	}
 
 	@Test
 	public void testShutdownAddOperation() throws InterruptedException {
 		thread.shutdown();
-		try {
-			thread.addOperation(new MockOperation());
-			fail("Expected IllegalStateException");
-		} catch (IllegalStateException expected) {
-		}
+		assertThrows(IllegalStateException.class, () -> thread.addOperation(new MockOperation()));
 	}
 
 	@Test
 	public void testShutdownProcessOnce() throws InterruptedException {
 		thread.shutdown();
-		try {
-			thread.processOperations();
-			fail("Expected IllegalStateException");
-		} catch (IllegalStateException expected) {
-		}
+		assertThrows(IllegalStateException.class, () -> thread.processOperations());
 	}
 
 	@Test
 	public void testShutdownRemoveOperation() throws InterruptedException {
 		thread.shutdown();
-		try {
-			thread.removeOperation(new MockOperation());
-			fail("Expected IllegalStateException");
-		} catch (IllegalStateException expected) {
-		}
+		assertThrows(IllegalStateException.class, () -> thread.removeOperation(new MockOperation()));
 	}
 
 	@Test
 	public void testShutdownStart() throws InterruptedException {
 		thread.shutdown();
-		try {
-			thread.start();
-			fail("Expected IllegalStateException");
-		} catch (IllegalStateException expected) {
-		}
+		assertThrows(IllegalStateException.class, () -> thread.start());
 	}
 
 	@Test
@@ -121,6 +108,7 @@ public class CancellableOperationMonitorThreadTest extends TestCase {
 		assertFalse(thread.isAlive());
 	}
 
+	@Test
 	public void testNotCancelOperation() throws Exception {
 		MockOperation operation = new MockOperation();
 		thread.addOperation(operation);
@@ -129,6 +117,7 @@ public class CancellableOperationMonitorThreadTest extends TestCase {
 		assertFalse(operation.aborted);
 	}
 
+	@Test
 	public void testCancelOperation() throws Exception {
 		MockOperation operation = new MockOperation();
 		thread.addOperation(operation);
@@ -138,6 +127,7 @@ public class CancellableOperationMonitorThreadTest extends TestCase {
 		assertTrue(operation.aborted);
 	}
 
+	@Test
 	public void testAddRemoveOperation() throws Exception {
 		MockOperation operation = new MockOperation();
 		thread.addOperation(operation);

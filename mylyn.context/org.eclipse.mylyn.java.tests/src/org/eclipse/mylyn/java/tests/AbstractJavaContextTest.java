@@ -12,6 +12,10 @@
 
 package org.eclipse.mylyn.java.tests;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -31,6 +35,8 @@ import org.eclipse.mylyn.internal.java.ui.JavaEditingMonitor;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * @deprecated use {@link org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest} instead
@@ -68,9 +74,8 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 	protected InteractionContextScaling scaling = new InteractionContextScaling();
 
 	@Deprecated
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	protected void _setUp() throws Exception {
 		ContextTestUtil.triggerContextUiLazyStart();
 		assertNotNull(JavaPlugin.getDefault());
 		assertNotNull(JavaUiBridgePlugin.getDefault());
@@ -93,8 +98,8 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 	}
 
 	@Deprecated
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	protected void _tearDown() throws Exception {
 		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(true);
 		context.reset();
 		assertTrue(context.getInteresting().isEmpty());
@@ -111,7 +116,6 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 		assertFalse(manager.isContextActive());
 		monitor.dispose();
 		waitForAutoBuild();
-		super.tearDown();
 	}
 
 	@Deprecated

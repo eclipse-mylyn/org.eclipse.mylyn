@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.java.tests.search;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
@@ -23,7 +25,6 @@ import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.junit.Assert;
 
 /**
  * @author Shawn Minto
@@ -75,7 +76,7 @@ public class ActiveSearchNotifier {
 			ContextCore.getContextManager().activateContext(workspaceContext.getHandleIdentifier());
 			context = (CompositeInteractionContext) ContextCore.getContextManager().getActiveContext();
 		} catch (Exception e) {
-			Assert.fail();
+			fail(e.getMessage());
 		}
 	}
 

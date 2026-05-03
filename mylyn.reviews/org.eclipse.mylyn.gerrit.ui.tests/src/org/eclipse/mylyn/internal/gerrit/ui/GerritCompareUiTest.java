@@ -13,8 +13,8 @@
 
 package org.eclipse.mylyn.internal.gerrit.ui;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -32,8 +32,8 @@ import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PartInitException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class GerritCompareUiTest {
@@ -60,7 +60,7 @@ public class GerritCompareUiTest {
 
 	private IReviewItemSet items;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws PartInitException {
 		editorReferences = new ArrayList<>();
 		editorReferences.add(getMockEditor("org.eclipse.other.Editor"));

@@ -9,14 +9,17 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.repositories.tests.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -28,7 +31,7 @@ import org.eclipse.mylyn.commons.repositories.core.auth.UnavailableException;
 import org.eclipse.mylyn.commons.repositories.tests.support.DelegatingSecurePreferences;
 import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
 import org.eclipse.mylyn.internal.commons.repositories.core.SecureCredentialsStore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
@@ -166,6 +169,9 @@ public class SecureCredentialsStoreTest extends AbstractCredentialsStoreTest {
 
 	@Test
 	public void testPutExceptionNoException() {
+		assumeFalse(System.getProperty("eclipse.launcher") != null || System.getProperty("eclipse.application") != null,
+				"Secure Storage not set up by the PDE"); // FIXME secure storage not set up
+
 		StubSecureCredentialsStore store = createStubSecureCredentialsStore();
 		store.getSecurePreferences().setException(new StorageException(0, ""));
 		store.put("key", "value", true);
@@ -241,6 +247,9 @@ public class SecureCredentialsStoreTest extends AbstractCredentialsStoreTest {
 
 	@Test
 	public void testSpecialCharactersInIdRetrieveValueEncrypt() {
+		assumeFalse(System.getProperty("eclipse.launcher") != null || System.getProperty("eclipse.application") != null,
+				"Secure Storage not set up by the PDE"); // FIXME secure storage not set up
+
 		StubSecureCredentialsStore store = createStubSecureCredentialsStore("http://ci.mylyn.org/\u00E7\u00F1\u00FC");
 		store.put("key", "value", true);
 		assertEquals("[key]", Arrays.toString(store.getSecurePreferences().keys()));
@@ -249,6 +258,9 @@ public class SecureCredentialsStoreTest extends AbstractCredentialsStoreTest {
 
 	@Test
 	public void testSpecialCharactersInIdRetrieveValueEncryptNoPersist() {
+		assumeFalse(System.getProperty("eclipse.launcher") != null || System.getProperty("eclipse.application") != null,
+				"Secure Storage not set up by the PDE"); // FIXME secure storage not set up
+
 		StubSecureCredentialsStore store = createStubSecureCredentialsStore("http://ci.mylyn.org/\u00E7\u00F1\u00FC");
 		store.put("key", "value", true, false);
 		assertEquals("[key]", Arrays.toString(store.getInMemoryStore().keys()));
@@ -256,16 +268,15 @@ public class SecureCredentialsStoreTest extends AbstractCredentialsStoreTest {
 	}
 
 	@Test
-	public void testTestAvailability() throws Exception {
+	public void testTestAvailability() {
+		assumeFalse(System.getProperty("eclipse.launcher") != null || System.getProperty("eclipse.application") != null,
+				"Secure Storage not set up by the PDE"); // FIXME secure storage not set up
+
 		StubSecureCredentialsStore store = createStubSecureCredentialsStore();
 		assertNull(store.get("org.eclipse.mylyn.commons.repositories.core.SecureCredentialsStore", null));
-		store.testAvailability();
+		assertDoesNotThrow(() -> store.testAvailability());
 		assertNotNull(store.get("org.eclipse.mylyn.commons.repositories.core.SecureCredentialsStore", null));
 		store.setUnavailable(true);
-		try {
-			store.testAvailability();
-			fail("Expected UnavailableException");
-		} catch (UnavailableException e) {// expected
-		}
+		assertThrows(UnavailableException.class, () -> store.testAvailability());
 	}
 }

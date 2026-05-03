@@ -10,13 +10,15 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.textile.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -29,8 +31,8 @@ import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 import org.eclipse.mylyn.wikitext.textile.internal.TextileDocumentBuilder;
 import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder;
 import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder.Event;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class TextileLanguageDefinitionListTest {
@@ -39,7 +41,7 @@ public class TextileLanguageDefinitionListTest {
 
 	private TextileLanguage markupLanguage;
 
-	@Before
+	@BeforeEach
 	public void initParser() throws IOException {
 		parser = new MarkupParser();
 		markupLanguage = new TextileLanguage();

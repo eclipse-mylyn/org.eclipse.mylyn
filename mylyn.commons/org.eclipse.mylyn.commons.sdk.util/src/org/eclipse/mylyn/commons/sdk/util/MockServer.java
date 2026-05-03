@@ -376,6 +376,7 @@ public class MockServer implements Runnable {
 			System.err.println("> " + message.getStatusLine());
 		}
 
+		// Note: do NOT close the writer here as that would close the shared socket output stream
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, message.getCharset()));
 		writer.write(message.toString());
 		writer.flush();

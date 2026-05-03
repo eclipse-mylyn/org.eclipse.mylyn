@@ -13,45 +13,38 @@
 
 package org.eclipse.mylyn.jenkins.tests.client;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsException;
 import org.eclipse.mylyn.internal.jenkins.core.client.RestfulJenkinsClient;
 import org.eclipse.mylyn.jenkins.tests.support.JenkinsFixture;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Test;
 
-import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-//FIXME: see https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/936
-@Ignore
-public class JenkinsValidationTest extends TestCase {
+public class JenkinsValidationTest {
 
+	@Test
 	public void testValidateNonExistantUrl() throws Exception {
 		// invalid url
 		RepositoryLocation location = new RepositoryLocation();
 		location.setUrl("http://non.existant/repository");
 		RestfulJenkinsClient client = JenkinsFixture.connect(location);
-		try {
-			client.validate(OperationUtil.convert(null));
-			fail("Expected JenkinsException");
-		} catch (JenkinsException e) {
-		}
+		assertThrows(JenkinsException.class, () -> client.validate(OperationUtil.convert(null)));
 	}
 
+	@Test
 	public void testValidateNonHudsonUrl() throws Exception {
 		// non Hudson url
 		RepositoryLocation location = new RepositoryLocation();
 		location.setUrl("http://eclipse.org/mylyn");
 		RestfulJenkinsClient client = JenkinsFixture.connect(location);
-		try {
-			client.validate(OperationUtil.convert(null));
-			fail("Expected JenkinsException");
-		} catch (JenkinsException e) {
-		}
+		assertThrows(JenkinsException.class, () -> client.validate(OperationUtil.convert(null)));
 	}
 
 }

@@ -10,12 +10,14 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,21 +27,21 @@ import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext;
 import org.eclipse.mylyn.wikitext.commonmark.internal.TextSegment;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class InlineParserTest {
 
 	private final Line line = new Line(0, 1, "test");
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void requiresSpans() {
-		assertNotNull(new InlineParser((SourceSpan[]) null));
+		assertThrows(NullPointerException.class, () -> new InlineParser((SourceSpan[]) null));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void requiresListOfSpans() {
-		assertNotNull(new InlineParser((List<SourceSpan>) null));
+		assertThrows(NullPointerException.class, () -> new InlineParser((List<SourceSpan>) null));
 	}
 
 	@Test
@@ -71,10 +73,10 @@ public class InlineParserTest {
 
 	private void assertEquivalent(int index, Inline expected, Inline actual) {
 		String message = "inline at " + index;
-		assertEquals(message + " type", expected.getClass(), actual.getClass());
-		assertEquals(message + " offset", expected.getOffset(), actual.getOffset());
-		assertEquals(message + " length", expected.getLength(), actual.getLength());
-		assertEquals(message, expected, actual);
+		assertEquals(expected.getClass(), actual.getClass(), message + " type");
+		assertEquals(expected.getOffset(), actual.getOffset(), message + " offset");
+		assertEquals(expected.getLength(), actual.getLength(), message + " length");
+		assertEquals(expected, actual, message);
 	}
 
 	private InlineParser createInlines() {

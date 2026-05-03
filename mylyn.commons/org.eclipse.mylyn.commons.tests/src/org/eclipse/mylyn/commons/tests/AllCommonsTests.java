@@ -13,7 +13,9 @@
 
 package org.eclipse.mylyn.commons.tests;
 
+import org.eclipse.mylyn.commons.core.DateUtilTest;
 import org.eclipse.mylyn.commons.core.HtmlStreamTokenizerTest;
+import org.eclipse.mylyn.commons.sdk.util.junit5.MylynTestSetup;
 import org.eclipse.mylyn.commons.tests.core.AuthenticatedProxyTest;
 import org.eclipse.mylyn.commons.tests.core.CommonListenerListTest;
 import org.eclipse.mylyn.commons.tests.core.CoreUtilTest;
@@ -30,18 +32,33 @@ import org.eclipse.mylyn.commons.tests.operations.CancellableOperationMonitorThr
 import org.eclipse.mylyn.commons.tests.operations.OperationUtilTest;
 import org.eclipse.mylyn.commons.tests.workbench.browser.BrowserUtilTest;
 import org.eclipse.mylyn.commons.tests.workbench.browser.WebBrowserDialogTest;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import org.eclipse.mylyn.commons.tests.xmlrpc.XmlRpcClientTest;
+import org.eclipse.mylyn.commons.tests.xmlrpc.XmlRpcOperationTest;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Mik Kersten
  */
-@RunWith(Suite.class)
-@SuiteClasses({ TimeoutInputStreamTest.class, CoreUtilTest.class, AuthenticatedProxyTest.class, OperationUtilTest.class,
-	NetUtilTest.class, SslProtocolSocketFactoryTest.class, WebUtilTest.class, BrowserUtilTest.class,
-	WebBrowserDialogTest.class, ExtensionPointReaderTest.class, CommonListenerListTest.class, CommonStoreTest.class,
-	Html2TextReaderTest.class, CommonHttpMethod3Test.class, HtmlStreamTokenizerTest.class,
-	CancellableOperationMonitorThreadTest.class, StatusHandlerTest.class })
+
+@Suite
+@SelectClasses({ //
+	// org.eclipse.mylyn.commons.core
+	DateUtilTest.class, HtmlStreamTokenizerTest.class,
+	// org.eclipse.mylyn.commons.tests.core
+	AuthenticatedProxyTest.class, CommonListenerListTest.class, CoreUtilTest.class, ExtensionPointReaderTest.class,
+	Html2TextReaderTest.class, StatusHandlerTest.class,
+	// org.eclipse.mylyn.commons.tests.core.storage
+	CommonStoreTest.class,
+	// org.eclipse.mylyn.commons.tests.net
+	CommonHttpMethod3Test.class, NetUtilTest.class, SslProtocolSocketFactoryTest.class, TimeoutInputStreamTest.class,
+	WebUtilTest.class,
+	// org.eclipse.mylyn.commons.tests.operations
+	CancellableOperationMonitorThreadTest.class, OperationUtilTest.class,
+	// org.eclipse.mylyn.commons.tests.workbench.browser
+	BrowserUtilTest.class, WebBrowserDialogTest.class,
+	// org.eclipse.mylyn.commons.tests.xmlrpc
+	XmlRpcClientTest.class, XmlRpcOperationTest.class })
+@MylynTestSetup
 public class AllCommonsTests {
 }

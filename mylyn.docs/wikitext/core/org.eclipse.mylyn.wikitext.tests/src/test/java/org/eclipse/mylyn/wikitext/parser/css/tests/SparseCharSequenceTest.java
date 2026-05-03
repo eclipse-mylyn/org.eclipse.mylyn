@@ -10,18 +10,20 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.css.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.parser.css.SparseCharSequence;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author David Green
@@ -33,8 +35,8 @@ public class SparseCharSequenceTest {
 
 	private String testData;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		configureTest("one /* two\n\n three */ four\n/* five */");
 	}
 

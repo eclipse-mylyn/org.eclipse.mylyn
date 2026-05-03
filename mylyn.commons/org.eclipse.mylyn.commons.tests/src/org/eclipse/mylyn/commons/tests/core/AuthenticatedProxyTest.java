@@ -9,23 +9,26 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.core;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 
 import org.eclipse.mylyn.commons.core.net.AuthenticatedProxy;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class AuthenticatedProxyTest extends TestCase {
+public class AuthenticatedProxyTest {
 
+	@Test
 	public void testConstructor() {
 		AuthenticatedProxy proxy = new AuthenticatedProxy(Proxy.Type.HTTP, new InetSocketAddress("localhost", 8080),
 				"user", "pass", "domain");

@@ -19,23 +19,29 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.io.File;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.mylyn.gerrit.tests.AbstractGerritFixtureTest;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.spi.remote.JobRemoteService;
 import org.eclipse.mylyn.reviews.spi.edit.remote.review.ReviewsRemoteEditFactoryProvider;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
-public class GerritDataLocatorTest extends TestCase {
+@Disabled("No gerrit instance available")
+public class GerritDataLocatorTest extends AbstractGerritFixtureTest {
+	@BeforeEach
+	void skipIfExcluded() {
+		assumeFalse(fixture.isExcluded(), "Fixture is excluded");
+	}
 
 	private ReviewHarness reviewHarness;
 
@@ -43,9 +49,8 @@ public class GerritDataLocatorTest extends TestCase {
 
 	private GerritRemoteFactoryProvider provider;
 
-	@Override
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		File rootDir = new File(locator.getSystemDataPath().toOSString());
 		if (rootDir.exists()) {
 			FileUtils.forceDelete(rootDir);
@@ -57,9 +62,8 @@ public class GerritDataLocatorTest extends TestCase {
 		provider.setService(new JobRemoteService());
 	}
 
-	@Override
-	@After
-	public void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		reviewHarness.dispose();
 	}
 

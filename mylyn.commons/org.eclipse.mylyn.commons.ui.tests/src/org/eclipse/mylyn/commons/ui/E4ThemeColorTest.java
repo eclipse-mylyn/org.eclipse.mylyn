@@ -8,15 +8,17 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.ui;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.mylyn.internal.commons.ui.E4ThemeColor;
 import org.eclipse.swt.graphics.RGB;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class E4ThemeColorTest {
 

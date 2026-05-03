@@ -13,6 +13,9 @@
 
 package org.eclipse.mylyn.builds.tests.ui;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import org.eclipse.mylyn.builds.core.BuildStatus;
@@ -23,12 +26,11 @@ import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildContentProvider;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildsView;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildsView.BuildsSummary;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import junit.framework.TestCase;
-
 @SuppressWarnings("nls")
-public class BuildsViewTest extends TestCase {
+public class BuildsViewTest {
 	public class TestBuildsView extends BuildsView {
 		@Override
 		protected BuildsSummary getBuildsSummary() {
@@ -41,6 +43,7 @@ public class BuildsViewTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetBuildsSummary() throws Exception {
 		TestBuildsView view = Mockito.spy(new TestBuildsView());
 		when(view.getContentProvider()).thenReturn(new BuildContentProvider());

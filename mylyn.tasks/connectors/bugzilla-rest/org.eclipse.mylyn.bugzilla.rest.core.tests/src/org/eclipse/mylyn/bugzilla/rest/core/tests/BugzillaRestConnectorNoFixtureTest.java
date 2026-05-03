@@ -16,8 +16,8 @@ package org.eclipse.mylyn.bugzilla.rest.core.tests;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
 
@@ -27,8 +27,8 @@ import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class BugzillaRestConnectorNoFixtureTest {
@@ -37,8 +37,8 @@ public class BugzillaRestConnectorNoFixtureTest {
 
 	private TaskRepository repository;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		connector = new BugzillaRestConnector();
 		repository = new TaskRepository(connector.getConnectorKind(), "http://test.repository.url");
 	}

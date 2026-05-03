@@ -12,62 +12,31 @@
 package org.eclipse.mylyn.jenkins.tests;
 
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
-import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
-import org.eclipse.mylyn.commons.sdk.util.junit4.ManagedSuite;
-import org.eclipse.mylyn.commons.sdk.util.junit4.ManagedTestSuite;
+import org.eclipse.mylyn.jenkins.tests.client.JenkinsClientTest;
+import org.eclipse.mylyn.jenkins.tests.client.JenkinsUrlTest;
+import org.eclipse.mylyn.jenkins.tests.client.JenkinsUrlUtilTest;
+import org.eclipse.mylyn.jenkins.tests.client.JenkinsValidationTest;
 import org.eclipse.mylyn.jenkins.tests.core.JenkinsConnectorTest;
 import org.eclipse.mylyn.jenkins.tests.core.JenkinsServerBehaviourTest;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.eclipse.mylyn.jenkins.tests.integration.JenkinsIntegrationTest;
+import org.junit.platform.suite.api.BeforeSuite;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Steffen Pingel
  */
+@Suite
+@SelectClasses({ JenkinsConnectorTest.class, JenkinsServerBehaviourTest.class, JenkinsUrlTest.class,
+	JenkinsValidationTest.class,
+	//Jenkins fixure
+	JenkinsUrlUtilTest.class, JenkinsClientTest.class, JenkinsIntegrationTest.class })
 public class AllJenkinsTests {
 
-	public static Test suite() {
+	@BeforeSuite
+	static void suiteSetup() {
 		if (CommonTestUtil.fixProxyConfiguration()) {
 			CommonTestUtil.dumpSystemInfo(System.err);
 		}
-		TestConfiguration testConfiguration = ManagedSuite.getTestConfigurationOrCreateDefault();
-		testConfiguration.setLocalOnly(CommonTestUtil.runNonCIServerTestsOnly());
-		TestSuite suite = new ManagedTestSuite(AllJenkinsTests.class.getName());
-		addTests(suite, testConfiguration);
-		return suite;
 	}
-
-	public static Test suite(TestConfiguration configuration) {
-		TestSuite suite = new TestSuite(AllJenkinsTests.class.getName());
-		addTests(suite, configuration);
-		return suite;
-	}
-
-	private static void addTests(TestSuite suite, TestConfiguration configuration) {
-		suite.addTestSuite(JenkinsConnectorTest.class);
-		suite.addTestSuite(JenkinsServerBehaviourTest.class);
-		//FIXME: see https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/936
-/*
-		suite.addTestSuite(JenkinsUrlTest.class);
-
-		if (!configuration.isLocalOnly()) {
-			// network tests
-			suite.addTestSuite(JenkinsValidationTest.class);
-			List<JenkinsFixture> fixtures = configuration.discover(JenkinsFixture.class, "jenkins");
-			for (JenkinsFixture fixture : fixtures) {
-				if (fixture.isExcluded()
-						|| fixture.isUseCertificateAuthentication() && CommonTestUtil.isCertificateAuthBroken()) {
-					continue;
-				}
-				fixture.createSuite(suite);
-				fixture.add(JenkinsClientTest.class);
-				if (!fixture.isUseCertificateAuthentication()) {
-					fixture.add(JenkinsIntegrationTest.class);
-				}
-				fixture.done();
-			}
-		}
- */
-	}
-
 }

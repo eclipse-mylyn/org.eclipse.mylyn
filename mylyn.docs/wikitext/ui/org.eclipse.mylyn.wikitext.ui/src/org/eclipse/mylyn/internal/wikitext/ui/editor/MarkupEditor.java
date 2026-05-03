@@ -193,8 +193,6 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 	private boolean disableReveal = false;
 
-	private ISourceViewer viewer;
-
 	private IPropertyChangeListener preferencesListener;
 
 	private IDocumentPartitioningListener documentPartitioningListener;
@@ -245,16 +243,110 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			}
 		});
 
-		{
-			sourceTab = new CTabItem(tabFolder, SWT.NONE);
-			updateSourceTabLabel();
+		ISourceViewer viewer = createSourceTab(ruler, styles);
 
-			viewer = new MarkupProjectionViewer(tabFolder, ruler, getOverviewRuler(), isOverviewRulerVisible(),
-					styles | SWT.WRAP);
+		createPreviewTab();
 
-			sourceTab.setControl(((Viewer) viewer).getControl());
+		// start special files in "read mode", i.e. preview tab
+		IEditorInput ei = getEditorInput();
+		if (previewTab != null && ei instanceof IURIEditorInput editorInput) {
+			String previewFileNamePattern = WikiTextUiPlugin.getDefault().getPreferences().getPreviewFileNamePattern();
+			File file = new File(editorInput.getURI());
+			if (previewFileNamePattern != null && file.getName().matches(previewFileNamePattern)) {
+				tabFolder.setSelection(previewTab);
+			} else {
+				tabFolder.setSelection(sourceTab);
+			}
+		} else {
+			tabFolder.setSelection(sourceTab);
 		}
 
+		tabFolder.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent selectionevent) {
+				widgetSelected(selectionevent);
+			}
+
+			@Override
+			public void widgetSelected(SelectionEvent selectionevent) {
+				if (isShowingPreview()) {
+					updatePreview();
+				}
+			}
+		});
+
+		configureSourceViewer(viewer);
+
+		updateDocument();
+
+		if (preferencesListener == null) {
+			preferencesListener = event -> {
+				if (viewer.getTextWidget() == null || viewer.getTextWidget().isDisposed()) {
+					return;
+				}
+				if (isFontPreferenceChange(event)) {
+					viewer.getTextWidget().getDisplay().asyncExec(this::reloadPreferences);
+				}
+			};
+			WikiTextUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(preferencesListener);
+		}
+
+		if (isShowingPreview()) {
+			updatePreview();
+		}
+
+		return viewer;
+	}
+
+	private ISourceViewer createSourceTab(IVerticalRuler ruler, int styles) {
+		sourceTab = new CTabItem(tabFolder, SWT.NONE);
+		updateSourceTabLabel();
+
+		ISourceViewer viewer = new MarkupProjectionViewer(tabFolder, ruler, getOverviewRuler(),
+				isOverviewRulerVisible(), styles | SWT.WRAP);
+
+		sourceTab.setControl(((Viewer) viewer).getControl());
+		return viewer;
+	}
+
+	private void configureSourceViewer(ISourceViewer viewer) {
+		viewer.getTextWidget().addSelectionListener(SelectionListener.widgetSelectedAdapter(e -> updateOutlineSelection()));
+		viewer.getTextWidget().addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (isRelevantKeyCode(e.keyCode)) {
+					updateOutlineSelection();
+				}
+			}
+
+			private boolean isRelevantKeyCode(int keyCode) {
+				// for some reason not all key presses result in a selection change
+				return switch (keyCode) {
+					case SWT.ARROW_DOWN, SWT.ARROW_LEFT, SWT.ARROW_RIGHT, SWT.ARROW_UP, SWT.PAGE_DOWN, SWT.PAGE_UP -> true;
+					default -> false;
+				};
+			}
+		});
+		viewer.getTextWidget().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+				updateOutlineSelection();
+			}
+		});
+
+		IFocusService focusService = PlatformUI.getWorkbench().getService(IFocusService.class);
+		if (focusService != null) {
+			focusService.addFocusTracker(viewer.getTextWidget(), MarkupEditor.EDITOR_SOURCE_VIEWER);
+		}
+
+		viewer.getTextWidget().setData(MarkupLanguage.class.getName(), getMarkupLanguage());
+		viewer.getTextWidget().setData(ISourceViewer.class.getName(), viewer);
+
+		getSourceViewerDecorationSupport(viewer);
+	}
+
+	private void createPreviewTab() {
 		try {
 			previewTab = new CTabItem(tabFolder, SWT.NONE);
 			previewTab.setText(Messages.MarkupEditor_preview);
@@ -313,9 +405,9 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 						}
 						try {
 							PlatformUI.getWorkbench()
-							.getBrowserSupport()
-							.createBrowser("org.eclipse.ui.browser") //$NON-NLS-1$
-							.openURL(new URL(event.location));
+									.getBrowserSupport()
+									.createBrowser("org.eclipse.ui.browser") //$NON-NLS-1$
+									.openURL(new URL(event.location));
 						} catch (Exception e) {
 							new URLHyperlink(new Region(0, 1), event.location).open();
 						}
@@ -333,89 +425,6 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			}
 			logPreviewTabUnavailable(e);
 		}
-
-		// start special files in "read mode", i.e. preview tab
-		IEditorInput ei = getEditorInput();
-		if (previewTab != null && ei instanceof IURIEditorInput editorInput) {
-			String previewFileNamePattern = WikiTextUiPlugin.getDefault().getPreferences().getPreviewFileNamePattern();
-			File file = new File(editorInput.getURI());
-			if (previewFileNamePattern != null && file.getName().matches(previewFileNamePattern)) {
-				tabFolder.setSelection(previewTab);
-			} else {
-				tabFolder.setSelection(sourceTab);
-			}
-		} else {
-			tabFolder.setSelection(sourceTab);
-		}
-
-		tabFolder.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent selectionevent) {
-				widgetSelected(selectionevent);
-			}
-
-			@Override
-			public void widgetSelected(SelectionEvent selectionevent) {
-				if (isShowingPreview()) {
-					updatePreview();
-				}
-			}
-		});
-		viewer.getTextWidget()
-		.addSelectionListener(SelectionListener.widgetSelectedAdapter(e -> updateOutlineSelection()));
-		viewer.getTextWidget().addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if (isRelevantKeyCode(e.keyCode)) {
-					updateOutlineSelection();
-				}
-			}
-
-			private boolean isRelevantKeyCode(int keyCode) {
-				// for some reason not all key presses result in a selection change
-				return switch (keyCode) {
-					case SWT.ARROW_DOWN, SWT.ARROW_LEFT, SWT.ARROW_RIGHT, SWT.ARROW_UP, SWT.PAGE_DOWN, SWT.PAGE_UP -> true;
-					default -> false;
-				};
-			}
-		});
-		viewer.getTextWidget().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseUp(MouseEvent e) {
-				updateOutlineSelection();
-			}
-		});
-
-		IFocusService focusService = PlatformUI.getWorkbench().getService(IFocusService.class);
-		if (focusService != null) {
-			focusService.addFocusTracker(viewer.getTextWidget(), MarkupEditor.EDITOR_SOURCE_VIEWER);
-		}
-
-		viewer.getTextWidget().setData(MarkupLanguage.class.getName(), getMarkupLanguage());
-		viewer.getTextWidget().setData(ISourceViewer.class.getName(), viewer);
-
-		getSourceViewerDecorationSupport(viewer);
-
-		updateDocument();
-
-		if (preferencesListener == null) {
-			preferencesListener = event -> {
-				if (viewer.getTextWidget() == null || viewer.getTextWidget().isDisposed()) {
-					return;
-				}
-				if (isFontPreferenceChange(event)) {
-					viewer.getTextWidget().getDisplay().asyncExec(this::reloadPreferences);
-				}
-			};
-			WikiTextUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(preferencesListener);
-		}
-
-		if (isShowingPreview()) {
-			updatePreview();
-		}
-
-		return viewer;
 	}
 
 	private void logPreviewScrollingFailure(SWTException e) {
@@ -424,7 +433,6 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				.log(WikiTextUiPlugin.getDefault()
 						.createStatus(format(Messages.MarkupEditor_previewScrollingFailed, e.getMessage()),
 								IStatus.WARNING, e));
-
 	}
 
 	private void logPreviewTabUnavailable(SWTError e) {
@@ -483,7 +491,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		syncProjectionModeWithPreferences();
 		((MarkupTokenScanner) sourceViewerConfiguration.getMarkupScanner()).reloadPreferences();
 		sourceViewerConfiguration.initializeDefaultFonts();
-		viewer.invalidateTextPresentation();
+		getSourceViewer().invalidateTextPresentation();
 	}
 
 	private boolean isFontPreferenceChange(PropertyChangeEvent event) {
@@ -786,7 +794,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	}
 
 	public ISourceViewer getViewer() {
-		return viewer;
+		return getSourceViewer();
 	}
 
 	public OutlineItem getOutlineModel() {
@@ -1133,8 +1141,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		scheduleOutlineUpdate();
 		updateSourceTabLabel();
 
-		if (viewer != null) {
-			viewer.getTextWidget().setData(MarkupLanguage.class.getName(), getMarkupLanguage());
+		if (getSourceViewer() != null) {
+			getSourceViewer().getTextWidget().setData(MarkupLanguage.class.getName(), getMarkupLanguage());
 		}
 
 		if (persistSetting && markupLanguage != null) {

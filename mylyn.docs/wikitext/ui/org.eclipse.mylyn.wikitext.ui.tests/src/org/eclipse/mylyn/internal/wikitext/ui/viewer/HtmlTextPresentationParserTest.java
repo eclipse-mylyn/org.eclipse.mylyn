@@ -10,11 +10,13 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.viewer;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -33,8 +35,8 @@ import org.eclipse.mylyn.wikitext.tests.HeadRequired;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 /**
@@ -46,13 +48,14 @@ public class HtmlTextPresentationParserTest {
 
 	private HtmlTextPresentationParser parser;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		parser = new HtmlTextPresentationParser();
 		parser.setPresentation(new TextPresentation());
 		parser.setDefaultFont(new Font(null, new FontData[] { new FontData("fake", 12, 0) }));
 	}
 
+	@Test
 	public void testAdjacentElementsSeparatedByWhitespace() throws Exception {
 		parser.parse("<html><body><p><strong>one</strong> <em>two</em></p></body></html>");
 		String text = parser.getText();
@@ -222,6 +225,6 @@ public class HtmlTextPresentationParserTest {
 				return elementName;
 			}
 		}, receiver);
-		assertEquals("element " + elementName, expectedStyles, styles.stream().collect(Collectors.joining("; ")));
+		assertEquals(expectedStyles, styles.stream().collect(Collectors.joining("; ")), "element " + elementName);
 	}
 }

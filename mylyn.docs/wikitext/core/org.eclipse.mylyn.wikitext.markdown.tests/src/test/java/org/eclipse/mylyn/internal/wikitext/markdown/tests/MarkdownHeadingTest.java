@@ -10,13 +10,14 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
 import org.eclipse.mylyn.wikitext.markdown.MarkdownLanguage;
 import org.eclipse.mylyn.wikitext.toolkit.AbstractMarkupGenerationTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class MarkdownHeadingTest extends AbstractMarkupGenerationTest<MarkdownLanguage> {

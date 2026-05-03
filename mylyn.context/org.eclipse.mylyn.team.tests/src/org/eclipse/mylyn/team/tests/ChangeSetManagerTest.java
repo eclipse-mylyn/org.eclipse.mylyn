@@ -13,6 +13,11 @@
 
 package org.eclipse.mylyn.team.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -31,18 +36,21 @@ import org.eclipse.mylyn.internal.team.ui.ContextActiveChangeSetManager;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.team.ui.IContextChangeSet;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  */
 @SuppressWarnings("nls")
+@Disabled("see https://github.com/eclipse-mylyn/org.eclipse.mylyn.context/issues/9") // FIXME: AF: enable test,
 public class ChangeSetManagerTest extends AbstractResourceContextTest {
 
 	private ContextActiveChangeSetManager changeSetManager;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		assertNotNull(IdeUiBridgePlugin.getDefault());
 		changeSetManager = (ContextActiveChangeSetManager) FocusedTeamUiPlugin.getDefault()
 				.getContextChangeSetManagers()
@@ -50,11 +58,6 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 				.next();
 		assertNotNull(changeSetManager);
 		assertNull(TasksUiPlugin.getTaskActivityManager().getActiveTask());
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 
 //	public void testDisabledMode() {
@@ -105,6 +108,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 //		// TODO: test with resource
 //	}
 
+	@Test
 	public void testContentsAfterDecay() throws CoreException {
 		IFile file = project.getProject().getFile(new Path("foo.txt"));
 		file.create(null, true, null);
@@ -122,13 +126,13 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		IContextChangeSet set = changeSets.get(0);
 		IResource[] resources = ((ActiveChangeSet) set).getResources();
 		// can have .project file in there
-		assertTrue("length: " + resources.length, resources.length <= 2);
+		assertTrue(resources.length <= 2, "length: " + resources.length);
 
 		for (int i = 0; i < 1 / scaling.getDecay() * 3; i++) {
 			ContextCore.getContextManager().processInteractionEvent(mockSelection());
 		}
-		assertTrue("" + fileElement.getInterest().getValue(), fileElement.getInterest().getValue() < 0);
-		assertTrue("length: " + resources.length, resources.length <= 2);
+		assertTrue(fileElement.getInterest().getValue() < 0, "" + fileElement.getInterest().getValue());
+		assertTrue(resources.length <= 2, "length: " + resources.length);
 
 		TasksUiPlugin.getTaskActivityManager().deactivateTask(task1);
 	}

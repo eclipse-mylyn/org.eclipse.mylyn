@@ -8,21 +8,24 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     David E. Narvaez - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import junit.framework.TestCase;
-
-public class GerritHtmlProcessorTest extends TestCase {
+public class GerritHtmlProcessorTest {
 	@Test
 	public void testHTMLProcessorGerrit2_6() throws Exception {
 		GerritHtmlProcessor processor = new GerritHtmlProcessor();
@@ -43,8 +46,8 @@ public class GerritHtmlProcessorTest extends TestCase {
 		assertNotNull(processor.getConfig());
 	}
 
-	private static String read(String path) throws IOException {
-		URL url = new URL("platform:/plugin/org.eclipse.mylyn.gerrit.core.tests/" + path); //$NON-NLS-1$
+	private static String read(String path) throws IOException, URISyntaxException {
+		URL url = new URI("platform:/plugin/org.eclipse.mylyn.gerrit.core.tests/" + path).toURL(); //$NON-NLS-1$
 		InputStream input = url.openConnection().getInputStream();
 		return IOUtils.toString(input, "utf-8"); //$NON-NLS-1$
 	}

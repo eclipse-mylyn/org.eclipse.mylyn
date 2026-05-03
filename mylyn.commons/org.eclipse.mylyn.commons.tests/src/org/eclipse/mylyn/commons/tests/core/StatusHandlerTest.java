@@ -9,9 +9,12 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.core;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -21,12 +24,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.commons.core.CommonsCorePlugin;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
-public class StatusHandlerTest extends TestCase {
+public class StatusHandlerTest {
 
+	@Test
 	public void testLogDumpsErrorToConsoleInTestMode() throws Exception {
 		if (!CoreUtil.TEST_MODE) {
 			return;

@@ -13,6 +13,12 @@
 
 package org.eclipse.mylyn.java.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +33,8 @@ import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
 import org.eclipse.mylyn.context.ui.AbstractFocusViewAction;
 import org.eclipse.mylyn.context.ui.InterestFilter;
 import org.eclipse.mylyn.internal.java.ui.actions.FocusPackageExplorerAction;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
@@ -40,16 +48,15 @@ public class InterestFilterTest extends AbstractJavaContextTest {
 
 	private AbstractFocusViewAction applyAction;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-
+	@BeforeEach
+	void setUp() throws Exception {
 		explorer = PackageExplorerPart.openInActivePerspective();
 		assertNotNull(explorer);
 		applyAction = AbstractFocusViewAction.getActionForPart(explorer);
 		assertTrue(applyAction instanceof FocusPackageExplorerAction);
 	}
 
+	@Test
 	public void testPreservedFilterRemovalExclusion() throws JavaModelException {
 		List<Class<?>> filterClasses = new ArrayList<>();
 		for (ViewerFilter filter : Arrays.asList(explorer.getTreeViewer().getFilters())) {
@@ -65,6 +72,7 @@ public class InterestFilterTest extends AbstractJavaContextTest {
 		assertTrue(filterClasses.contains(ImportDeclarationFilter.class));
 	}
 
+	@Test
 	public void testFilterRemovalAndRestore() throws JavaModelException {
 		applyAction.update(false);
 		ViewerFilter[] previousFilters = explorer.getTreeViewer().getFilters();
@@ -84,6 +92,7 @@ public class InterestFilterTest extends AbstractJavaContextTest {
 		assertEquals(previousFilters.length, restoredFilters.length);
 	}
 
+	@Test
 	public void testInterestFilter() throws JavaModelException {
 
 		applyAction.update(true);

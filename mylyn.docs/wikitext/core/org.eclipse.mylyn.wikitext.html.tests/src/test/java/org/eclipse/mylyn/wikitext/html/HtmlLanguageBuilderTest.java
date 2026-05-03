@@ -15,12 +15,11 @@
 
 package org.eclipse.mylyn.wikitext.html;
 
-import static java.util.Objects.requireNonNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.StringWriter;
 import java.util.Set;
@@ -30,15 +29,15 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-@SuppressWarnings({ "nls", "restriction" })
+@SuppressWarnings({ "nls" })
 public class HtmlLanguageBuilderTest {
 
 	private HtmlLanguageBuilder builder;
 
-	@Before
+	@BeforeEach
 	public void before() {
 		builder = new HtmlLanguageBuilder();
 	}
@@ -117,8 +116,8 @@ public class HtmlLanguageBuilderTest {
 	@Test
 	public void createWithoutBlockType() {
 		HtmlLanguage language = builder.document("", "").name("Test").create();
-		requireNonNull(language);
-		requireNonNull(language.createDocumentBuilder(new StringWriter()));
+		assertNotNull(language);
+		assertNotNull(language.createDocumentBuilder(new StringWriter()));
 	}
 
 	@Test

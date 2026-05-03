@@ -13,15 +13,16 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.twiki.tests;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.twiki.TWikiLanguage;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class TWikiLanguageTest {
@@ -30,8 +31,8 @@ public class TWikiLanguageTest {
 
 	private MarkupParser parser;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		language = new TWikiLanguage();
 		parser = new MarkupParser(language);
 	}

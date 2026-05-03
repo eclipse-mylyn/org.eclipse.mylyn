@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.java.tests.xml;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -33,8 +35,9 @@ import org.eclipse.mylyn.internal.pde.ui.XmlJavaRelationProvider;
 import org.eclipse.mylyn.internal.resources.ui.ResourceStructureBridge;
 import org.eclipse.mylyn.java.tests.search.ActiveSearchNotifier;
 import org.eclipse.mylyn.java.tests.search.SearchPluginTestHelper;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * TEST CASES TO HANDLE 1. all dos - with and without results TODO - in both the plugin.xml and the build.xml 2. different type of xml file
@@ -44,7 +47,7 @@ import junit.framework.TestCase;
  * @author Shawn Minto
  */
 @SuppressWarnings("nls")
-public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
+public class XmlSearchPluginTest implements ISearchPluginTest {
 
 	private IType type1;
 
@@ -66,8 +69,8 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 
 	private SearchPluginTestHelper helper;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		// TODO: clear the relationship providers?
 		WorkspaceSetupHelper.setupWorkspace();
 		jp1 = WorkspaceSetupHelper.getProject1();
@@ -85,13 +88,14 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 		helper = new SearchPluginTestHelper(this);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		WorkspaceSetupHelper.clearDoiModel();
 		ContextCore.getContextManager().deactivateContext(WorkspaceSetupHelper.getContext().getHandleIdentifier());
 		assertFalse(ContextCore.getContextManager().isContextActive());
 	}
 
+	@Test
 	public void testXMLSearchDOS1() throws IOException, CoreException {
 
 		int dos = 1;
@@ -163,6 +167,7 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 		//
 	}
 
+	@Test
 	public void testXMLSearchDOS2() throws IOException, CoreException {
 
 		int dos = 2;
@@ -220,6 +225,7 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 				searchNode, dos, 3, false);
 	}
 
+	@Test
 	public void testXMLSearchDOS3() throws IOException, CoreException {
 
 		int dos = 3;
@@ -267,6 +273,7 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 		//
 	}
 
+	@Test
 	public void testXMLSearchDOS4() throws IOException, CoreException {
 		// right now, dos 3 and 4 are exactly the same, workspace scope
 

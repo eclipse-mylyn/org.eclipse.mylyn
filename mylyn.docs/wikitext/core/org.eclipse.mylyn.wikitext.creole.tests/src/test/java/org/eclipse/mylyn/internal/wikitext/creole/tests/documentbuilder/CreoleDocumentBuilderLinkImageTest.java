@@ -20,7 +20,7 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @see http://www.wikicreole.org/wiki/Elements

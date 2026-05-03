@@ -17,16 +17,16 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
 import java.util.List;
 
 import org.eclipse.mylyn.reviews.internal.core.model.FileItem;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * <!-- begin-user-doc --> A test case for the model object '<em><b>Review Item</b></em>'. <!-- end-user-doc -->

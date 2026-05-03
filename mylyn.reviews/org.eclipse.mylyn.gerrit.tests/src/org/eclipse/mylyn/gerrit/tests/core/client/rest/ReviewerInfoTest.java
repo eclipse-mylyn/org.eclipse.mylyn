@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -12,6 +12,11 @@
  *******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.tests.core.client.rest;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +26,7 @@ import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewerInfo;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.gerrit.common.data.ApprovalDetail;
 import com.google.gerrit.reviewdb.Account;
@@ -30,10 +35,8 @@ import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gerrit.reviewdb.PatchSetApproval;
 
-import junit.framework.TestCase;
-
 @SuppressWarnings("nls")
-public class ReviewerInfoTest extends TestCase {
+public class ReviewerInfoTest {
 	@Test
 	public void testFromEmptyJson() throws Exception {
 		ReviewerInfo reviewerInfo = parseFile("testdata/EmptyWithMagic.json");

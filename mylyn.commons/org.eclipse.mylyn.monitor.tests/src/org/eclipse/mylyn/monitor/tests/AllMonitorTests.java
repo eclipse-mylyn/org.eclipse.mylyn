@@ -12,19 +12,15 @@
 
 package org.eclipse.mylyn.monitor.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.eclipse.mylyn.commons.sdk.util.junit5.MylynTestSetup;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Mik Kersten
  */
+@Suite
+@SelectClasses({ CheckActivityJobTest.class, ActivityContextManagerTest.class })
+@MylynTestSetup
 public class AllMonitorTests {
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite(AllMonitorTests.class.getName());
-		suite.addTestSuite(CheckActivityJobTest.class);
-		suite.addTestSuite(ActivityContextManagerTest.class);
-		return suite;
-	}
-
 }

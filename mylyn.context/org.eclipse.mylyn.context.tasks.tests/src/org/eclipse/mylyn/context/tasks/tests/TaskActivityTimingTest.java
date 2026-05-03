@@ -14,6 +14,11 @@
 
 package org.eclipse.mylyn.context.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,14 +46,15 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TestFixture;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Rob Elves
  */
 @SuppressWarnings({ "nls", "restriction" })
-public class TaskActivityTimingTest extends TestCase {
+public class TaskActivityTimingTest {
 
 	private TaskActivityManager activityManager;
 
@@ -56,8 +62,8 @@ public class TaskActivityTimingTest extends TestCase {
 
 	private ITaskList taskList;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		activityManager = (TaskActivityManager) TasksUi.getTaskActivityManager();
 		taskList = TasksUiInternal.getTaskList();
 		TestFixture.resetTaskListAndRepositories();
@@ -69,12 +75,13 @@ public class TaskActivityTimingTest extends TestCase {
 		activityMonitor.reloadActivityTime();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 		TestFixture.resetTaskList();
 	}
 
+	@Test
 	public void testLoadCorruptContext() throws Exception {
 		String contextPath = TasksUiPlugin.getDefault().getDataDirectory() + '/' + "contexts" + '/';
 		File contexts = new File(contextPath);
@@ -98,6 +105,7 @@ public class TaskActivityTimingTest extends TestCase {
 		assertFalse(manager.getActivityMetaContext().getInteractionHistory().isEmpty());
 	}
 
+	@Test
 	public void testConstantWriting() throws Exception {
 
 		String contextPath = TasksUiPlugin.getDefault().getDataDirectory() + '/' + "contexts" + '/';
@@ -124,6 +132,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 	}
 
+	@Test
 	public void testActivityWithNoTaskActive() {
 		Calendar start = Calendar.getInstance();
 		Calendar end = Calendar.getInstance();
@@ -151,6 +160,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 	}
 
+	@Test
 	public void testActivityWithNoTaskActive2() {
 		Calendar start = Calendar.getInstance();
 		Calendar end = Calendar.getInstance();
@@ -182,6 +192,7 @@ public class TaskActivityTimingTest extends TestCase {
 		assertTrue(activityManager.getWorkingSets().contains("set 2"));
 	}
 
+	@Test
 	public void testActivityCaptured() {
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
 		taskList.addTask(task1);
@@ -220,6 +231,7 @@ public class TaskActivityTimingTest extends TestCase {
 		assertEquals(2 * expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start, end2));
 	}
 
+	@Test
 	public void testActivityDelete() {
 
 		AbstractTask task1 = new LocalTask("1", "Task 1");
@@ -343,9 +355,9 @@ public class TaskActivityTimingTest extends TestCase {
 //		ContextCore.getContextManager().loadActivityMetaContext();
 //		TasksUiPlugin.getTaskListManager().resetAndRollOver();
 //
-////		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, startEarly, end));
-////		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start2, end2));
-////		assertEquals(2 * expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start, end2));
+	////		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, startEarly, end));
+	////		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start2, end2));
+	////		assertEquals(2 * expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1, start, end2));
 //
 //		// reset still valid after restart
 //		assertEquals(expectedTotalTime, activityManager.getElapsedTime(task1));
@@ -354,6 +366,7 @@ public class TaskActivityTimingTest extends TestCase {
 //
 //	}
 
+	@Test
 	public void testNegativeActivity() {
 
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
@@ -388,6 +401,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 	}
 
+	@Test
 	public void testNullTaskHandle() {
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
 		taskList.addTask(task1);
@@ -410,6 +424,7 @@ public class TaskActivityTimingTest extends TestCase {
 		assertEquals(0, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
 	}
 
+	@Test
 	public void testActivityNotLoggedTwice() {
 		InteractionContext metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		metaContext.reset();
@@ -445,6 +460,7 @@ public class TaskActivityTimingTest extends TestCase {
 		assertEquals(1, metaContext.getInteractionHistory().size());
 	}
 
+	@Test
 	public void testDoubleBookKeeping() {
 		AbstractTask task1 = new LocalTask("testDoubleBookKeeping", "testDoubleBookKeeping");
 		TasksUiPlugin.getTaskList().addTask(task1);
@@ -533,6 +549,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 	}
 
+	@Test
 	public void testAfterReloading() {
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
 		TasksUiPlugin.getTaskList().addTask(task1);
@@ -565,6 +582,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 	}
 
+	@Test
 	public void testCollapsedTiming() {
 		Calendar startTime1 = createCalendar();
 		Calendar endTime1 = createCalendar(startTime1, 20);
@@ -594,6 +612,7 @@ public class TaskActivityTimingTest extends TestCase {
 	/**
 	 * test that total collapsed time is same when events are separated in time
 	 */
+	@Test
 	public void testCollapsedTiming2() {
 		Calendar startTime1 = createCalendar();
 		Calendar endTime1 = createCalendar(startTime1, 20);
@@ -617,6 +636,7 @@ public class TaskActivityTimingTest extends TestCase {
 				- mockContext.getInteractionHistory().get(0).getDate().getTime());
 	}
 
+	@Test
 	public void testCollapsedExternalization() throws Exception {
 
 		Calendar startTime1 = Calendar.getInstance();
@@ -664,6 +684,7 @@ public class TaskActivityTimingTest extends TestCase {
 				TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
 	}
 
+	@Test
 	public void testCollapsedTwoTasks() {
 		// test collapsing of attention events when two or more
 		// task attention events occur sequentially
@@ -691,6 +712,7 @@ public class TaskActivityTimingTest extends TestCase {
 		assertEquals(2, mockContext.getInteractionHistory().size());
 	}
 
+	@Test
 	public void testCollapsedByTheHour() {
 		Calendar startTime1 = Calendar.getInstance();
 		startTime1.set(Calendar.MINUTE, 2);
@@ -736,6 +758,7 @@ public class TaskActivityTimingTest extends TestCase {
 		assertEquals(2, collapsedEvents.size());
 	}
 
+	@Test
 	public void testTaskListManagerInactivity() {
 
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
@@ -770,6 +793,7 @@ public class TaskActivityTimingTest extends TestCase {
 		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
 	}
 
+	@Test
 	public void testElapsedSameAfterRead() throws Exception {
 		// test that granularity of elapsed time map is retained after
 		// being re-read from disk
@@ -858,6 +882,7 @@ public class TaskActivityTimingTest extends TestCase {
 	 * @author Yuri Baburov (burchik@gmail.com)
 	 * @author Rob Elves adaption to test LegacyActivityAdaptor
 	 */
+	@Test
 	public void testLegacyTimingMigration() {
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
 		TasksUiPlugin.getTaskList().addTask(task1);
@@ -1234,6 +1259,7 @@ public class TaskActivityTimingTest extends TestCase {
 //		assertEquals(1, activityPreviousWeek.getChildren().size());
 //	}
 
+	@Test
 	public void testScheduledTaskContainer() {
 
 		Calendar startDate = Calendar.getInstance();

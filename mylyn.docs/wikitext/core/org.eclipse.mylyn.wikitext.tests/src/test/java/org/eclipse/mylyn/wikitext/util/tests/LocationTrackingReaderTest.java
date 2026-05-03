@@ -14,15 +14,16 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.util.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 
 import org.eclipse.mylyn.wikitext.util.LocationTrackingReader;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author David Green

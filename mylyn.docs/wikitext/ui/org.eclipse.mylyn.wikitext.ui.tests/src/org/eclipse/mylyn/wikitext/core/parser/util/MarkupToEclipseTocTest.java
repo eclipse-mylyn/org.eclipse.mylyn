@@ -10,17 +10,19 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.parser.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.mylyn.wikitext.parser.util.MarkupToEclipseToc;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 import org.eclipse.mylyn.wikitext.toolkit.TestResources;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author David Green
@@ -30,8 +32,8 @@ public class MarkupToEclipseTocTest {
 
 	private MarkupToEclipseToc markupToEclipseToc;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		markupToEclipseToc = new MarkupToEclipseToc();
 		markupToEclipseToc.setMarkupLanguage(new TextileLanguage());
 	}
@@ -50,7 +52,7 @@ public class MarkupToEclipseTocTest {
 		markupToEclipseToc.setCopyrightNotice("Copyright (c) 2012 David Green");
 		String toc = markupToEclipseToc.parse("h1. title");
 
-		assertTrue("content: " + toc, toc.contains("<!-- Copyright (c) 2012 David Green -->"));
+		assertTrue(toc.contains("<!-- Copyright (c) 2012 David Green -->"), "content: " + toc);
 	}
 
 	@Test

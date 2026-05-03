@@ -13,7 +13,8 @@
 
 package org.eclipse.mylyn.internal.gerrit.ui;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,7 +26,7 @@ import org.eclipse.mylyn.commons.workbench.browser.UrlHyperlink;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.CommentLink;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel

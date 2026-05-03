@@ -8,11 +8,14 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.repositories.http.tests;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -30,9 +33,9 @@ import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
 import org.eclipse.mylyn.commons.sdk.util.MockServer;
 import org.eclipse.mylyn.commons.sdk.util.MockServer.Message;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
@@ -53,7 +56,7 @@ public class HttpUtilTest {
 	public HttpUtilTest() {
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		server = new MockServer();
 		server.startAndWait();
@@ -66,7 +69,7 @@ public class HttpUtilTest {
 		};
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		server.stop();
 	}
@@ -84,19 +87,26 @@ public class HttpUtilTest {
 		assertEquals(1, connectionManager.getConnectionsInPool());
 	}
 
-	@Test(expected = AssertionFailedException.class)
+	@Test
 	public void testConfigureAuthenticationNullUrl() {
-		HttpUtil.configureAuthentication(client, new RepositoryLocation((String) null), new UserCredentials("", ""));
+		assertThrows(AssertionFailedException.class, () -> {
+			HttpUtil.configureAuthentication(client, new RepositoryLocation((String) null),
+					new UserCredentials("", ""));
+		});
 	}
 
-	@Test(expected = AssertionFailedException.class)
+	@Test
 	public void testConfigureAuthenticationNullClient() {
-		HttpUtil.configureAuthentication(null, new RepositoryLocation("url"), new UserCredentials("", ""));
+		assertThrows(AssertionFailedException.class, () -> {
+			HttpUtil.configureAuthentication(null, new RepositoryLocation("url"), new UserCredentials("", ""));
+		});
 	}
 
-	@Test(expected = AssertionFailedException.class)
+	@Test
 	public void testConfigureAuthenticationNullCredentials() {
-		HttpUtil.configureAuthentication(client, new RepositoryLocation("url"), null);
+		assertThrows(AssertionFailedException.class, () -> {
+			HttpUtil.configureAuthentication(client, new RepositoryLocation("url"), null);
+		});
 	}
 
 	@Test
@@ -109,14 +119,18 @@ public class HttpUtilTest {
 		HttpUtil.configureProxy(client, new RepositoryLocation("url"));
 	}
 
-	@Test(expected = AssertionFailedException.class)
+	@Test
 	public void testConfigureProxyNullClient() {
-		HttpUtil.configureProxy(null, new RepositoryLocation("url"));
+		assertThrows(AssertionFailedException.class, () -> {
+			HttpUtil.configureProxy(null, new RepositoryLocation("url"));
+		});
 	}
 
-	@Test(expected = AssertionFailedException.class)
+	@Test
 	public void testConfigureProxyNullLocation() {
-		HttpUtil.configureProxy(client, null);
+		assertThrows(AssertionFailedException.class, () -> {
+			HttpUtil.configureProxy(client, null);
+		});
 	}
 
 	@Test

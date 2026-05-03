@@ -12,16 +12,10 @@
 package org.eclipse.mylyn.reviews.ui.tests;
 
 import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentPopupDialogTest;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
+@Suite
+@SelectClasses({ CommentPopupDialogTest.class })
 public class AllReviewsUiTests {
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite(AllReviewsUiTests.class.getName());
-		suite.addTestSuite(CommentPopupDialogTest.class);
-		return suite;
-	}
-
 }

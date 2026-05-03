@@ -8,14 +8,17 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.confluence.internal.block.tests;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.eclipse.mylyn.wikitext.confluence.internal.block.ExtendedQuoteBlock;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class ExtendedQuoteBlockTest {
@@ -29,7 +32,7 @@ public class ExtendedQuoteBlockTest {
 	@Test
 	public void canResumeWithoutANestedBlock() {
 		ExtendedQuoteBlock block = new ExtendedQuoteBlock();
-		assertEquals(false, block.canResume("some line", 1));
+		assertFalse(block.canResume("some line", 1));
 	}
 
 	@Test

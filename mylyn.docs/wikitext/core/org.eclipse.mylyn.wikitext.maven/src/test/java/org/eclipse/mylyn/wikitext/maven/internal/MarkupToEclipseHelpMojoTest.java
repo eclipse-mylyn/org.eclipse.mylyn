@@ -16,11 +16,11 @@
 package org.eclipse.mylyn.wikitext.maven.internal;
 
 import static java.util.Objects.requireNonNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -45,24 +45,23 @@ import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder.Stylesheet;
 import org.eclipse.mylyn.wikitext.parser.util.MarkupToEclipseToc;
 import org.eclipse.mylyn.wikitext.splitter.SplitOutlineItem;
 import org.eclipse.mylyn.wikitext.splitter.SplittingHtmlDocumentBuilder;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.ArgumentCaptor;
 
 @SuppressWarnings("nls")
 public class MarkupToEclipseHelpMojoTest {
 
-	@Rule
-	public TemporaryFolder temporaryFolder = new TemporaryFolder();
+	@TempDir
+	public File temporaryFolder;
 
 	private MarkupToEclipseHelpMojo markupToEclipseHelp;
 
-	@Before
-	public void setup() {
+	@BeforeEach
+	void setup() {
 		markupToEclipseHelp = new MarkupToEclipseHelpMojo();
-		markupToEclipseHelp.outputFolder = temporaryFolder.getRoot();
+		markupToEclipseHelp.outputFolder = temporaryFolder;
 		markupToEclipseHelp.sourceFolder = calculateSourceFolder();
 	}
 
@@ -282,19 +281,19 @@ public class MarkupToEclipseHelpMojoTest {
 
 	private void assertHasContent(String path, String expectedContent) {
 		File file = computeOutputFile(path);
-		assertTrue(file.toString(), file.exists());
-		assertTrue(file.toString(), file.isFile());
+		assertTrue(file.exists(), file.toString());
+		assertTrue(file.isFile(), file.toString());
 		try {
 			String content = Files.readString(file.toPath(), StandardCharsets.UTF_8);
-			assertTrue(String.format("expected %s but got %s", expectedContent, content),
-					content.contains(expectedContent));
+			assertTrue(content.contains(expectedContent),
+					String.format("expected %s but got %s", expectedContent, content));
 		} catch (IOException e) {
 			throw new IllegalStateException(file.toString(), e);
 		}
 	}
 
 	private File computeOutputFile(String path) {
-		return new File(temporaryFolder.getRoot(), path);
+		return new File(temporaryFolder, path);
 	}
 
 }

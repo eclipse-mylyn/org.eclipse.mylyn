@@ -22,8 +22,8 @@ import static org.hamcrest.Matchers.sameInstance;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcoreFactory;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Miles Parker
@@ -39,8 +39,8 @@ public class RemoteEmfObserverTest {
 
 	TestRemoteEmfObserver<EPackage, EClass, String, Integer> listener2;
 
-	@Before
-	public void setup() {
+	@BeforeEach
+	void setup() {
 		TestEClassRemoteFactory factory = new TestEClassRemoteFactory();
 		EPackage parent = EcoreFactory.eINSTANCE.createEPackage();
 

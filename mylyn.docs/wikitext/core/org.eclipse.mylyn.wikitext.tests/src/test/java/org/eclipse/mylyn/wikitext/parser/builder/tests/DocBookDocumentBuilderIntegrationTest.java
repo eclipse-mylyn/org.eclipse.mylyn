@@ -10,10 +10,12 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.parser.builder.tests;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.StringWriter;
 
@@ -21,8 +23,8 @@ import org.eclipse.mylyn.wikitext.confluence.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.DocBookDocumentBuilder;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author David Green
@@ -40,8 +42,8 @@ public class DocBookDocumentBuilderIntegrationTest {
 
 	private DocBookDocumentBuilder builder;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		parser = new MarkupParser();
 		parser.setMarkupLanguage(new TextileLanguage());
 		out = new StringWriter();

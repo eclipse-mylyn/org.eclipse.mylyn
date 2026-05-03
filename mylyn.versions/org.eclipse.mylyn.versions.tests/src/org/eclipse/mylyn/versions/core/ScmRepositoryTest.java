@@ -13,13 +13,14 @@
 
 package org.eclipse.mylyn.versions.core;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.mylyn.versions.core.spi.ScmConnector;
 import org.eclipse.mylyn.versions.tests.support.MockScmConnector;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class ScmRepositoryTest {
@@ -29,7 +30,7 @@ public class ScmRepositoryTest {
 
 	private ScmConnector connector;
 
-	@Before
+	@BeforeEach
 	public void prepare() {
 		connector = new MockScmConnector();
 	}

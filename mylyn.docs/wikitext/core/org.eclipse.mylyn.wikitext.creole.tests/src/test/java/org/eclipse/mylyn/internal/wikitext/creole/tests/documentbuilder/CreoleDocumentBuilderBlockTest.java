@@ -15,12 +15,13 @@
 
 package org.eclipse.mylyn.internal.wikitext.creole.tests.documentbuilder;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @see http://www.wikicreole.org/wiki/Elements

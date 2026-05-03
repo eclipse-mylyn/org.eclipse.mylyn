@@ -10,8 +10,8 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
  org.eclipse.mylyn.commons.sdk.util;bundle-version="4.4.0",
  org.eclipse.mylyn.versions.core;bundle-version="4.4.0",
  org.eclipse.mylyn.versions.ui;bundle-version="4.4.0",
- org.eclipse.team.core;bundle-version="0.0.0",
- org.junit;bundle-version="4.5.0"
+ org.eclipse.team.core;bundle-version="0.0.0"
 Export-Package: org.eclipse.mylyn.versions.core;x-internal:=true,
  org.eclipse.mylyn.versions.tests.support;x-internal:=true
+Import-Package: org.junit.jupiter.api;version="[5.14.3,6.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-21

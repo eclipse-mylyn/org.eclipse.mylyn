@@ -14,9 +14,17 @@
 
 package org.eclipse.mylyn.jenkins.tests.client;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
@@ -25,15 +33,15 @@ import org.eclipse.mylyn.internal.hudson.model.HudsonModelRun;
 import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsException;
 import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsResourceNotFoundException;
 import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsServerInfo;
-import org.eclipse.mylyn.internal.jenkins.core.client.JenkinsServerInfo.Type;
 import org.eclipse.mylyn.internal.jenkins.core.client.RestfulJenkinsClient;
 import org.eclipse.mylyn.internal.jenkins.core.client.RestfulJenkinsClient.BuildId;
-import org.eclipse.mylyn.jenkins.tests.support.JenkinsFixture;
+import org.eclipse.mylyn.jenkins.tests.AbstractDefaultJenkinsFixtureTest;
 import org.eclipse.mylyn.jenkins.tests.support.JenkinsHarness;
 import org.eclipse.mylyn.jenkins.tests.support.JenkinsTestUtil;
-import org.junit.Ignore;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases for {@link RestfulJenkinsClient}.
@@ -42,22 +50,29 @@ import junit.framework.TestCase;
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-//FIXME: see https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/936
-@Ignore
-public class JenkinsClientTest extends TestCase {
+public class JenkinsClientTest extends AbstractDefaultJenkinsFixtureTest {
 
 	private JenkinsHarness harness;
 
-	@Override
-	protected void setUp() throws Exception {
-		harness = JenkinsFixture.current().createHarness();
+	@BeforeEach
+	void conditionalRun() {
+		assumeFalse(fixture.isExcluded());
+		assumeFalse(fixture.isUseCertificateAuthentication() && CommonTestUtil.isCertificateAuthBroken());
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		harness.dispose();
+	@BeforeEach
+	void setUp() throws Exception {
+		harness = fixture.createHarness();
 	}
 
+	@AfterEach
+	void tearDown() throws Exception {
+		if (harness != null) {
+			harness.dispose();
+		}
+	}
+
+	@Test
 	public void testValidateValidUrl() throws Exception {
 		// standard connect
 		RestfulJenkinsClient client = harness.connect(PrivilegeLevel.ANONYMOUS);
@@ -65,22 +80,19 @@ public class JenkinsClientTest extends TestCase {
 		assertEquals(harness.getFixture().getType(), info.getType());
 	}
 
+	@Test
 	public void testValidateValidUrlAuthenticate() throws Exception {
-		if (!JenkinsFixture.current().canAuthenticate()) {
-			// ignore
-			return;
-		}
+		assumeTrue(fixture.canAuthenticate());
 		// standard connect
 		RestfulJenkinsClient client = harness.connect();
 		JenkinsServerInfo info = client.validate(null);
 		assertEquals(harness.getFixture().getType(), info.getType());
 	}
 
+	@Test
 	public void testValidateExpiredCookie() throws Exception {
-		if (!JenkinsFixture.current().canAuthenticate()) {
-			// ignore
-			return;
-		}
+		assumeTrue(fixture.canAuthenticate());
+
 		RestfulJenkinsClient client = harness.connect();
 		client.validate(null);
 		// clear cookies
@@ -90,6 +102,7 @@ public class JenkinsClientTest extends TestCase {
 		assertEquals(harness.getFixture().getType(), info.getType());
 	}
 
+	@Test
 	public void testGetJobs() throws Exception {
 		RestfulJenkinsClient client = harness.connect(PrivilegeLevel.ANONYMOUS);
 		harness.ensureHasRun(harness.getPlanFailing());
@@ -101,6 +114,7 @@ public class JenkinsClientTest extends TestCase {
 		JenkinsTestUtil.assertHealthReport(jobs);
 	}
 
+	@Test
 	public void testGetManyJobs() throws Exception {
 		RestfulJenkinsClient client = harness.connect(PrivilegeLevel.ANONYMOUS);
 		harness.ensureHasRun(harness.getPlanSucceeding());
@@ -111,12 +125,8 @@ public class JenkinsClientTest extends TestCase {
 		JenkinsTestUtil.assertHealthReport(jobs);
 	}
 
+	@Test
 	public void testGetNestedJobs() throws Exception {
-		if (harness.getFixture().getType().equals(Type.HUDSON)) {
-			/* HUDSON does not support nested jobs */
-			return;
-		}
-
 		RestfulJenkinsClient client = harness.connect(PrivilegeLevel.ANONYMOUS);
 		List<HudsonModelJob> jobs = client.getJobs(null, null);
 		JenkinsTestUtil.assertContainsNot(jobs, harness.getPlanFolder());
@@ -125,6 +135,7 @@ public class JenkinsClientTest extends TestCase {
 		JenkinsTestUtil.assertContains(jobs, harness.getPlanNestedTwo());
 	}
 
+	@Test
 	public void testGetJobsWithWhitespaces() throws Exception {
 		harness.ensureHasRun(harness.getPlanWhitespace());
 
@@ -138,6 +149,7 @@ public class JenkinsClientTest extends TestCase {
 		assertNotNull(build);
 	}
 
+	@Test
 	public void testGetJobDisabled() throws Exception {
 		RestfulJenkinsClient client = harness.connect(PrivilegeLevel.ANONYMOUS);
 		List<HudsonModelJob> jobs = client.getJobs(Collections.singletonList(harness.getPlanDisabled()), null);
@@ -155,6 +167,7 @@ public class JenkinsClientTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetJobGit() throws Exception {
 		harness.ensureHasRun(harness.getPlanGit());
 
@@ -167,11 +180,9 @@ public class JenkinsClientTest extends TestCase {
 		assertNotNull(build.getAction());
 	}
 
+	@Test
 	public void testRunBuildFailing() throws Exception {
-		if (!JenkinsFixture.current().canAuthenticate()) {
-			// ignore
-			return;
-		}
+		assumeTrue(fixture.canAuthenticate());
 
 		final String jobName = harness.getPlanFailing();
 		RestfulJenkinsClient client = harness.connect();
@@ -195,11 +206,9 @@ public class JenkinsClientTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testRunBuildSucceeding() throws Exception {
-		if (!JenkinsFixture.current().canAuthenticate()) {
-			// ignore
-			return;
-		}
+		assumeTrue(fixture.canAuthenticate());
 
 		final String jobName = harness.getPlanSucceeding();
 		RestfulJenkinsClient client = harness.connect();
@@ -222,11 +231,9 @@ public class JenkinsClientTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testAbortBuild() throws Exception {
-		if (!JenkinsFixture.current().canAuthenticate()) {
-			// ignore
-			return;
-		}
+		assumeTrue(fixture.canAuthenticate());
 
 		final String jobName = harness.getPlanSucceeding();
 		RestfulJenkinsClient client = harness.connect();
@@ -270,11 +277,10 @@ public class JenkinsClientTest extends TestCase {
 //		}
 //	}
 
+	@Test
+	@Disabled("Gets BLUE instead of BLUE_ANIME") // FIXME Unexpected result
 	public void testRunNestedJob() throws Exception {
-		if (!JenkinsFixture.current().canAuthenticate() || harness.getFixture().getType().equals(Type.HUDSON)) {
-			// ignore
-			return;
-		}
+		assumeTrue(fixture.canAuthenticate());
 
 		final String jobName = harness.getPlanNestedOne();
 		RestfulJenkinsClient client = harness.connect();

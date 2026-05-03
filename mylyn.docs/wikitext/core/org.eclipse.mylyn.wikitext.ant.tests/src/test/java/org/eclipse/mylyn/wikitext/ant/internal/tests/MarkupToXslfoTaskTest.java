@@ -10,12 +10,14 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.ant.internal.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -23,18 +25,16 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.eclipse.mylyn.wikitext.ant.internal.MarkupToXslfoTask;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class MarkupToXslfoTaskTest extends AbstractTestAntTask {
 
 	private MarkupToXslfoTask task;
 
-	@Override
-	@Before
-	public void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		task = new MarkupToXslfoTask();
 		task.setMarkupLanguage(languageName);
 	}

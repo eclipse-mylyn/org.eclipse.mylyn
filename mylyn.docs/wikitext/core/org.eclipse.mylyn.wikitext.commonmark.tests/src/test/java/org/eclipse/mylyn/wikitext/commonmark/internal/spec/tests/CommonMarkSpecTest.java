@@ -16,8 +16,8 @@
 package org.eclipse.mylyn.wikitext.commonmark.internal.spec.tests;
 
 import static org.eclipse.mylyn.wikitext.commonmark.internal.CommonMarkAsserts.assertContent;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,20 +34,23 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.CommonMarkLanguage;
 import org.eclipse.mylyn.wikitext.util.LocationTrackingReader;
 import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.Parameter;
+import org.junit.jupiter.params.ParameterizedClass;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 @SuppressWarnings({ "nls", "restriction" })
-@RunWith(Parameterized.class)
+@ParameterizedClass
+@MethodSource("parameters")
 public class CommonMarkSpecTest {
 
 	private static final String SPEC_VERSION = "0.21";
@@ -74,37 +77,24 @@ public class CommonMarkSpecTest {
 			, 6700 // TODO
 			);
 
-	public static class Expectation {
+	@Parameter(0)
+	public String title;
 
-		final String input;
+	@Parameter(1)
+	public String heading;
 
-		final String expected;
+	@Parameter(2)
+	public int lineNumber;
 
-		public Expectation(String input, String expected) {
-			this.input = input;
-			this.expected = expected;
-		}
+	@Parameter(3)
+	public Expectation expectation;
 
-		@Override
-		public String toString() {
-			return new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE) //
-					.append("input", input)
-					.append("expected", expected)
-					.toString();
-		}
-	}
-
-	private final Expectation expectation;
-
-	private final String heading;
-
-	private final int lineNumber;
-
-	@Before
+	@BeforeEach
 	public void preconditions() {
 		assumeTrue(!HEADING_EXCLUSIONS.contains(heading));
 		assumeTrue(!LINE_EXCLUSIONS.contains(Integer.valueOf(lineNumber)));
 	}
+
 
 	@Test
 	public void test() {
@@ -124,19 +114,12 @@ public class CommonMarkSpecTest {
 		return language;
 	}
 
-	@Parameters //(name = "{0} test {index}")
-	public static List<Object[]> parameters() {
+	public static Stream<Arguments> parameters() {
 		List<Object[]> parameters = new ArrayList<>();
 
 		loadSpec(parameters);
 
-		return List.copyOf(parameters);
-	}
-
-	public CommonMarkSpecTest(String title, String heading, int lineNumber, Expectation expectation) {
-		this.heading = heading;
-		this.lineNumber = lineNumber;
-		this.expectation = expectation;
+		return parameters.stream().map(Arguments::of);
 	}
 
 	private static void loadSpec(List<Object[]> parameters) {
@@ -188,7 +171,7 @@ public class CommonMarkSpecTest {
 		if (!tmpFolder.exists()) {
 			tmpFolder.mkdir();
 		}
-		assertTrue(tmpFolder.getAbsolutePath(), tmpFolder.exists());
+		assertTrue(tmpFolder.exists(), tmpFolder.getAbsolutePath());
 		File spec = new File(tmpFolder, String.format("spec%s.txt", SPEC_VERSION));
 		if (!spec.exists()) {
 			try (FileOutputStream out = new FileOutputStream(spec)) {
@@ -197,6 +180,26 @@ public class CommonMarkSpecTest {
 		}
 		try (InputStream in = new FileInputStream(spec)) {
 			return IOUtils.toString(new InputStreamReader(in, StandardCharsets.UTF_8));
+		}
+	}
+
+	public static class Expectation {
+
+		final String input;
+
+		final String expected;
+
+		public Expectation(String input, String expected) {
+			this.input = input;
+			this.expected = expected;
+		}
+
+		@Override
+		public String toString() {
+			return new ToStringBuilder(this, WikiToStringStyle.WIKI_TO_STRING_STYLE) //
+					.append("input", input)
+					.append("expected", expected)
+					.toString();
 		}
 	}
 

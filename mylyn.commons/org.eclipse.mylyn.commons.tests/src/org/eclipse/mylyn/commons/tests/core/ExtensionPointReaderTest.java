@@ -9,9 +9,13 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.core;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,15 +23,14 @@ import java.util.Objects;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.commons.core.ExtensionPointReader;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  * @author Sam Davis
  */
 @SuppressWarnings("nls")
-public class ExtensionPointReaderTest extends TestCase {
+public class ExtensionPointReaderTest {
 
 	public interface ExtensionPointReaderExtension {
 
@@ -76,6 +79,7 @@ public class ExtensionPointReaderTest extends TestCase {
 
 	private static final String ID_PLUGIN = "org.eclipse.mylyn.commons.tests";
 
+	@Test
 	public void testRead() {
 		ExtensionPointReader<ExtensionPointReaderExtension> reader = new ExtensionPointReader<>(
 				ID_PLUGIN, "extensionPointReaderTest", "extensionElement", ExtensionPointReaderExtension.class);
@@ -88,6 +92,7 @@ public class ExtensionPointReaderTest extends TestCase {
 		assertEquals(new ExtensionPointReaderExtensionImplementation(), reader.getItem());
 	}
 
+	@Test
 	public void testReadWithFiltering() {
 		ExtensionPointReader<ExtensionPointReaderExtension> reader = new ExtensionPointReader<>(
 				ID_PLUGIN, "extensionPointReaderTest", "extensionElementWithPriority",
@@ -104,6 +109,7 @@ public class ExtensionPointReaderTest extends TestCase {
 		assertNull(reader.getItem());
 	}
 
+	@Test
 	public void testReadWithPriority() {
 		ExtensionPointReader<ExtensionPointReaderExtension> reader = new ExtensionPointReader<>(
 				ID_PLUGIN, "extensionPointReaderTest", "extensionElementWithPriority",
@@ -116,6 +122,7 @@ public class ExtensionPointReaderTest extends TestCase {
 				new PNegative5ExtensionPointReaderExtensionImplementation()), reader.getItems());
 	}
 
+	@Test
 	public void testReadWithCustomPriority() {
 		ExtensionPointReader<ExtensionPointReaderExtension> reader = new ExtensionPointReader<>(
 				ID_PLUGIN, "extensionPointReaderTest", "extensionElementWithPriority",

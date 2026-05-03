@@ -23,6 +23,11 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.IsNot.not;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,7 +53,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.LabelInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.RevisionInfo;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.gerrit.common.data.ApprovalDetail;
 import com.google.gerrit.common.data.ApprovalType;
@@ -59,10 +64,9 @@ import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gerrit.reviewdb.PatchSetApproval;
 
-import junit.framework.TestCase;
 
 @SuppressWarnings("nls")
-public class ChangeInfoTest extends TestCase {
+public class ChangeInfoTest {
 	@Test
 	public void testFromEmptyJson() throws Exception {
 		ChangeInfo changeInfo = parseFile("testdata/EmptyWithMagic.json");

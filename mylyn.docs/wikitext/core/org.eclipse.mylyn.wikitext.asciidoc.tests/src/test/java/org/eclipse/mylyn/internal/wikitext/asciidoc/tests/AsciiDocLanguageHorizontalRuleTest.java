@@ -10,12 +10,13 @@
  * Contributors:
  *     Jeremie Bresson - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class AsciiDocLanguageHorizontalRuleTest extends AsciiDocLanguageTestBase {

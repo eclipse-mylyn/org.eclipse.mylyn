@@ -13,6 +13,10 @@
 
 package org.eclipse.mylyn.context.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -45,14 +49,15 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.XMLMemento;
 import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.part.FileEditorInput;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class EditorStateParticipantTest extends TestCase {
+public class EditorStateParticipantTest {
 
 	private final class MyEditorStateParticipant extends EditorStateParticipant {
 		// make visible
@@ -98,14 +103,14 @@ public class EditorStateParticipantTest extends TestCase {
 
 	private Exception exceptionOnSave;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		participant = new MyEditorStateParticipant();
 		assertTrue(participant.isEnabled());
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		UiTestUtil.closeAllEditors();
 
 		if (project != null) {
@@ -113,6 +118,7 @@ public class EditorStateParticipantTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testSaveState() {
 		XMLMemento memento = XMLMemento.createWriteRoot("State");
 		IInteractionContext context = new InteractionContext("id", new InteractionContextScaling());
@@ -121,6 +127,7 @@ public class EditorStateParticipantTest extends TestCase {
 		assertNotNull(memento.getChild(EditorStateParticipant.MEMENTO_EDITORS));
 	}
 
+	@Test
 	public void testSaveRestore() throws Exception {
 		createFilesAndOpenEditors();
 
@@ -131,12 +138,13 @@ public class EditorStateParticipantTest extends TestCase {
 		System.err.println(toString((XMLMemento) state.getMemento(EditorStateParticipant.MEMENTO_EDITORS)));
 		participant.closeAllEditors();
 		participant.restoreState(state);
-		assertEquals("Expected 2 editors, got: " + Arrays.asList(page.getEditorReferences()), 2,
-				page.getEditorReferences().length);
+		assertEquals(2, page.getEditorReferences().length,
+				"Expected 2 editors, got: " + Arrays.asList(page.getEditorReferences()));
 		assertEquals(new FileEditorInput(fileB), page.getEditorReferences()[0].getEditorInput());
 		assertEquals(new FileEditorInput(fileA), page.getEditorReferences()[1].getEditorInput());
 	}
 
+	@Test
 	public void testRestoreState_3_7() throws Exception {
 		createFiles();
 
@@ -145,13 +153,14 @@ public class EditorStateParticipantTest extends TestCase {
 		IInteractionContext context = new InteractionContext("id", new InteractionContextScaling());
 		ContextState state = new ContextState(context, context.getHandleIdentifier(), memento);
 		participant.restoreState(state);
-		assertEquals("Expected 2 editors, got: " + Arrays.asList(page.getEditorReferences()), 2,
-				page.getEditorReferences().length);
+		assertEquals(2, page.getEditorReferences().length,
+				"Expected 2 editors, got: " + Arrays.asList(page.getEditorReferences()));
 		assertEquals(new FileEditorInput(fileB), page.getEditorReferences()[0].getEditorInput());
 		assertEquals(new FileEditorInput(fileA), page.getEditorReferences()[1].getEditorInput());
 		assertNotNull(memento.getChild(EditorStateParticipant.MEMENTO_EDITORS));
 	}
 
+	@Test
 	public void testRestoreState_4_1() throws Exception {
 		createFiles();
 
@@ -162,17 +171,18 @@ public class EditorStateParticipantTest extends TestCase {
 		participant.restoreState(state);
 		if (participant.is_3_x()) {
 			// 3.x doesn't have sufficient properties to restore editors persisted with 4.x
-			assertEquals("Expected 0 editors, got: " + Arrays.asList(page.getEditorReferences()), 0,
-					page.getEditorReferences().length);
+			assertEquals(0, page.getEditorReferences().length,
+					"Expected 0 editors, got: " + Arrays.asList(page.getEditorReferences()));
 		} else {
-			assertEquals("Expected 2 editors, got: " + Arrays.asList(page.getEditorReferences()), 2,
-					page.getEditorReferences().length);
+			assertEquals(2, page.getEditorReferences().length,
+					"Expected 2 editors, got: " + Arrays.asList(page.getEditorReferences()));
 			assertEquals(new FileEditorInput(fileB), page.getEditorReferences()[0].getEditorInput());
 			assertEquals(new FileEditorInput(fileA), page.getEditorReferences()[1].getEditorInput());
 		}
 		assertNotNull(memento.getChild(EditorStateParticipant.MEMENTO_EDITORS));
 	}
 
+	@Test
 	public void testRestoreStateRetainState() throws Exception {
 		waitForMylynMonitorToStart();
 		createFiles();
@@ -198,6 +208,7 @@ public class EditorStateParticipantTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNoEditorsState() throws Exception {
 		createFiles();
 

@@ -13,6 +13,9 @@
 
 package org.eclipse.mylyn.commons.tests.net;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -21,32 +24,34 @@ import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
 import org.eclipse.mylyn.commons.sdk.util.MockServer;
 import org.eclipse.mylyn.internal.commons.net.PollingSslProtocolSocketFactory;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class SslProtocolSocketFactoryTest extends TestCase {
+public class SslProtocolSocketFactoryTest {
 
 	private MockServer server;
 
 	private InetSocketAddress proxyAddress;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		server = new MockServer();
 		int proxyPort = server.startAndWait();
 		assert proxyPort > 0;
 		proxyAddress = new InetSocketAddress("localhost", proxyPort);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		server.stop();
 	}
 
+	@Test
 	public void testTrustAllSslProtocolSocketFactory() throws Exception {
 		SecureProtocolSocketFactory factory = new PollingSslProtocolSocketFactory();
 

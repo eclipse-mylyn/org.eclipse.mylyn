@@ -9,16 +9,18 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.repositories.tests.core;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.eclipse.mylyn.commons.repositories.core.auth.CredentialsStores;
 import org.eclipse.mylyn.commons.repositories.core.auth.ICredentialsStore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class CredentialsStoresTest {
@@ -37,11 +39,6 @@ public class CredentialsStoresTest {
 
 	@Test
 	public void testGetDefaultCredentialsStoreNullID() {
-		try {
-			CredentialsStores.getDefaultCredentialsStore(null);
-			fail();
-		} catch (RuntimeException e) {
-			// expected
-		}
+		assertThrows(RuntimeException.class, () -> CredentialsStores.getDefaultCredentialsStore(null));
 	}
 }

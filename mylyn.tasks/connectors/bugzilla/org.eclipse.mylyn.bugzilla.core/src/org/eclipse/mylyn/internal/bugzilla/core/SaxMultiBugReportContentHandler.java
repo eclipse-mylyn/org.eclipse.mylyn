@@ -14,6 +14,11 @@
 
 package org.eclipse.mylyn.internal.bugzilla.core;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CodingErrorAction;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -392,7 +397,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				break;
 			case FILENAME:
 				if (attachment != null) {
-					attachment.setFileName(parsedText);
+					attachment.setFileName(recoverMojibakeFilename(parsedText));
 				}
 				break;
 			case CTYPE:
@@ -782,6 +787,36 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		}
 
 		parseAttachment(taskComment);
+	}
+
+	/**
+	 * Recovers a filename that was stored as mojibake due to Bugzilla 5.x interpreting UTF-8 bytes in the
+	 * Content-Disposition header as ISO-8859-1 (Latin-1). When the client sends a UTF-8 encoded filename,
+	 * Bugzilla 5.x reads those bytes as individual Latin-1 characters and stores/returns them that way.
+	 * <p>
+	 * Recovery: get the ISO-8859-1 bytes of the returned string and try to re-decode as UTF-8. If the result
+	 * is valid UTF-8 and differs from the input, the input was mojibake and the recovered value is returned.
+	 * Otherwise the original string is returned unchanged.
+	 * <p>
+	 * This is safe because legitimate Latin-1 filenames rarely have byte patterns that form valid UTF-8
+	 * multi-byte sequences (e.g. "Ñoño" → bytes 0xD1 0x6F 0xF1 0x6F which are NOT valid UTF-8).
+	 */
+	public static String recoverMojibakeFilename(String filename) {
+		if (filename == null || filename.isEmpty()) {
+			return filename;
+		}
+		try {
+			byte[] latin1Bytes = filename.getBytes(StandardCharsets.ISO_8859_1);
+			CharsetDecoder utf8Decoder = StandardCharsets.UTF_8.newDecoder()
+					.onMalformedInput(CodingErrorAction.REPORT)
+					.onUnmappableCharacter(CodingErrorAction.REPORT);
+			String recovered = utf8Decoder.decode(ByteBuffer.wrap(latin1Bytes)).toString();
+			// Only use the recovered value if it actually differs (non-ASCII was present)
+			return recovered.equals(filename) ? filename : recovered;
+		} catch (CharacterCodingException e) {
+			// The ISO-8859-1 bytes are not valid UTF-8, so the filename is not mojibake
+			return filename;
+		}
 	}
 
 	/** determines attachment id from comment */

@@ -25,5 +25,5 @@
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>org.eclipse.mylyn.wikitext.asciidoc.tests</artifactId>
-	<packaging>eclipse-plugin</packaging>
+	<packaging>eclipse-test-plugin</packaging>
 </project>

@@ -10,18 +10,19 @@
  * Contributors:
  *     Stefan Seelmann - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.eclipse.mylyn.wikitext.markdown.internal.LinkDefinition;
 import org.eclipse.mylyn.wikitext.markdown.internal.LinkDefinitionParser;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Stefan Seelmann
@@ -31,8 +32,8 @@ public class LinkDefinitionParserTest {
 
 	private LinkDefinitionParser linkDefinitionParser;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		linkDefinitionParser = new LinkDefinitionParser();
 	}
 

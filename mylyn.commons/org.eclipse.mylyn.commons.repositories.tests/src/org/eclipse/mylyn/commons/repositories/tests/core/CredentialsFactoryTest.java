@@ -9,12 +9,14 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.repositories.tests.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationCredentials;
@@ -24,7 +26,7 @@ import org.eclipse.mylyn.commons.repositories.core.auth.OpenIdCredentials;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.internal.commons.repositories.core.CredentialsFactory;
 import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
@@ -32,7 +34,7 @@ import org.junit.Test;
 @SuppressWarnings("nls")
 public class CredentialsFactoryTest {
 
-	@Test(expected = RuntimeException.class)
+	@Test
 	public void testCreateInvalidCredentials() {
 		ICredentialsStore store = new InMemoryCredentialsStore();
 		AuthenticationCredentials credentials = new AuthenticationCredentials() {
@@ -46,7 +48,8 @@ public class CredentialsFactoryTest {
 				// ignore
 			}
 		};
-		CredentialsFactory.create(credentials.getClass(), store, "key", false);
+		assertThrows(RuntimeException.class,
+				() -> CredentialsFactory.create(credentials.getClass(), store, "key", false));
 	}
 
 	@Test

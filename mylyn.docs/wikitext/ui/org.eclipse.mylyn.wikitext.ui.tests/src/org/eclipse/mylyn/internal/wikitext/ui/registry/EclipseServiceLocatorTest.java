@@ -10,13 +10,16 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.ui.registry;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,16 +30,16 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
 import org.eclipse.mylyn.wikitext.ui.WikiText;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @EclipseRuntimeRequired
 @SuppressWarnings({ "nls", "restriction" })
 public class EclipseServiceLocatorTest {
 
-	@Before
+	@BeforeEach
 	public void before() {
-		assertTrue("platform must be running for this test", Platform.isRunning());
+		assertTrue(Platform.isRunning(), "platform must be running for this test");
 		// verify that the OSGi plug-in has been initialized otherwise this test will fail
 		assertNotNull(WikiTextUiPlugin.getDefault());
 	}
@@ -44,7 +47,7 @@ public class EclipseServiceLocatorTest {
 	@Test
 	public void instance() {
 		ServiceLocator instance = ServiceLocator.getInstance();
-		assertTrue(instance.getClass().getName(), instance instanceof EclipseServiceLocator);
+		assertInstanceOf(EclipseServiceLocator.class, instance, instance.getClass().getName());
 	}
 
 	@Test

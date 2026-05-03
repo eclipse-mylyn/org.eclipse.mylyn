@@ -13,6 +13,9 @@
 
 package org.eclipse.mylyn.jenkins.tests.integration;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -25,40 +28,49 @@ import org.eclipse.mylyn.builds.core.spi.BuildPlanRequest;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.builds.internal.core.BuildFactory;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.jenkins.core.JenkinsCore;
-import org.eclipse.mylyn.jenkins.tests.support.JenkinsFixture;
+import org.eclipse.mylyn.jenkins.tests.AbstractDefaultJenkinsFixtureTest;
 import org.eclipse.mylyn.jenkins.tests.support.JenkinsHarness;
-import org.junit.Ignore;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-//FIXME: see https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/936
-@Ignore
-public class JenkinsIntegrationTest extends TestCase {
+public class JenkinsIntegrationTest extends AbstractDefaultJenkinsFixtureTest {
 
 	private JenkinsHarness harness;
 
-	@Override
-	protected void setUp() throws Exception {
-		harness = JenkinsFixture.current().createHarness();
+	@BeforeEach
+	public void conditionalRUn() {
+		assumeFalse(fixture.isExcluded());
+		assumeFalse(fixture.isUseCertificateAuthentication() && CommonTestUtil.isCertificateAuthBroken());
+		assumeFalse(fixture.isUseCertificateAuthentication());
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		harness.dispose();
+	@BeforeEach
+	void setUp() throws Exception {
+		harness = fixture.createHarness();
 	}
 
+	@AfterEach
+	void tearDown() throws Exception {
+		if (harness != null) {
+			harness.dispose();
+		}
+	}
+
+	@Test
 	public void testPlanParameters() throws Exception {
 		RepositoryLocation location = harness.getFixture().location();
 		BuildServerBehaviour behaviour = JenkinsCore.createConnector(null).getBehaviour(location);
 		BuildPlanRequest request = new BuildPlanRequest(Collections.singletonList(harness.getPlanParameterized()));
 
 		List<IBuildPlan> plans = behaviour.getPlans(request, null);
-		assertEquals("Expected one plan, got: " + plans, 1, plans.size());
+		assertEquals(1, plans.size(), "Expected one plan, got: " + plans);
 
 		IBuildPlan plan = plans.get(0);
 		assertEquals(harness.getPlanParameterized(), plan.getName());

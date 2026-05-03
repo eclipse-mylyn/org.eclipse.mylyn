@@ -10,17 +10,19 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.function.Function;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class TransformLineSequenceTest {
@@ -39,14 +41,14 @@ public class TransformLineSequenceTest {
 
 	private final LineSequence lineSequence = new TransformLineSequence(delegate, transform);
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void requiresDelegate() {
-		assertNotNull(new TransformLineSequence(null, transform));
+		assertThrows(NullPointerException.class, () -> new TransformLineSequence(null, transform));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void requiresTransform() {
-		assertNotNull(new TransformLineSequence(delegate, null));
+		assertThrows(NullPointerException.class, () -> new TransformLineSequence(delegate, null));
 	}
 
 	@Test

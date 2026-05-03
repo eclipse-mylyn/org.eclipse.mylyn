@@ -13,6 +13,10 @@
 
 package org.eclipse.mylyn.context.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -42,6 +46,9 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.SaxContextReader;
 import org.eclipse.mylyn.internal.context.core.SaxContextWriter;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
@@ -60,16 +67,15 @@ public class ContextExternalizerTest extends AbstractContextTest {
 
 	private AbstractContextContributor contributor;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		scaling = ContextCore.getCommonContextScaling();
 		context = new InteractionContext(CONTEXT_HANDLE, ContextCore.getCommonContextScaling());
 		assertNotNull(ContextCore.getContextManager());
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		if (contextFile != null && contextFile.exists()) {
 			contextFile.delete();
 		}
@@ -77,9 +83,9 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		if (contributor != null) {
 			ContextCorePlugin.getDefault().removeContextContributor(contributor);
 		}
-		super.tearDown();
 	}
 
+	@Test
 	public void testContentAttributeExternalization() throws Exception {
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 		context.parseEvent(mockSelection("1"));
@@ -90,9 +96,10 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertEquals("foobar", loaded.getContentLimitedTo());
 	}
 
+	@Test
 	public void testSaxExternalizationAgainstDom() throws Exception {
 		File file = CommonTestUtil.getFile(this, "testdata/externalizer/testcontext.xml.zip");
-		assertTrue(file.getAbsolutePath(), file.exists());
+		assertTrue(file.exists(), file.getAbsolutePath());
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 		IInteractionContext domReadContext = externalizer.readContextFromXml(CONTEXT_HANDLE, file,
 				new DomContextReader(), scaling);
@@ -118,6 +125,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertEquals(domReadAfterWrite, saxReadAfterWrite);
 	}
 
+	@Test
 	public void testContextSize() throws Exception {
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 		String path = "extern.xml";
@@ -144,6 +152,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertTrue(size <= size2 * 2);
 	}
 
+	@Test
 	public void testExternalization() throws Exception {
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 
@@ -153,8 +162,8 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertNotNull(edge);
 		assertEquals(1, node.getRelations().size());
 		context.parseEvent(mockInterestContribution("3", scaling.getLandmark() + scaling.getDecay() * 3));
-		assertTrue("interest: " + context.get("3").getInterest().getValue(),
-				context.get("3").getInterest().isLandmark());
+		assertTrue(context.get("3").getInterest().isLandmark(),
+				"interest: " + context.get("3").getInterest().getValue());
 		float doi = node.getInterest().getValue();
 		assertNotNull(context.getLandmarks());
 
@@ -182,6 +191,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 	 *
 	 * @throws Exception
 	 */
+	@Test
 	public void testExternalizationWithCollapse() throws Exception {
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 
@@ -267,6 +277,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		return loaded;
 	}
 
+	@Test
 	public void testReadOtherContextHandle() throws Exception {
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 
@@ -295,6 +306,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertEquals(1, context.getAllElements().size());
 	}
 
+	@Test
 	public void testReadInvalidContextHandle() throws Exception {
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 		File file = File.createTempFile("context", null);
@@ -308,6 +320,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertNull(context);
 	}
 
+	@Test
 	public void testAddContextContributor() throws Exception {
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 		ContextCorePlugin contextCorePlugin = ContextCorePlugin.getDefault();
@@ -326,6 +339,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertEquals(initialContributor, contextCorePlugin.getContextContributor().size());
 	}
 
+	@Test
 	public void testWriteAdditionalContextData() throws Exception {
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 		contributor = mock(AbstractContextContributor.class);

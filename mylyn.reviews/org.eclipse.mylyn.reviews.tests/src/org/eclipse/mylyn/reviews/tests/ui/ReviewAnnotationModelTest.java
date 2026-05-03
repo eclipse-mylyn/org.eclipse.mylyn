@@ -14,6 +14,8 @@
 
 package org.eclipse.mylyn.reviews.tests.ui;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Iterator;
@@ -32,8 +34,9 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.tests.util.MockReviewBehavior;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Leo Dos Santos
@@ -41,7 +44,7 @@ import junit.framework.TestCase;
  */
 
 @SuppressWarnings("nls")
-public class ReviewAnnotationModelTest extends TestCase {
+public class ReviewAnnotationModelTest {
 
 	private final static String DEFAULT_TEXT = "This change looks good.";
 
@@ -53,8 +56,8 @@ public class ReviewAnnotationModelTest extends TestCase {
 
 	private ReviewAnnotationModel model;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		doc = new Document("A test document, nothing special.");
 		review = IReviewsFactory.INSTANCE.createFileItem();
 		generateComment(DEFAULT_TEXT, new Date(DEFAULT_TIMESTAMP));
@@ -64,11 +67,12 @@ public class ReviewAnnotationModelTest extends TestCase {
 		model.connect(doc);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		model.disconnect(doc);
 	}
 
+	@Test
 	public void testConnect() {
 		Iterator<Annotation> iter = model.getAnnotationIterator();
 		assertEquals(1, getCount(iter));
@@ -82,6 +86,7 @@ public class ReviewAnnotationModelTest extends TestCase {
 		assertEquals(1, getCount(iter));
 	}
 
+	@Test
 	public void testNotifyChanged() {
 		Iterator<Annotation> iter = model.getAnnotationIterator();
 		assertEquals(1, getCount(iter));

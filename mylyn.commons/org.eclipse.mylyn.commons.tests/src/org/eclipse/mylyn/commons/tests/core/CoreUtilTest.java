@@ -14,13 +14,14 @@
 
 package org.eclipse.mylyn.commons.tests.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.mylyn.commons.core.CoreUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.osgi.framework.Version;
 
 /**
@@ -205,16 +206,8 @@ public class CoreUtilTest {
 
 	@Test
 	public void testDecodeInvalid() {
-		try {
-			String s = CoreUtil.decode("abc-123");
-			fail("Expected IllegalArgumentException, got '" + s + "'");
-		} catch (IllegalArgumentException e) {
-		}
-		try {
-			String s = CoreUtil.decode("%Z_");
-			fail("Expected IllegalArgumentException, got '" + s + "'");
-		} catch (IllegalArgumentException e) {
-		}
+		assertThrows(IllegalArgumentException.class, () -> CoreUtil.decode("abc-123"));
+		assertThrows(IllegalArgumentException.class, () -> CoreUtil.decode("%Z_"));
 	}
 
 	@Test

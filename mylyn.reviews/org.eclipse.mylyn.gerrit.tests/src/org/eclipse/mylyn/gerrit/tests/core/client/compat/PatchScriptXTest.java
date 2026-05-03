@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2014 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -13,18 +13,21 @@
 
 package org.eclipse.mylyn.gerrit.tests.core.client.compat;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchScriptX;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
-public class PatchScriptXTest extends TestCase {
+public class PatchScriptXTest {
 	@Test
 	public void testPatchScriptIsNotBinary() throws Exception {
 		PatchScriptX patchScript = parseFile("testdata/PatchScript_java.json");
@@ -50,7 +53,7 @@ public class PatchScriptXTest extends TestCase {
 		return result.result;
 	}
 
-	private class PatchScriptXAsResult {
+	private static class PatchScriptXAsResult {
 		private String jsonrpc;
 
 		private int id;

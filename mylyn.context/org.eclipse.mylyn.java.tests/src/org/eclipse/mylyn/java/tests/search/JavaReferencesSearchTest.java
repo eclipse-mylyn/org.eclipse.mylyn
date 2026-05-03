@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.java.tests.search;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -33,15 +35,16 @@ import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.internal.java.ui.search.JavaReferencesProvider;
 import org.eclipse.mylyn.internal.pde.ui.PdeStructureBridge;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Shawn Minto
  * @author Mik Kersten
  */
 @SuppressWarnings("nls")
-public class JavaReferencesSearchTest extends TestCase implements ISearchPluginTest {
+public class JavaReferencesSearchTest implements ISearchPluginTest {
 
 	private IType type1;
 
@@ -59,8 +62,8 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 
 	private SearchPluginTestHelper helper;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		UiTestUtil.closeWelcomeView();
 		UiTestUtil.closeAllEditors();
 
@@ -78,13 +81,14 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 		helper = new SearchPluginTestHelper(this);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		WorkspaceSetupHelper.clearDoiModel();
 		ContextCore.getContextManager().deactivateContext(WorkspaceSetupHelper.getContext().getHandleIdentifier());
 		assertFalse(ContextCore.getContextManager().isContextActive());
 	}
 
+	@Test
 	public void testJavaReferencesSearchDOS1() throws IOException, CoreException {
 
 		int dos = 1;
@@ -126,6 +130,7 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 				dos, 1, true);
 	}
 
+	@Test
 	public void testJavaReferencesSearchDOS2() throws CoreException, IOException {
 		int dos = 2;
 
@@ -173,6 +178,7 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 				searchNode, dos, 1, true);
 	}
 
+	@Test
 	public void testJavaReferencesSearchDOS3() throws Exception {
 		int dos = 3;
 
@@ -218,6 +224,7 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 				searchNode, dos, 1, true);
 	}
 
+	@Test
 	public void testJavaReferencesSearchDOS4() throws Exception {
 		// TODO this is the same as 3, but there are some flags to search
 		// libraries...we should check this too
@@ -266,6 +273,7 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 				searchNode, dos, 1, true);
 	}
 
+	@Test
 	public void testJavaReferencesSearchDOS5() throws IOException, CoreException {
 		int dos = 5;
 

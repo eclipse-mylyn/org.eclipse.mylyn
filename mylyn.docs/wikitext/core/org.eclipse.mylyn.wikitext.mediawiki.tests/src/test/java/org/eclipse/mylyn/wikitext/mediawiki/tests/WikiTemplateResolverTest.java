@@ -10,12 +10,14 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.mediawiki.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,8 +26,8 @@ import org.eclipse.mylyn.wikitext.mediawiki.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.mediawiki.Template;
 import org.eclipse.mylyn.wikitext.mediawiki.WikiTemplateResolver;
 import org.eclipse.mylyn.wikitext.mediawiki.internal.TemplateProcessor;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class WikiTemplateResolverTest {
@@ -40,8 +42,8 @@ public class WikiTemplateResolverTest {
 
 	private TemplateProcessor templateProcessor;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 
 		TestWikiTemplateResolver resolverUnderTest = new TestWikiTemplateResolver();
 		resolverUnderTest.setWikiBaseUrl("http://wiki.eclipse.org");

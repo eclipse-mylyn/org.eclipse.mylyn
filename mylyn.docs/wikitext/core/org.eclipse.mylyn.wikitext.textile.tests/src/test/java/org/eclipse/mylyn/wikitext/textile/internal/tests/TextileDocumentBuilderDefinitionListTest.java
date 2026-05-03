@@ -10,11 +10,12 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.textile.internal.tests;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.StringWriter;
 
@@ -22,22 +23,22 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.ListAttributes;
 import org.eclipse.mylyn.wikitext.textile.internal.TextileDocumentBuilder;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author David Green
  * @see TextileDocumentBuilder
  */
-@SuppressWarnings({ "nls", "restriction" })
+@SuppressWarnings({ "nls" })
 public class TextileDocumentBuilderDefinitionListTest {
 
 	private TextileDocumentBuilder builder;
 
 	private StringWriter out;
 
-	@Before
-	public void initBuilder() {
+	@BeforeEach
+	void initBuilder() {
 		out = new StringWriter();
 		builder = new TextileDocumentBuilder(out);
 	}

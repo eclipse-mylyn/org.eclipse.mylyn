@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.context.tasks.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.tasks.ui.TaskContextStore;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
@@ -23,17 +25,15 @@ import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings({ "nls", "restriction" })
-public class TaskContextStoreTest extends TestCase {
+public class TaskContextStoreTest {
 
 	private TaskContextStore store;
 
@@ -41,9 +41,8 @@ public class TaskContextStoreTest extends TestCase {
 
 	private TaskActivityManager activityManager;
 
-	@Override
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		TaskTestUtil.resetTaskListAndRepositories();
 		TasksUiPlugin.getTaskActivityManager().clear();
 		ContextCorePlugin.getContextManager().resetActivityMetaContext();
@@ -53,9 +52,8 @@ public class TaskContextStoreTest extends TestCase {
 		activityManager = TasksUiPlugin.getTaskActivityManager();
 	}
 
-	@Override
-	@After
-	public void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		TaskTestUtil.resetTaskListAndRepositories();
 		TasksUiPlugin.getTaskActivityManager().clear();
 	}
@@ -70,7 +68,7 @@ public class TaskContextStoreTest extends TestCase {
 		assertEquals(60 * 1000, activityManager.getElapsedTime(task));
 
 		store.clearContext(task);
-		assertEquals("Expected activity to remain", 60 * 1000, activityManager.getElapsedTime(task));
+		assertEquals(60 * 1000, activityManager.getElapsedTime(task), "Expected activity to remain");
 	}
 
 	@Test
@@ -84,8 +82,8 @@ public class TaskContextStoreTest extends TestCase {
 		assertEquals(60 * 1000, activityManager.getElapsedTime(sourceTask));
 
 		store.copyContext(sourceTask, targetTask);
-		assertEquals("Expected activity to remain", 60 * 1000, activityManager.getElapsedTime(sourceTask));
-		assertEquals("Expected activity not be copied", 0, activityManager.getElapsedTime(targetTask));
+		assertEquals(60 * 1000, activityManager.getElapsedTime(sourceTask), "Expected activity to remain");
+		assertEquals(0, activityManager.getElapsedTime(targetTask), "Expected activity not be copied");
 	}
 
 	@Test
@@ -114,8 +112,8 @@ public class TaskContextStoreTest extends TestCase {
 		assertEquals(60 * 1000, activityManager.getElapsedTime(sourceTask));
 
 		store.mergeContext(sourceTask, targetTask);
-		assertEquals("Expected activity to remain", 60 * 1000, activityManager.getElapsedTime(sourceTask));
-		assertEquals("Expected activity not be copied", 0, activityManager.getElapsedTime(targetTask));
+		assertEquals(60 * 1000, activityManager.getElapsedTime(sourceTask), "Expected activity to remain");
+		assertEquals(0, activityManager.getElapsedTime(targetTask), "Expected activity not be copied");
 	}
 
 	@Test
@@ -129,8 +127,8 @@ public class TaskContextStoreTest extends TestCase {
 		assertEquals(60 * 1000, activityManager.getElapsedTime(sourceTask));
 
 		store.moveContext(sourceTask, targetTask);
-		assertEquals("Expected activity to be moved", 0, activityManager.getElapsedTime(sourceTask));
-		assertEquals("Expected activity to be moved", 60 * 1000, activityManager.getElapsedTime(targetTask));
+		assertEquals(0, activityManager.getElapsedTime(sourceTask), "Expected activity to be moved");
+		assertEquals(60 * 1000, activityManager.getElapsedTime(targetTask), "Expected activity to be moved");
 	}
 
 	private void addTime(ITask task, long time) {

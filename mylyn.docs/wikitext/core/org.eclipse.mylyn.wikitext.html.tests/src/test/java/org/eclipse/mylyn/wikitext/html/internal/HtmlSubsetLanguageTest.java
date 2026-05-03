@@ -15,10 +15,11 @@
 
 package org.eclipse.mylyn.wikitext.html.internal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -34,33 +35,33 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentHandler;
 import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "nls", "restriction" })
 public class HtmlSubsetLanguageTest {
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void createNullName() {
-		new HtmlSubsetLanguage(null, null, 6, Set.of(BlockType.PARAGRAPH), Set.of(SpanType.BOLD), Map.of(),
-				Collections.emptyList(), false, true);
+		assertThrows(NullPointerException.class, () -> new HtmlSubsetLanguage(null, null, 6,
+				Set.of(BlockType.PARAGRAPH), Set.of(SpanType.BOLD), Map.of(), Collections.emptyList(), false, true));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void createNullBlockTypes() {
-		new HtmlSubsetLanguage("Test", null, 6, null, Set.of(SpanType.BOLD), Map.of(), Collections.emptyList(), false,
-				true);
+		assertThrows(NullPointerException.class, () -> new HtmlSubsetLanguage("Test", null, 6, null,
+				Set.of(SpanType.BOLD), Map.of(), Collections.emptyList(), false, true));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void createNullSpanTypes() {
-		new HtmlSubsetLanguage("Test", null, 6, Set.of(BlockType.PARAGRAPH), null, Map.of(), Collections.emptyList(),
-				false, true);
+		assertThrows(NullPointerException.class, () -> new HtmlSubsetLanguage("Test", null, 6,
+				Set.of(BlockType.PARAGRAPH), null, Map.of(), Collections.emptyList(), false, true));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void createNullTagNameSubstitutions() {
-		new HtmlSubsetLanguage("Test", null, 6, Set.of(BlockType.PARAGRAPH), Set.of(SpanType.BOLD), null,
-				Collections.emptyList(), false, true);
+		assertThrows(NullPointerException.class, () -> new HtmlSubsetLanguage("Test", null, 6,
+				Set.of(BlockType.PARAGRAPH), Set.of(SpanType.BOLD), null, Collections.emptyList(), false, true));
 	}
 
 	@Test

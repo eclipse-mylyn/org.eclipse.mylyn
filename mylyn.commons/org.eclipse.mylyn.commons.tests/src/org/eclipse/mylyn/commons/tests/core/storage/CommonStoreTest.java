@@ -14,6 +14,13 @@
 
 package org.eclipse.mylyn.commons.tests.core.storage;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,19 +34,21 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.mylyn.commons.core.storage.CommonStore;
 import org.eclipse.mylyn.commons.core.storage.ICommonStorable;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings({ "nls", "restriction" })
-public class CommonStoreTest extends TestCase {
+public class CommonStoreTest {
 
 	private File location;
 
 	private CommonStore store;
 
+	@Test
 	public void testDelete() throws Exception {
 		ICommonStorable storable = store.get(Path.EMPTY);
 		assertFalse(storable.exists("handle"));
@@ -54,6 +63,7 @@ public class CommonStoreTest extends TestCase {
 		assertEquals(Collections.emptyList(), Arrays.asList(location.listFiles()));
 	}
 
+	@Test
 	public void testDeleteAll() throws Exception {
 		ICommonStorable storable = store.get(Path.EMPTY);
 		writeHello(storable, "1");
@@ -63,6 +73,7 @@ public class CommonStoreTest extends TestCase {
 		assertFalse(location.exists());
 	}
 
+	@Test
 	public void testDeleteAllSubPath() throws Exception {
 		ICommonStorable storable2 = store.get(new Path("sub2"));
 		writeHello(storable2, "1");
@@ -76,24 +87,24 @@ public class CommonStoreTest extends TestCase {
 		assertFalse(new File(location, "sub").exists());
 	}
 
+	@Test
 	public void testDeleteAllSubPathException() throws Exception {
 		ICommonStorable storable = store.get(new Path("sub"));
 		writeHello(storable, "1");
 		ICommonStorable storable2 = store.get(new Path("sub/sub2"));
 		writeHello(storable2, "1");
-		try {
-			storable.deleteAll();
-			fail("Expected CoreException");
-		} catch (CoreException expected) {
-			assertTrue(storable.exists("1"));
-			assertTrue(storable2.exists("1"));
-		}
+
+		assertThrows(CoreException.class, () -> storable.deleteAll());
+		assertTrue(storable.exists("1"));
+		assertTrue(storable2.exists("1"));
+
 		storable2.deleteAll();
 		storable.deleteAll();
 		assertTrue(location.exists());
 		assertFalse(new File(location, "sub").exists());
 	}
 
+	@Test
 	public void testExists() throws Exception {
 		ICommonStorable storable = store.get(Path.EMPTY);
 		assertFalse(storable.exists("handle"));
@@ -103,12 +114,14 @@ public class CommonStoreTest extends TestCase {
 		assertTrue(storable.exists("handle"));
 	}
 
+	@Test
 	public void testGet() throws Exception {
 		ICommonStorable storable = store.get(Path.EMPTY);
 		ICommonStorable storable2 = store.get(Path.EMPTY);
 		assertSame(storable, storable2);
 	}
 
+	@Test
 	public void testGetPath() {
 		ICommonStorable storable = store.get(new Path("sub"));
 		ICommonStorable storable2 = store.get(Path.EMPTY);
@@ -117,6 +130,7 @@ public class CommonStoreTest extends TestCase {
 		assertSame(storable, storable2);
 	}
 
+	@Test
 	public void testGetPathLazyCreate() {
 		ICommonStorable storable = store.get(new Path("sub"));
 		assertEquals(Collections.emptyList(), Arrays.asList(location.listFiles()));
@@ -124,6 +138,7 @@ public class CommonStoreTest extends TestCase {
 		assertEquals(Collections.emptyList(), Arrays.asList(location.listFiles()));
 	}
 
+	@Test
 	public void testGetPathWrite() throws Exception {
 		ICommonStorable storable = store.get(new Path("sub"));
 		writeHello(storable, "handle");
@@ -132,6 +147,7 @@ public class CommonStoreTest extends TestCase {
 		assertEquals(Collections.singletonList(new File(subFile, "handle")), Arrays.asList(subFile.listFiles()));
 	}
 
+	@Test
 	public void testMove() throws Exception {
 		ICommonStorable storable = store.get(new Path("source"));
 		writeHello(storable, "handle");
@@ -141,30 +157,30 @@ public class CommonStoreTest extends TestCase {
 		assertEquals(Collections.singletonList(new File(targetFile, "handle")), Arrays.asList(targetFile.listFiles()));
 	}
 
+	@Test
 	public void testMoveExistant() throws Exception {
 		ICommonStorable storable = store.get(new Path("source"));
 		writeHello(storable, "handle");
 		ICommonStorable storable2 = store.get(new Path("target"));
 		writeHello(storable2, "handle2");
-		try {
-			store.move(new Path("source"), new Path("target"));
-			fail("Expected CoreException");
-		} catch (CoreException expected) {
-			File sourceFile = new File(location, "source");
-			File targetFile = new File(location, "target");
-			List<File> list = Arrays.asList(location.listFiles());
-			Collections.sort(list);
-			assertEquals(Arrays.asList(sourceFile, targetFile), list);
-			assertEquals(Collections.singletonList(new File(targetFile, "handle2")),
-					Arrays.asList(targetFile.listFiles()));
-		}
+
+		assertThrows(CoreException.class, () -> store.move(new Path("source"), new Path("target")));
+		File sourceFile = new File(location, "source");
+		File targetFile = new File(location, "target");
+		List<File> list = Arrays.asList(location.listFiles());
+		Collections.sort(list);
+		assertEquals(Arrays.asList(sourceFile, targetFile), list);
+		assertEquals(Collections.singletonList(new File(targetFile, "handle2")),
+				Arrays.asList(targetFile.listFiles()));
 	}
 
+	@Test
 	public void testMoveNonExistant() throws Exception {
 		store.move(new Path("source"), new Path("target"));
 		assertEquals(Collections.emptyList(), Arrays.asList(location.listFiles()));
 	}
 
+	@Test
 	public void testRelease() throws Exception {
 		ICommonStorable storable = store.get(Path.EMPTY);
 		storable.release();
@@ -172,13 +188,13 @@ public class CommonStoreTest extends TestCase {
 		assertNotSame(storable, storable2);
 	}
 
+	@Test
 	public void testWriteRead() throws Exception {
 		ICommonStorable storable = store.get(Path.EMPTY);
 		writeHello(storable, "handle");
 		assertTrue(storable.exists("handle"));
 
-		InputStream in = storable.read("handle", null);
-		try (in) {
+		try (InputStream in = storable.read("handle", null)) {
 			byte[] buffer = new byte[5];
 			in.read(buffer);
 			assertEquals("hello", new String(buffer));
@@ -186,20 +202,19 @@ public class CommonStoreTest extends TestCase {
 	}
 
 	private void writeHello(ICommonStorable storable, String handle) throws IOException, CoreException {
-		OutputStream out = storable.write(handle, null);
-		try (out) {
+		try (OutputStream out = storable.write(handle, null)) {
 			out.write("hello".getBytes());
 		}
 	}
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		location = CommonTestUtil.createTempFolder(CommonStoreTest.class.getName());
 		store = new CommonStore(location);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		CommonTestUtil.deleteFolderRecursively(location);
 	}
 

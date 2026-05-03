@@ -17,15 +17,14 @@ import org.eclipse.mylyn.commons.notifications.tests.core.NotificationEnvironmen
 import org.eclipse.mylyn.commons.notifications.tests.feed.FeedReaderTest;
 import org.eclipse.mylyn.commons.notifications.tests.feed.ServiceMessageManagerTest;
 import org.eclipse.mylyn.commons.notifications.tests.feed.ServiceMessageTest;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Steffen Pingel
  */
-@RunWith(Suite.class)
-@SuiteClasses({ NotificationEnvironmentTest.class, FeedReaderTest.class, ServiceMessageManagerTest.class,
+@Suite
+@SelectClasses({ NotificationEnvironmentTest.class, FeedReaderTest.class, ServiceMessageManagerTest.class,
 	ServiceMessageTest.class })
 public class AllNotificationsTests {
 

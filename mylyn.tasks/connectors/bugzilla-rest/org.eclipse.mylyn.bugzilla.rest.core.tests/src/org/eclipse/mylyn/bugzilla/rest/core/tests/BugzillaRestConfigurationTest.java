@@ -14,88 +14,63 @@
 
 package org.eclipse.mylyn.bugzilla.rest.core.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.bugzilla.rest.test.support.BugzillaRestTestFixture;
-import org.eclipse.mylyn.commons.sdk.util.AbstractTestFixture;
+import org.eclipse.mylyn.bugzilla.rest.test.support.AbstractDefaultBugzillaRestFixtureTest;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
-import org.eclipse.mylyn.commons.sdk.util.junit4.ConditionalIgnoreRule;
-import org.eclipse.mylyn.commons.sdk.util.junit4.IFixtureJUnitClass;
-import org.eclipse.mylyn.commons.sdk.util.junit4.Junit4TestFixtureRunner;
-import org.eclipse.mylyn.commons.sdk.util.junit4.Junit4TestFixtureRunner.FixtureDefinition;
-import org.eclipse.mylyn.commons.sdk.util.junit4.MustRunOnCIServerRule;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.google.gson.Gson;
 
 @SuppressWarnings({ "nls", "restriction" })
-@RunWith(Junit4TestFixtureRunner.class)
-@FixtureDefinition(fixtureClass = BugzillaRestTestFixture.class, fixtureType = "bugzillaREST")
-//@RunOnlyWhenProperty(property = "default", value = "1")
 
-public class BugzillaRestConfigurationTest implements IFixtureJUnitClass {
-	private final BugzillaRestTestFixture actualFixture;
-
-	@Rule
-	public ConditionalIgnoreRule rule = new ConditionalIgnoreRule(this);
-
+public class BugzillaRestConfigurationTest extends AbstractDefaultBugzillaRestFixtureTest {
 	private static TaskRepositoryManager manager;
 
 	private BugzillaRestConnector connector;
 
-	public BugzillaRestConfigurationTest(BugzillaRestTestFixture fixture) {
-		actualFixture = fixture;
-	}
-
-	@BeforeClass
+	@BeforeAll
 	public static void setUpClass() {
 		manager = new TaskRepositoryManager();
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() {
-		manager.addRepository(actualFixture.repository());
+		manager.addRepository(fixture.repository());
 		connector = new BugzillaRestConnector();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		manager.clearRepositories();
 	}
 
 	@Test
-	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnCIServerRule.class)
 	public void testConfigurationFromConnector() throws CoreException, IOException {
-		BugzillaRestConfiguration configuration = connector.getRepositoryConfiguration(actualFixture.repository());
+		BugzillaRestConfiguration configuration = connector.getRepositoryConfiguration(fixture.repository());
 		assertNotNull(configuration);
 		assertEquals(
 				IOUtils.toString(
-						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/configuration.json"),
+						CommonTestUtil.getResource(this, fixture.getTestDataFolder() + "/configuration.json"),
 						Charset.defaultCharset()),
 				new Gson().toJson(configuration)
-				.replaceAll(actualFixture.getRepositoryUrl(), "http://dummy.url")
-				.replaceAll(actualFixture.getRepositoryUrl().replaceFirst("https://", "http://"),
+				.replaceAll(fixture.getRepositoryUrl(), "http://dummy.url")
+				.replaceAll(fixture.getRepositoryUrl().replaceFirst("https://", "http://"),
 						"http://dummy.url"));
 
-	}
-
-	@Override
-	public AbstractTestFixture getActualFixture() {
-		return actualFixture;
 	}
 
 }

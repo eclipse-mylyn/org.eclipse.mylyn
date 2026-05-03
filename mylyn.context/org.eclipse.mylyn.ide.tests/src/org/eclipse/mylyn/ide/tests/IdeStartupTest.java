@@ -8,9 +8,12 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.ide.tests;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -18,19 +21,20 @@ import org.eclipse.mylyn.context.core.IContextListener;
 import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.team.ui.ContextActiveChangeSetManager;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
  */
-public class IdeStartupTest extends TestCase {
+public class IdeStartupTest {
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		ContextTestUtil.triggerContextUiLazyStart();
 	}
 
+	@Test
 	public void testChangeSetsStartup() {
 		List<IContextListener> listeners = ContextCorePlugin.getContextManager().getListeners();
 		boolean containsManager = false;

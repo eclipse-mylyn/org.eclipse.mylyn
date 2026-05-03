@@ -10,15 +10,16 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -27,19 +28,19 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class LinesIterableTest {
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void requiresLineSequence() {
-		assertNotNull(new LinesIterable(null, x -> true));
+		assertThrows(NullPointerException.class, () -> new LinesIterable(null, x -> true));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void requiresPredicate() {
-		assertNotNull(new LinesIterable(LineSequence.create(""), null));
+		assertThrows(NullPointerException.class, () -> new LinesIterable(LineSequence.create(""), null));
 	}
 
 	@Test

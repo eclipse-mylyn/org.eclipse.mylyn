@@ -14,6 +14,11 @@
 
 package org.eclipse.mylyn.java.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.resources.IFile;
@@ -35,6 +40,9 @@ import org.eclipse.mylyn.internal.resources.ui.ResourceStructureBridge;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
@@ -61,9 +69,8 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 
 	private ResourceInteractionMonitor resourceMonitor;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		javaMethod = type1.createMethod("void testDecrement() { }", null, true, null);
 		javaType = (IType) javaMethod.getParent();
 		javaCu = (ICompilationUnit) javaType.getParent();
@@ -72,12 +79,12 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		resourceMonitor = new ResourceInteractionMonitor();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		monitor.dispose();
-		super.tearDown();
 	}
 
+	@Test
 	public void testDecrementNonJavaProject() throws CoreException, InvocationTargetException, InterruptedException {
 		IFile file = nonJavaProject.getProject().getFile("foo.txt");
 		file.create(null, true, null);
@@ -93,7 +100,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		assertTrue(projectElement.getInterest().isInteresting());
 
 		assertTrue(ContextCorePlugin.getContextManager()
-				.manipulateInterestForElement(projectElement, false, false, false, "test"));
+				.manipulateInterestForElement(projectElement, false, false, false, "test", false));
 
 		projectElement = ContextCore.getContextManager()
 				.getElement(new ResourceStructureBridge().getHandleIdentifier(nonJavaProject.getProject()));
@@ -104,6 +111,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		assertFalse(fileElement.getInterest().isInteresting());
 	}
 
+	@Test
 	public void testDecrementAcrossBridges() throws CoreException, InvocationTargetException, InterruptedException {
 		monitor.selectionChanged(part, new StructuredSelection(javaMethod));
 		method = ContextCore.getContextManager().getElement(javaMethod.getHandleIdentifier());
@@ -122,7 +130,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		assertTrue(method.getInterest().isInteresting());
 
 		assertTrue(ContextCorePlugin.getContextManager()
-				.manipulateInterestForElement(projectElement, false, false, false, "test"));
+				.manipulateInterestForElement(projectElement, false, false, false, "test", false));
 
 		fileElement = ContextCore.getContextManager().getElement(bridge.getHandleIdentifier(file));
 		assertFalse(fileElement.getInterest().isInteresting());
@@ -130,6 +138,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		// assertFalse(method.getInterest().isInteresting());
 	}
 
+	@Test
 	public void testDecrementInterestOfCompilationUnit() throws JavaModelException {
 		monitor.selectionChanged(part, new StructuredSelection(javaMethod));
 		monitor.selectionChanged(part, new StructuredSelection(javaCu));
@@ -144,7 +153,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		assertTrue(cu.getInterest().isInteresting());
 
 		assertTrue(ContextCorePlugin.getContextManager()
-				.manipulateInterestForElement(packageNode, false, false, false, "test"));
+				.manipulateInterestForElement(packageNode, false, false, false, "test", false));
 
 		method = ContextCore.getContextManager().getElement(javaMethod.getHandleIdentifier());
 		clazz = ContextCore.getContextManager().getElement(javaType.getHandleIdentifier());
@@ -158,6 +167,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		assertFalse(method.getInterest().isInteresting());
 	}
 
+	@Test
 	public void testManipulation() throws JavaModelException {
 		InterestManipulationAction action = new InterestManipulationAction();
 
@@ -197,7 +207,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		public void changeInterestForSelected(boolean increment) {
 			assertTrue(ContextCorePlugin.getContextManager()
 					.manipulateInterestForElement(ContextCore.getContextManager().getActiveElement(), increment, false,
-							true, ""));
+							true, "", false));
 		}
 	}
 }

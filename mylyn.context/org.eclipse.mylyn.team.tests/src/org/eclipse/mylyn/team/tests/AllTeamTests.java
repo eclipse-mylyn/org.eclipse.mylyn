@@ -8,34 +8,28 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.team.tests;
 
 import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.platform.suite.api.BeforeSuite;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Mik Kersten
  */
-@SuppressWarnings("nls")
+@Suite
+@SelectClasses({ ChangeSetManagerTest.class, CommitTemplateTest.class, CommitTemplateVariablesTest.class,
+	CopyCommitMessageHandlerTest.class, TaskFinderTest.class, TeamPropertiesLinkProviderTest.class,
+	TestSyncViewRefresh.class })
 public class AllTeamTests {
 
-	public static Test suite() {
+	@BeforeSuite
+	static void suite() {
 		ContextTestUtil.triggerContextUiLazyStart();
-
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.team.tests");
-		suite.addTestSuite(TestSyncViewRefresh.class);
-//FIXME: AF: enable test, see https://github.com/eclipse-mylyn/org.eclipse.mylyn.context/issues/9
-//		suite.addTestSuite(ChangeSetManagerTest.class);
-		suite.addTestSuite(CommitTemplateTest.class);
-		suite.addTestSuite(TeamPropertiesLinkProviderTest.class);
-		suite.addTestSuite(TaskFinderTest.class);
-		suite.addTestSuite(CommitTemplateVariablesTest.class);
-		suite.addTestSuite(CopyCommitMessageHandlerTest.class);
-		return suite;
 	}
 
 }

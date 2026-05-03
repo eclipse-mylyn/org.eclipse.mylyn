@@ -8,18 +8,22 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
 
 /**
  * @author Steffen Pingel
@@ -42,13 +46,13 @@ public class JSonSupportTest {
 				json.parseResponse("\"2012-11-08 21:38:35.337000000\"", Timestamp.class)); //$NON-NLS-1$
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testParseResponseNull() {
-		new JSonSupport().parseResponse(null, Timestamp.class);
+		assertThrows(IllegalArgumentException.class, () -> new JSonSupport().parseResponse(null, Timestamp.class));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testParseResponseEmpty() {
-		new JSonSupport().parseResponse("", Timestamp.class); //$NON-NLS-1$
+		assertThrows(IllegalArgumentException.class, () -> new JSonSupport().parseResponse("", Timestamp.class)); //$NON-NLS-1$
 	}
 }

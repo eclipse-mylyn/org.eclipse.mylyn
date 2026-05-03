@@ -10,18 +10,20 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.textile.internal.tests;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.StringWriter;
 
 import org.eclipse.mylyn.wikitext.textile.internal.TextileDocumentBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-@SuppressWarnings({ "nls", "restriction" })
+@SuppressWarnings({ "nls" })
 public class TextileDocumentBuilderEntityReferenceTest {
 
 	@Test

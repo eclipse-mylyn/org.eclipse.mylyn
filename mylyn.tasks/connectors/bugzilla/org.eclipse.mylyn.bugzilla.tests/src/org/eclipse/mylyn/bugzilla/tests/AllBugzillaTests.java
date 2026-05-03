@@ -15,6 +15,7 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
+import org.eclipse.mylyn.bugzilla.tests.core.BugzillaAttachmentNameTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaXmlRpcClientTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaHyperlinkDetectorTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaRepositorySettingsPageTest;
@@ -33,7 +34,7 @@ import org.junit.platform.suite.api.Suite;
  */
 @Suite
 @SelectClasses({ BugzillaTaskHyperlinkDetectorTest.class, BugzillaHyperlinkDetectorTest.class,
-	AllBugzillaHeadlessStandaloneTests.class,
+		AllBugzillaHeadlessStandaloneTests.class, BugzillaAttachmentNameTest.class,
 	// not local
 	BugzillaTaskEditorTest.class, BugzillaSearchPageTest.class, BugzillaRepositorySettingsPageTest.class,
 	// needs fixture

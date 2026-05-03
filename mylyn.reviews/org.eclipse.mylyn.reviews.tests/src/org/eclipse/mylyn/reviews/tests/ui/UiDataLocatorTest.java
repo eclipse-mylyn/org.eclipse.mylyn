@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.reviews.tests.ui;
@@ -21,14 +22,12 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.mylyn.reviews.core.spi.remote.ReviewsDataLocator;
 import org.eclipse.mylyn.reviews.ui.spi.factories.ReviewsUiDataLocator;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Miles Parker
  */
-public class UiDataLocatorTest extends TestCase {
+public class UiDataLocatorTest {
 
 	@Test
 	public void testGetLocation() {

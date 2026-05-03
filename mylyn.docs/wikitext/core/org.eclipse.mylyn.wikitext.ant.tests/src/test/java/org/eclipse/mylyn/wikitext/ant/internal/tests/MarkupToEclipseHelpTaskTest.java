@@ -10,12 +10,14 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.ant.internal.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -24,7 +26,7 @@ import java.io.PrintWriter;
 
 import org.eclipse.mylyn.wikitext.ant.internal.MarkupToEclipseHelpTask;
 import org.eclipse.mylyn.wikitext.ant.internal.MarkupToHtmlTask;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class MarkupToEclipseHelpTaskTest extends MarkupToHtmlTaskTest {

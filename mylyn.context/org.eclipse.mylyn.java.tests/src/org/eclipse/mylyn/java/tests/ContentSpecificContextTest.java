@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.java.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.sdk.util.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
@@ -21,6 +23,7 @@ import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Mik Kersten
@@ -29,20 +32,22 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 @SuppressWarnings("nls")
 public class ContentSpecificContextTest extends AbstractContextTest {
 
+	@Test
 	public void testEventProcessing() {
 		InteractionContext context = new InteractionContext("global-id", new InteractionContextScaling());
 		context.setContentLimitedTo(JavaStructureBridge.CONTENT_TYPE);
 		ContextCorePlugin.getContextManager().addGlobalContext(context);
 
 		ContextCore.getContextManager()
-				.processInteractionEvent(
-						new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "foo-kind", "h0", MOCK_ORIGIN));
+		.processInteractionEvent(
+				new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "foo-kind", "h0", MOCK_ORIGIN));
 		assertEquals(0, context.getAllElements().size());
 		ContextCorePlugin.getContextManager().processInteractionEvent(mockSelection("h1"), false, false);
 		assertEquals(1, context.getAllElements().size());
 		ContextCorePlugin.getContextManager().removeGlobalContext(context);
 	}
 
+	@Test
 	public void testEventProcessingCompositeContext() {
 		InteractionContext context1 = new InteractionContext("global-id-1", new InteractionContextScaling());
 		InteractionContext context2 = new InteractionContext("global-id-2", new InteractionContextScaling());
@@ -56,8 +61,8 @@ public class ContentSpecificContextTest extends AbstractContextTest {
 		ContextCorePlugin.getContextManager().addGlobalContext(context);
 
 		ContextCore.getContextManager()
-				.processInteractionEvent(
-						new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "foo-kind", "h0", MOCK_ORIGIN));
+		.processInteractionEvent(
+				new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "foo-kind", "h0", MOCK_ORIGIN));
 		assertEquals(0, context.getAllElements().size());
 		assertEquals(0, context1.getAllElements().size());
 		assertEquals(0, context2.getAllElements().size());
@@ -69,8 +74,8 @@ public class ContentSpecificContextTest extends AbstractContextTest {
 		context.getContextMap().remove(context2.getHandleIdentifier());
 
 		ContextCore.getContextManager()
-				.processInteractionEvent(
-						new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "foo-kind", "h0", MOCK_ORIGIN));
+		.processInteractionEvent(
+				new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "foo-kind", "h0", MOCK_ORIGIN));
 		assertEquals(1, context.getAllElements().size());
 		assertEquals(1, context1.getAllElements().size());
 		assertEquals(1, context2.getAllElements().size());

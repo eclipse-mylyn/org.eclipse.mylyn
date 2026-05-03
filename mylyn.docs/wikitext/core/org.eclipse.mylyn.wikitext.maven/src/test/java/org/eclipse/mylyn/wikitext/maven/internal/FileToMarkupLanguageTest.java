@@ -10,13 +10,15 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.maven.internal;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
@@ -25,19 +27,19 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class FileToMarkupLanguageTest {
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void createNull() {
-		new FileToMarkupLanguage(null);
+		assertThrows(NullPointerException.class, () -> new FileToMarkupLanguage(null));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void getNull() {
-		create().get(null);
+		assertThrows(NullPointerException.class, () -> create().get(null));
 	}
 
 	@Test

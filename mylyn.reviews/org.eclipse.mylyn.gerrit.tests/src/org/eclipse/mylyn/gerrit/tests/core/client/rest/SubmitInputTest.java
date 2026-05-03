@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -15,15 +15,17 @@ package org.eclipse.mylyn.gerrit.tests.core.client.rest;
 
 import static org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.getFile;
 import static org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.read;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.SubmitInput;
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
-public class SubmitInputTest extends TestCase {
+public class SubmitInputTest {
 
 	@Test
 	public void testFromValid() throws Exception {

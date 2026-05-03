@@ -10,18 +10,19 @@
  * Contributors:
  *     Patrik Suzzi - Bug 481670 - [asciidoc] support for lists
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.List;
 
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder.Event;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the AsciiDoc ListBlock elements.
@@ -42,7 +43,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "**** level 4" + BR //
 				+ "***** level 5" + BR //
 				+ "* level 1" + BR);
-		assertEquals("Unordered List parsing", "" //
+		assertEquals("" //
 				+ "<ul>" //
 				+ "<li>level 1<ul>" //
 				+ "<li>level 2<ul>" //
@@ -54,7 +55,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "</ul></li>" //
 				+ "</ul></li>" //
 				+ "<li>level 1</li>" //
-				+ "</ul>".trim(), html.trim());
+				+ "</ul>".trim(), html.trim(), "Unordered List parsing");
 	}
 
 	@Test
@@ -63,12 +64,12 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "- item 1" + BR //
 				+ "-  item 2" + BR //
 				+ "- _item_ 3" + BR);
-		assertEquals("Unordered List with whitespaces and formatting", "" //
+		assertEquals("" //
 				+ "<ul>" //
 				+ "<li>item 1</li>" //
 				+ "<li>item 2</li>" //
 				+ "<li><em>item</em> 3</li>" //
-				+ "</ul>".trim(), html.trim());
+				+ "</ul>".trim(), html.trim(), "Unordered List with whitespaces and formatting");
 	}
 
 	@Test
@@ -82,13 +83,14 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "* *item3*" + BR //
 				+ "" + BR //
 				+ "other text" + BR);
-		assertEquals("Unordered List with blank lines", "" //
+		assertEquals("" //
 				+ "<ul>" //
 				+ "<li>item 1</li>" //
 				+ "<li>item 2</li>" //
 				+ "<li><strong>item3</strong></li>" //
 				+ "</ul>" //
-				+ "<p>other text</p>".trim(), html.trim());
+				+ "<p>other text</p>".trim(), html.trim(),
+				"Unordered List with blank lines");
 	}
 
 	@Test
@@ -100,7 +102,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ ".... level 4" + BR //
 				+ "..... level 5" + BR //
 				+ ". level 1" + BR);
-		assertEquals("Ordered List parsing", "" //
+		assertEquals("" //
 				+ "<ol style=\"list-style-type:decimal;\">" //
 				+ "<li>level 1<ol style=\"list-style-type:lower-alpha;\">" //
 				+ "<li>level 2<ol style=\"list-style-type:lower-roman;\">" //
@@ -112,7 +114,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "</ol></li>" //
 				+ "</ol></li>" //
 				+ "<li>level 1</li>" //
-				+ "</ol>".trim(), html.trim());
+				+ "</ol>".trim(), html.trim(), "Ordered List parsing");
 	}
 
 	@Test
@@ -124,7 +126,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "**** level 4" + BR //
 				+ "..... level 5" + BR //
 				+ ". level 1" + BR);
-		assertEquals("Mixed List parsing", "" //
+		assertEquals("" //
 				+ "<ol style=\"list-style-type:decimal;\">" //
 				+ "<li>level 1<ul>" //
 				+ "<li>level 2<ol style=\"list-style-type:lower-alpha;\">" //
@@ -135,7 +137,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "</ul></li>" //
 				+ "</ol></li>" //
 				+ "</ul></li>" //
-				+ "<li>level 1</li></ol>".trim(), html.trim());
+				+ "<li>level 1</li></ol>".trim(), html.trim(), "Mixed List parsing");
 	}
 
 	@Test
@@ -146,7 +148,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "*** level 3" + BR //
 				+ ".... level 4, 1st" + BR //
 				+ ".... level 4, 2nd" + BR);
-		assertEquals("Mixed List 2 parsing", "" //
+		assertEquals("" //
 				+ "<ul>" //
 				+ "<li>level2 (non-zero start)<ul>" //
 				+ "<li>level 3<ol style=\"list-style-type:decimal;\">" //
@@ -154,7 +156,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "<li>level 4, 2nd</li>" //
 				+ "</ol></li>" //
 				+ "</ul></li>" //
-				+ "</ul>".trim(), html.trim());
+				+ "</ul>".trim(), html.trim(), "Mixed List 2 parsing");
 	}
 
 	@Test
@@ -164,7 +166,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "** second item level 2" + BR //
 				+ "* item level 3" + BR //
 				+ "- item level 1" + BR);
-		assertEquals("testMixedLevels", """
+		assertEquals("""
 				<ul>\
 				<li>item level 1<ul>\
 				<li>first item level 2</li>\
@@ -172,7 +174,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				<li>item level 3</li>\
 				</ul></li></ul></li>\
 				<li>item level 1</li>\
-				</ul>""", html);
+				</ul>""", html, "testMixedLevels");
 	}
 
 	@Test
@@ -285,11 +287,11 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 		String html = parseToHtml(".. lorem" + BR //
 				+ "...... ipsum" + BR //this is not a valid list item
 				+ ".. other" + BR); //
-		assertEquals("testListBreak", """
+		assertEquals("""
 				<ol style="list-style-type:decimal;">\
 				<li>lorem ...... ipsum</li>\
 				<li>other</li>\
-				</ol>""", html);
+				</ol>""", html, "testListBreak");
 	}
 
 	@Test
@@ -298,12 +300,13 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "+" + BR //
 				+ "ipsum" + BR //
 				+ "* other" + BR); //
-		assertEquals("testListBreak", """
+		assertEquals("""
 				<ul>\
 				<li>lorem<p>ipsum</p>
 				</li>\
 				<li>other</li>\
-				</ul>""", html);
+				</ul>""", html,
+				"testListBreak");
 	}
 
 	@Test
@@ -313,12 +316,13 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "ipsum" + BR //
 				+ "+" + BR //
 				+ "* other" + BR); //
-		assertEquals("testListBreak", """
+		assertEquals("""
 				<ul>\
 				<li>lorem<p>ipsum</p>
 				</li>\
 				<li>other</li>\
-				</ul>""", html);
+				</ul>""", html,
+				"testListBreak");
 	}
 
 	@Test
@@ -328,12 +332,12 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "ipsum" + BR //
 				+ "" + BR //
 				+ "* other" + BR); //
-		assertEquals("testListBreak", """
+		assertEquals("""
 				<ul>\
 				<li>lorem<p>ipsum</p>
 				</li>\
 				<li>other</li>\
-				</ul>""", html);
+				</ul>""", html, "testListBreak");
 	}
 
 	@Test
@@ -348,7 +352,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "other code" + BR //
 				+ "----" + BR //
 				); //
-		assertEquals("testListBreak", """
+		assertEquals("""
 				<ul>\
 				<li>lorem\
 				<div class="listingblock"><div class="content"><pre class="nowrap"><code class="nowrap">\
@@ -360,7 +364,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				other code<br/>\
 				</code></pre></div></div>\
 				</li>\
-				</ul>""", html);
+				</ul>""", html, "testListBreak");
 	}
 
 	@Test
@@ -383,7 +387,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				----
 				"""
 				); //
-		assertEquals("testListBreak", """
+		assertEquals("""
 				<ul>\
 				<li>item 1\
 				<div class="listingblock"><div class="content"><pre class="nowrap"><code class="nowrap">\
@@ -400,7 +404,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				code block 2<br/>\
 				</code></pre></div></div>\
 				</li>\
-				</ul>""", html);
+				</ul>""", html, "testListBreak");
 	}
 
 	@Test
@@ -415,7 +419,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 
 				end of list"""
 				); //
-		assertEquals("testListBreak", """
+		assertEquals("""
 				<ul>\
 				<li>item 1\
 				<div class="listingblock"><div class="content"><pre class="nowrap"><code class="nowrap">\
@@ -424,7 +428,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				</li>\
 				</ul>\
 				<p>end of list</p>
-				""", html);
+				""", html, "testListBreak");
 	}
 
 	@Test
@@ -439,7 +443,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 
 				end of list"""
 				); //
-		assertEquals("testListBreak", """
+		assertEquals("""
 				<ul>\
 				<li>item 1\
 				<div class="listingblock"><div class="content"><pre class="nowrap"><code class="nowrap">\
@@ -449,7 +453,7 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				</li>\
 				</ul>\
 				<p>end of list</p>
-				""", html);
+				""", html, "testListBreak");
 	}
 
 	@Test
@@ -464,14 +468,14 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 
 				end of list"""
 				); //
-		assertEquals("testListBreak", """
+		assertEquals("""
 				<ul>\
 				<li>item 1\
 				<table><tr><td>one</td><td>two</td></tr></table>\
 				</li>\
 				</ul>\
 				<p>end of list</p>
-				""", html);
+				""", html, "testListBreak");
 	}
 
 	@Test

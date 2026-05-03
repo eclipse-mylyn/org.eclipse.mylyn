@@ -14,6 +14,9 @@
 
 package org.eclipse.mylyn.commons.tests.net;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
@@ -21,12 +24,13 @@ import java.net.ServerSocket;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 import org.eclipse.mylyn.internal.commons.net.TimeoutInputStream;
-import org.junit.Ignore;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 /**
  * @author Steffen Pingel
@@ -35,8 +39,7 @@ import junit.framework.TestCase;
 /**
  * Badly conceived tests. Makes assumptions about the running environment rather than setting it up
  */
-@SuppressWarnings("nls")
-public class TimeoutInputStreamTest extends TestCase {
+public class TimeoutInputStreamTest {
 
 	volatile int value;
 
@@ -54,8 +57,8 @@ public class TimeoutInputStreamTest extends TestCase {
 
 	private ServerSocket server;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 // FIXME		assertEquals(0, ((ThreadPoolExecutor) CommonsNetPlugin.getExecutorService()).getActiveCount()); // mvn build leaves a thread running, does not happen with Eclipse
 		server = new ServerSocket();
 		new Thread() {
@@ -70,19 +73,15 @@ public class TimeoutInputStreamTest extends TestCase {
 		}.start();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		server.close();
 	}
 
-	@Ignore
 	//FIXME: AF: investigate further flaky failure
+	@Test
+	@DisabledOnOs(value = OS.LINUX, disabledReason = "flaky failure") // TODO Is this still the case
 	public void testClose() throws Exception {
-		if (Platform.OS_LINUX.equals(Platform.getOS())) {
-			System.err.println(
-					"Skipping TimeoutInputStreamTest.testClose() on Ubuntu because of flaky failure");
-			return;
-		}
 		try (TimeoutInputStream in = new TimeoutInputStream(stream, 1, 500, 500)) {
 			assertEquals(0, in.read());
 			value = -1;
@@ -94,23 +93,14 @@ public class TimeoutInputStreamTest extends TestCase {
 		assertEquals(0, ((ThreadPoolExecutor) CommonsNetPlugin.getExecutorService()).getActiveCount()); // mvn build leaves a thread running, does not happen with Eclipse
 	}
 
-	@Ignore
 	//FIXME: AF: investigate further flaky failure
+	@Test
+	@DisabledOnOs(value = OS.LINUX, disabledReason = "flaky failure") // TODO Is this still the case
 	public void testCloseTimeout() throws Exception {
-		if (Platform.OS_LINUX.equals(Platform.getOS())) {
-			System.err.println(
-					"Skipping TimeoutInputStreamTest.testCloseTimeout() on Ubuntu because of flaky failure");
-			return;
-		}
 		e = new SocketTimeoutException();
-		TimeoutInputStream in = new TimeoutInputStream(stream, 1, 500, 500);
-		try (in) {
-			in.read();
-			fail("expected InterruptedIOException");
-		} catch (InterruptedIOException e) {
-			// expected
+		try (TimeoutInputStream in = new TimeoutInputStream(stream, 1, 500, 500)) {
+			assertThrows(InterruptedIOException.class, () -> in.read());
 		}
-
 		// wait 30 seconds for executor to complete
 		long startTime = System.currentTimeMillis();
 		while (System.currentTimeMillis() - startTime < 30 * 1000

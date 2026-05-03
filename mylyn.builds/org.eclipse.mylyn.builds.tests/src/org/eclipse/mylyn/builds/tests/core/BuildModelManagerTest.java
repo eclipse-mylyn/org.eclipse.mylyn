@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.builds.tests.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.File;
 import java.util.Collections;
 
@@ -22,35 +24,38 @@ import org.eclipse.mylyn.builds.core.IBuildServer;
 import org.eclipse.mylyn.builds.internal.core.BuildFactory;
 import org.eclipse.mylyn.builds.internal.core.util.BuildModelManager;
 import org.eclipse.mylyn.builds.tests.support.MockBuildLoader;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
-public class BuildModelManagerTest extends TestCase {
+public class BuildModelManagerTest {
 
 	private BuildModelManager manager;
 
 	private File file;
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		file = File.createTempFile("builds", ".xmi");
 		file.deleteOnExit();
 		manager = new BuildModelManager(file, new MockBuildLoader());
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		file.delete();
 	}
 
+	@Test
 	public void testSaveEmptyModel() throws Exception {
 		manager.save();
 	}
 
+	@Test
 	public void testSaveDanglingPlan() throws Exception {
 		IBuildPlan plan = BuildFactory.eINSTANCE.createBuildPlan();
 		IBuild build = BuildFactory.eINSTANCE.createBuild();
@@ -60,6 +65,7 @@ public class BuildModelManagerTest extends TestCase {
 		assertEquals(Collections.EMPTY_LIST, manager.getModel().getBuilds());
 	}
 
+	@Test
 	public void testSaveDanglingPlanWithServer() throws Exception {
 		IBuildServer server = BuildFactory.eINSTANCE.createBuildServer();
 		IBuildPlan plan1 = BuildFactory.eINSTANCE.createBuildPlan();

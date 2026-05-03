@@ -8,31 +8,28 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.resources.tests;
 
 import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.platform.suite.api.BeforeSuite;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Mik Kersten
  */
-@SuppressWarnings("nls")
+
+@Suite
+@SelectClasses({ ResourceChangeMonitorTest.class, ResourcePatternExclusionStrategyTest.class,
+	ResourceModificationDateExclusionStrategyTest.class, ResourceContextTest.class, ResourcesUiTest.class })
 public class AllResourcesTests {
 
-	public static Test suite() {
+	@BeforeSuite
+	static void suiteSetup() {
 		ContextTestUtil.triggerContextUiLazyStart();
-
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.resources.tests");
-		suite.addTestSuite(ResourceChangeMonitorTest.class);
-		suite.addTestSuite(ResourcePatternExclusionStrategyTest.class);
-		suite.addTestSuite(ResourceModificationDateExclusionStrategyTest.class);
-		suite.addTestSuite(ResourceContextTest.class);
-		suite.addTestSuite(ResourcesUiTest.class);
-		return suite;
 	}
 
 }

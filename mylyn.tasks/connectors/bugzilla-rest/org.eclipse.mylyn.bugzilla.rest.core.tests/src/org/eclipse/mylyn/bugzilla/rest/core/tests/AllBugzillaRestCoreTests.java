@@ -14,34 +14,22 @@
 
 package org.eclipse.mylyn.bugzilla.rest.core.tests;
 
-import java.util.List;
-
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
-import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
-import org.eclipse.mylyn.commons.sdk.util.junit4.ManagedSuite;
-import org.eclipse.mylyn.commons.sdk.util.junit4.ManagedSuite.SuiteClassProvider;
-import org.eclipse.mylyn.commons.sdk.util.junit4.ManagedSuite.TestConfigurationProperty;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import org.junit.platform.suite.api.BeforeSuite;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
-@RunWith(ManagedSuite.class)
-@Suite.SuiteClasses({ RepositoryKeyTest.class, BugzillaRestFlagMapperTest.class,
-	BugzillaRestConnectorNoFixtureTest.class })
-@TestConfigurationProperty()
+@Suite
+@SelectClasses({ RepositoryKeyTest.class, BugzillaRestFlagMapperTest.class,
+		BugzillaRestConnectorNoFixtureTest.class,
+	// Needs fixture
+	BugzillaRestClientTest.class, BugzillaRestConfigurationTest.class, BugzillaRestConnectorTest.class })
 @SuppressWarnings("restriction")
 public class AllBugzillaRestCoreTests {
-	static {
+	@BeforeSuite
+	static void suiteSetup() {
 		if (CommonTestUtil.fixProxyConfiguration()) {
 			CommonTestUtil.dumpSystemInfo(System.err);
-		}
-	}
-
-	@SuiteClassProvider
-	public static void add2SuiteClasses(List<Class<?>> suiteClassList, TestConfiguration testConfiguration) {
-		if (!testConfiguration.isLocalOnly()) {
-			suiteClassList.add(BugzillaRestClientTest.class);
-			suiteClassList.add(BugzillaRestConfigurationTest.class);
-			suiteClassList.add(BugzillaRestConnectorTest.class);
 		}
 	}
 }

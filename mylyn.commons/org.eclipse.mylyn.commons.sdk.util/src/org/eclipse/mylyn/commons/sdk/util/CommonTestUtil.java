@@ -73,6 +73,8 @@ public class CommonTestUtil {
 
 	private final static int MAX_RETRY = 5;
 
+	private static final String ciServer = TestUrl.DEFAULT.getHttpsOk().toString();
+
 	/**
 	 * Returns the given file path with its separator character changed from the given old separator to the given new separator.
 	 *
@@ -518,16 +520,10 @@ public class CommonTestUtil {
 			info = info.replaceFirst(Pattern.quote("${" + entry.getKey() + "}"), entry.getValue().toString());
 		}
 		out.println(info);
-		out.print("HTTP Proxy : " + WebUtil.getProxyForUrl("http://mylyn.org") + " (Platform)");
+
+		out.print("HTTPS Proxy : " + WebUtil.getProxyForUrl(ciServer) + " (Platform)");
 		try {
-			out.print(" / " + ProxySelector.getDefault().select(new URI("http://mylyn.org")) + " (Java)");
-		} catch (URISyntaxException e) {
-			// ignore
-		}
-		out.println();
-		out.print("HTTPS Proxy : " + WebUtil.getProxyForUrl("https://mylyn.org") + " (Platform)");
-		try {
-			out.print(" / " + ProxySelector.getDefault().select(new URI("https://mylyn.org")) + " (Java)");
+			out.print(" / " + ProxySelector.getDefault().select(new URI(ciServer)) + " (Java)");
 		} catch (URISyntaxException e) {
 			// ignore
 		}
@@ -547,8 +543,8 @@ public class CommonTestUtil {
 	 */
 	public static boolean isHttpsProxyBroken() {
 		// checks if http and https proxy configuration matches
-		Proxy httpProxy = WebUtil.getProxyForUrl("http://mylyn.org");
-		Proxy httpsProxy = WebUtil.getProxyForUrl("https://mylyn.org");
+		Proxy httpProxy = WebUtil.getProxyForUrl(TestUrl.DEFAULT.getHttpOk().toString()); // NO http on ci server, points to https
+		Proxy httpsProxy = WebUtil.getProxyForUrl(TestUrl.DEFAULT.getHttpsOk().toString());
 		return CoreUtil.areEqual(httpProxy, httpsProxy);
 	}
 
@@ -565,7 +561,7 @@ public class CommonTestUtil {
 	}
 
 	public static boolean isBehindProxy() {
-		return NetUtil.getProxyForUrl("https://mylyn.org/secure/index.txt") != null;
+		return NetUtil.getProxyForUrl(TestUrl.DEFAULT.getHttpsOk().toString()) != null;
 	}
 
 	public static boolean skipBrowserTests() {

@@ -8,13 +8,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.remote;
 
 import static java.util.Collections.emptyList;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylyn.reviews.core.model.IChange;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.gerrit.common.data.ChangeInfo;
 import com.google.gerrit.reviewdb.Change.Id;

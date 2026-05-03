@@ -12,41 +12,17 @@
 
 package org.eclipse.mylyn.tests;
 
-import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
-import org.eclipse.mylyn.commons.sdk.util.junit4.ManagedSuite;
-import org.eclipse.mylyn.commons.sdk.util.junit4.ManagedTestSuite;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * @author Steffen Pingel
  */
+
+@Suite
+@SelectClasses({ AllNonConnectorTests.class
+	//FIXME: AF: remove? we already did these tests during component build
+// AllBugzillaTests.class, AllTracTests.class, AllJenkinsTests.class, AllGerritTests.class, AllBugzillaRestCoreTests.class })
+})
 public class AllLocalTests {
-
-	public static Test suite() {
-		TestConfiguration configuration = ManagedSuite.getTestConfiguration();
-		if (configuration == null) {
-			configuration = new TestConfiguration();
-			configuration.setLocalOnly(true);
-			ManagedSuite.setTestConfiguration(configuration);
-		}
-
-		TestSuite suite = new ManagedTestSuite(AllLocalTests.class.getName());
-		AllNonConnectorTests.addTests(suite, configuration);
-		addTests(suite, configuration);
-		return suite;
-	}
-
-	static void addTests(TestSuite suite, TestConfiguration configuration) {
-		//FIXME: AF: remove? we already did these tests during component build
-//		suite.addTest(AllBugzillaTests.suite(configuration));
-//		suite.addTest(AllTracTests.suite(configuration));
-//		suite.addTest(AllJenkinsTests.suite(configuration));
-//		suite.addTest(AllGerritTests.suite(configuration));
-		//FIXME: AF: enable tests back
-		//https://github.com/eclipse-mylyn/.github/issues/3
-//		suite.addTest(new JUnit4TestAdapter(AllBugzillaRestCoreTests.class));
-	}
-
 }

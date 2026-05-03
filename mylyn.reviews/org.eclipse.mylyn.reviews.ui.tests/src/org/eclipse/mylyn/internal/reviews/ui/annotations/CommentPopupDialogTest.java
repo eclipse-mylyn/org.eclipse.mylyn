@@ -13,6 +13,11 @@
 
 package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doReturn;
@@ -59,13 +64,14 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TypedListener;
 import org.eclipse.ui.forms.widgets.Section;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatcher;
 
-import junit.framework.TestCase;
 
 @SuppressWarnings("nls")
-public class CommentPopupDialogTest extends TestCase {
+public class CommentPopupDialogTest {
 
 	private final static String USER_ID = "1";
 
@@ -89,8 +95,8 @@ public class CommentPopupDialogTest extends TestCase {
 
 	private CommentPopupDialog secondPopupDialog;
 
-	@Override
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		shell = new Shell();
 		repository = new TaskRepository("mock", "url");
 		TasksUi.getRepositoryManager().addRepository(repository);
@@ -104,8 +110,8 @@ public class CommentPopupDialogTest extends TestCase {
 		range.setEnd(10);
 	}
 
-	@Override
-	public void tearDown() {
+	@AfterEach
+	void tearDown() {
 		if (secondPopupDialog != null) {
 			secondPopupDialog.dispose(true);
 			secondPopupDialog = null;

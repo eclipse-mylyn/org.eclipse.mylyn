@@ -13,12 +13,15 @@
 
 package org.eclipse.mylyn.context.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.lang.reflect.Method;
 import java.util.List;
 
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.sdk.util.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.junit.jupiter.api.Test;
 
 /**
  * This tests that structure bridge shadowing occurs appropriately.
@@ -225,6 +228,7 @@ public class ShadowsBridgeTest extends AbstractContextTest {
 	/**
 	 * @throws Exception
 	 */
+	@Test
 	public void testShadowsStructureBridge() throws Exception {
 		// 1) Create mock bridge
 		BaseContentStructureBridge baseBridge = new BaseContentStructureBridge();
@@ -237,16 +241,16 @@ public class ShadowsBridgeTest extends AbstractContextTest {
 		AbstractContextStructureBridge otherBridge;
 
 		otherBridge = context.getStructureBridge(BASE_CONTENT_TYPE);
-		assertEquals("Should be the same bridges: " + baseBridge + " " + otherBridge, baseBridge, otherBridge);
+		assertEquals(baseBridge, otherBridge, "Should be the same bridges: " + baseBridge + " " + otherBridge);
 
 		otherBridge = context.getStructureBridge(BASE_OBJECT);
-		assertEquals("Should be the same bridges: " + baseBridge + " " + otherBridge, baseBridge, otherBridge);
+		assertEquals(baseBridge, otherBridge, "Should be the same bridges: " + baseBridge + " " + otherBridge);
 
 //		otherBridge = context.getStructureBridge(SHADOWS_CONTENT_TYPE);
 //		assertEquals("Should be the same bridges: " + baseBridge + " " + otherBridge, baseBridge, otherBridge);
 
 		otherBridge = context.getStructureBridge(SHADOWS_OBJECT);
-		assertEquals("Should be the same bridges: " + baseBridge + " " + otherBridge, baseBridge, otherBridge);
+		assertEquals(baseBridge, otherBridge, "Should be the same bridges: " + baseBridge + " " + otherBridge);
 
 		// 4) Create second mock bridge
 		ShadowsContentStructureBridge shadowsBridge = new ShadowsContentStructureBridge();
@@ -263,16 +267,16 @@ public class ShadowsBridgeTest extends AbstractContextTest {
 		// 7) Ensure that the proper kinds of objects are accepted by the shadows bridge instead
 		// now the base content is shadowed and should return the shadows bridge
 		otherBridge = context.getStructureBridge(BASE_CONTENT_TYPE);
-		assertEquals("Should be the same bridges: " + shadowsBridge + " " + otherBridge, shadowsBridge, otherBridge);
+		assertEquals(shadowsBridge, otherBridge, "Should be the same bridges: " + shadowsBridge + " " + otherBridge);
 
 		otherBridge = context.getStructureBridge(SHADOWS_CONTENT_TYPE);
-		assertEquals("Should be the same bridges: " + shadowsBridge + " " + otherBridge, shadowsBridge, otherBridge);
+		assertEquals(shadowsBridge, otherBridge, "Should be the same bridges: " + shadowsBridge + " " + otherBridge);
 
 		otherBridge = context.getStructureBridge(SHADOWS_OBJECT);
-		assertEquals("Should be the same bridges: " + shadowsBridge + " " + otherBridge, shadowsBridge, otherBridge);
+		assertEquals(shadowsBridge, otherBridge, "Should be the same bridges: " + shadowsBridge + " " + otherBridge);
 
 		// since shadows bridge does not accept BASE_OBJECT, we should still be getting base bridge here.
 		otherBridge = context.getStructureBridge(BASE_OBJECT);
-		assertEquals("Should be the same bridges: " + baseBridge + " " + otherBridge, baseBridge, otherBridge);
+		assertEquals(baseBridge, otherBridge, "Should be the same bridges: " + baseBridge + " " + otherBridge);
 	}
 }

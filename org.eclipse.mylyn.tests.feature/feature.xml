@@ -31,48 +31,30 @@
 
    <plugin
          id="org.eclipse.mylyn.commons.sdk.util"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.commons.sdk.util.junit4"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.mylyn.commons.sdk.util.junit5"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.mylyn.context.sdk.java"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.mylyn.context.sdk.util"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.mylyn.tasks.tests"
-         version="0.0.0"
-         unpack="false"/>
-
+         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.mylyn.tests.util"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.tests.util.junit4"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.mylyn.tests.util.junit5"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
 </feature>

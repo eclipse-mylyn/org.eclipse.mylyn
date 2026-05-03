@@ -6,10 +6,12 @@ Bundle-SymbolicName: org.eclipse.mylyn.gerrit.ui.tests;singleton:=true
 Bundle-Version: 4.11.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.gerrit.ui
+Import-Package: org.hamcrest;version="[3.0.0,4.0.0)",
+ org.junit.jupiter.api;version="[5.14.3,6.0.0)",
+ org.junit.jupiter.api.function;version="[5.14.0,6.0.0)",
+ org.mockito;version="[5.23.0,6.0.0)",
+ org.mockito.stubbing;version="[5.23.0,6.0.0)"
+Require-Bundle: org.eclipse.jface.text;bundle-version="[3.16.400,4.0.0)",
+ org.eclipse.mylyn.gerrit.core,
+ org.eclipse.mylyn.tasks.core;bundle-version="4.4.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
-Require-Bundle: org.hamcrest;bundle-version="2.0.0",
- org.junit;bundle-version="4.5.0",
- org.mockito.mockito-core;bundle-version="4.8.1"
-Export-Package: org.eclipse.mylyn.internal.gerrit.ui;x-internal:=true,
- org.eclipse.mylyn.internal.gerrit.ui.editor;x-internal:=true,
- org.eclipse.mylyn.internal.gerrit.ui.operations;x-internal:=true

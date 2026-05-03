@@ -54,6 +54,7 @@ public final class RestfulGitlabClientTest {
 			GitlabTestFixture.current();
 			System.setProperty("gitlabInstance", "active"); //$NON-NLS-1$//$NON-NLS-2$
 		} catch (Exception e) {
+			System.err.println("Unable to find Gitlab fixture:" + e.getMessage());
 			System.setProperty("gitlabInstance", "inactive"); //$NON-NLS-1$//$NON-NLS-2$
 		}
 	}

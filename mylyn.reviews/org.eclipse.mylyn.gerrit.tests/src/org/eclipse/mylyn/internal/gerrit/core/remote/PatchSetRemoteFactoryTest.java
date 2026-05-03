@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -21,6 +21,8 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -54,7 +56,8 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.internal.core.model.FileVersion;
 import org.eclipse.osgi.util.NLS;
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
@@ -67,6 +70,7 @@ import com.google.gerrit.reviewdb.PatchSet;
  * @author Miles Parker
  */
 @SuppressWarnings("nls")
+@Disabled("No gerrit instance available")
 public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
@@ -499,8 +503,8 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		= retrieveForLocalKey(reviewHarness.getProvider().getReviewItemSetFactory(), getReview(), patchSetId,
 				false);
 		PatchSetDetail detail = itemSetObserver.getRemoteObject();
-		assertNotNull(NLS.bind("Failed to retrieve PatchSetDetail {0} for {1}", patchSetId, getReview().getId()),
-				detail);
+		assertNotNull(detail,
+				NLS.bind("Failed to retrieve PatchSetDetail {0} for {1}", patchSetId, getReview().getId()));
 		return detail;
 	}
 

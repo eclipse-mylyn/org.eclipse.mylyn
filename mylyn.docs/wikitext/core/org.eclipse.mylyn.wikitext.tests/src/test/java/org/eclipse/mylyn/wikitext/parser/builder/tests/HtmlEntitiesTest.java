@@ -10,18 +10,19 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.builder.tests;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class HtmlEntitiesTest {
 //	private final HtmlEntities instance = HtmlEntities.instance();
 
 	// FIXME: re-implement tests to avoid access to package-local members
-	@Ignore
+	@Disabled
 	@Test
 	public void instance() {
 //		assertNotNull(instance);
@@ -29,7 +30,7 @@ public class HtmlEntitiesTest {
 	}
 
 	// FIXME: re-implement tests to avoid access to package-local members
-	@Ignore
+	@Disabled
 	@Test
 	public void nameToEntityReferencesUnknownName() {
 //		assertEquals(List.of(), instance.nameToEntityReferences("asdf"));
@@ -37,7 +38,7 @@ public class HtmlEntitiesTest {
 	}
 
 	// FIXME: re-implement tests to avoid access to package-local members
-	@Ignore
+	@Disabled
 	@Test
 	public void nameToEntityReferences() {
 //		assertEquals(List.of("#160"), instance.nameToEntityReferences("nbsp"));

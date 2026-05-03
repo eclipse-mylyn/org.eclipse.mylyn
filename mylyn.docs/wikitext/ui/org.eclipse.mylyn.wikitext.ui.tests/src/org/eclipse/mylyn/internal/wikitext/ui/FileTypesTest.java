@@ -10,13 +10,14 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.ui;
 
 import static java.text.MessageFormat.format;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -44,8 +45,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * A test that runs in the Eclipse UI that verifies that registered file types make sense.
@@ -58,10 +59,8 @@ public class FileTypesTest extends AbstractTestInWorkspace {
 
 	private IProject project;
 
-	@Override
-	@Before
+	@BeforeEach
 	public void before() {
-		super.before();
 		project = createSimpleProject();
 	}
 
@@ -153,19 +152,13 @@ public class FileTypesTest extends AbstractTestInWorkspace {
 				.stream()
 				.filter(descriptor -> descriptor.getId().equals("org.eclipse.mylyn.wikitext.ui.editor.markupEditor"))
 				.findFirst();
-		assertTrue(format("Expected wikitext editor to be registered for file {0} of content type {1}", file.getName(),
-				contentType), editorDescriptor.isPresent());
+		assertTrue(editorDescriptor.isPresent(),
+				format("Expected wikitext editor to be registered for file {0} of content type {1}", file.getName(),
+						contentType));
 
 		IEditorPart editor = workbenchPage.openEditor(new FileEditorInput(file), editorDescriptor.get().getId());
 		assertInstanceOf(MarkupEditor.class, editor);
 		return editor;
-	}
-
-	private void assertInstanceOf(Class<?> clazz, Object o) {
-		if (o != null && clazz.isAssignableFrom(o.getClass())) {
-			return;
-		}
-		fail("Expected instanceof " + clazz.getName() + " but found " + (o == null ? null : o.getClass().getName()));
 	}
 
 	private InputStream createSimpleTextileContent() {
