@@ -24,10 +24,10 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
  org.eclipse.mylyn.tests.util.junit5;bundle-version="4.11.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: org.eclipse.mylyn.team.tests;x-internal:=true
-Import-Package: org.junit.jupiter.api;version="[5.14.3,6.0.0)",
- org.junit.jupiter.api.extension;version="[5.14.0,6.0.0)",
- org.junit.platform.launcher;version="[1.14.0,2.0.0)",
- org.junit.platform.launcher.listeners;version="[1.14.0,2.0.0)",
- org.junit.platform.suite.api;version="[1.14.0,2.0.0)",
+Import-Package: org.junit.jupiter.api;version="[6.0.0,7.0.0)",
+ org.junit.jupiter.api.extension;version="[6.0.0,7.0.0)",
+ org.junit.platform.launcher;version="[6.0.0,7.0.0)",
+ org.junit.platform.launcher.listeners;version="[6.0.0,7.0.0)",
+ org.junit.platform.suite.api;version="[6.0.0,7.0.0)",
  org.mockito;version="[5.23.0,6.0.0)",
  org.mockito.stubbing;version="[5.23.0,6.0.0)"

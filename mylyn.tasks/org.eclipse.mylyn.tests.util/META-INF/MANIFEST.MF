@@ -20,5 +20,5 @@ Export-Package: org.eclipse.mylyn.tasks.tests.connector,
  org.eclipse.mylyn.tests.util;x-internal:=true
 Import-Package: org.eclipse.jface.text,
  org.eclipse.jface.text.hyperlink,
- org.junit.jupiter.api;version="[5.14.3,6.0.0)"
+ org.junit.jupiter.api;version="[6.0.0,7.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-21

@@ -16,4 +16,4 @@ Import-Package: org.eclipse.mylyn.wikitext.parser;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.util;version="[4.2,5)",
  org.eclipse.mylyn.wikitext.validation;version="[4.2,5)",
  org.hamcrest;version="[3.0.0,4.0.0)",
- org.junit.jupiter.api;version="[5.14.0,6.0.0)"
+ org.junit.jupiter.api;version="[6.0.0,7.0.0)"
