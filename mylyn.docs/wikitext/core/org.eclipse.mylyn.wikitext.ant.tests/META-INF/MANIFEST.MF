@@ -10,4 +10,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=17))"
 Import-Package: 
  org.eclipse.mylyn.wikitext.textile;version="4.11.0",
- org.junit.jupiter.api;version="[5.14.0,6.0.0)"
+ org.junit.jupiter.api;version="[6.0.0,7.0.0)"

@@ -13,5 +13,5 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="0.0.0",
  org.eclipse.team.core;bundle-version="0.0.0"
 Export-Package: org.eclipse.mylyn.versions.core;x-internal:=true,
  org.eclipse.mylyn.versions.tests.support;x-internal:=true
-Import-Package: org.junit.jupiter.api;version="[5.14.3,6.0.0)"
+Import-Package: org.junit.jupiter.api;version="[6.0.0,7.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-21

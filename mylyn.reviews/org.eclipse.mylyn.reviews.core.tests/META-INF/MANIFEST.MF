@@ -7,7 +7,7 @@ Bundle-Version: 4.11.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.reviews.core
 Import-Package: org.hamcrest;version="[3.0.0,4.0.0)",
- org.junit.jupiter.api;version="[5.14.3,6.0.0)",
+ org.junit.jupiter.api;version="[6.0.0,7.0.0)",
  org.mockito;version="[5.23.0,6.0.0)",
  org.mockito.stubbing;version="[5.23.0,6.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-21

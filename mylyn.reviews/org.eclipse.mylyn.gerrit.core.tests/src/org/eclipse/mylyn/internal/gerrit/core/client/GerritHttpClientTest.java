@@ -42,11 +42,13 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.JsonEntity;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.Request;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.Request.HttpMethod;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.Mockito;
+import org.mockito.MockitoSession;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -56,7 +58,7 @@ import com.google.gson.reflect.TypeToken;
  * @author Christian Trutz
  */
 @SuppressWarnings("nls")
-@ExtendWith(MockitoExtension.class)
+//@ExtendWith(MockitoExtension.class) // FIXME Need org.mockito.junit-jupiter for juni6, using @BeforeEach instead
 public class GerritHttpClientTest {
 	public class TestGerritHttpClient extends GerritHttpClient {
 		private final int code;
@@ -89,6 +91,18 @@ public class GerritHttpClientTest {
 	@Mock
 	IProgressMonitor progressMonitor;
 
+	// FIXME Need org.mockito.junit-jupiter for junit6, using @BeforeEach instead
+	private MockitoSession session;
+
+	@BeforeEach
+	void setUp() {
+		session = Mockito.mockitoSession().initMocks(this).startMocking();
+	}
+
+	@AfterEach
+	void tearDown() {
+		session.finishMocking();
+	}
 	/**
 	 * Test {@link GerritHttpClient} constructor with {@code null} argument.
 	 */
@@ -106,11 +120,11 @@ public class GerritHttpClientTest {
 		GerritHttpClient gerritHttpClient = new GerritHttpClient(abstractWebLocation,
 				GerritCapabilities.MAXIMUM_SUPPORTED_VERSION);
 		assertThrows(AssertionFailedException.class, () -> gerritHttpClient.postJsonRequest(null, new JsonEntity() {
-					@Override
-					public String getContent() {
-						return "[]"; //$NON-NLS-1$
-					}
-				}, progressMonitor));
+			@Override
+			public String getContent() {
+				return "[]"; //$NON-NLS-1$
+			}
+		}, progressMonitor));
 	}
 
 	/**

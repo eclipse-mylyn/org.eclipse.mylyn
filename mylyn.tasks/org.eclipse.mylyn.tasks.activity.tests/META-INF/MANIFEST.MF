@@ -17,4 +17,4 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.mylyn.tasks.index.core;bundle-version="4.4.0",
  org.eclipse.mylyn.tasks.index.ui;bundle-version="4.4.0"
 Export-Package: org.eclipse.mylyn.tasks.activity.tests;x-internal:=true
-Import-Package: org.junit.jupiter.api;version="[5.14.3,6.0.0)"
+Import-Package: org.junit.jupiter.api;version="[6.0.0,7.0.0)"

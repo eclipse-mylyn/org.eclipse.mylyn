@@ -73,18 +73,15 @@
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/2026-06/"/>
-			<unit id="junit-jupiter-api" version="[5.14.0,6.0.0)"/>
-			<unit id="junit-jupiter-engine" version="[5.14.0,6.0.0)"/>
-			<unit id="junit-jupiter-migrationsupport" version="[5.14.0,6.0.0)"/>
-			<unit id="junit-jupiter-params" version="[5.14.0,6.0.0)"/>
-			<unit id="junit-platform-commons" version="[1.14.0,2.0.0)"/>
-			<unit id="junit-platform-engine" version="[1.14.0,2.0.0)"/>
-			<unit id="junit-platform-launcher" version="[1.14.0,2.0.0)"/>
-			<unit id="junit-platform-runner" version="[1.14.0,2.0.0)"/>
-			<unit id="junit-platform-suite-api" version="[1.14.0,2.0.0)"/>
-			<unit id="junit-platform-suite-engine" version="[1.14.0,2.0.0)"/>
-			<unit id="junit-platform-suite-commons" version="[1.14.0,2.0.0)"/>
-			<unit id="junit-vintage-engine" version="[5.14.0,6.0.0)"/>
+			<unit id="junit-jupiter-api" version="[6.0.0,7.0.0)"/>
+			<unit id="junit-jupiter-engine" version="[6.0.0,7.0.0)"/>
+			<unit id="junit-jupiter-migrationsupport" version="[6.0.0,7.0.0)"/>
+			<unit id="junit-jupiter-params" version="[6.0.0,7.0.0)"/>
+			<unit id="junit-platform-commons" version="[6.0.0,7.0.0)"/>
+			<unit id="junit-platform-engine" version="[6.0.0,7.0.0)"/>
+			<unit id="junit-platform-launcher" version="[6.0.0,7.0.0)"/>
+			<unit id="junit-platform-suite-api" version="[6.0.0,7.0.0)"/>
+			<unit id="junit-platform-suite-engine" version="[6.0.0,7.0.0)"/>
 			<unit id="org.apiguardian.api" version="0.0.0"/>
 			<unit id="org.glassfish.hk2.osgi-resource-locator" version="0.0.0"/>
 			<unit id="org.apache.commons.lang3" version="0.0.0"/>
@@ -104,7 +101,6 @@
 			<unit id="org.hamcrest" version="0.0.0"/>
 			<unit id="org.jsoup" version="0.0.0"/>
 			<unit id="org.mockito.mockito-core" version="0.0.0"/>
-			<unit id="org.mockito.junit-jupiter" version="0.0.0"/>
 			<unit id="org.objenesis" version="0.0.0"/>
 		</location>
 	</locations>
