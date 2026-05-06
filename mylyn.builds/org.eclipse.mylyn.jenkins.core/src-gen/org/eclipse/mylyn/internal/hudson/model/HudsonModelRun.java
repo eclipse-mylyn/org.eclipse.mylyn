@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for hudson.model.Run complex type.
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="hudson.model.Run">
  *   &lt;complexContent>
@@ -88,7 +88,7 @@ public class HudsonModelRun extends HudsonModelActionable {
 	 * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the artifact property.
 	 * <p>
 	 * For example, to add a new item, do as follows:
-	 * 
+	 *
 	 * <pre>
 	 * getArtifact().add(newItem);
 	 * </pre>
@@ -118,7 +118,7 @@ public class HudsonModelRun extends HudsonModelActionable {
 
 	/**
 	 * Gets the value of the description property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getDescription() {
@@ -127,7 +127,7 @@ public class HudsonModelRun extends HudsonModelActionable {
 
 	/**
 	 * Sets the value of the description property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
@@ -151,7 +151,7 @@ public class HudsonModelRun extends HudsonModelActionable {
 
 	/**
 	 * Gets the value of the fullDisplayName property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getFullDisplayName() {
@@ -160,7 +160,7 @@ public class HudsonModelRun extends HudsonModelActionable {
 
 	/**
 	 * Sets the value of the fullDisplayName property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
@@ -170,7 +170,7 @@ public class HudsonModelRun extends HudsonModelActionable {
 
 	/**
 	 * Gets the value of the id property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getId() {
@@ -179,7 +179,7 @@ public class HudsonModelRun extends HudsonModelActionable {
 
 	/**
 	 * Sets the value of the id property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
@@ -217,7 +217,7 @@ public class HudsonModelRun extends HudsonModelActionable {
 
 	/**
 	 * Gets the value of the result property.
-	 * 
+	 *
 	 * @return possible object is {@link Object }
 	 */
 	public Object getResult() {
@@ -226,7 +226,7 @@ public class HudsonModelRun extends HudsonModelActionable {
 
 	/**
 	 * Sets the value of the result property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link Object }
 	 */
@@ -236,7 +236,7 @@ public class HudsonModelRun extends HudsonModelActionable {
 
 	/**
 	 * Gets the value of the timestamp property.
-	 * 
+	 *
 	 * @return possible object is {@link Long }
 	 */
 	public Long getTimestamp() {
@@ -245,7 +245,7 @@ public class HudsonModelRun extends HudsonModelActionable {
 
 	/**
 	 * Sets the value of the timestamp property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link Long }
 	 */
@@ -255,7 +255,7 @@ public class HudsonModelRun extends HudsonModelActionable {
 
 	/**
 	 * Gets the value of the url property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getUrl() {
@@ -264,7 +264,7 @@ public class HudsonModelRun extends HudsonModelActionable {
 
 	/**
 	 * Sets the value of the url property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
