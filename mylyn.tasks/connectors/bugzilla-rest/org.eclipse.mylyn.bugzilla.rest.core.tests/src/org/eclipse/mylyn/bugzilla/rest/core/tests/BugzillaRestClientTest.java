@@ -17,6 +17,7 @@ package org.eclipse.mylyn.bugzilla.rest.core.tests;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -30,7 +31,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -42,7 +42,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.bugzilla.rest.test.support.AbstractDefaultBugzillaRestFixtureTest;
 import org.eclipse.mylyn.bugzilla.rest.test.support.BugzillaRestHarness;
@@ -63,6 +62,7 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.IBugzillaRestConstants;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Parameters;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Product;
+import org.eclipse.mylyn.internal.commons.core.FileUtil;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
 import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
@@ -201,6 +201,10 @@ public class BugzillaRestClientTest extends AbstractDefaultBugzillaRestFixtureTe
 		assertThat(e.getMessage(), is("The API key you specified is invalid"));
 	}
 
+	private String readResource(String file) throws IOException {
+		return FileUtil.readFile(CommonTestUtil.getResource(this, fixture.getTestDataFolder() + file));
+	}
+
 	@Test
 	public void testGetConfiguration() throws Exception {
 		TaskRepository repository = fixture.repository();
@@ -209,29 +213,16 @@ public class BugzillaRestClientTest extends AbstractDefaultBugzillaRestFixtureTe
 		Map<String, Field> fields = configuration.getFields();
 		Collection<Field> fieldCollection = fields.values();
 		assertConfigurationFieldNames(fieldCollection);
-		assertEquals(
-				IOUtils.toString(CommonTestUtil.getResource(this, fixture.getTestDataFolder() + "/fields.json"),
-						Charset.defaultCharset()),
-				new Gson().toJson(fields));
+		assertEquals(readResource("/fields.json"), new Gson().toJson(fields));
 		Map<String, Product> products = configuration.getProducts();
-		assertEquals(
-				IOUtils.toString(
-						CommonTestUtil.getResource(this, fixture.getTestDataFolder() + "/products.json"),
-						Charset.defaultCharset()),
-				new Gson().toJson(products));
+		assertEquals(readResource("/products.json"), new Gson().toJson(products));
 		Parameters parameter = configuration.getParameters();
-		assertEquals(
-				IOUtils.toString(
-						CommonTestUtil.getResource(this, fixture.getTestDataFolder() + "/parameters.json"),
-						Charset.defaultCharset()),
+		assertEquals(readResource("/parameters.json"), //
 				new Gson().toJson(parameter)
 				.replaceAll(repository.getRepositoryUrl(), "http://dummy.url")
 				.replaceAll(repository.getRepositoryUrl().replaceFirst("https://", "http://"),
 						"http://dummy.url"));
-		assertEquals(
-				IOUtils.toString(
-						CommonTestUtil.getResource(this, fixture.getTestDataFolder() + "/configuration.json"),
-						Charset.defaultCharset()),
+		assertEquals(readResource("/configuration.json"), //
 				new Gson().toJson(configuration)
 				.replaceAll(repository.getRepositoryUrl(), "http://dummy.url")
 				.replaceAll(repository.getRepositoryUrl().replaceFirst("https://", "http://"),
@@ -244,11 +235,7 @@ public class BugzillaRestClientTest extends AbstractDefaultBugzillaRestFixtureTe
 			fieldNameList.add(field.getName());
 		}
 		Collections.sort(fieldNameList);
-		assertEquals(
-				IOUtils.toString(
-						CommonTestUtil.getResource(this, fixture.getTestDataFolder() + "/fieldName.json"),
-						Charset.defaultCharset()),
-				new Gson().toJson(fieldNameList));
+		assertEquals(readResource("/fieldName.json"), new Gson().toJson(fieldNameList));
 	}
 
 	@Test
@@ -276,23 +263,15 @@ public class BugzillaRestClientTest extends AbstractDefaultBugzillaRestFixtureTe
 		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository);
 		TaskData taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");
 		assertTrue(taskDataHandler.initializeTaskData(repository, taskData, null, null));
-		assertEquals(
-				IOUtils.toString(CommonTestUtil.getResource(this, fixture.getTestDataFolder() + "/taskData.txt"),
-						Charset.defaultCharset()).replace("\r\n", "\n"),
+		assertEquals(readResource("/taskData.txt").replace("\r\n", "\n"), //
 				taskData.getRoot().toString().replace("\r\n", "\n"));
 		taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");
 		assertTrue(taskDataHandler.initializeTaskData(repository, taskData, taskMappingInit, null));
-		assertEquals(
-				IOUtils.toString(
-						CommonTestUtil.getResource(this, fixture.getTestDataFolder() + "/taskData1.txt"),
-						Charset.defaultCharset()).replace("\r\n", "\n"),
+		assertEquals(readResource("/taskData1.txt").replace("\r\n", "\n"), //
 				taskData.getRoot().toString().replace("\r\n", "\n"));
 		taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");
 		assertTrue(taskDataHandler.initializeTaskData(repository, taskData, taskMappingSelect, null));
-		assertEquals(
-				IOUtils.toString(
-						CommonTestUtil.getResource(this, fixture.getTestDataFolder() + "/taskData2.txt"),
-						Charset.defaultCharset()).replace("\r\n", "\n"),
+		assertEquals(readResource("/taskData2.txt").replace("\r\n", "\n"), //
 				taskData.getRoot().toString().replace("\r\n", "\n"));
 	}
 
@@ -322,7 +301,7 @@ public class BugzillaRestClientTest extends AbstractDefaultBugzillaRestFixtureTe
 		} catch (BugzillaRestException e) {
 			String url = fixture.getRepositoryUrl();
 			if (url.endsWith("/")) {
-				url= url.substring(0, url.length()-1);
+				url = url.substring(0, url.length() - 1);
 			}
 			assertEquals("You must select/enter a product.  (status: Bad Request from "
 					+ url.substring(url.lastIndexOf('/')) + "/rest.cgi/bug)", e.getMessage());
@@ -413,8 +392,7 @@ public class BugzillaRestClientTest extends AbstractDefaultBugzillaRestFixtureTe
 		taskData.getRoot()
 		.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
 		.setValue("M2");
-		RepositoryResponse reposonse = connector.getClient(fixture.repository())
-				.postTaskData(taskData, null, null);
+		RepositoryResponse reposonse = connector.getClient(fixture.repository()).postTaskData(taskData, null, null);
 		assertEquals(ResponseKind.TASK_CREATED, reposonse.getReposonseKind());
 	}
 
@@ -562,10 +540,7 @@ public class BugzillaRestClientTest extends AbstractDefaultBugzillaRestFixtureTe
 
 		assertEquals(taskData.getRoot().toString().replace("\r\n", "\n"),
 				taskDataGet.getRoot().toString().replace("\r\n", "\n"));
-		assertEquals(
-				IOUtils.toString(
-						CommonTestUtil.getResource(this, fixture.getTestDataFolder() + "/taskDataFlags.txt"),
-						Charset.defaultCharset()).replace("\r\n", "\n"),
+		assertEquals(readResource("/taskDataFlags.txt").replace("\r\n", "\n"),
 				flags.toString().replace("\r\n", "\n"));
 	}
 
@@ -709,7 +684,7 @@ public class BugzillaRestClientTest extends AbstractDefaultBugzillaRestFixtureTe
 
 		try (OutputStream out = new FileOutputStream(file);
 				InputStream in = CommonTestUtil.getResource(this, "testdata/icons/bugzilla-logo.gif")) {
-			IOUtils.copy(in, out);
+			in.transferTo(out);
 		}
 		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(file);
 		attachment.setContentType("image/gif");
@@ -724,10 +699,9 @@ public class BugzillaRestClientTest extends AbstractDefaultBugzillaRestFixtureTe
 			}
 		}
 		assertNotNull(attachmentAttribute);
-		InputStream instream = attachmentHandler.getContent(fixture.repository(), task, attachmentAttribute,
-				null);
+		InputStream instream = attachmentHandler.getContent(fixture.repository(), task, attachmentAttribute, null);
 		InputStream instream2 = CommonTestUtil.getResource(this, "testdata/icons/bugzilla-logo.gif");
-		assertTrue(IOUtils.contentEquals(instream, instream2));
+		assertArrayEquals(instream.readAllBytes(), instream2.readAllBytes());
 	}
 
 	@Test
@@ -777,7 +751,7 @@ public class BugzillaRestClientTest extends AbstractDefaultBugzillaRestFixtureTe
 		file.deleteOnExit();
 		try (OutputStream out = new FileOutputStream(file);
 				InputStream in = CommonTestUtil.getResource(this, "testdata/AttachmentTest.txt")) {
-			IOUtils.copy(in, out);
+			in.transferTo(out);
 		}
 
 		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(file);
@@ -793,10 +767,9 @@ public class BugzillaRestClientTest extends AbstractDefaultBugzillaRestFixtureTe
 			}
 		}
 		assertNotNull(attachmentAttribute);
-		InputStream instream = attachmentHandler.getContent(fixture.repository(), task, attachmentAttribute,
-				null);
+		InputStream instream = attachmentHandler.getContent(fixture.repository(), task, attachmentAttribute, null);
 		InputStream instream2 = CommonTestUtil.getResource(this, "testdata/AttachmentTest.txt");
-		assertTrue(IOUtils.contentEquals(instream, instream2));
+		assertArrayEquals(instream.readAllBytes(), instream2.readAllBytes());
 	}
 
 	private TaskData getTaskData(final String taskId) throws CoreException, BugzillaRestException {
@@ -858,8 +831,7 @@ public class BugzillaRestClientTest extends AbstractDefaultBugzillaRestFixtureTe
 		taskData.getRoot()
 		.getAttribute(BugzillaRestCreateTaskSchema.getDefault().CC.getKey())
 		.setValue("admin@mylyn.eclipse.org, tests@mylyn.eclipse.org");
-		RepositoryResponse reposonse = connector.getClient(fixture.repository())
-				.postTaskData(taskData, null, null);
+		RepositoryResponse reposonse = connector.getClient(fixture.repository()).postTaskData(taskData, null, null);
 		assertNotNull(reposonse);
 		assertNotNull(reposonse.getReposonseKind());
 		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_CREATED));
@@ -912,8 +884,7 @@ public class BugzillaRestClientTest extends AbstractDefaultBugzillaRestFixtureTe
 		taskData.getRoot()
 		.getAttribute(BugzillaRestCreateTaskSchema.getDefault().BLOCKS.getKey())
 		.setValue(taskIdRel[0] + ", " + taskIdRel[1]);
-		RepositoryResponse reposonse = connector.getClient(fixture.repository())
-				.postTaskData(taskData, null, null);
+		RepositoryResponse reposonse = connector.getClient(fixture.repository()).postTaskData(taskData, null, null);
 		assertNotNull(reposonse);
 		assertNotNull(reposonse.getReposonseKind());
 		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_CREATED));
@@ -966,8 +937,7 @@ public class BugzillaRestClientTest extends AbstractDefaultBugzillaRestFixtureTe
 		taskData.getRoot()
 		.getAttribute(BugzillaRestCreateTaskSchema.getDefault().DEPENDS_ON.getKey())
 		.setValue(taskIdRel[0] + ", " + taskIdRel[1]);
-		RepositoryResponse reposonse = connector.getClient(fixture.repository())
-				.postTaskData(taskData, null, null);
+		RepositoryResponse reposonse = connector.getClient(fixture.repository()).postTaskData(taskData, null, null);
 		assertNotNull(reposonse);
 		assertNotNull(reposonse.getReposonseKind());
 		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_CREATED));
@@ -1720,7 +1690,7 @@ public class BugzillaRestClientTest extends AbstractDefaultBugzillaRestFixtureTe
 		file.deleteOnExit();
 		try (OutputStream out = new FileOutputStream(file);
 				InputStream in = CommonTestUtil.getResource(this, "testdata/AttachmentTest.txt")) {
-			IOUtils.copy(in, out);
+			in.transferTo(out);
 		}
 
 		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(file);
@@ -1796,9 +1766,8 @@ public class BugzillaRestClientTest extends AbstractDefaultBugzillaRestFixtureTe
 			}
 		}
 		assertEquals(4, flagcount);
-		InputStream instream = attachmentHandler.getContent(fixture.repository(), task, attachmentAttribute,
-				null);
+		InputStream instream = attachmentHandler.getContent(fixture.repository(), task, attachmentAttribute, null);
 		InputStream instream2 = CommonTestUtil.getResource(this, "testdata/AttachmentTest.txt");
-		assertTrue(IOUtils.contentEquals(instream, instream2));
+		assertArrayEquals(instream.readAllBytes(), instream2.readAllBytes());
 	}
 }

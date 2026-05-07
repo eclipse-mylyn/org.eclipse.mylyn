@@ -19,14 +19,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.bugzilla.rest.test.support.AbstractDefaultBugzillaRestFixtureTest;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
+import org.eclipse.mylyn.internal.commons.core.FileUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -62,10 +61,9 @@ public class BugzillaRestConfigurationTest extends AbstractDefaultBugzillaRestFi
 	public void testConfigurationFromConnector() throws CoreException, IOException {
 		BugzillaRestConfiguration configuration = connector.getRepositoryConfiguration(fixture.repository());
 		assertNotNull(configuration);
-		assertEquals(
-				IOUtils.toString(
-						CommonTestUtil.getResource(this, fixture.getTestDataFolder() + "/configuration.json"),
-						Charset.defaultCharset()),
+		assertEquals(FileUtil.readFile(
+				CommonTestUtil.getResource(this, fixture.getTestDataFolder() + "/configuration.json")
+		),
 				new Gson().toJson(configuration)
 				.replaceAll(fixture.getRepositoryUrl(), "http://dummy.url")
 				.replaceAll(fixture.getRepositoryUrl().replaceFirst("https://", "http://"),

@@ -29,13 +29,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
@@ -179,7 +179,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(GerritClient.isZippedContent(zippedBytes), is(true));
 
 		byte[] unzippedBytes = GerritClient.unzip(zippedBytes);
-		byte[] imageBytes = FileUtils.readFileToByteArray(imageFile);
+		byte[] imageBytes = Files.readAllBytes(imageFile.toPath());
 		assertThat(GerritClient.isZippedContent(imageBytes), is(false));
 		assertThat(unzippedBytes, is(imageBytes));
 	}
@@ -188,7 +188,9 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		ZipOutputStream out = new ZipOutputStream(bytes);
 		out.putNextEntry(new ZipEntry(file.getName()));
-		IOUtils.copy(new FileInputStream(file), out);
+		try (InputStream in = new FileInputStream(file)) {
+			in.transferTo(out);
+		}
 		out.closeEntry();
 		return bytes.toByteArray();
 	}
@@ -283,7 +285,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		reviewHarness.addFile(fileName, file);
 		reviewHarness.commitAndPush(command);
 		reviewHarness.retrieve();
-		return FileUtils.readFileToByteArray(file);
+		return Files.readAllBytes(file.toPath());
 	}
 
 	private void removeFile(String fileName) throws Exception {

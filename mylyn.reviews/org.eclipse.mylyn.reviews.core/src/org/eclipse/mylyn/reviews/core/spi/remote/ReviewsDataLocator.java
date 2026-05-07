@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.reviews.core.spi.remote;
@@ -15,9 +16,9 @@ package org.eclipse.mylyn.reviews.core.spi.remote;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.mylyn.internal.commons.core.FileUtil;
 
 public abstract class ReviewsDataLocator extends AbstractDataLocator {
 
@@ -40,12 +41,10 @@ public abstract class ReviewsDataLocator extends AbstractDataLocator {
 
 	private void deleteSubDirectory(String directory) {
 		File file = new File(getSystemDataPath().append(directory).toOSString());
-		if (file.exists()) {
-			try {
-				FileUtils.deleteDirectory(file);
-			} catch (IOException e) {
-				//We'll ignore, because we don't want to break any calling methods, and the only harm is stray files.
-			}
+		try {
+			FileUtil.deleteTree(file);
+		} catch (IOException e) {
+			//We'll ignore, because we don't want to break any calling methods, and the only harm is stray files.
 		}
 	}
 }

@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpPost;
@@ -106,7 +105,7 @@ public class BugzillaRestPostNewAttachment extends BugzillaRestPostRequest<Bugzi
 		ByteArrayOutputStream outb = new ByteArrayOutputStream();
 
 		try (InputStream is = source.createInputStream(null)) {
-			IOUtils.copy(is, outb);
+			is.transferTo(outb);
 		} catch (CoreException | IOException e) {
 			if (e instanceof IOException && e.getSuppressed() != null && e.getSuppressed().length > 0) {
 				throw new BugzillaRestException(

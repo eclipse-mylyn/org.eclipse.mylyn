@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Miles Parker (Tasktop Technologies) - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.reviews.spi.edit.remote;
@@ -19,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -39,6 +39,7 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.commons.core.FileUtil;
 import org.eclipse.mylyn.reviews.core.spi.remote.AbstractDataLocator;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactoryProvider;
 import org.eclipse.mylyn.reviews.edit.ReviewsEditPluginActivator;
@@ -51,7 +52,7 @@ import org.eclipse.mylyn.reviews.internal.core.model.ReviewsResourceFactory;
  * @author Miles Parker
  */
 public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObject, EChildObject extends EObject>
-		extends AbstractRemoteEmfFactoryProvider<ERootObject, EChildObject> {
+extends AbstractRemoteEmfFactoryProvider<ERootObject, EChildObject> {
 
 	final EditingDomain editingDomain;
 
@@ -173,7 +174,7 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 			} catch (AssertionError e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ReviewsEditPluginActivator.PLUGIN_ID,
 						"Bad provider defintion. Local key attribute must be reference of class child type. Local Key: " //$NON-NLS-1$
-								+ localKeyAttribute.getName() + " Class: " + eClass.getName(), //$NON-NLS-1$
+						+ localKeyAttribute.getName() + " Class: " + eClass.getName(), //$NON-NLS-1$
 						e));
 			} catch (ClassCastException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ReviewsEditPluginActivator.PLUGIN_ID,
@@ -188,9 +189,9 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 		String containerSegment = getContainerSegment();
 		URI uri = URI.createFileURI(
 				getDataLocator()
-						.getFilePath(containerSegment, eClass.getName(), id,
-								getFileExtension(parentReference.getEContainingClass()))
-						.toOSString());
+				.getFilePath(containerSegment, eClass.getName(), id,
+						getFileExtension(parentReference.getEContainingClass()))
+				.toOSString());
 		Resource resource = getResourceImpl(uri, true);
 		return resource.getContents().get(0);
 	}
@@ -285,7 +286,7 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 			resource.save(saveOptions);
 		} catch (IOException e) {
 			StatusHandler
-					.log(new Status(IStatus.ERROR, ReviewsEditPluginActivator.PLUGIN_ID, "Couldn't save model.", e)); //$NON-NLS-1$
+			.log(new Status(IStatus.ERROR, ReviewsEditPluginActivator.PLUGIN_ID, "Couldn't save model.", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -297,13 +298,11 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 		close();
 		IPath systemPath = getDataLocator().getModelPath();
 		File file = new File(systemPath.toOSString());
-		if (file.exists()) {
-			try {
-				FileUtils.deleteDirectory(file);
-			} catch (IOException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ReviewsEditPluginActivator.PLUGIN_ID,
-						"Problem when deleting cache.", e)); //$NON-NLS-1$
-			}
+		try {
+			FileUtil.deleteTree(file);
+		} catch (IOException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, ReviewsEditPluginActivator.PLUGIN_ID,
+					"Problem when deleting cache.", e)); //$NON-NLS-1$
 		}
 	}
 
