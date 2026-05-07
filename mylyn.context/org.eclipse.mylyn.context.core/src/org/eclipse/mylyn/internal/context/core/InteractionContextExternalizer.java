@@ -27,7 +27,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
@@ -167,7 +166,7 @@ public class InteractionContextExternalizer {
 									InteractionContextManager.CONTEXT_FILENAME_ENCODING);
 							ZipEntry zipEntry = new ZipEntry(encoded);
 							outputStream.putNextEntry(zipEntry);
-							IOUtils.copy(additionalContextInformation, outputStream);
+							additionalContextInformation.transferTo(outputStream);
 							outputStream.flush();
 							outputStream.closeEntry();
 						}

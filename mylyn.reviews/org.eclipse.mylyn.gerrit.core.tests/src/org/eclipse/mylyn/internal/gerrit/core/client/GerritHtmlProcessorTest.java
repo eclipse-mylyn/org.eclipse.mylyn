@@ -22,7 +22,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.apache.commons.io.IOUtils;
+import org.eclipse.mylyn.internal.commons.core.FileUtil;
 import org.junit.jupiter.api.Test;
 
 public class GerritHtmlProcessorTest {
@@ -48,7 +48,8 @@ public class GerritHtmlProcessorTest {
 
 	private static String read(String path) throws IOException, URISyntaxException {
 		URL url = new URI("platform:/plugin/org.eclipse.mylyn.gerrit.core.tests/" + path).toURL(); //$NON-NLS-1$
-		InputStream input = url.openConnection().getInputStream();
-		return IOUtils.toString(input, "utf-8"); //$NON-NLS-1$
+		try (InputStream input = url.openConnection().getInputStream()) {
+			return FileUtil.readFile(input);
+		}
 	}
 }

@@ -22,14 +22,13 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Set;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.gitlab.core.GitlabConfiguration;
+import org.eclipse.mylyn.internal.commons.core.FileUtil;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
 import org.eclipse.mylyn.internal.gitlab.core.GitlabRestClient;
 import org.junit.jupiter.api.AfterAll;
@@ -152,7 +151,7 @@ public final class RestfulGitlabClientTest {
 		+ ".json";
 
 		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(resultElement);
-		String expected = IOUtils.toString(CommonTestUtil.getResource(this, fName), Charset.defaultCharset());
+		String expected = FileUtil.readFile(CommonTestUtil.getResource(this, fName));
 		assertEquals(expected.replace("\r\n", "\n"), actual.replace("\r\n", "\n"));
 	}
 
@@ -179,8 +178,7 @@ public final class RestfulGitlabClientTest {
 			userObj.addProperty("web_url", webURL);
 		}
 		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(user);
-		String expectedStr = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/getUser.json"), //$NON-NLS-1$
-				Charset.defaultCharset());
+		String expectedStr = FileUtil.readFile(CommonTestUtil.getResource(this, "testdata/getUser.json"));
 		assertEquals(expectedStr.replace("\r\n", "\n"), actual.replace("\r\n", "\n"));
 	}
 
@@ -240,7 +238,7 @@ public final class RestfulGitlabClientTest {
 		techUsers.sort(Comparator.naturalOrder());
 		String fName = "testdata/getUsers" + (techUsers.size() > 0 ? "_" : "") + String.join("_", techUsers) + ".json";
 		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(resultElement);
-		String expected = IOUtils.toString(CommonTestUtil.getResource(this, fName), Charset.defaultCharset());
+		String expected = FileUtil.readFile(CommonTestUtil.getResource(this, fName));
 		assertEquals(expected.replace("\r\n", "\n"), actual.replace("\r\n", "\n"));
 	}
 
@@ -261,8 +259,7 @@ public final class RestfulGitlabClientTest {
 			}
 		}
 		String actual = new GsonBuilder().setPrettyPrinting().create().toJson(resultElement);
-		String expected = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/getGroups.json"), //$NON-NLS-1$
-				Charset.defaultCharset());
+		String expected = FileUtil.readFile(CommonTestUtil.getResource(this, "testdata/getGroups.json"));
 		assertEquals(expected.replace("\r\n", "\n"), actual.replace("\r\n", "\n"));
 	}
 
@@ -320,8 +317,7 @@ public final class RestfulGitlabClientTest {
 				.create()
 				.toJson(configuration)
 				.replace(GitlabTestFixture.current().getProperty("host-name"), "gitlab.mylyn.local");
-		String expected = IOUtils.toString(CommonTestUtil.getResource(this, "testdata/configuration.json"), //$NON-NLS-1$
-				Charset.defaultCharset());
+		String expected = FileUtil.readFile(CommonTestUtil.getResource(this, "testdata/configuration.json"));
 		assertEquals(expected.replace("\r\n", "\n"), actual.replace("\r\n", "\n"));
 	}
 

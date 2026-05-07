@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.reviews.ui.compare;
@@ -15,7 +16,6 @@ package org.eclipse.mylyn.internal.reviews.ui.compare;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.apache.commons.io.FilenameUtils;
 import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.runtime.CoreException;
@@ -47,8 +47,8 @@ class ByteArrayInput implements ITypedElement, IStreamContentAccessor {
 
 	@Override
 	public String getType() {
-		String extension = FilenameUtils.getExtension(name);
-		return extension != null && extension.length() > 0 ? extension : ITypedElement.TEXT_TYPE;
+		String extension = name.contains(".") ? name.substring(name.lastIndexOf('.') + 1) : ""; //$NON-NLS-1$ //$NON-NLS-2$
+		return !extension.isEmpty() ? extension : ITypedElement.TEXT_TYPE;
 	}
 
 	@Override

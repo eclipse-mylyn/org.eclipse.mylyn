@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.reviews.ui.compare;
 
 import java.io.InputStream;
 
-import org.apache.commons.io.FilenameUtils;
 import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.ISharedDocumentAdapter;
 import org.eclipse.compare.IStreamContentAccessor;
@@ -102,8 +101,9 @@ public class FileRevisionTypedElement implements IAdaptable, IStreamContentAcces
 
 	@Override
 	public String getType() {
-		String extension = FilenameUtils.getExtension(getName());
-		return extension != null && extension.length() > 0 ? extension : ITypedElement.TEXT_TYPE;
+		String n = getName();
+		String extension = n != null && n.contains(".") ? n.substring(n.lastIndexOf('.') + 1) : ""; //$NON-NLS-1$ //$NON-NLS-2$
+		return !extension.isEmpty() ? extension : ITypedElement.TEXT_TYPE;
 	}
 
 	@Override

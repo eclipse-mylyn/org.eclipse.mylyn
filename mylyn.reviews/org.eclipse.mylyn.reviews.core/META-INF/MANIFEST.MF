@@ -24,5 +24,4 @@ Bundle-Vendor: Eclipse Mylyn
 Import-Package: org.apache.commons.collections4;version="4.4.0",
  org.apache.commons.collections4.map;version="4.4.0",
  org.apache.commons.collections4.multimap;version="4.4.0",
- org.apache.commons.io,
  org.apache.commons.lang3;version="[3.13.0,4.0.0)"

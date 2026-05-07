@@ -47,7 +47,6 @@ import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -519,7 +518,7 @@ public abstract class GerritClient extends ReviewsClient {
 
 		try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(zip))) {
 			zis.getNextEntry(); // expecting a single entry
-			return IOUtils.toByteArray(zis);
+			return zis.readAllBytes();
 		} catch (IOException e) {
 			throw new GerritException(e);
 		}

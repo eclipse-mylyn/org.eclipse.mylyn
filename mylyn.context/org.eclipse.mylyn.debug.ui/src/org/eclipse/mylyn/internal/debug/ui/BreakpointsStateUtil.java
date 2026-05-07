@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.debug.core.DebugPlugin;
@@ -83,7 +82,7 @@ public class BreakpointsStateUtil {
 			}
 		}
 		try (FileOutputStream output = new FileOutputStream(stateFile)) {
-			IOUtils.copy(exportedBreakpoints, output);
+			exportedBreakpoints.transferTo(output);
 		} catch (FileNotFoundException e) {
 			return;
 		} catch (IOException e) {

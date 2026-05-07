@@ -13,7 +13,6 @@
 
 package org.eclipse.mylyn.internal.debug.ui;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -22,6 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +36,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
@@ -44,6 +43,7 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.mylyn.context.sdk.java.WorkspaceSetupHelper;
+import org.eclipse.mylyn.internal.commons.core.FileUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -79,7 +79,7 @@ public class BreakpointsStateUtilTest {
 	@AfterEach
 	void tearDown() throws IOException, CoreException {
 		deleteAllBreakpoints();
-		FileUtils.deleteDirectory(pluginStateDir.toFile());
+		FileUtil.deleteTree(pluginStateDir);
 		WorkspaceSetupHelper.clearWorkspace();
 	}
 
@@ -157,7 +157,8 @@ public class BreakpointsStateUtilTest {
 
 	@Test
 	public void testRestoreState() throws CoreException, IOException {
-		FileUtils.copyFile(new File("testdata/breakpointFile.xml"), pluginStateFile);
+		Files.copy(new File("testdata/breakpointFile.xml").toPath(), pluginStateFile.toPath(), //
+				java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
 		objectUnderTest.restoreState();
 

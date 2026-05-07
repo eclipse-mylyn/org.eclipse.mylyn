@@ -28,7 +28,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
@@ -40,10 +39,12 @@ import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.mylyn.internal.commons.core.FileUtil;
 import org.eclipse.mylyn.reviews.core.spi.remote.AbstractDataLocator;
 import org.eclipse.mylyn.reviews.core.spi.remote.JobRemoteService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 /**
  * @author Miles Parker
@@ -51,6 +52,9 @@ import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nls")
 public class AbstractRemoteEditFactoryProviderTest { //XXX why abstract? Not used by any classes
+
+	@TempDir
+	private File tempDir;
 
 	class TestEditFactoryProvider extends AbstractRemoteEditFactoryProvider<EPackage, EClass> {
 		public TestEditFactoryProvider() {
@@ -77,7 +81,7 @@ public class AbstractRemoteEditFactoryProviderTest { //XXX why abstract? Not use
 	AbstractDataLocator testDataLocator = new AbstractDataLocator() {
 		@Override
 		protected IPath getSystemDataPath() {
-			return new Path(FileUtils.getTempDirectory().getAbsolutePath());
+			return new Path(tempDir.getAbsolutePath());
 		}
 
 		@Override
@@ -89,7 +93,7 @@ public class AbstractRemoteEditFactoryProviderTest { //XXX why abstract? Not use
 	@BeforeEach
 	protected void setUp() throws Exception {
 		File rootDir = new File(testDataLocator.getModelPath().removeLastSegments(1).toPortableString());
-		FileUtils.deleteDirectory(rootDir);
+		FileUtil.deleteTree(rootDir);
 	}
 
 	@Test
@@ -217,7 +221,7 @@ public class AbstractRemoteEditFactoryProviderTest { //XXX why abstract? Not use
 		AbstractDataLocator testSpaceDataLocator = new AbstractDataLocator() {
 			@Override
 			protected IPath getSystemDataPath() {
-				return new Path(FileUtils.getTempDirectory().getAbsolutePath());
+				return new Path(tempDir.getAbsolutePath());
 			}
 
 			@Override
