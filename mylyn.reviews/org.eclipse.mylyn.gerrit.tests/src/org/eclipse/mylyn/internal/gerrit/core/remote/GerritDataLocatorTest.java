@@ -22,10 +22,12 @@ import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.mylyn.gerrit.tests.AbstractGerritFixtureTest;
+import org.eclipse.mylyn.internal.commons.core.FileUtil;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.spi.remote.JobRemoteService;
@@ -34,10 +36,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 @SuppressWarnings("nls")
 @Disabled("No gerrit instance available")
 public class GerritDataLocatorTest extends AbstractGerritFixtureTest {
+	@TempDir
+	private File tempDir;
+
 	@BeforeEach
 	void skipIfExcluded() {
 		assumeFalse(fixture.isExcluded(), "Fixture is excluded");
@@ -52,10 +58,8 @@ public class GerritDataLocatorTest extends AbstractGerritFixtureTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		File rootDir = new File(locator.getSystemDataPath().toOSString());
-		if (rootDir.exists()) {
-			FileUtils.forceDelete(rootDir);
-		}
-		FileUtils.forceMkdir(rootDir);
+		FileUtil.deleteTree(rootDir);
+		Files.createDirectories(rootDir.toPath());
 		reviewHarness = new ReviewHarness();
 		provider = new GerritRemoteFactoryProvider(reviewHarness.getClient());
 		provider.setDataLocator(locator);
@@ -69,11 +73,13 @@ public class GerritDataLocatorTest extends AbstractGerritFixtureTest {
 
 	@Test
 	public void testCreateRoot() throws Exception {
-		String testPath = FileUtils.getTempDirectory().getAbsolutePath() + File.separator + "gerrit_tests";
-		String filePath = testPath + File.separator + "reviews_bin" + File.separator + "org.eclipse.mylyn.gerrit-"
-				+ ReviewsRemoteEditFactoryProvider.asFileName(reviewHarness.getTaskRepository().getUrl())
-				+ File.separator + "Repository" + File.separator + "Repository.reviews";
-		File file = new File(filePath);
+		Path testPath = tempDir.toPath().resolve("gerrit_tests");
+		Path filePath = testPath.resolve("reviews_bin")
+				.resolve("org.eclipse.mylyn.gerrit-"
+						+ ReviewsRemoteEditFactoryProvider.asFileName(reviewHarness.getTaskRepository().getUrl()))
+				.resolve("Repository")
+				.resolve("Repository.reviews");
+		File file = filePath.toFile();
 		assertThat("File should not exist at: " + filePath, file.exists(), is(false));
 		provider.open();
 		assertThat("File should exist at: " + filePath, file.exists(), is(true));
@@ -93,14 +99,15 @@ public class GerritDataLocatorTest extends AbstractGerritFixtureTest {
 
 	@Test
 	public void testMigrate() throws Exception {
-		String testPath = FileUtils.getTempDirectory().getAbsolutePath() + File.separator + "gerrit_tests";
-		File binDir = new File(testPath + File.separator + "reviews_bin");
-		File xmlDir = new File(testPath + File.separator + "reviews_xml");
-		FileUtils.forceMkdir(xmlDir);
-		File xmlFile = new File(testPath + File.separator + "reviews_xml" + File.separator + "SomeFile.txt");
+		Path testPath = tempDir.toPath().resolve("gerrit_tests");
+		File binDir = testPath.resolve("reviews_bin").toFile();
+		File xmlDir = testPath.resolve("reviews_xml").toFile();
+		Files.createDirectories(xmlDir.toPath());
+		File xmlFile = testPath.resolve("reviews_xml").resolve("SomeFile.txt").toFile();
 		xmlFile.createNewFile();
-		File modelDir = new File(testPath + File.separator + "model");
-		FileUtils.forceMkdir(modelDir);
+		File modelDir = testPath.resolve("model").toFile();
+		Files.createDirectories(modelDir.toPath());
+
 		assertThat(binDir.exists(), is(false));
 		assertThat(xmlDir.exists(), is(true));
 		assertThat(xmlFile.exists(), is(true));
@@ -116,11 +123,13 @@ public class GerritDataLocatorTest extends AbstractGerritFixtureTest {
 
 	@Test
 	public void testCreateChild() throws Exception {
-		String testPath = FileUtils.getTempDirectory().getAbsolutePath() + File.separator + "gerrit_tests";
-		String filePath = testPath + File.separator + "reviews_bin" + File.separator + "org.eclipse.mylyn.gerrit-"
-				+ ReviewsRemoteEditFactoryProvider.asFileName(reviewHarness.getTaskRepository().getUrl())
-				+ File.separator + "Review" + File.separator + "2.reviews";
-		File file = new File(filePath);
+		Path testPath = tempDir.toPath().resolve("gerrit_tests");
+		Path filePath = testPath.resolve("reviews_bin")
+				.resolve("org.eclipse.mylyn.gerrit-"
+						+ ReviewsRemoteEditFactoryProvider.asFileName(reviewHarness.getTaskRepository().getUrl()))
+				.resolve("Review")
+				.resolve("2.reviews");
+		File file = filePath.toFile();
 		assertThat("File should not exist at: " + filePath, file.exists(), is(false));
 		provider.open();
 		IReview child = provider.open("2");

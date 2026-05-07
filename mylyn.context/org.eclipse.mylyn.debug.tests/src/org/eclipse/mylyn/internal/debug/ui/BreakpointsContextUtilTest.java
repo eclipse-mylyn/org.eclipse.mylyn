@@ -8,9 +8,9 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Sebastian Schmidt - initial API and implementation
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.debug.ui;
-
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -21,13 +21,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -68,7 +69,8 @@ public class BreakpointsContextUtilTest {
 		breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
 		File contextStore = ContextCorePlugin.getContextStore().getContextDirectory();
 		tempContextFile = new File(contextStore, contextFileName);
-		FileUtils.copyFile(contextFile, tempContextFile);
+		Files.copy(contextFile.toPath(), tempContextFile.toPath(), //
+				StandardCopyOption.REPLACE_EXISTING);
 		assertTrue(contextFile.exists());
 	}
 
@@ -179,11 +181,13 @@ public class BreakpointsContextUtilTest {
 		InputStream exportedBreakpoints = BreakpointsContextUtil.exportBreakpoints(breakpoints, null);
 		List<String> expected;
 		try (BufferedReader reader = new BufferedReader(
-				new InputStreamReader(CommonTestUtil.getResource(this, "testdata/breakpointFile.xml"), StandardCharsets.UTF_8))) {
+				new InputStreamReader(CommonTestUtil.getResource(this, "testdata/breakpointFile.xml"),
+						StandardCharsets.UTF_8))) {
 			expected = reader.lines().collect(Collectors.toList());
 		}
 		List<String> actual;
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(exportedBreakpoints, StandardCharsets.UTF_8))) {
+		try (BufferedReader reader = new BufferedReader(
+				new InputStreamReader(exportedBreakpoints, StandardCharsets.UTF_8))) {
 			actual = reader.lines().collect(Collectors.toList());
 		}
 		Collections.sort(expected);

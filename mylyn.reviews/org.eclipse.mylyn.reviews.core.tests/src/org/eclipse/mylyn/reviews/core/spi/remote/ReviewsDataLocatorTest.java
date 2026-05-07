@@ -18,28 +18,31 @@ import static org.hamcrest.Matchers.is;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 /**
  * @author Miles Parker
  */
 @SuppressWarnings("nls")
 public class ReviewsDataLocatorTest {
+	@TempDir
+	public File temporaryFolder;
 
 	ReviewsDataLocator reviewDataLocator = new ReviewsDataLocator() {
 		@Override
 		public IPath getSystemDataPath() {
-			return new Path(FileUtils.getTempDirectory().getAbsolutePath());
+			return new Path(temporaryFolder.getAbsolutePath());
 		}
 	};
 
 	@Test
 	public void testFilePath() {
-		IPath testPath = Path.fromOSString(FileUtils.getTempDirectory().getAbsolutePath());
+		IPath testPath = Path.fromOSString(temporaryFolder.getAbsolutePath());
 		testPath = testPath.append("/reviews_bin/Parent/Class/123.txt");
 
 		assertThat(reviewDataLocator.getFilePath("Parent", "Class", "123", "txt"), is(testPath));
@@ -47,15 +50,15 @@ public class ReviewsDataLocatorTest {
 
 	@Test
 	public void testMigrate() throws IOException {
-		String testPath = FileUtils.getTempDirectory().getAbsolutePath();
+		String testPath = temporaryFolder.getAbsolutePath();
 		File binDir = new File(testPath + "/reviews_bin");
-		FileUtils.forceMkdir(binDir);
+		Files.createDirectories(binDir.toPath());
 		File xmlDir = new File(testPath + "/reviews_xml");
-		FileUtils.forceMkdir(xmlDir);
+		Files.createDirectories(xmlDir.toPath());
 		File xmlFile = new File(testPath + "/reviews_xml/SomeFile.txt");
 		xmlFile.createNewFile();
 		File modelDir = new File(testPath + "/model");
-		FileUtils.forceMkdir(modelDir);
+		Files.createDirectories(modelDir.toPath());
 		assertThat(binDir.exists(), is(true));
 		assertThat(xmlDir.exists(), is(true));
 		assertThat(xmlFile.exists(), is(true));
