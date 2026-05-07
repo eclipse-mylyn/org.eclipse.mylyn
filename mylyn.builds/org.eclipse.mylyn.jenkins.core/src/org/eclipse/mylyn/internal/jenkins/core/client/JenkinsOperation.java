@@ -30,7 +30,6 @@ import java.util.regex.Pattern;
 import javax.swing.text.html.HTML.Tag;
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -109,7 +108,7 @@ public abstract class JenkinsOperation<T> extends CommonHttpOperation<T> {
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				try (InputStream inStream = HttpUtil.getResponseBodyAsStream(response.getEntity(), monitor)) {
 					String charSet = EntityUtils.getContentCharSet(response.getEntity());
-					String text = IOUtils.toString(inStream,
+					String text = new String(inStream.readAllBytes(),
 							charSet != null ? Charset.forName(charSet) : Charset.defaultCharset());
 					Pattern crumbPattern = Pattern.compile(CRUMB_REGEX);
 					Matcher matcher = crumbPattern.matcher(text);
@@ -122,23 +121,20 @@ public abstract class JenkinsOperation<T> extends CommonHttpOperation<T> {
 						getClient().setAttribute(ID_CONTEXT_CRUMB, crumb);
 						getClient().setAttribute(ID_CONTEXT_CRUMB_HEADER, crumbHeader);
 					} else {
-						throw new AuthenticationException(AUTHENTICATION_FAILED,
-								new AuthenticationRequest<>(
-										getClient().getLocation(), AuthenticationType.REPOSITORY));
+						throw new AuthenticationException(AUTHENTICATION_FAILED, new AuthenticationRequest<>(
+								getClient().getLocation(), AuthenticationType.REPOSITORY));
 					}
 				}
 			} else if (response.getStatusLine().getStatusCode() >= HttpStatus.SC_INTERNAL_SERVER_ERROR) {
 				throw new AuthenticationException(response.getStatusLine().getReasonPhrase(),
-						new AuthenticationRequest<>(getClient().getLocation(),
-								AuthenticationType.REPOSITORY));
+						new AuthenticationRequest<>(getClient().getLocation(), AuthenticationType.REPOSITORY));
 			} else if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
 				legacyAuthentication(monitor, credentials); // Needed for unit tests against https://mylyn.org/hudson-3.3.3
 			} else {
 				validate(response, monitor); // Check for proxy errors and such
 
 				throw new AuthenticationException(AUTHENTICATION_FAILED,
-						new AuthenticationRequest<>(getClient().getLocation(),
-								AuthenticationType.REPOSITORY));
+						new AuthenticationRequest<>(getClient().getLocation(), AuthenticationType.REPOSITORY));
 			}
 		} finally {
 			HttpUtil.release(request, response, monitor);
@@ -177,8 +173,7 @@ public abstract class JenkinsOperation<T> extends CommonHttpOperation<T> {
 			if (header != null && header.getValue().endsWith("/loginError")) { //$NON-NLS-1$
 				getClient().setAuthenticated(false);
 				throw new AuthenticationException(AUTHENTICATION_FAILED,
-						new AuthenticationRequest<>(getClient().getLocation(),
-								AuthenticationType.REPOSITORY));
+						new AuthenticationRequest<>(getClient().getLocation(), AuthenticationType.REPOSITORY));
 			}
 
 			// success

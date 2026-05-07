@@ -62,6 +62,7 @@ import org.eclipse.mylyn.gitlab.core.GitlabConfiguration;
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator.ActivityType;
 import org.eclipse.mylyn.gitlab.core.GitlabException;
+import org.eclipse.mylyn.internal.commons.core.FileUtil;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -489,7 +490,7 @@ public class GitlabRestClient {
 				throw new Exception("Failed to obtain access token"); //$NON-NLS-1$
 			}
 
-			String response = new String(connection.getInputStream().readAllBytes());
+			String response = FileUtil.readFile(connection.getInputStream());
 			accessToken = response.split("\"access_token\":\"")[1].split("\"")[0]; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 

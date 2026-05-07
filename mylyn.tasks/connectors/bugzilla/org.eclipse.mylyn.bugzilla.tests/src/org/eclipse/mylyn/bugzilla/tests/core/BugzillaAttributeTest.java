@@ -15,12 +15,12 @@ package org.eclipse.mylyn.bugzilla.tests.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeMapper;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
+import org.eclipse.mylyn.internal.commons.core.FileUtil;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -45,7 +45,7 @@ public class BugzillaAttributeTest {
 			taskDataAttribute.getMetaData().setKind(attribute.getKind());
 			taskDataAttribute.getMetaData().setType(attribute.getType());
 		}
-		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/schema/taskdata.txt"))
+		assertEquals(FileUtil.readFile(CommonTestUtil.getResource(this, "testdata/schema/taskdata.txt"))
 				.replace("\r\n", "\n"), taskData.getRoot().toString().replace("\r\n", "\n"));
 	}
 
