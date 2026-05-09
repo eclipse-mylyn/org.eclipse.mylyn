@@ -94,6 +94,10 @@ public class ReadAheadDispatcher extends Block {
 		super.setParser(parser);
 	}
 
+	public Block getDispatchedBlock() {
+		return dispatchedBlock;
+	}
+
 	@Override
 	public Block clone() {
 		ReadAheadDispatcher clone = (ReadAheadDispatcher) super.clone();

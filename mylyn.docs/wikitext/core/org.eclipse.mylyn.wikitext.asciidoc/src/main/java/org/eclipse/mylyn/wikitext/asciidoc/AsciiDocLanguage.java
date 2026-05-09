@@ -24,6 +24,7 @@ import java.util.Map;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.AsciiDocContentState;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.AsciiDocDocumentBuilder;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.AsciiDocIdGenerationStrategy;
+import org.eclipse.mylyn.wikitext.asciidoc.internal.block.AdmonitionBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.AdmonitionParagraphBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.AttributeDefinitionBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.CodeBlock;
@@ -166,6 +167,9 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 
 	@Override
 	protected void addStandardBlocks(List<Block> blocks, List<Block> paragraphBreakingBlocks) {
+
+		blocks.add(new AdmonitionBlock());
+
 		ListBlock listBlock = new ListBlock();
 		blocks.add(listBlock);
 		paragraphBreakingBlocks.add(listBlock);
@@ -195,6 +199,7 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 		blocks.add(codeBlock);
 		blocks.add(commentBlock);
 		blocks.add(hrBlock);
+
 		blocks.add(new AdmonitionParagraphBlock());
 
 		paragraphBreakingBlocks.add(codeBlock);
