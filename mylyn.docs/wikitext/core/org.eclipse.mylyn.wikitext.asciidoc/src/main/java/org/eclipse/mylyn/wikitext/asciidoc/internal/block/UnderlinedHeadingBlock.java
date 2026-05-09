@@ -55,18 +55,11 @@ public class UnderlinedHeadingBlock extends Block implements ReadAheadBlock {
 			return false;
 		} else {
 			int expectedLength = line.trim().length() - lineOffset;
-			if (checkNextLine(expectedLength, nextLine, h1pattern, 1)) {
-				return true;
-			} else if (checkNextLine(expectedLength, nextLine, h2pattern, 2)) {
-				return true;
-			} else if (checkNextLine(expectedLength, nextLine, h3pattern, 3)) {
-				return true;
-			} else if (checkNextLine(expectedLength, nextLine, h4pattern, 4)) {
-				return true;
-			} else if (checkNextLine(expectedLength, nextLine, h5pattern, 5)) {
-				return true;
-			}
-			return false;
+			return checkNextLine(expectedLength, nextLine, h1pattern, 1)
+					|| checkNextLine(expectedLength, nextLine, h2pattern, 2)
+					|| checkNextLine(expectedLength, nextLine, h3pattern, 3)
+					|| checkNextLine(expectedLength, nextLine, h4pattern, 4)
+					|| checkNextLine(expectedLength, nextLine, h5pattern, 5);
 		}
 	}
 
@@ -112,12 +105,19 @@ public class UnderlinedHeadingBlock extends Block implements ReadAheadBlock {
 			builder.beginHeading(level, attributes);
 			builder.characters(line.trim());
 		} else {
-			builder.endHeading();
 			setClosed(true);
 		}
 
 		blockLineCount++;
 		return -1;
+	}
+
+	@Override
+	public void setClosed(boolean closed) {
+		if (!isClosed() && closed && blockLineCount != 0) {
+			builder.endHeading();
+		}
+		super.setClosed(closed);
 	}
 
 	protected AsciiDocContentState getAsciiDocState() {
