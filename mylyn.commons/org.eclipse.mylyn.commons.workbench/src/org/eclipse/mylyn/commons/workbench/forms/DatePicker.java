@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.workbench.forms;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.commons.ui.FontUtils;
 import org.eclipse.mylyn.internal.commons.workbench.Messages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -104,10 +106,8 @@ public class DatePicker extends Composite {
 		setLayout(gridLayout);
 
 		dateText = new Text(this, style);
-		GridData dateTextGridData = new GridData(SWT.FILL, SWT.FILL, false, false);
-		dateTextGridData.heightHint = 5;
-		dateTextGridData.grabExcessHorizontalSpace = true;
-		dateTextGridData.verticalAlignment = SWT.FILL;
+		GridData dateTextGridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		dateTextGridData.widthHint = FontUtils.getStringPixels(dateText, Messages.DatePicker_Sample_Due_Date).x + 5;
 
 		dateText.setLayoutData(dateTextGridData);
 		dateText.setText(initialText);
@@ -186,8 +186,8 @@ public class DatePicker extends Composite {
 				dialog.open();
 			}
 		});
+
 		updateClearControlVisibility();
-		pack();
 		setBackground(getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 	}
 
@@ -316,5 +316,4 @@ public class DatePicker extends Composite {
 		clearControl.setEnabled(enabled);
 		super.setEnabled(enabled);
 	}
-
 }
