@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.Issue;
@@ -287,7 +288,7 @@ public class IssueConnector extends RepositoryConnector {
 		List<String> statuses = QueryUtils.getAttributes(
 				IssueService.FILTER_STATE, query);
 
-		monitor.beginTask(Messages.IssueConector_TaskQuerying, statuses.size());
+		SubMonitor subMonitor = SubMonitor.convert(monitor, Messages.IssueConector_TaskQuerying, statuses.size() * 100);
 		try {
 			RepositoryId repo = GitHub.getRepository(repository.getRepositoryUrl());
 
@@ -324,28 +325,32 @@ public class IssueConnector extends RepositoryConnector {
 			String name = repo.getName();
 			for (String status : statuses) {
 				filterData.put(IssueService.FILTER_STATE, status);
+				SubMonitor statusMonitor = subMonitor.split(100);
+				statusMonitor.setTaskName(status + Messages.IssueConnector_LabelIssues);
 				List<Issue> issues = service.getIssues(repo.getOwner(), repo.getName(), filterData);
+				statusMonitor.checkCanceled();
 
 				// collect task data
+				statusMonitor.setWorkRemaining(issues.size());
 				for (Issue issue : issues) {
-					if (isPullRequest(issue)) {
-						continue;
+					if (!isPullRequest(issue)) {
+						List<Comment> comments = null;
+						if (issue.getComments() > 0) {
+							comments = service.getComments(owner, name, Integer.toString(issue.getNumber()));
+						}
+						TaskData taskData = taskDataHandler.createTaskData(repository, statusMonitor, owner, name,
+								issue, comments);
+						collector.accept(taskData);
 					}
-					List<Comment> comments = null;
-					if (issue.getComments() > 0) {
-						comments = service.getComments(owner, name, Integer.toString(issue.getNumber()));
-					}
-					TaskData taskData = taskDataHandler.createTaskData(
-							repository, monitor, owner, name, issue, comments);
-					collector.accept(taskData);
+					statusMonitor.split(1);
 				}
-				monitor.worked(1);
+				statusMonitor.done();
 			}
 		} catch (IOException e) {
 			result = GitHub.createWrappedStatus(e);
+		} finally {
+			subMonitor.done();
 		}
-
-		monitor.done();
 		return result;
 	}
 
