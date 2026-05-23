@@ -35,7 +35,7 @@
     "web_url": "https://gitlab.mylyn.local/groups/eclipse-mylyn",
     "members_count_with_descendants": 0,
     "root_repository_size": 1924,
-    "projects_count": 1
+    "projects_count": 2
   },
   {
     "id": 5,
@@ -46,7 +46,7 @@
     "parent_id": 4,
     "web_url": "https://gitlab.mylyn.local/groups/eclipse-mylyn/ci-test",
     "members_count_with_descendants": 0,
-    "projects_count": 1
+    "projects_count": 2
   },
   {
     "id": 7,
@@ -56,5 +56,16 @@
     "full_path": "alert-bot",
     "avatar_url": "https://secure.gravatar.com/avatar/42?s\u003d80\u0026d\u003didenticon",
     "web_url": "https://gitlab.mylyn.local/alert-bot"
+  },
+  {
+    "id": 8,
+    "name": "ci-test",
+    "path": "ci-test",
+    "kind": "group",
+    "full_path": "eclipse-mylyn/ci-test/ci-test",
+    "parent_id": 5,
+    "web_url": "https://gitlab.mylyn.local/groups/eclipse-mylyn/ci-test/ci-test",
+    "members_count_with_descendants": 0,
+    "projects_count": 1
   }
 ]
