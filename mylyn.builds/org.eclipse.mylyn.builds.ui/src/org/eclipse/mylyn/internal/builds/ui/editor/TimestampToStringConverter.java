@@ -8,24 +8,27 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
 
-import java.util.Date;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.core.internal.databinding.conversion.DateConversionSupport;
 
 /**
  * @author Steffen Pingel
  */
-public class TimestampToStringConverter extends DateConversionSupport implements IConverter {
+public class TimestampToStringConverter implements IConverter<Long, String> {
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS Z"); //$NON-NLS-1$
 
 	@Override
-	public Object convert(Object source) {
+	public String convert(Long source) {
 		if (source != null) {
-			return format(new Date((Long) source));
+			return Instant.ofEpochMilli(source).atZone(ZoneId.systemDefault()).format(formatter);
 		}
 		return ""; //$NON-NLS-1$
 	}

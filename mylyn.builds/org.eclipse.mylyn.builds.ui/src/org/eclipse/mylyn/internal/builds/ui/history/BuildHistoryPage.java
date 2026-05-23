@@ -138,6 +138,10 @@ public class BuildHistoryPage extends HistoryPage {
 										build.setServer(plan.getServer());
 									}
 									viewer.setInput(builds);
+									for (TreeColumn column : viewer.getTree().getColumns()) {
+										column.pack();
+										column.setWidth(column.getWidth() + 10);
+									}
 								}
 							}
 						});
