@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Control;
 
 /**
  * Some utility methods for working with fonts.
- * 
+ *
  * @since 4.11
  */
 public class FontUtils {

@@ -451,7 +451,7 @@ public abstract class ControlListViewer extends StructuredViewer {
 	}
 
 	@Deprecated
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "rawtypes" })
 	@Override
 	protected void setSelectionToWidget(List list, boolean reveal) {
 		HashSet<Object> elements = new HashSet<Object>(list);
