@@ -224,7 +224,6 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 	 *
 	 * @{link LinkEditorAction}
 	 */
-	@SuppressWarnings("unchecked")
 	private IStructuredSelection mergeSelection(IStructuredSelection aBase, IStructuredSelection aSelectionToAppend) {
 		if (aBase == null || aBase.isEmpty()) {
 			return aSelectionToAppend != null ? aSelectionToAppend : StructuredSelection.EMPTY;
