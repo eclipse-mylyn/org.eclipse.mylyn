@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for hudson.model.LoadStatistics complex type.
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="hudson.model.LoadStatistics">
  *   &lt;complexContent>
@@ -55,7 +55,7 @@ public class HudsonModelLoadStatistics {
 
 	/**
 	 * Gets the value of the busyExecutors property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelMultiStageTimeSeries }
 	 */
 	public HudsonModelMultiStageTimeSeries getBusyExecutors() {
@@ -64,7 +64,7 @@ public class HudsonModelLoadStatistics {
 
 	/**
 	 * Sets the value of the busyExecutors property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelMultiStageTimeSeries }
 	 */
@@ -74,7 +74,7 @@ public class HudsonModelLoadStatistics {
 
 	/**
 	 * Gets the value of the queueLength property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelMultiStageTimeSeries }
 	 */
 	public HudsonModelMultiStageTimeSeries getQueueLength() {
@@ -83,7 +83,7 @@ public class HudsonModelLoadStatistics {
 
 	/**
 	 * Sets the value of the queueLength property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelMultiStageTimeSeries }
 	 */
@@ -93,7 +93,7 @@ public class HudsonModelLoadStatistics {
 
 	/**
 	 * Gets the value of the totalExecutors property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelMultiStageTimeSeries }
 	 */
 	public HudsonModelMultiStageTimeSeries getTotalExecutors() {
@@ -102,7 +102,7 @@ public class HudsonModelLoadStatistics {
 
 	/**
 	 * Sets the value of the totalExecutors property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelMultiStageTimeSeries }
 	 */

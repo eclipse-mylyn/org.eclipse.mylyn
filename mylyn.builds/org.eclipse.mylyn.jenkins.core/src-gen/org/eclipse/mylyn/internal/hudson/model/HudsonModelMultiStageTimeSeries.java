@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for hudson.model.MultiStageTimeSeries complex type.
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="hudson.model.MultiStageTimeSeries">
  *   &lt;complexContent>
@@ -53,7 +53,7 @@ public class HudsonModelMultiStageTimeSeries {
 
 	/**
 	 * Gets the value of the hour property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelTimeSeries }
 	 */
 	public HudsonModelTimeSeries getHour() {
@@ -62,7 +62,7 @@ public class HudsonModelMultiStageTimeSeries {
 
 	/**
 	 * Sets the value of the hour property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelTimeSeries }
 	 */
@@ -72,7 +72,7 @@ public class HudsonModelMultiStageTimeSeries {
 
 	/**
 	 * Gets the value of the min property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelTimeSeries }
 	 */
 	public HudsonModelTimeSeries getMin() {
@@ -81,7 +81,7 @@ public class HudsonModelMultiStageTimeSeries {
 
 	/**
 	 * Sets the value of the min property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelTimeSeries }
 	 */
@@ -91,7 +91,7 @@ public class HudsonModelMultiStageTimeSeries {
 
 	/**
 	 * Gets the value of the sec10 property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelTimeSeries }
 	 */
 	public HudsonModelTimeSeries getSec10() {
@@ -100,7 +100,7 @@ public class HudsonModelMultiStageTimeSeries {
 
 	/**
 	 * Sets the value of the sec10 property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelTimeSeries }
 	 */

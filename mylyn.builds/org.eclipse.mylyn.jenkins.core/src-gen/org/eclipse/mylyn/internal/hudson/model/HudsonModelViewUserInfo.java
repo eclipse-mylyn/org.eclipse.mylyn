@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for hudson.model.View-UserInfo complex type.
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="hudson.model.View-UserInfo">
  *   &lt;complexContent>
@@ -53,7 +53,7 @@ public class HudsonModelViewUserInfo {
 
 	/**
 	 * Gets the value of the lastChange property.
-	 * 
+	 *
 	 * @return possible object is {@link Long }
 	 */
 	public Long getLastChange() {
@@ -62,7 +62,7 @@ public class HudsonModelViewUserInfo {
 
 	/**
 	 * Sets the value of the lastChange property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link Long }
 	 */
@@ -72,7 +72,7 @@ public class HudsonModelViewUserInfo {
 
 	/**
 	 * Gets the value of the project property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelAbstractProject }
 	 */
 	public HudsonModelAbstractProject getProject() {
@@ -81,7 +81,7 @@ public class HudsonModelViewUserInfo {
 
 	/**
 	 * Sets the value of the project property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelAbstractProject }
 	 */
@@ -91,7 +91,7 @@ public class HudsonModelViewUserInfo {
 
 	/**
 	 * Gets the value of the user property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonModelUser }
 	 */
 	public HudsonModelUser getUser() {
@@ -100,7 +100,7 @@ public class HudsonModelViewUserInfo {
 
 	/**
 	 * Sets the value of the user property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonModelUser }
 	 */
