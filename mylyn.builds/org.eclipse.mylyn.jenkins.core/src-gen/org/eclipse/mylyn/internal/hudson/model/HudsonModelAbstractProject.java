@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for hudson.model.AbstractProject complex type.
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="hudson.model.AbstractProject">
  *   &lt;complexContent>
@@ -81,7 +81,7 @@ public class HudsonModelAbstractProject extends HudsonModelJob {
 	 * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the downstreamProject property.
 	 * <p>
 	 * For example, to add a new item, do as follows:
-	 * 
+	 *
 	 * <pre>
 	 * getDownstreamProject().add(newItem);
 	 * </pre>
@@ -97,7 +97,7 @@ public class HudsonModelAbstractProject extends HudsonModelJob {
 
 	/**
 	 * Gets the value of the scm property.
-	 * 
+	 *
 	 * @return possible object is {@link HudsonScmSCM }
 	 */
 	public HudsonScmSCM getScm() {
@@ -106,7 +106,7 @@ public class HudsonModelAbstractProject extends HudsonModelJob {
 
 	/**
 	 * Sets the value of the scm property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link HudsonScmSCM }
 	 */
@@ -121,7 +121,7 @@ public class HudsonModelAbstractProject extends HudsonModelJob {
 	 * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the upstreamProject property.
 	 * <p>
 	 * For example, to add a new item, do as follows:
-	 * 
+	 *
 	 * <pre>
 	 * getUpstreamProject().add(newItem);
 	 * </pre>

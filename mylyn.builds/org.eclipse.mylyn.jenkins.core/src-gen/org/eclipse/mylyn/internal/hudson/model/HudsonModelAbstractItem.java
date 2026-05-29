@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for hudson.model.AbstractItem complex type.
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="hudson.model.AbstractItem">
  *   &lt;complexContent>
@@ -58,7 +58,7 @@ public class HudsonModelAbstractItem extends HudsonModelActionable {
 
 	/**
 	 * Gets the value of the description property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getDescription() {
@@ -67,7 +67,7 @@ public class HudsonModelAbstractItem extends HudsonModelActionable {
 
 	/**
 	 * Sets the value of the description property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
@@ -77,7 +77,7 @@ public class HudsonModelAbstractItem extends HudsonModelActionable {
 
 	/**
 	 * Gets the value of the displayName property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getDisplayName() {
@@ -86,7 +86,7 @@ public class HudsonModelAbstractItem extends HudsonModelActionable {
 
 	/**
 	 * Sets the value of the displayName property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
@@ -96,7 +96,7 @@ public class HudsonModelAbstractItem extends HudsonModelActionable {
 
 	/**
 	 * Gets the value of the name property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getName() {
@@ -105,7 +105,7 @@ public class HudsonModelAbstractItem extends HudsonModelActionable {
 
 	/**
 	 * Sets the value of the name property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
@@ -115,7 +115,7 @@ public class HudsonModelAbstractItem extends HudsonModelActionable {
 
 	/**
 	 * Gets the value of the url property.
-	 * 
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getUrl() {
@@ -124,7 +124,7 @@ public class HudsonModelAbstractItem extends HudsonModelActionable {
 
 	/**
 	 * Sets the value of the url property.
-	 * 
+	 *
 	 * @param value
 	 *            allowed object is {@link String }
 	 */
