@@ -15,10 +15,6 @@ public class InheritedBooleanInfo {
 
 	private boolean value;
 
-	private boolean configured_value;
-
-	private boolean inherited_value;
-
 	/**
 	 * @return the value
 	 */

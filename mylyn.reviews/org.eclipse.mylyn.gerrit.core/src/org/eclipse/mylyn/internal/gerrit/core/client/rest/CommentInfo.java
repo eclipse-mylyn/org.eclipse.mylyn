@@ -26,12 +26,6 @@ public class CommentInfo {
 	// 0 for file comment (default)
 	private int line;
 
-	@SuppressWarnings("unused")
-	private String in_reply_to;
-
-	@SuppressWarnings("unused")
-	private Timestamp updated;
-
 	private String message;
 
 	private AccountInfo author;
