@@ -15,7 +15,6 @@
 
 package org.eclipse.mylyn.wikitext.parser.builder.tests;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -24,10 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-
-import org.apache.commons.io.IOUtils;
+import org.eclipse.mylyn.internal.commons.core.FileUtil;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
@@ -410,8 +406,7 @@ public class HtmlDocumentBuilderTest {
 	private String loadResourceContent(String resourceName) {
 		try {
 			String fileName = HtmlDocumentBuilderTest.class.getSimpleName() + '_' + resourceName + ".xml";
-			URL resource = HtmlDocumentBuilderTest.class.getResource(fileName);
-			return convertToUnixLineEndings(IOUtils.toString(resource, StandardCharsets.UTF_8));
+			return convertToUnixLineEndings(FileUtil.readFile(HtmlDocumentBuilderTest.class, fileName));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

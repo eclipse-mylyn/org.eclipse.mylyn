@@ -15,7 +15,6 @@
 
 package org.eclipse.mylyn.wikitext.html.tests;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -24,10 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-
-import org.apache.commons.io.IOUtils;
+import org.eclipse.mylyn.internal.commons.core.FileUtil;
 import org.eclipse.mylyn.wikitext.html.HtmlLanguage;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
@@ -165,8 +161,7 @@ public class HtmlLanguageTest {
 	private String loadResourceContent(String resourceName) {
 		try {
 			String fileName = HtmlLanguageTest.class.getSimpleName() + '_' + resourceName;
-			URL resource = HtmlLanguageTest.class.getResource(fileName);
-			return convertToUnixLineEndings(IOUtils.toString(resource, StandardCharsets.UTF_8));
+			return convertToUnixLineEndings(FileUtil.readFile(HtmlLanguageTest.class, fileName));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

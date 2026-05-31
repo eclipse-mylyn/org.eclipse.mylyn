@@ -9,9 +9,12 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     see git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.css;
+
+import java.util.Objects;
 
 /**
  * a selector that selects elements based on their {@link ElementInfo#getLocalName() name}
@@ -20,6 +23,7 @@ package org.eclipse.mylyn.wikitext.parser.css;
  * @since 3.0
  */
 public class NameSelector extends Selector {
+
 	private final String name;
 
 	public NameSelector(String name) {
@@ -32,6 +36,27 @@ public class NameSelector extends Selector {
 	}
 
 	public String getName() {
+		return name;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof NameSelector other)) {
+			return false;
+		}
+		return Objects.equals(name, other.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name);
+	}
+
+	@Override
+	public String toString() {
 		return name;
 	}
 }

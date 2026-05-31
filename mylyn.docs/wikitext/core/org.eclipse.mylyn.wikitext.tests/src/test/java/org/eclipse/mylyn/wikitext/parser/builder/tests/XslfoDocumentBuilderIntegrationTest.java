@@ -16,7 +16,6 @@
 
 package org.eclipse.mylyn.wikitext.parser.builder.tests;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,10 +23,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.IOUtils;
+import org.eclipse.mylyn.internal.commons.core.FileUtil;
 import org.eclipse.mylyn.wikitext.mediawiki.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.XslfoDocumentBuilder;
@@ -310,7 +308,7 @@ public class XslfoDocumentBuilderIntegrationTest {
 		URL resource = XslfoDocumentBuilderIntegrationTest.class.getResource(
 				"resources/" + XslfoDocumentBuilderIntegrationTest.class.getSimpleName() + "_" + resourceName);
 		try {
-			return IOUtils.toString(resource, StandardCharsets.UTF_8);
+			return FileUtil.readFile(resource);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

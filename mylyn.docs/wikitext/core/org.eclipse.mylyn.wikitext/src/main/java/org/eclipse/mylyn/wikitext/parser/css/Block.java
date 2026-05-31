@@ -15,6 +15,7 @@ package org.eclipse.mylyn.wikitext.parser.css;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * An abstraction for a block of CSS rules
@@ -43,5 +44,21 @@ public class Block {
 
 	public List<CssRule> getRules() {
 		return rules;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Block other)) {
+			return false;
+		}
+		return Objects.equals(selector, other.selector) && Objects.equals(rules, other.rules);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(selector, rules);
 	}
 }

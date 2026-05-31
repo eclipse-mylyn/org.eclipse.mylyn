@@ -15,14 +15,15 @@
 package org.eclipse.mylyn.wikitext.mediawiki;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.apache.commons.io.IOUtils;
+import org.eclipse.mylyn.internal.commons.core.FileUtil;
 
 /**
  * compute the contents of a template based on
@@ -72,7 +73,7 @@ public class WikiTemplateResolver extends TemplateResolver {
 	}
 
 	protected String readContent(URL url) throws IOException {
-		return IOUtils.toString(url, StandardCharsets.UTF_8);
+		return FileUtil.readFile(url);
 	}
 
 	private URL computeRawUrl(String path) {
@@ -82,8 +83,8 @@ public class WikiTemplateResolver extends TemplateResolver {
 				qualifiedUrl += "/"; //$NON-NLS-1$
 			}
 			qualifiedUrl += "index.php?title=" + URLEncoder.encode(path, StandardCharsets.UTF_8) + "&action=raw"; //$NON-NLS-1$ //$NON-NLS-2$
-			return new URL(qualifiedUrl);
-		} catch (IOException e) {
+			return new URI(qualifiedUrl).toURL();
+		} catch (IOException | URISyntaxException e) {
 			Logger.getLogger(WikiTemplateResolver.class.getName())
 			.log(Level.WARNING,
 					MessageFormat.format("Cannot compute raw URL for {0}: {1}", path, e.getMessage()), e); //$NON-NLS-1$

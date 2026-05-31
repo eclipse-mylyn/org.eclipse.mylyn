@@ -24,10 +24,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -36,8 +34,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.eclipse.mylyn.internal.commons.core.FileUtil;
 import org.eclipse.mylyn.wikitext.commonmark.CommonMarkLanguage;
 import org.eclipse.mylyn.wikitext.util.LocationTrackingReader;
 import org.eclipse.mylyn.wikitext.util.WikiToStringStyle;
@@ -174,12 +172,13 @@ public class CommonMarkSpecTest {
 		assertTrue(tmpFolder.exists(), tmpFolder.getAbsolutePath());
 		File spec = new File(tmpFolder, String.format("spec%s.txt", SPEC_VERSION));
 		if (!spec.exists()) {
-			try (FileOutputStream out = new FileOutputStream(spec)) {
-				IOUtils.copy(COMMONMARK_SPEC_URI.toURL(), out);
+			try (FileOutputStream out = new FileOutputStream(spec);
+					InputStream in = COMMONMARK_SPEC_URI.toURL().openStream()) {
+				in.transferTo(out);
 			}
 		}
 		try (InputStream in = new FileInputStream(spec)) {
-			return IOUtils.toString(new InputStreamReader(in, StandardCharsets.UTF_8));
+			return FileUtil.readFile(in);
 		}
 	}
 
