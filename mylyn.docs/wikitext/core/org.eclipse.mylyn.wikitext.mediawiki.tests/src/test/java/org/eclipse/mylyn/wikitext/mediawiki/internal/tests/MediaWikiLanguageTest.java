@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.mediawiki.internal.tests;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -23,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -31,8 +29,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
-
-import org.apache.commons.io.IOUtils;
+import org.eclipse.mylyn.internal.commons.core.FileUtil;
 import org.eclipse.mylyn.wikitext.mediawiki.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.mediawiki.Template;
 import org.eclipse.mylyn.wikitext.parser.builder.DocBookDocumentBuilder;
@@ -1492,7 +1489,7 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 	}
 
 	private String readFully(String resource) throws IOException {
-		return IOUtils.toString(MediaWikiLanguageTest.class.getResource(resource), StandardCharsets.UTF_8);
+		return FileUtil.readFile(MediaWikiLanguageTest.class, resource);
 	}
 
 	private void assertContainsPattern(String html, Pattern pattern) {

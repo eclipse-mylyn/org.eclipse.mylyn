@@ -19,8 +19,7 @@ import static java.util.Objects.requireNonNull;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-
-import org.apache.commons.io.IOUtils;
+import org.eclipse.mylyn.internal.commons.core.FileUtil;
 
 /**
  * @since 3.0
@@ -32,7 +31,7 @@ public class TestResources {
 		try {
 			URL url = relativeToClass.getResource(path);
 			requireNonNull(url, String.format("Resource %s not found relative to %s", path, relativeToClass.getName()));
-			return convertToUnixLineEndings(IOUtils.toString(url, StandardCharsets.UTF_8));
+			return convertToUnixLineEndings(FileUtil.readFile(url));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

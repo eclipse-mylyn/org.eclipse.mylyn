@@ -9,9 +9,12 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.css;
+
+import java.util.Objects;
 
 /**
  * a selector that selects elements based on their having a CSS class
@@ -21,6 +24,7 @@ package org.eclipse.mylyn.wikitext.parser.css;
  * @since 3.0
  */
 public class CssClassSelector extends Selector {
+
 	private final String cssClass;
 
 	public CssClassSelector(String cssClass) {
@@ -34,5 +38,26 @@ public class CssClassSelector extends Selector {
 
 	public String getCssClass() {
 		return cssClass;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof CssClassSelector other)) {
+			return false;
+		}
+		return Objects.equals(cssClass, other.cssClass);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(cssClass);
+	}
+
+	@Override
+	public String toString() {
+		return "." + cssClass; //$NON-NLS-1$
 	}
 }
