@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.css;
@@ -26,4 +27,18 @@ public class AnySelector extends Selector {
 		return true;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof AnySelector;
+	}
+
+	@Override
+	public int hashCode() {
+		return AnySelector.class.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return "*"; //$NON-NLS-1$
+	}
 }

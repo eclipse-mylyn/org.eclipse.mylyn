@@ -9,9 +9,12 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.css;
+
+import java.util.Objects;
 
 /**
  * @author David Green
@@ -41,4 +44,24 @@ public class DescendantSelector extends Selector {
 		return ancestorSelector;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof DescendantSelector other)) {
+			return false;
+		}
+		return Objects.equals(ancestorSelector, other.ancestorSelector);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(ancestorSelector);
+	}
+
+	@Override
+	public String toString() {
+		return ancestorSelector.toString() + " *"; //$NON-NLS-1$
+	}
 }

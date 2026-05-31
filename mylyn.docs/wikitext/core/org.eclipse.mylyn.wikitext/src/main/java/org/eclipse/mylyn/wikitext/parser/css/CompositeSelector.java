@@ -9,11 +9,14 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.css;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * A selector that can select based on a set of delegates.
@@ -59,4 +62,25 @@ public class CompositeSelector extends Selector {
 		return delegates;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof CompositeSelector other)) {
+			return false;
+		}
+		return and == other.and && Objects.equals(delegates, other.delegates);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(and, delegates);
+	}
+
+	@Override
+	public String toString() {
+		String separator = and ? "" : ", "; //$NON-NLS-1$//$NON-NLS-2$
+		return delegates.stream().map(Selector::toString).collect(Collectors.joining(separator));
+	}
 }

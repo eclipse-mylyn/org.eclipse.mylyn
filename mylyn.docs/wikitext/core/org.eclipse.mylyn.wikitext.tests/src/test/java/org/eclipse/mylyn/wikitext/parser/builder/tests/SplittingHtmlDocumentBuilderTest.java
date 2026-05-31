@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 
-import org.apache.commons.io.IOUtils;
+import org.eclipse.mylyn.internal.commons.core.FileUtil;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.splitter.DefaultSplittingStrategy;
@@ -102,9 +102,9 @@ public class SplittingHtmlDocumentBuilderTest {
 
 	private void assertFileContents(String resource, File outputFile) throws IOException {
 		String resourcePath = "resources/SplittingHtmlDocumentBuilderTest_" + resource;
-		String resourceContents = convertToUnixLineEndings(IOUtils
-				.toString(SplittingHtmlDocumentBuilderTest.class.getResource(resourcePath), StandardCharsets.UTF_8));
-		String actualContents = IOUtils.toString(outputFile.toURI().toURL(), StandardCharsets.UTF_8);
+		String resourceContents = convertToUnixLineEndings(
+				FileUtil.readFile(SplittingHtmlDocumentBuilderTest.class, resourcePath));
+		String actualContents = FileUtil.readFile(outputFile);
 		assertEquals(resourceContents, actualContents, format("Resource {0} differs", resourcePath));
 	}
 

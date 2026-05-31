@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.css;
@@ -16,6 +17,8 @@ package org.eclipse.mylyn.wikitext.parser.css;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * An abstraction for a CSS stylesheet.
@@ -48,5 +51,32 @@ public class Stylesheet {
 
 	void add(Block block) {
 		blocks.add(block);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Stylesheet other)) {
+			return false;
+		}
+		return Objects.equals(blocks, other.blocks);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(blocks);
+	}
+
+	@Override
+	public String toString() {
+		return blocks.stream()
+				.map(block -> block.getSelector().toString() + " { " //$NON-NLS-1$
+						+ block.getRules().stream()
+						.map(r -> r.name + ": " + r.value) //$NON-NLS-1$
+						.collect(Collectors.joining("; ")) //$NON-NLS-1$
+						+ " }") //$NON-NLS-1$
+				.collect(Collectors.joining("\n")); //$NON-NLS-1$
 	}
 }
