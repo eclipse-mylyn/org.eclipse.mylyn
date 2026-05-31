@@ -9,9 +9,12 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.css;
+
+import java.util.Objects;
 
 /**
  * A selector that selects elements having an id equal to a specific value.
@@ -36,4 +39,24 @@ public class IdSelector extends Selector {
 		return id;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof IdSelector other)) {
+			return false;
+		}
+		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public String toString() {
+		return "#" + id; //$NON-NLS-1$
+	}
 }

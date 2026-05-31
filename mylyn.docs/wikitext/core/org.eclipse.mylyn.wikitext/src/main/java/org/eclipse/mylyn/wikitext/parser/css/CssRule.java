@@ -9,9 +9,12 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.css;
+
+import java.util.Objects;
 
 /**
  * A rule (name and value) as defined by CSS
@@ -59,4 +62,19 @@ public class CssRule {
 		this.valueOffset = valueOffset;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof CssRule other)) {
+			return false;
+		}
+		return Objects.equals(name, other.name) && Objects.equals(value, other.value);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, value);
+	}
 }
