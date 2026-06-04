@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.mylyn.jenkins.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Jenkins Connector
 Bundle-SymbolicName: org.eclipse.mylyn.jenkins.tests;singleton:=true
-Bundle-Version: 4.11.0.qualifier
+Bundle-Version: 4.12.0.qualifier
 Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.emf.ecore;bundle-version="0.0.0",
  org.eclipse.jface.text;bundle-version="0.0.0",
@@ -16,8 +16,8 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.search;bundle-version="0.0.0",
  org.eclipse.ui;bundle-version="0.0.0",
  org.eclipse.ui.workbench.texteditor;bundle-version="0.0.0",
- org.eclipse.mylyn.commons.sdk.util.junit5;bundle-version="4.11.0",
- org.eclipse.mylyn.tests.util.junit5;bundle-version="4.11.0"
+ org.eclipse.mylyn.commons.sdk.util.junit5;bundle-version="4.12.0",
+ org.eclipse.mylyn.tests.util.junit5;bundle-version="4.12.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Vendor: Eclipse Mylyn
 Export-Package: org.eclipse.mylyn.jenkins.tests;x-internal:=true,
