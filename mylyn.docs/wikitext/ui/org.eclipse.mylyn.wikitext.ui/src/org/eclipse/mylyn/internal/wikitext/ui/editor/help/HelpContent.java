@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2015 David Green and others.
+ * Copyright (c) 2007, 2026 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.ui.WikiText;
@@ -88,11 +87,10 @@ public class HelpContent {
 	/**
 	 * Get the help content, which may be formatted using HTML markup. If HTML markup is used, the content must be well-formed HTML.
 	 */
-	@SuppressWarnings("serial")
 	public String getContent() throws IOException {
 		try {
 			URL resource = getResource();
-			String content = IOUtils.toString(resource, StandardCharsets.UTF_8);
+			String content = new String(resource.openStream().readAllBytes(), StandardCharsets.UTF_8);
 			if (resourceContentLanguage == null || "html".equalsIgnoreCase(resourceContentLanguage)) { //$NON-NLS-1$
 				return content;
 			}
@@ -105,7 +103,7 @@ public class HelpContent {
 			return markupParser.parseToHtml(content);
 		} catch (final Exception e) {
 			throw new IOException(NLS.bind(Messages.HelpContent_cannotAccessContent,
-					new Object[] { provider.getSymbolicName(), resourcePath, e.getMessage() })) {
+					provider.getSymbolicName(), resourcePath, e.getMessage())) {
 				@Override
 				public Throwable getCause() {
 					return e;

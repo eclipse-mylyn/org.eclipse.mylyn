@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2024 David Green and others.
+ * Copyright (c) 2009, 2026 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.mylyn.internal.wikitext.ui.util.Util;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
@@ -62,9 +61,10 @@ public class TextileLanguageTasksTest {
 
 		StringWriter out = new StringWriter();
 		parser.setBuilder(new HtmlDocumentBuilder(out));
-
-		String content = IOUtils.toString(
-				TextileLanguageTasksTest.class.getResource("resources/subversive-bug-report.txt"),
+		String content = new String(
+				TextileLanguageTasksTest.class.getResource("resources/subversive-bug-report.txt")
+						.openStream()
+						.readAllBytes(),
 				StandardCharsets.UTF_8);
 		parser.parse(content);
 	}

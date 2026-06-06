@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2021 David Green and others.
+ * Copyright (c) 2007, 2026 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,10 +9,12 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.viewer;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
@@ -315,7 +317,7 @@ public class HtmlTextPresentationParser {
 	private static Stylesheet getDefaultStylesheet() {
 		synchronized (HtmlTextPresentationParser.class) {
 			if (defaultStylesheet == null) {
-				try (Reader reader = getDefaultStylesheetContent()) {
+				try (Reader reader = new InputStreamReader(getDefaultStylesheetContent(), StandardCharsets.UTF_8)) {
 					defaultStylesheet = new CssParser().parse(reader);
 				} catch (IOException e) {
 					throw new IllegalStateException(e);
@@ -325,9 +327,8 @@ public class HtmlTextPresentationParser {
 		}
 	}
 
-	public static Reader getDefaultStylesheetContent() {
-		return new InputStreamReader(HtmlTextPresentationParser.class.getResourceAsStream("default.css"), //$NON-NLS-1$
-				StandardCharsets.UTF_8);
+	public static InputStream getDefaultStylesheetContent() {
+		return HtmlTextPresentationParser.class.getResourceAsStream("default.css"); //$NON-NLS-1$
 	}
 
 	public TextPresentation getPresentation() {
@@ -476,7 +477,7 @@ public class HtmlTextPresentationParser {
 				ElementState elementState = state.peek();
 				if (elementState.noWhitespaceTextContainer
 						|| elementState.blockElement && elementState.skipWhitespace && elementState.textChildCount == 0
-								&& elementState.childCount == 0
+						&& elementState.childCount == 0
 						|| elementState.lastChild != null && elementState.lastChild.collapsesAdjacentWhitespace) {
 					// trim left here, since we must properly eliminate whitespace in ordered lists where we've already
 					// prepended a number to the list item text
@@ -960,7 +961,7 @@ public class HtmlTextPresentationParser {
 			}
 			ElementState elementState = state.peek();
 			int offset = elementState.offset;
-			if ((offset >= getOffset()) || elementState.fontState.equals(state.get(0).fontState)) {
+			if (offset >= getOffset() || elementState.fontState.equals(state.get(0).fontState)) {
 				// no different than the default state
 				return;
 			}

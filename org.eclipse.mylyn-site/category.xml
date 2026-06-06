@@ -114,7 +114,6 @@
    <bundle id="org.apache.commons.commons-collections4"/>
    <bundle id="org.apache.commons.commons-codec"/>
    <bundle id="org.apache.commons.httpclient"/>
-   <bundle id="org.apache.commons.io"/>
    <bundle id="org.apache.commons.lang3"/>
    <bundle id="org.apache.commons.logging"/>
    <bundle id="org.apache.commons.text"/>
