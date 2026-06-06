@@ -515,3 +515,4 @@ org.eclipse.jdt.core.formatter.wrap_before_string_concatenation=true
 org.eclipse.jdt.core.formatter.wrap_before_switch_case_arrow_operator=false
 org.eclipse.jdt.core.formatter.wrap_outer_expressions_when_nested=true
 org.eclipse.jdt.core.javaFormatter=org.eclipse.jdt.core.defaultJavaFormatter
+org.eclipse.jdt.core.compiler.ignoreUnnamedModuleForSplitPackage=enabled

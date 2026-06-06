@@ -20,10 +20,10 @@ import java.io.IOException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.context.sdk.java.WorkspaceSetupHelper;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.java.tests.WorkspaceSetupHelper;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
