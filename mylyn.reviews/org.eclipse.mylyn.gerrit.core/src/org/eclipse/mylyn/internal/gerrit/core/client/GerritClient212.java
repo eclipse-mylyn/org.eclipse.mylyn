@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018 Tasktop Technologies and others.
+ * Copyright (c) 2018, 2026 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
@@ -84,7 +85,8 @@ import com.google.gson.reflect.TypeToken;
 
 public class GerritClient212 extends GerritClient29 {
 
-	private final String SELF_ACCOUNT_ID = "self"; //$NON-NLS-1$
+	//FIXME: AF: was unused private, most probably should be removed
+	final String SELF_ACCOUNT_ID = "self"; //$NON-NLS-1$
 
 	protected GerritClient212(TaskRepository repository, Version version) {
 		super(repository, version);
