@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2014 Tasktop Technologies and others.
+ * Copyright (c) 2010, 2026 Tasktop Technologies and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -282,10 +283,10 @@ public abstract class JenkinsOperation<T> extends CommonHttpOperation<T> {
 
 	private void setupAuthentication(HttpRequestBase request) {
 
-		String crumb = (String) getClient().getAttribute(ID_CONTEXT_CRUMB);
-		if (crumb != null && !crumb.isEmpty()) {
-			String crumbHeader = (String) getClient().getAttribute(ID_CONTEXT_CRUMB_HEADER);
-			request.addHeader(crumbHeader, crumb);
+		Optional<String> crumb = getClient().attributeValue(ID_CONTEXT_CRUMB);
+		if (!crumb.isEmpty()) {
+			String crumbHeader = getClient().attributeValue(ID_CONTEXT_CRUMB_HEADER).get();
+			request.addHeader(crumbHeader, crumb.get());
 		}
 
 		UserCredentials credentials = getClient().getLocation().getCredentials(AuthenticationType.REPOSITORY);
@@ -322,7 +323,8 @@ public abstract class JenkinsOperation<T> extends CommonHttpOperation<T> {
 	@Override
 	protected boolean needsAuthentication() {
 		if (hasCredentials()) {
-			boolean authenticated = getClient().isAuthenticated() && getClient().getAttribute(ID_CONTEXT_CRUMB) != null
+			boolean authenticated = getClient().isAuthenticated()
+					&& getClient().attributeValue(ID_CONTEXT_CRUMB).isPresent()
 					&& hasValidatAuthenticationState();
 			return !authenticated;
 		}
