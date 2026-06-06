@@ -11,7 +11,7 @@
  *     See git history
  *******************************************************************************/
 
-package org.eclipse.mylyn.context.sdk.java;
+package org.eclipse.mylyn.java.tests;
 
 import java.io.File;
 import java.io.IOException;

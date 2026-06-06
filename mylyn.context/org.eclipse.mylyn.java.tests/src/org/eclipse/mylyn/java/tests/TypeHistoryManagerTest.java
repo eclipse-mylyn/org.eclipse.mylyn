@@ -21,7 +21,6 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.corext.util.OpenTypeHistory;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
 import org.eclipse.mylyn.internal.java.ui.TypeHistoryManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

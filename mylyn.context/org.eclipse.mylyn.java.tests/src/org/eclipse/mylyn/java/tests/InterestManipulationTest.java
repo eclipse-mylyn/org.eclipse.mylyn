@@ -31,7 +31,6 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.actions.AbstractInterestManipulationAction;
 import org.eclipse.mylyn.internal.ide.ui.IdeUiUtil;

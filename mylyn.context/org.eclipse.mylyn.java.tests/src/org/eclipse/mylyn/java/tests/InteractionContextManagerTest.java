@@ -45,7 +45,6 @@ import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.context.sdk.java.AbstractJavaContextTest;
 import org.eclipse.mylyn.internal.context.core.CompositeContextElement;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
