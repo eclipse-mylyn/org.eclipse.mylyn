@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2026 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.client.rest;
@@ -27,17 +28,17 @@ public class CommentInput {
 	private String path;
 
 	// REVISION (default) or PARENT
-	@SuppressWarnings("unused")
-	private String side;
+	//FIXME: AF: was unused private, most probably should be removed
+	String side;
 
 	// 0 for file comment (default)
 	private int line;
 
-	@SuppressWarnings("unused")
-	private String in_reply_to;
+	//FIXME: AF: was unused private, most probably should be removed
+	String in_reply_to;
 
-	@SuppressWarnings("unused")
-	private Timestamp updated;
+	//FIXME: AF: was unused private, most probably should be removed
+	Timestamp updated;
 
 	private String message;
 

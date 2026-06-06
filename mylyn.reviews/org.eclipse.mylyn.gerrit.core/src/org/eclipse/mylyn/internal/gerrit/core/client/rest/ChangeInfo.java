@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2026 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     Marc-Andre Laperle (Ericsson) - Add topic
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.client.rest;
@@ -84,8 +85,8 @@ public class ChangeInfo {
 	private Map<String/*Label*/, String[]> permitted_labels;
 
 	// e.g. "0023412400000f7d"
-	@SuppressWarnings("unused")
-	private String _sortkey;
+	//FIXME: AF: was unused private, most probably should be removed
+	String _sortkey;
 
 	// e.g. 3965
 	private int _number;
@@ -255,7 +256,7 @@ public class ChangeInfo {
 				labels.size());
 		for (Entry<String, LabelInfo> entry : labels.entrySet()) {
 			ApprovalCategory approvalCategory = ApprovalUtil.findCategoryByNameWithDash(entry.getKey());
-			if ((approvalCategory == null) || (entry.getValue().getAll() == null)) {
+			if (approvalCategory == null || entry.getValue().getAll() == null) {
 				continue;
 			}
 			for (ApprovalInfo approvalInfo : entry.getValue().getAll()) {
