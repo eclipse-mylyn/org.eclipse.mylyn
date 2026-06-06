@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2024 David Green and others.
+ * Copyright (c) 2007, 2026 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -190,7 +192,8 @@ public class HtmlTextPresentationParserTest {
 
 	private Stylesheet defaultStylesheet() {
 		try {
-			try (Reader reader = HtmlTextPresentationParser.getDefaultStylesheetContent()) {
+			try (Reader reader = new InputStreamReader(HtmlTextPresentationParser.getDefaultStylesheetContent(),
+					StandardCharsets.UTF_8)) {
 				return new CssParser().parse(reader);
 			}
 		} catch (IOException e) {

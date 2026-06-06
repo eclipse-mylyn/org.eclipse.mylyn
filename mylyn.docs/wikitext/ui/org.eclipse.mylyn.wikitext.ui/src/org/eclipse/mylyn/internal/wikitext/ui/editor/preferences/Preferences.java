@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2021 David Green and others.
+ * Copyright (c) 2007, 2026 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -14,13 +14,13 @@
 package org.eclipse.mylyn.internal.wikitext.ui.editor.preferences;
 
 import java.io.IOException;
-import java.io.Reader;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.HtmlTextPresentationParser;
@@ -285,8 +285,8 @@ public class Preferences implements Cloneable {
 	}
 
 	private String getDefaultMarkupViewerCss() {
-		try (Reader reader = HtmlTextPresentationParser.getDefaultStylesheetContent()) {
-			return IOUtils.toString(reader);
+		try (InputStream reader = HtmlTextPresentationParser.getDefaultStylesheetContent()) {
+			return new String(reader.readAllBytes(), StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			WikiTextUiPlugin.getDefault().log(e);
 			return ""; //$NON-NLS-1$
