@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Frank Becker and others.
+ * Copyright (c) 2023, 2026 Frank Becker and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -62,7 +62,6 @@ import org.eclipse.mylyn.gitlab.core.GitlabConfiguration;
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator;
 import org.eclipse.mylyn.gitlab.core.GitlabCoreActivator.ActivityType;
 import org.eclipse.mylyn.gitlab.core.GitlabException;
-import org.eclipse.mylyn.internal.commons.core.FileUtil;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -105,6 +104,8 @@ public class GitlabRestClient {
 	private final TaskRepository taskRepository;
 
 	private static final Pattern linkPattern = Pattern.compile("\\[(.+)\\]\\((.+)\\)"); //$NON-NLS-1$
+
+	public static String AUTHORIZATION_KEY = "authorization_key"; //$NON-NLS-1$
 
 	public static String AUTHORIZATION_HEADER = "authorization_header"; //$NON-NLS-1$
 
@@ -447,31 +448,22 @@ public class GitlabRestClient {
 	}
 
 	private void getAccessTokenIfNotPresent(IOperationMonitor monitor) throws GitlabException {
-		if (getClientAttribute(AUTHORIZATION_HEADER) == null) {
+		if (getClient().attributeValue(AUTHORIZATION_HEADER).isEmpty()) {
 			try {
 				obtainAccessToken(monitor);
 			} catch (Exception e) {
-				throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID, "Exception", e)); //$NON-NLS-1$
+				throw new GitlabException(Status.error(e.getMessage(), e));
 			}
 		}
 	}
 
-	@SuppressWarnings("restriction")
-	private Object getClientAttribute(String attribute) {
-		return getClient().getAttribute(attribute);
-	}
-
-	@SuppressWarnings("restriction")
-	private void setClientAttribute(String attribute, Object value) {
-		getClient().setAttribute(attribute, value);
-	}
-
-	public String obtainAccessToken(IOperationMonitor monitor) throws Exception {
-		String accessToken;
+	public void obtainAccessToken(IOperationMonitor monitor) throws Exception {
 		if (Boolean.parseBoolean(taskRepository.getProperty(IRepositoryConstants.PROPERTY_USE_TOKEN))) {
-			AuthenticationCredentials credentials1 = taskRepository
+			AuthenticationCredentials credentials = taskRepository
 					.getCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY);
-			accessToken = credentials1.getPassword();
+			String accessToken = credentials.getPassword();
+			getClient().setAttribute(AUTHORIZATION_KEY, "PRIVATE-TOKEN"); //$NON-NLS-1$
+			getClient().setAttribute(AUTHORIZATION_HEADER, accessToken);
 		} else {
 			AuthenticationCredentials credentials1 = taskRepository
 					.getCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY);
@@ -489,13 +481,11 @@ public class GitlabRestClient {
 			if (responseCode != 200) {
 				throw new Exception("Failed to obtain access token"); //$NON-NLS-1$
 			}
-
-			String response = FileUtil.readFile(connection.getInputStream());
-			accessToken = response.split("\"access_token\":\"")[1].split("\"")[0]; //$NON-NLS-1$ //$NON-NLS-2$
+			String response = new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+			String accessToken = response.split("\"access_token\":\"")[1].split("\"")[0]; //$NON-NLS-1$ //$NON-NLS-2$
+			getClient().setAttribute(AUTHORIZATION_KEY, "Authorization"); //$NON-NLS-1$
+			getClient().setAttribute(AUTHORIZATION_HEADER, "Bearer " + accessToken);
 		}
-
-		setClientAttribute(AUTHORIZATION_HEADER, "Bearer " + accessToken); //$NON-NLS-1$
-		return accessToken;
 	}
 
 	public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)

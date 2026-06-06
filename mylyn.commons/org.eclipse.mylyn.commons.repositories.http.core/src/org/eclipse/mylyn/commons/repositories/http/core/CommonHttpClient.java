@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2014 Tasktop Technologies and others.
+ * Copyright (c) 2011, 2026 Tasktop Technologies and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,12 +8,14 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.repositories.http.core;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.net.ssl.TrustManager;
@@ -63,7 +65,7 @@ public class CommonHttpClient {
 
 	private final RepositoryLocation location;
 
-	private final Map<String, Object> attributes = new ConcurrentHashMap<>();
+	private final Map<String, String> attributes = new ConcurrentHashMap<>();
 
 	private CancellableOperationMonitorThread monitorThread = CancellableOperationMonitorThread.getInstance();
 
@@ -217,12 +219,12 @@ public class CommonHttpClient {
 		this.monitorThread = monitorThread;
 	}
 
-	public void setAttribute(String key, Object value) {
+	public void setAttribute(String key, String value) {
 		attributes.put(key, value);
 	}
 
-	public Object getAttribute(String key) {
-		return attributes.get(key);
+	public Optional<String> attributeValue(String key) {
+		return Optional.ofNullable(attributes.get(key));
 	}
 
 	public void removeAttribute(String key) {

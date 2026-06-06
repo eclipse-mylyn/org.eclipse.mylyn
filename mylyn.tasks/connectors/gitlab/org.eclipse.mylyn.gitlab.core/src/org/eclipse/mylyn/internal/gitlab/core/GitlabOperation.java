@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Frank Becker and others.
+ * Copyright (c) 2023, 2026 Frank Becker and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -52,8 +52,7 @@ public abstract class GitlabOperation<T> extends CommonHttpOperation<T> {
 		try {
 			return execute(monitor);
 		} catch (IOException e) {
-			throw new GitlabException(new Status(IStatus.ERROR, GitlabCoreActivator.PLUGIN_ID,
-					"org.eclipse.mylyn.gitlab.core.GitlabOperation.run(IOperationMonitor)", e)); //$NON-NLS-1$
+			throw new GitlabException(Status.error(e.getMessage(), e));
 		}
 	}
 
@@ -68,8 +67,9 @@ public abstract class GitlabOperation<T> extends CommonHttpOperation<T> {
 
 	protected void addHttpRequestEntities(HttpRequestBase request) throws GitlabException {
 		request.setHeader(ACCEPT, APPLICATION_JSON);
-		String accessToken = (String) getClient().getAttribute(GitlabRestClient.AUTHORIZATION_HEADER);
-		request.setHeader("Authorization", accessToken); //$NON-NLS-1$
+		String accessKey = getClient().attributeValue(GitlabRestClient.AUTHORIZATION_KEY).get();
+		String accessValue = getClient().attributeValue(GitlabRestClient.AUTHORIZATION_HEADER).get();
+		request.setHeader(accessKey, accessValue);
 	}
 
 	protected T doProcess(CommonHttpResponse response, IOperationMonitor monitor) throws IOException, GitlabException {
