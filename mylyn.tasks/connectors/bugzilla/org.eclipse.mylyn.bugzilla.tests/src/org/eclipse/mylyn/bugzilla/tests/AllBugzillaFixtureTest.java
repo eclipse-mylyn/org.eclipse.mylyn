@@ -11,15 +11,32 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
+import java.io.IOException;
 import java.util.stream.Stream;
 
+import org.eclipse.core.runtime.CoreException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 @MethodSource("allFixtureProvider")
+@SuppressWarnings("nls")
 public class AllBugzillaFixtureTest extends AbstractBugzillaFixtureTest {
 
 	static Stream<Arguments> allFixtureProvider() {
 		return fixtureProvider(false);
 	}
+
+	@BeforeEach
+	void checkService() {
+		try {
+			fixture.client();
+		} catch (CoreException | IOException e) {
+			System.err.println("\n*****\n* " + fixture.getRepositoryUrl() + " - " + e.getMessage() + "\n*****");
+			assumeTrue(false, "Unable to connect to Bugzilla server: " + e.getMessage());
+		}
+	}
+
 }

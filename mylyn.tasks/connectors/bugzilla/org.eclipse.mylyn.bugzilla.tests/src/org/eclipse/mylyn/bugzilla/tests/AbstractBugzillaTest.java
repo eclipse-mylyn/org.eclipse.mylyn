@@ -78,7 +78,9 @@ public abstract class AbstractBugzillaTest extends AllBugzillaFixtureTest {
 	@AfterEach
 	void _tearDown() throws Exception {
 		TestFixture.resetTaskList();
-		manager.clearRepositories();
+		if (manager != null) {
+			manager.clearRepositories();
+		}
 	}
 
 	public TaskDataModel createModel(ITask task) throws CoreException {
