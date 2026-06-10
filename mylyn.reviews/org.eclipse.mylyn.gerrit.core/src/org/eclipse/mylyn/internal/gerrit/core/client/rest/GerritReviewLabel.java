@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013 Ericsson and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Francois Chouinard - Initial API and implementation
@@ -18,7 +18,7 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * The optional labels part of the ChangeInfo structure (filled by GSON).
- * 
+ *
  * @author Francois Chouinard
  */
 public class GerritReviewLabel {
@@ -26,7 +26,7 @@ public class GerritReviewLabel {
 	/*
 	 * When specifying the "LABELS" option on the gerrit changes query, the result
 	 * has the following form:
-	 * 
+	 *
 	 * {
 	 *    "project": "demo",
 	 *    "branch": "master",
@@ -39,19 +39,19 @@ public class GerritReviewLabel {
 	 *      "Code-Review": { ... }
 	 *    }
 	 * }
-	 * 
+	 *
 	 * The "labels" section has the following semi-formal structure:
-	 * 
+	 *
 	 * LABELS      = "labels"      + ":" + "{" + VERIFIED + "," + CODE_REVIEW + "}".
 	 * VERIFIED    = "Verified"    + ":" + "{" + [ STATUS ] + "}".
 	 * CODE_REVIEW = "Code-Review" + ":" + "{" + [ STATUS ] + "}".
 	 * STATUS      = APPROVED | RECOMMENDED | DISLIKED | REJECTED.
-	 * 
+	 *
 	 * APPROVED    = "approved"    + ":" + "{" + REVIEWER + "}".
 	 * RECOMMENDED = "recommended" + ":" + "{" + REVIEWER + "}".
 	 * DISLIKED    = "dislikes"    + ":" + "{" + REVIEWER + "}".
 	 * REJECTED    = "rejected"    + ":" + "{" + REVIEWER + "}".
-	 * 
+	 *
 	 * REVIEWER    = "name" + ":" + STRING.
 	 */
 

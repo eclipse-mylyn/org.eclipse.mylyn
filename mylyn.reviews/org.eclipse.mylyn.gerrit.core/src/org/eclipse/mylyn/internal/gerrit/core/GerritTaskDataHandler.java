@@ -204,7 +204,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		return consumer;
 	}
 
-	private class ReviewObserver extends RemoteEmfObserver<IRepository, IReview, String, Date> {
+	private static class ReviewObserver extends RemoteEmfObserver<IRepository, IReview, String, Date> {
 		boolean complete;
 
 		@Override
