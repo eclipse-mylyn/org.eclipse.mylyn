@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - adapt to SimRel 2023-06
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.resources.tests;
@@ -16,8 +17,10 @@ package org.eclipse.mylyn.resources.tests;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.eclipse.mylyn.commons.sdk.util.ResourceTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.TestProject;
 import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
-import org.eclipse.mylyn.context.sdk.util.AbstractContextTest;
+import org.eclipse.mylyn.context.tests.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
@@ -33,36 +36,25 @@ import org.junit.jupiter.api.BeforeEach;
 
 /**
  * @author Mik Kersten
- * @deprecated use {@link org.eclipse.mylyn.context.sdk.util.AbstractResourceContextTest} instead
  */
-@Deprecated
 public abstract class AbstractResourceContextTest extends AbstractContextTest {
 
-	@Deprecated
 	protected InteractionContextManager manager = ContextCorePlugin.getContextManager();
 
-	@Deprecated
 	protected ResourceInteractionMonitor monitor;
 
-	@Deprecated
 	protected ResourceStructureBridge structureBridge = new ResourceStructureBridge();
 
-	@Deprecated
 	protected TestProject project;
 
-	@Deprecated
 	protected InteractionContext context;
 
-	@Deprecated
 	protected InteractionContextScaling scaling = new InteractionContextScaling();
 
-	@Deprecated
 	protected String taskId = this.getClass().getName();
 
-	@Deprecated
 	protected ProjectExplorer navigator;
 
-	@Deprecated
 	@BeforeEach
 	void _setUp() throws Exception {
 		assertNotNull(IdeUiBridgePlugin.getDefault());
@@ -76,7 +68,6 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 		assertNotNull(navigator);
 	}
 
-	@Deprecated
 	@AfterEach
 	void _tearDown() throws Exception {
 		context.reset();

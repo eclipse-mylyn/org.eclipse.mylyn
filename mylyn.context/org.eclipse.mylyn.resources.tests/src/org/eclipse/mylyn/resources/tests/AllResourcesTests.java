@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.resources.tests;
 
-import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
+import org.eclipse.mylyn.context.tests.support.ContextTestUtil;
 import org.junit.platform.suite.api.BeforeSuite;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
@@ -24,7 +24,8 @@ import org.junit.platform.suite.api.Suite;
 
 @Suite
 @SelectClasses({ ResourceChangeMonitorTest.class, ResourcePatternExclusionStrategyTest.class,
-	ResourceModificationDateExclusionStrategyTest.class, ResourceContextTest.class, ResourcesUiTest.class })
+		ResourceModificationDateExclusionStrategyTest.class, ResourceContextTest.class, ResourcesUiTest.class,
+		ToggleFocusActiveViewHandlerTest.class })
 public class AllResourcesTests {
 
 	@BeforeSuite

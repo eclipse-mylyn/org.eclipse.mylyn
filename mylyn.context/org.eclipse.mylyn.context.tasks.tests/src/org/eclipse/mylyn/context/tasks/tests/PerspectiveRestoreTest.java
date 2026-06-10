@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Collections;
 
-import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
+import org.eclipse.mylyn.context.tests.support.ContextTestUtil;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;

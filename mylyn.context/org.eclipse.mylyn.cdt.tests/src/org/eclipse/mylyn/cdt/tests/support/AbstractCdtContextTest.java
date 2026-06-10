@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.cdt.tests.support;
@@ -20,8 +21,8 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.sdk.util.ResourceTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.TestProject;
-import org.eclipse.mylyn.context.sdk.util.AbstractContextTest;
-import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
+import org.eclipse.mylyn.context.tests.AbstractContextTest;
+import org.eclipse.mylyn.context.tests.support.ContextTestUtil;
 import org.eclipse.mylyn.internal.cdt.ui.CDTStructureBridge;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
