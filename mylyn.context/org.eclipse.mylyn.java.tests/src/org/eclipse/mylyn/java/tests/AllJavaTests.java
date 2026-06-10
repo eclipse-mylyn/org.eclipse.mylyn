@@ -14,7 +14,7 @@
 package org.eclipse.mylyn.java.tests;
 
 import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
-import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
+import org.eclipse.mylyn.context.tests.support.ContextTestUtil;
 import org.eclipse.mylyn.java.tests.search.JUnitReferencesSearchPluginTest;
 import org.eclipse.mylyn.java.tests.search.JavaImplementorsSearchPluginTest;
 import org.eclipse.mylyn.java.tests.search.JavaReadAccessSearchPluginTest;

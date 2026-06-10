@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.tests.support.search;
@@ -19,24 +20,20 @@ import org.eclipse.mylyn.internal.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
 
 /**
- * @deprecated use {@link org.eclipse.mylyn.context.sdk.util.search.TestActiveSearchListener} instead
  * @author Mik Kersten
  */
-@Deprecated
 public class TestActiveSearchListener implements IActiveSearchListener {
 
 	private AbstractRelationProvider prov = null;
 
 	private List<?> results = null;
 
-	@Deprecated
 	public TestActiveSearchListener(AbstractRelationProvider prov) {
 		this.prov = prov;
 	}
 
 	private boolean gathered = false;
 
-	@Deprecated
 	@Override
 	public void searchCompleted(List<?> l) {
 		List<Object> accepted = new ArrayList<>(l.size());
@@ -53,13 +50,11 @@ public class TestActiveSearchListener implements IActiveSearchListener {
 		gathered = true;
 	}
 
-	@Deprecated
 	@Override
 	public boolean resultsGathered() {
 		return gathered;
 	}
 
-	@Deprecated
 	public List<?> getResults() {
 		return results;
 	}

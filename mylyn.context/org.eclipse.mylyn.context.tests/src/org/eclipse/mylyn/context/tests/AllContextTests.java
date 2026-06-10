@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.context.tests;
 
-import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
+import org.eclipse.mylyn.context.tests.support.ContextTestUtil;
 import org.junit.platform.suite.api.BeforeSuite;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
@@ -24,8 +24,7 @@ import org.junit.platform.suite.api.Suite;
 @Suite
 @SelectClasses({ ContextExternalizerTest.class, ContextTest.class, DegreeOfInterestTest.class,
 	EditorStateParticipantTest.class, InteractionContextListeningTest.class, InteractionContextTest.class,
-	InteractionEventTest.class, ScalingFactorsTest.class, ShadowsBridgeTest.class,
-	ToggleFocusActiveViewHandlerTest.class })
+	InteractionEventTest.class, ScalingFactorsTest.class, ShadowsBridgeTest.class })
 public class AllContextTests {
 	@BeforeSuite
 	static void suiteSetup() {

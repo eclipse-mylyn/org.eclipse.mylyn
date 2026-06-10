@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.tests.support.search;
@@ -19,11 +20,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 
 /**
- * @deprecated use {@link org.eclipse.mylyn.context.sdk.util.search.ISearchPluginTest} instead
  * @author Mik Kersten
  */
-@Deprecated
 public interface ISearchPluginTest {
-	@Deprecated
+
 	List<?> search(int dos, IInteractionElement node) throws IOException, CoreException;
+
 }
