@@ -18,7 +18,6 @@ import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import org.eclipse.mylyn.internal.commons.core.FileUtil;
 
 /**

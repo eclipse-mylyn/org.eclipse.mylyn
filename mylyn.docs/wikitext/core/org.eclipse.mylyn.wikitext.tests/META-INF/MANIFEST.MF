@@ -25,3 +25,4 @@ Import-Package: org.eclipse.mylyn.internal.commons.core,
  org.junit.jupiter.api;version="[6.0.0,7.0.0)",
  org.junit.jupiter.api.function;version="[6.0.0,7.0.0)",
  org.junit.jupiter.api.io;version="[6.0.0,7.0.0)"
+Export-Package: org.eclipse.mylyn.wikitext.util.tests

@@ -32,9 +32,9 @@ import org.eclipse.mylyn.wikitext.confluence.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.parser.builder.DocBookDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.toolkit.AbstractMarkupGenerationTest;
 import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
+import org.eclipse.mylyn.wikitext.util.tests.AbstractMarkupGenerationTest;
 import org.junit.jupiter.api.Test;
 
 /**

@@ -16,10 +16,10 @@
 package org.eclipse.mylyn.wikitext.textile.tests;
 
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
-import org.eclipse.mylyn.wikitext.toolkit.AbstractMarkupGenerationTest;
+import org.eclipse.mylyn.wikitext.util.tests.AbstractMarkupGenerationTest;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings({ "nls", "restriction" })
+@SuppressWarnings({ "nls" })
 public class TextileCommentBlockTest extends AbstractMarkupGenerationTest<TextileLanguage> {
 
 	@Test
