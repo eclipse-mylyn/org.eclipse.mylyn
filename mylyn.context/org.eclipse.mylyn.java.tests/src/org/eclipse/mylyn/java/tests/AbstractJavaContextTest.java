@@ -25,7 +25,6 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.mylyn.commons.sdk.util.ResourceTestUtil;
-import org.eclipse.mylyn.commons.sdk.util.TestProject;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
 import org.eclipse.mylyn.context.tests.support.ContextTestUtil;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
@@ -37,6 +36,7 @@ import org.eclipse.mylyn.internal.java.ui.JavaEditingMonitor;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
+import org.eclipse.mylyn.resources.tests.TestProject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 

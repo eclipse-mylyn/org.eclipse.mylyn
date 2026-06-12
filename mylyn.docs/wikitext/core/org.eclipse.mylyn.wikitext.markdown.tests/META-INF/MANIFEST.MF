@@ -20,3 +20,4 @@ Import-Package: org.eclipse.mylyn.wikitext.parser;version="[4.2,5)",
  org.junit.jupiter.params;version="[6.0.0,7.0.0)",
  org.junit.jupiter.params.provider;version="[6.0.0,7.0.0)"
 Export-Package: org.eclipse.mylyn.wikitext.markdown.internal;version="4.12.0";x-internal:=true;uses:="org.eclipse.mylyn.wikitext.parser,org.eclipse.mylyn.wikitext.parser.builder,org.eclipse.mylyn.wikitext.parser.markup"
+Require-Bundle: org.eclipse.mylyn.wikitext.tests;bundle-version="[4.12.0,5.0.0)"

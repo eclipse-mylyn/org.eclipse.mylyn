@@ -23,7 +23,6 @@ import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.commons.sdk.util.TestProject;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.tests.support.ContextTestUtil;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;

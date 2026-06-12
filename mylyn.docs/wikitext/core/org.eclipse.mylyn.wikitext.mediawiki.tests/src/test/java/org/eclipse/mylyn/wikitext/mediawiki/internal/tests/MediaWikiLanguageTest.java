@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
+
 import org.eclipse.mylyn.internal.commons.core.FileUtil;
 import org.eclipse.mylyn.wikitext.mediawiki.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.mediawiki.Template;
@@ -36,9 +37,9 @@ import org.eclipse.mylyn.wikitext.parser.builder.DocBookDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineParser;
-import org.eclipse.mylyn.wikitext.toolkit.AbstractMarkupGenerationTest;
 import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
+import org.eclipse.mylyn.wikitext.util.tests.AbstractMarkupGenerationTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
