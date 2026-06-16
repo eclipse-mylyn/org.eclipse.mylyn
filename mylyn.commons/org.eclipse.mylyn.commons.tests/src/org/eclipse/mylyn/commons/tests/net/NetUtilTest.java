@@ -24,12 +24,15 @@ import java.io.PrintStream;
 
 import org.eclipse.mylyn.commons.core.net.NetUtil;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.util.SetSystemProperty;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
 public class NetUtilTest {
+
+	private static final String MAX_HTTP_CONNECTIONS_PER_HOST_VALUE = "7";
 
 	static final int /*NetUtil.*/ MAX_HTTP_HOST_CONNECTIONS_DEFAULT = 100;
 
@@ -238,57 +241,27 @@ public class NetUtilTest {
 	}
 
 	@Test
+	@SetSystemProperty(key = PROPERTY_MAX_HTTP_HOST_CONNECTIONS, value = MAX_HTTP_CONNECTIONS_PER_HOST_VALUE)
 	public void testGetMaxHttpConnectionsPerHost() {
-		String oldValue = System.getProperty(PROPERTY_MAX_HTTP_HOST_CONNECTIONS);
-		int newValue = 7;
-		try {
-			System.setProperty(PROPERTY_MAX_HTTP_HOST_CONNECTIONS, Integer.toString(newValue));
-			assertEquals(newValue, NetUtil.getMaxHttpConnectionsPerHost());
-		} finally {
-			resetSystemProperty(PROPERTY_MAX_HTTP_HOST_CONNECTIONS, oldValue);
-		}
+		assertEquals(Integer.parseInt(MAX_HTTP_CONNECTIONS_PER_HOST_VALUE), NetUtil.getMaxHttpConnectionsPerHost());
 	}
 
 	@Test
+	@SetSystemProperty(key = PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS, value = "NaN")
 	public void testGetMaxHttpConnectionsPerHostInvalid() {
-		String oldValue = System.getProperty(PROPERTY_MAX_HTTP_HOST_CONNECTIONS);
-		try {
-			System.setProperty(PROPERTY_MAX_HTTP_HOST_CONNECTIONS, "NaN");
-			assertEquals(MAX_HTTP_HOST_CONNECTIONS_DEFAULT, NetUtil.getMaxHttpConnectionsPerHost());
-		} finally {
-			resetSystemProperty(PROPERTY_MAX_HTTP_HOST_CONNECTIONS, oldValue);
-		}
+		assertEquals(MAX_HTTP_HOST_CONNECTIONS_DEFAULT, NetUtil.getMaxHttpConnectionsPerHost());
 	}
 
 	@Test
+	@SetSystemProperty(key = PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS, value = MAX_HTTP_CONNECTIONS_PER_HOST_VALUE)
 	public void testGetMaxHttpConnections() {
-		String oldValue = System.getProperty(PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS);
-		int newValue = 7;
-		try {
-			System.setProperty(PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS, Integer.toString(newValue));
-			assertEquals(newValue, NetUtil.getMaxHttpConnections());
-		} finally {
-			resetSystemProperty(PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS, oldValue);
-		}
+		assertEquals(Integer.parseInt(MAX_HTTP_CONNECTIONS_PER_HOST_VALUE), NetUtil.getMaxHttpConnections());
 	}
 
 	@Test
+	@SetSystemProperty(key = PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS, value = "NaN")
 	public void testGetMaxHttpConnectionsInvalid() {
-		String oldValue = System.getProperty(PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS);
-		try {
-			System.setProperty(PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS, "NaN");
-			assertEquals(MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT, NetUtil.getMaxHttpConnections());
-		} finally {
-			resetSystemProperty(PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS, oldValue);
-		}
-	}
-
-	private static void resetSystemProperty(String key, String oldValue) {
-		if (oldValue == null) {
-			System.clearProperty(key);
-		} else {
-			System.setProperty(key, oldValue);
-		}
+		assertEquals(MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT, NetUtil.getMaxHttpConnections());
 	}
 
 }
