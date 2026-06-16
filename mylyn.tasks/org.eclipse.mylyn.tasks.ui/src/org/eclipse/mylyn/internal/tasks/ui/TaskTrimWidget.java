@@ -14,10 +14,10 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Set;
 
-import org.apache.commons.lang3.reflect.MethodUtils;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -259,9 +259,9 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	private boolean contributeObjectActionsOld(IMenuManager manager) {
 		try {
-			MethodUtils.invokeExactMethod(ObjectActionContributorManager.getManager(), "contributeObjectActions", //$NON-NLS-1$
-					new Object[] { null, manager, activeTaskSelectionProvider },
-					new Class[] { IWorkbenchPart.class, IMenuManager.class, ISelectionProvider.class });
+			Method method = ObjectActionContributorManager.getManager().getClass().getMethod(
+					"contributeObjectActions", IWorkbenchPart.class, IMenuManager.class, ISelectionProvider.class); //$NON-NLS-1$
+			method.invoke(ObjectActionContributorManager.getManager(), null, manager, activeTaskSelectionProvider);
 		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
 			return false;
 		}
@@ -270,9 +270,10 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	private boolean contributeObjectActionsNew(IMenuManager manager) {
 		try {
-			MethodUtils.invokeExactMethod(ObjectActionContributorManager.getManager(), "contributeObjectActions", //$NON-NLS-1$
-					new Object[] { null, manager, activeTaskSelectionProvider, Collections.EMPTY_SET },
-					new Class[] { IWorkbenchPart.class, IMenuManager.class, ISelectionProvider.class, Set.class });
+			Method method = ObjectActionContributorManager.getManager().getClass().getMethod(
+					"contributeObjectActions", IWorkbenchPart.class, IMenuManager.class, ISelectionProvider.class, Set.class); //$NON-NLS-1$
+			method.invoke(ObjectActionContributorManager.getManager(), null, manager, activeTaskSelectionProvider,
+					Collections.EMPTY_SET);
 		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
 			return false;
 		}

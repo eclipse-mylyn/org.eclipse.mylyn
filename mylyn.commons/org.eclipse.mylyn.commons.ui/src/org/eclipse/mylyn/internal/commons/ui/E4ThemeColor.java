@@ -13,8 +13,9 @@
 package org.eclipse.mylyn.internal.commons.ui;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.stream.IntStream;
 
-import org.apache.commons.lang3.reflect.MethodUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -78,12 +79,12 @@ public class E4ThemeColor {
 		// use reflection so that this can build against Eclipse 3.x
 		BundleContext context = FrameworkUtil.getBundle(E4ThemeColor.class).getBundleContext();
 		try {
-			Object reference = MethodUtils.invokeMethod(context, "getServiceReference", //$NON-NLS-1$
+			Object reference = invokeMethod(context, "getServiceReference", //$NON-NLS-1$
 					"org.eclipse.e4.ui.css.swt.theme.IThemeManager"); //$NON-NLS-1$
 			if (reference != null) {
-				Object iThemeManager = MethodUtils.invokeMethod(context, "getService", reference); //$NON-NLS-1$
+				Object iThemeManager = invokeMethod(context, "getService", reference); //$NON-NLS-1$
 				if (iThemeManager != null) {
-					Object themeEngine = MethodUtils.invokeMethod(iThemeManager, "getEngineForDisplay", display); //$NON-NLS-1$
+					Object themeEngine = invokeMethod(iThemeManager, "getEngineForDisplay", display); //$NON-NLS-1$
 					if (themeEngine != null) {
 						CSSStyleDeclaration shellStyle = getStyleDeclaration(themeEngine, display);
 						if (shellStyle != null) {
@@ -122,11 +123,24 @@ public class E4ThemeColor {
 
 	private static CSSStyleDeclaration retrieveStyleFromShell(Object themeEngine, Shell shell)
 			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-		Object shellStyle = MethodUtils.invokeMethod(themeEngine, "getStyle", shell); //$NON-NLS-1$
+		Object shellStyle = invokeMethod(themeEngine, "getStyle", shell); //$NON-NLS-1$
 		if (shellStyle instanceof CSSStyleDeclaration) {
 			return (CSSStyleDeclaration) shellStyle;
 		}
 		return null;
+	}
+
+	private static Object invokeMethod(Object object, String methodName, Object... args)
+			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+		for (Method method : object.getClass().getMethods()) {
+			if (method.getName().equals(methodName) && method.getParameterCount() == args.length) {
+				Class<?>[] p = method.getParameterTypes();
+				if (IntStream.range(0, args.length).allMatch(i -> args[i] == null || p[i].isAssignableFrom(args[i].getClass()))) {
+					return method.invoke(object, args);
+				}
+			}
+		}
+		throw new NoSuchMethodException(object.getClass().getName() + "." + methodName); //$NON-NLS-1$
 	}
 
 	private static void logOnce(Exception e) {
