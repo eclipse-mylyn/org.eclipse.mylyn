@@ -29,7 +29,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.text.html.HTML.Tag;
-import javax.xml.bind.JAXBException;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -54,6 +53,8 @@ import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpOperation;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
 import org.eclipse.osgi.util.NLS;
+
+import jakarta.xml.bind.JAXBException;
 
 /**
  * @author Steffen Pingel

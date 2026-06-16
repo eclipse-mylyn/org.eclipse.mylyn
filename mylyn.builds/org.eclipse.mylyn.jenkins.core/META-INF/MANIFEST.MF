@@ -10,20 +10,18 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.mylyn.builds.core;bundle-version="4.4.0",
  org.eclipse.mylyn.commons.core;bundle-version="4.4.0",
  org.eclipse.mylyn.commons.repositories.core;bundle-version="4.4.0",
- org.eclipse.mylyn.commons.repositories.http.core;bundle-version="4.4.0",
- org.eclipse.mylyn.jenkins.core;bundle-version="4.4.0"
+ org.eclipse.mylyn.commons.repositories.http.core;bundle-version="4.4.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Localization: plugin
-Export-Package: org.eclipse.mylyn.jenkins.core;x-friends:="org.eclipse.mylyn.jenkins.ui",
- org.eclipse.mylyn.internal.jenkins.core;x-friends:="org.eclipse.mylyn.jenkins.ui",
+Export-Package: org.eclipse.mylyn.internal.hudson.model,
+ org.eclipse.mylyn.internal.jenkins.core,
  org.eclipse.mylyn.internal.jenkins.core.client;x-friends:="org.eclipse.mylyn.jenkins.ui",
- org.eclipse.mylyn.internal.hudson.model;x-friends:="org.eclipse.mylyn.jenkins.ui"
+ org.eclipse.mylyn.jenkins.core;x-friends:="org.eclipse.mylyn.jenkins.ui"
 Bundle-Activator: org.eclipse.mylyn.internal.jenkins.core.JenkinsCorePlugin
 Import-Package: com.google.gson;version="2.9.1",
- com.sun.xml.bind;version="2.3.3",
- javax.xml.bind;version="2.3.3",
- javax.xml.bind.annotation;version="2.3.3",
+ jakarta.xml.bind;version="[4.0.0,5.0.0)",
+ jakarta.xml.bind.annotation;version="[4.0.0,5.0.0)",
  org.apache.http;version="[4.4.4,4.5.0)",
  org.apache.http.client;version="[4.5.2,4.7.0)",
  org.apache.http.client.entity;version="[4.5.2,4.7.0)",
@@ -33,4 +31,6 @@ Import-Package: com.google.gson;version="2.9.1",
  org.apache.http.message;version="[4.4.4,4.5.0)",
  org.apache.http.protocol;version="[4.4.4,4.5.0)",
  org.apache.http.util;version="[4.4.4,4.5.0)",
- org.glassfish.hk2.osgiresourcelocator;version="1.0.3"
+ org.glassfish.hk2.osgiresourcelocator;version="1.0.3",
+ org.glassfish.jaxb.core;version="[4.0.0,5.0.0)",
+ org.glassfish.jaxb.runtime;version="[4.0.0,5.0.0)"

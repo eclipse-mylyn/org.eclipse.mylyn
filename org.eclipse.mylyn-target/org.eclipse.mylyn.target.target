@@ -67,10 +67,10 @@
 			<unit id="com.sun.xml.bind" version="2.3.3.v20221203-1659"/>
 			<unit id="jakarta.xml.bind" version="2.3.3.v20221203-1659"/>
 			<unit id="javax.activation" version="1.2.2.v20221203-1659"/>
-			<unit id="javax.activation" version="2.0.0.v20221203-1659"/>			
+			<unit id="javax.activation" version="2.0.0.v20221203-1659"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/2026-06/"/>
+			<repository location="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/2026-09/"/>
 			<unit id="junit-jupiter-api" version="[6.0.0,7.0.0)"/>
 			<unit id="junit-jupiter-engine" version="[6.0.0,7.0.0)"/>
 			<unit id="junit-jupiter-migrationsupport" version="[6.0.0,7.0.0)"/>
@@ -82,6 +82,8 @@
 			<unit id="junit-platform-suite-engine" version="[6.0.0,7.0.0)"/>
 			<unit id="org.apiguardian.api" version="0.0.0"/>
 			<unit id="org.glassfish.hk2.osgi-resource-locator" version="0.0.0"/>
+			<unit id="com.sun.xml.bind.jaxb-core" version="0.0.0"/>
+			<unit id="org.glassfish.jaxb.runtime" version="0.0.0"/>
 			<unit id="org.apache.commons.commons-collections4" version="0.0.0"/>
 			<unit id="org.apache.commons.lang3" version="0.0.0"/>
 			<unit id="org.apache.commons.logging" version="0.0.0"/>
