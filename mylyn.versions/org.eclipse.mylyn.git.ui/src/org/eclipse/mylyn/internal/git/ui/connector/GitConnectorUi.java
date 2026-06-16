@@ -12,14 +12,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.git.ui.connector;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.apache.commons.lang3.reflect.MethodUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.core.GitProvider;
 import org.eclipse.egit.ui.internal.commit.CommitEditor;
 import org.eclipse.egit.ui.internal.commit.RepositoryCommit;
@@ -28,7 +23,6 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.git.core.GitRepository;
 import org.eclipse.mylyn.internal.git.ui.GetChangeSetDialog;
 import org.eclipse.mylyn.versions.core.ChangeSet;
@@ -80,28 +74,11 @@ public class GitConnectorUi extends ScmConnectorUi {
 	}
 
 	private RevCommit getCommit(Repository repository, String objectId) {
-		RevWalk revWalk = null;
-		try {
-			revWalk = new RevWalk(repository);
+		try (RevWalk revWalk = new RevWalk(repository)) {
 			return revWalk.parseCommit(ObjectId.fromString(objectId));
 		} catch (Exception e) {
 			return null;
-		} finally {
-			if (revWalk != null) {
-				release(revWalk);
-			}
 		}
 	}
 
-	private void release(RevWalk revWalk) {
-		try {
-			MethodUtils.invokeMethod(revWalk, "release", null); //$NON-NLS-1$
-		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-			try {
-				MethodUtils.invokeMethod(revWalk, "close", null); //$NON-NLS-1$
-			} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e1) {
-				StatusHandler.log(new Status(IStatus.ERROR, ID_PLUGIN, "Failed to release revWalk " + revWalk, e1)); //$NON-NLS-1$
-			}
-		}
-	}
 }

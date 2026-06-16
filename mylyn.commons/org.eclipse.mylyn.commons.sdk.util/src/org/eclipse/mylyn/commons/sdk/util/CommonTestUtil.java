@@ -40,7 +40,9 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.apache.commons.lang3.reflect.MethodUtils;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
@@ -307,20 +309,30 @@ public class CommonTestUtil {
 	}
 
 	private static File getFileFromClassLoaderBeforeLuna(String filename, ClassLoader classLoader) throws Exception {
-		Object classpathManager = MethodUtils.invokeExactMethod(classLoader, "getClasspathManager", null);
-		Object baseData = MethodUtils.invokeExactMethod(classpathManager, "getBaseData", null);
-		Bundle bundle = (Bundle) MethodUtils.invokeExactMethod(baseData, "getBundle", null);
+		Object classpathManager = invokeExactMethod(classLoader, "getClasspathManager", null, null);
+		Object baseData = invokeExactMethod(classpathManager, "getBaseData", null, null);
+		Bundle bundle = (Bundle) invokeExactMethod(baseData, "getBundle", null, null);
 		URL localURL = FileLocator.toFileURL(bundle.getEntry(filename));
 		return new File(localURL.getFile());
 	}
 
 	private static File getFileFromClassLoader4Luna(String filename, ClassLoader classLoader) throws Exception {
-		Object classpathManager = MethodUtils.invokeExactMethod(classLoader, "getClasspathManager", null);
-		Object generation = MethodUtils.invokeExactMethod(classpathManager, "getGeneration", null);
-		Object bundleFile = MethodUtils.invokeExactMethod(generation, "getBundleFile", null);
-		File file = (File) MethodUtils.invokeExactMethod(bundleFile, "getFile", new Object[] { filename, true },
-				new Class[] { String.class, boolean.class });
-		return file;
+		Object classpathManager = invokeExactMethod(classLoader, "getClasspathManager", null, null);
+		Object generation = invokeExactMethod(classpathManager, "getGeneration", null, null);
+		Object bundleFile = invokeExactMethod(generation, "getBundleFile", null, null);
+		return (File) invokeExactMethod(bundleFile, "getFile", new Object[] { filename, true },
+				new Class<?>[] { String.class, boolean.class });
+	}
+
+	private static Object invokeExactMethod(Object object, String methodName, Object[] args, Class<?>[] paramTypes)
+			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+		if (paramTypes == null) {
+			paramTypes = new Class<?>[0];
+		}
+		if (args == null) {
+			args = new Object[0];
+		}
+		return object.getClass().getMethod(methodName, paramTypes).invoke(object, args);
 	}
 
 	public static InputStream getResource(Object source, String filename) throws IOException {
