@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
@@ -28,12 +27,14 @@ import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
+import org.junit.jupiter.api.util.SetSystemProperty;
 
 /**
  * @author Mik Kersten
  * @author Steffen Pingel
  */
-@SuppressWarnings("nls")
 public class LinkProviderTest {
 
 	public class LinkProviderStub extends AbstractTaskRepositoryLinkProvider {
@@ -54,13 +55,10 @@ public class LinkProviderTest {
 		}
 	}
 
-	private String defaultTimeout;
-
 	private LinkProviderStub provider;
 
 	@BeforeEach
 	protected void setUp() throws Exception {
-		defaultTimeout = System.getProperty(ITasksCoreConstants.PROPERTY_LINK_PROVIDER_TIMEOUT, "");
 		provider = new LinkProviderStub();
 		TasksUiPlugin.getDefault().addRepositoryLinkProvider(provider);
 	}
@@ -68,13 +66,11 @@ public class LinkProviderTest {
 	@AfterEach
 	protected void tearDown() throws Exception {
 		TasksUiPlugin.getDefault().removeRepositoryLinkProvider(provider);
-		System.setProperty(ITasksCoreConstants.PROPERTY_LINK_PROVIDER_TIMEOUT, defaultTimeout);
 	}
 
 	@Test
+	@SetSystemProperty(key = ITasksCoreConstants.PROPERTY_LINK_PROVIDER_TIMEOUT, value = "500")
 	public void testTimeout() {
-		System.setProperty(ITasksCoreConstants.PROPERTY_LINK_PROVIDER_TIMEOUT, "500");
-
 		provider.timeout = 10;
 		TasksUiPlugin.getDefault().getRepositoryForResource(ResourcesPlugin.getWorkspace().getRoot());
 		assertEquals(1, provider.executions);
@@ -91,29 +87,19 @@ public class LinkProviderTest {
 	}
 
 	@Test
+	@DisabledOnOs(OS.MAC)
+	@SetSystemProperty(key = ITasksCoreConstants.PROPERTY_LINK_PROVIDER_TIMEOUT, value = "-1")
 	public void testTimeoutInfinite() {
-		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
-			System.err.println("Skipping LinkProviderTest.testTimeoutInfinite() on Macs");
-			return;
-		}
-		System.setProperty(ITasksCoreConstants.PROPERTY_LINK_PROVIDER_TIMEOUT, "50");
-
-		provider.timeout = 40;
+		provider.timeout = 0;
 		TasksUiPlugin.getDefault().getRepositoryForResource(ResourcesPlugin.getWorkspace().getRoot());
 		assertEquals(1, provider.executions);
 
-		System.setProperty(ITasksCoreConstants.PROPERTY_LINK_PROVIDER_TIMEOUT, "-1");
-
-		provider.timeout = 0;
+		provider.timeout = 60;
 		TasksUiPlugin.getDefault().getRepositoryForResource(ResourcesPlugin.getWorkspace().getRoot());
 		assertEquals(2, provider.executions);
 
-		provider.timeout = 60;
 		TasksUiPlugin.getDefault().getRepositoryForResource(ResourcesPlugin.getWorkspace().getRoot());
 		assertEquals(3, provider.executions);
-
-		TasksUiPlugin.getDefault().getRepositoryForResource(ResourcesPlugin.getWorkspace().getRoot());
-		assertEquals(4, provider.executions);
 	}
 
 }

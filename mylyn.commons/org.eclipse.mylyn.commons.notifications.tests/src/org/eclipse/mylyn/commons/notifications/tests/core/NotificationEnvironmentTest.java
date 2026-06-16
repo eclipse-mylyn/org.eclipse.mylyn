@@ -36,12 +36,14 @@ import org.eclipse.mylyn.internal.commons.notifications.feed.FeedEntry;
 import org.eclipse.osgi.service.resolver.VersionRange;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.util.SetSystemProperty;
 import org.osgi.framework.Version;
 
 /**
  * @author Steffen Pingel
  */
 @SuppressWarnings("nls")
+@SetSystemProperty(key = "EnvironmentTest", value = "2")
 public class NotificationEnvironmentTest {
 
 	private static class StubEntry extends FeedEntry implements IAdaptable, IFilterable {
@@ -84,7 +86,6 @@ public class NotificationEnvironmentTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 		installedFeatures = new HashSet<>();
-		System.setProperty("EnvironmentTest", "2");
 		environment = new NotificationEnvironment() {
 			@Override
 			public Set<String> getInstalledFeatures(IProgressMonitor monitor) {
