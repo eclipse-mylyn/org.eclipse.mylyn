@@ -30,6 +30,24 @@
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<configuration>
+					<filters>
+						<!-- The org.glassfish.jaxb.runtime.source bundle contains a META-INF/services entry
+						     for JAXBContextFactory. When Tycho activates it as an OSGi bundle during test
+						     execution, the JAXB ServiceLoader finds this entry and fails with
+						     ClassNotFoundException because the source bundle has no compiled classes.
+						     Exclude the source bundle so only the real runtime bundle is active. -->
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.glassfish.jaxb.runtime.source</id>
+							<removeAll/>
+						</filter>
+					</filters>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<configuration>
 					<skip>${test.component.skip}</skip>
