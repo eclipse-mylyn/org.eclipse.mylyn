@@ -85,8 +85,8 @@
 			<unit id="com.sun.xml.bind.jaxb-core" version="0.0.0"/>
 			<unit id="org.glassfish.jaxb.runtime" version="0.0.0"/>
 			<unit id="org.apache.commons.commons-collections4" version="0.0.0"/>
+			<unit id="org.apache.commons.commons-logging" version="0.0.0"/>
 			<unit id="org.apache.commons.lang3" version="0.0.0"/>
-			<unit id="org.apache.commons.logging" version="0.0.0"/>
 			<unit id="org.apache.commons.text" version="0.0.0"/>
 			<unit id="org.apache.httpcomponents.httpclient" version="0.0.0"/>
 			<unit id="org.apache.lucene.analysis-common" version="0.0.0"/>
