@@ -112,10 +112,10 @@
    <bundle id="javax.activation" version="2.0.0.v20221203-1659"/>
    <bundle id="org.apache.ant"/>
    <bundle id="org.apache.commons.commons-collections4"/>
+   <bundle id="org.apache.commons.commons-logging"/>
    <bundle id="org.apache.commons.commons-codec"/>
    <bundle id="org.apache.commons.httpclient"/>
    <bundle id="org.apache.commons.lang3"/>
-   <bundle id="org.apache.commons.logging"/>
    <bundle id="org.apache.commons.text"/>
    <bundle id="org.apache.httpcomponents.httpclient"/>
    <bundle id="org.apache.httpcomponents.httpcore"/>
