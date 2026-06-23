@@ -106,13 +106,11 @@
    <bundle id="com.google.gwt.servlet"/>
    <bundle id="com.google.gwtjsonrpc"/>
    <bundle id="com.google.gwtorm"/>
-   <bundle id="com.sun.xml.bind"/>
-   <bundle id="jakarta.xml.bind"/>
-   <bundle id="javax.activation" version="1.2.2.v20221203-1659"/>
-   <bundle id="javax.activation" version="2.0.0.v20221203-1659"/>
+   <bundle id="com.googlecode.javaewah.JavaEWAH"/>
+   <bundle id="com.sun.xml.bind.jaxb-osgi"/>
+   <bundle id="jakarta.activation-api"/>
    <bundle id="org.apache.ant"/>
    <bundle id="org.apache.commons.commons-collections4"/>
-   <bundle id="org.apache.commons.commons-logging"/>
    <bundle id="org.apache.commons.commons-codec"/>
    <bundle id="org.apache.commons.httpclient"/>
    <bundle id="org.apache.commons.lang3"/>
@@ -128,15 +126,14 @@
    <bundle id="org.apache.tika.core"/>
    <bundle id="org.apache.xerces"/>
    <bundle id="org.apache.xml.resolver"/>
-   <bundle id="org.apache.xmlrpc.client"/>
-   <bundle id="org.apache.xmlrpc.common"/>
-   <bundle id="org.apache.xmlrpc.server"/>
+   <bundle id="com.evolvedbinary.thirdparty.org.apache.xmlrpc.xmlrpc-client"/>
+   <bundle id="com.evolvedbinary.thirdparty.org.apache.xmlrpc.xmlrpc-client"/>
    <bundle id="org.apache.ws.commons.util"/>
    <bundle id="org.apiguardian.api"/>
-   <bundle id="org.glassfish.hk2.osgi-resource-locator"/>
    <bundle id="org.jsoup"/>
    <bundle id="org.eclipse.ecf.discovery"/>
    <bundle id="org.eclipse.ecf.provider.jmdns"/>
+   <bundle id="org.glassfish.hk2.osgi-resource-locator"/>
    <category-def name="org.eclipse.mylyn.docs.category" label="Mylyn Docs">
       <description>
          Mylyn Docs
