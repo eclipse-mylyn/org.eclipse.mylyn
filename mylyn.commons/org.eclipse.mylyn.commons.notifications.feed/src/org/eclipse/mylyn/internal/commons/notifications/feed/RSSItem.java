@@ -15,7 +15,7 @@ package org.eclipse.mylyn.internal.commons.notifications.feed;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElement;
 
 public class RSSItem {
 
