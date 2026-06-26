@@ -13,7 +13,7 @@
  *     See git history
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.toolkit;
+package org.eclipse.mylyn.wikitext.util.tests;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

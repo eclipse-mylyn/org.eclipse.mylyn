@@ -25,7 +25,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.mylyn.commons.sdk.util.ResourceTestUtil;
-import org.eclipse.mylyn.commons.sdk.util.TestProject;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.ui.ContextAwareEditorInput;
@@ -34,6 +33,7 @@ import org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.resources.tests.TestProject;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
