@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
@@ -28,19 +28,13 @@ import com.google.gson.Gson;
  */
 public class JenkinsRunBuildForm {
 
-	private class Parameters {
+	private static class Parameters {
 
 		@SuppressWarnings("unused")
 		private NameValue[] parameter;
 	}
 
 	private static class NameValue {
-
-		@SuppressWarnings("unused")
-		private Object name;
-
-		@SuppressWarnings("unused")
-		private Object value;
 
 	}
 
@@ -59,8 +53,6 @@ public class JenkinsRunBuildForm {
 			requestParameters.add(new BasicNameValuePair("value", value)); //$NON-NLS-1$
 		}
 		NameValue param = new NameValue();
-		param.name = key;
-		param.value = value;
 		params.add(param);
 	}
 
