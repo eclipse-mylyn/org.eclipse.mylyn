@@ -56,7 +56,7 @@ public class WebBrowserDialogTest {
 	}
 
 	@Test
-	@DisabledOnOs(value = OS.LINUX, disabledReason = "missing GTK 3.x/4.x bindings") // TODO Is this still the case
+	@DisabledOnOs(value = OS.LINUX, disabledReason = "Please ensure that WebKit with its GTK 3.x/4.x bindings is installed.")
 	public void testCreate() {
 		assumeFalse(CommonTestUtil.skipBrowserTests(), "Browser crashes");
 
@@ -70,7 +70,7 @@ public class WebBrowserDialogTest {
 	}
 
 	@Test
-	@DisabledOnOs(value = OS.LINUX, disabledReason = "missing GTK 3.x/4.x bindings") // TODO Is this still the case
+	@DisabledOnOs(value = OS.LINUX, disabledReason = "Please ensure that WebKit with its GTK 3.x/4.x bindings is installed.")
 	public void testSetShow() {
 		assumeFalse(CommonTestUtil.skipBrowserTests(), "Browser crashes");
 
@@ -84,7 +84,7 @@ public class WebBrowserDialogTest {
 	}
 
 	@Test
-	@DisabledOnOs(value = OS.LINUX, disabledReason = "missing GTK 3.x/4.x bindings") // TODO Is this still the case
+	@DisabledOnOs(value = OS.LINUX, disabledReason = "Please ensure that WebKit with its GTK 3.x/4.x bindings is installed.")
 	public void testSetShowAfterCreate() {
 		assumeFalse(CommonTestUtil.skipBrowserTests(), "Browser crashes");
 

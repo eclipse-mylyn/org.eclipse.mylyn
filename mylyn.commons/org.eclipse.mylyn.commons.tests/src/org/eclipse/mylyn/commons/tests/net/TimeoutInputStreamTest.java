@@ -29,8 +29,6 @@ import org.eclipse.mylyn.internal.commons.net.TimeoutInputStream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnOs;
-import org.junit.jupiter.api.condition.OS;
 
 /**
  * @author Steffen Pingel
@@ -78,9 +76,7 @@ public class TimeoutInputStreamTest {
 		server.close();
 	}
 
-	//FIXME: AF: investigate further flaky failure
 	@Test
-	@DisabledOnOs(value = OS.LINUX, disabledReason = "flaky failure") // TODO Is this still the case
 	public void testClose() throws Exception {
 		try (TimeoutInputStream in = new TimeoutInputStream(stream, 1, 500, 500)) {
 			assertEquals(0, in.read());
@@ -93,9 +89,7 @@ public class TimeoutInputStreamTest {
 		assertEquals(0, ((ThreadPoolExecutor) CommonsNetPlugin.getExecutorService()).getActiveCount()); // mvn build leaves a thread running, does not happen with Eclipse
 	}
 
-	//FIXME: AF: investigate further flaky failure
 	@Test
-	@DisabledOnOs(value = OS.LINUX, disabledReason = "flaky failure") // TODO Is this still the case
 	public void testCloseTimeout() throws Exception {
 		e = new SocketTimeoutException();
 		try (TimeoutInputStream in = new TimeoutInputStream(stream, 1, 500, 500)) {
