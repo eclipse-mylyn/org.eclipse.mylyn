@@ -27,8 +27,6 @@ import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnOs;
-import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.util.SetSystemProperty;
 
 /**
@@ -87,7 +85,6 @@ public class LinkProviderTest {
 	}
 
 	@Test
-	@DisabledOnOs(OS.MAC)
 	@SetSystemProperty(key = ITasksCoreConstants.PROPERTY_LINK_PROVIDER_TIMEOUT, value = "-1")
 	public void testTimeoutInfinite() {
 		provider.timeout = 0;
