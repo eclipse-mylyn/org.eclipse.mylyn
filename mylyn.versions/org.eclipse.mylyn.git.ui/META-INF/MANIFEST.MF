@@ -22,4 +22,3 @@ Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Localization: plugin
 Export-Package: org.eclipse.mylyn.internal.git.ui;x-internal:=true,
  org.eclipse.mylyn.internal.git.ui.connector;x-internal:=true
-Import-Package: org.apache.commons.lang3.reflect;version="3.13.0"
