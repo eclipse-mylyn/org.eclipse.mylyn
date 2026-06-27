@@ -43,7 +43,6 @@ public class MonitorUserActivityJobTest {
 	}
 
 	@Test
-	@DisabledOnOs(OS.MAC) // TODO Is this still the case
 	public void testInactivityTimeout() throws Exception {
 		callback.lastEventTime = System.currentTimeMillis() - 201;
 		job.setInactivityTimeout(200);
@@ -64,7 +63,6 @@ public class MonitorUserActivityJobTest {
 	}
 
 	@Test
-	@DisabledOnOs(OS.MAC) // TODO Is this still the case
 	public void testResumeFromSleepNoTimeout() throws Exception {
 		job.setInactivityTimeout(0);
 		job.run();
@@ -83,7 +81,6 @@ public class MonitorUserActivityJobTest {
 	}
 
 	@Test
-	@DisabledOnOs(OS.MAC) // TODO Is this still the case
 	public void testResumeFromSleepTimeoutNoEvent() throws Exception {
 		callback.lastEventTime = System.currentTimeMillis();
 		job.setInactivityTimeout(20);
@@ -105,7 +102,7 @@ public class MonitorUserActivityJobTest {
 	}
 
 	@Test
-	@DisabledOnOs(OS.MAC) // TODO Is this still the case
+	@DisabledOnOs(OS.MAC) // FIXME
 	public void testResumeFromSleepTimeoutEvent() throws Exception {
 		callback.lastEventTime = System.currentTimeMillis();
 		job.setInactivityTimeout(20);
@@ -139,7 +136,7 @@ public class MonitorUserActivityJobTest {
 	}
 
 	@Test
-	@DisabledOnOs(OS.MAC) // TODO Is this still the case
+	@DisabledOnOs(OS.MAC) // FIXME
 	public void testResumeFromSleepTimeoutEventDiscarded() throws Exception {
 		// record one tick
 		callback.lastEventTime = System.currentTimeMillis();
