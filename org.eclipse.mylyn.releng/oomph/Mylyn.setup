@@ -157,6 +157,8 @@
           name="org.eclipse.oomph.setup.maven.feature.group"/>
       <requirement
           name="org.eclipse.oomph.launches.feature.group"/>
+      <repository
+          url="https://download.eclipse.org/oomph/updates/latest"/>
     </setupTask>
     <setupTask
         xsi:type="git:GitCloneTask"
