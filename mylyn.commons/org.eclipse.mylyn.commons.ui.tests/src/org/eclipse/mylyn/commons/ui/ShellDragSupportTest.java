@@ -14,6 +14,7 @@ package org.eclipse.mylyn.commons.ui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -31,6 +32,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+@SuppressWarnings("nls")
 public class ShellDragSupportTest {
 	private final Composite composite = mock(Composite.class, Mockito.RETURNS_DEEP_STUBS);
 
@@ -81,6 +83,9 @@ public class ShellDragSupportTest {
 	public void handleMouseMove() {
 		handleEvent(SWT.MouseMove, 110, 160);
 		assertEquals(new Point(100, 150), shell.getLocation());
+
+		int zoom = shell.getZoom();
+		assumeTrue(zoom == 100, "This test is skipped if the monitor zoom is not 100: zoom=" + zoom);
 
 		handleEvent(SWT.MouseDown, 105, 160);
 		handleEvent(SWT.MouseMove, 109, 167);
