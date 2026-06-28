@@ -267,7 +267,7 @@
             </detail>
             <detail
                 key="extraUnits">
-              <value>org.eclipse.license.feature.group</value>
+              <value>org.eclipse.license.feature.group com.sun.xml.bind.jaxb-osgi</value>
             </detail>
             <detail
                 key="singleLocation">
@@ -275,6 +275,10 @@
             </detail>
             <detail
                 key="sortLocations">
+              <value>true</value>
+            </detail>
+            <detail
+                key="minimizeLocationUnits">
               <value>true</value>
             </detail>
             <detail
