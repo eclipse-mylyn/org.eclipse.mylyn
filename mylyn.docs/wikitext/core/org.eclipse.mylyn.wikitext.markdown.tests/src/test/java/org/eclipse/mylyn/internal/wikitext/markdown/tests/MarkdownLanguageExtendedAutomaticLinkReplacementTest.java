@@ -16,14 +16,14 @@
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
 import org.eclipse.mylyn.wikitext.markdown.MarkdownLanguage;
-import org.eclipse.mylyn.wikitext.toolkit.AbstractMarkupGenerationTest;
+import org.eclipse.mylyn.wikitext.util.tests.AbstractMarkupGenerationTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.provider.ValueSource;
 
 @ParameterizedClass
 @ValueSource(strings = { "http://", "https://", "" })
-@SuppressWarnings({ "nls", "restriction" })
+@SuppressWarnings({ "nls" })
 public class MarkdownLanguageExtendedAutomaticLinkReplacementTest
 extends AbstractMarkupGenerationTest<MarkdownLanguage> {
 
