@@ -41,8 +41,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
