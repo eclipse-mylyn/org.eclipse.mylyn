@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.ide.ui;
@@ -62,7 +63,7 @@ public abstract class AbstractFocusMarkerViewAction extends AbstractFocusViewAct
 			try {
 				IViewPart viewPart = super.getPartForAction();
 				if (viewPart != null) {
-					// NOTE: following code is Eclipse 3.4 specific
+					// NOTE: following code is Eclipse 4.x+ specific
 					Class<?> clazz = ExtendedMarkersView.class;
 					Field field = clazz.getDeclaredField("viewer"); //$NON-NLS-1$
 					field.setAccessible(true);

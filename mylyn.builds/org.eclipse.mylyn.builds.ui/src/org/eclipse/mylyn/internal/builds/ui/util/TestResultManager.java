@@ -9,6 +9,7 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     Itema AS - Corrected lazy initialisation of fields
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.builds.ui.util;
@@ -31,6 +32,7 @@ import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.core.search.SearchPattern;
 import org.eclipse.jdt.core.search.TypeNameMatch;
 import org.eclipse.jdt.core.search.TypeNameMatchRequestor;
+import org.eclipse.jdt.internal.junit.JUnitCorePlugin;
 import org.eclipse.jdt.internal.junit.model.JUnitModel;
 import org.eclipse.jdt.internal.junit.model.TestRunHandler;
 import org.eclipse.jdt.internal.junit.model.TestRunSession;
@@ -88,23 +90,7 @@ public class TestResultManager {
 
 		static JUnitModel getJUnitModel() {
 			if (junitModel == null) {
-				try {
-					// Eclipse 3.6 or later
-					Class<?> clazz;
-					try {
-						clazz = Class.forName("org.eclipse.jdt.internal.junit.JUnitCorePlugin"); //$NON-NLS-1$
-					} catch (ClassNotFoundException e) {
-						// Eclipse 3.5 and earlier
-						clazz = Class.forName("org.eclipse.jdt.internal.junit.ui.JUnitPlugin"); //$NON-NLS-1$
-					}
-
-					Method method = clazz.getDeclaredMethod("getModel"); //$NON-NLS-1$
-					junitModel = (JUnitModel) method.invoke(null);
-				} catch (Exception e) {
-					NoClassDefFoundError error = new NoClassDefFoundError("Unable to locate container for JUnitModel"); //$NON-NLS-1$
-					error.initCause(e);
-					throw error;
-				}
+				junitModel = JUnitCorePlugin.getModel();
 			}
 			return junitModel;
 		}
@@ -127,9 +113,9 @@ public class TestResultManager {
 				});
 				if (result.get() == null) {
 					StatusManager.getManager()
-							.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-									"Failed to locate test in workspace."), //$NON-NLS-1$
-									StatusManager.SHOW | StatusManager.BLOCK);
+					.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+							"Failed to locate test in workspace."), //$NON-NLS-1$
+							StatusManager.SHOW | StatusManager.BLOCK);
 					return;
 				}
 				JavaUI.openInEditor(result.get(), true, true);
@@ -137,9 +123,9 @@ public class TestResultManager {
 				return;
 			} catch (Exception e) {
 				StatusManager.getManager()
-						.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-								"Failed to locate test in workspace.", e), //$NON-NLS-1$
-								StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
+				.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+						"Failed to locate test in workspace.", e), //$NON-NLS-1$
+						StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
 				return;
 			}
 		}
@@ -149,7 +135,7 @@ public class TestResultManager {
 			try {
 				WorkbenchUtil.busyCursorWhile(monitor -> {
 					JUnitResultGenerator generator = new JUnitResultGenerator(build.getTestResult());
-					generator.setIncludeIgnored(jUnitSupportIgnoredTests());
+					generator.setIncludeIgnored(true);
 					TestRunHandler handler = new TestRunHandler(testRunSession);
 					try {
 						generator.write(handler);
@@ -162,9 +148,9 @@ public class TestResultManager {
 				return;
 			} catch (CoreException e) {
 				StatusManager.getManager()
-						.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-								"Unexpected error while processing test results", e), //$NON-NLS-1$
-								StatusManager.SHOW | StatusManager.LOG);
+				.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+						"Unexpected error while processing test results", e), //$NON-NLS-1$
+						StatusManager.SHOW | StatusManager.LOG);
 				return;
 			}
 
@@ -193,11 +179,6 @@ public class TestResultManager {
 		return Platform.getBundle("org.eclipse.jdt.junit") != null; //$NON-NLS-1$
 	}
 
-	static boolean jUnitSupportIgnoredTests() {
-		// supported on Eclipse 3.6 and later
-		return Platform.getBundle("org.eclipse.jdt.junit.core") != null; //$NON-NLS-1$
-	}
-
 	public static void openInEditor(ITestCase testCase) {
 		if (!isJUnitAvailable()) {
 			return;
@@ -219,16 +200,16 @@ public class TestResultManager {
 
 		if (!isJUnitAvailable()) {
 			StatusManager.getManager()
-					.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "JUnit is not installed."), //$NON-NLS-1$
-							StatusManager.SHOW | StatusManager.BLOCK);
+			.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "JUnit is not installed."), //$NON-NLS-1$
+					StatusManager.SHOW | StatusManager.BLOCK);
 			return;
 		}
 
 		if (build.getTestResult() == null) {
 			StatusManager.getManager()
-					.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-							"The build did not produce test results."), //$NON-NLS-1$
-							StatusManager.SHOW | StatusManager.BLOCK);
+			.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+					"The build did not produce test results."), //$NON-NLS-1$
+					StatusManager.SHOW | StatusManager.BLOCK);
 			return;
 		}
 

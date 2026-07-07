@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.File;
 import java.util.Date;
@@ -309,10 +310,8 @@ public class TaskDataStoreTest {
 
 	@Test
 	public void testCorruptedData() throws Exception {
-		if (!hasXerces()) {
-			System.err.println("Skipping testCorruptedData() due to Xerces missing");
-			return;
-		}
+		assumeTrue(hasXerces(), "Xerces is not available");
+
 		state = storage.getTaskDataState(CommonTestUtil.getFile(this, "testdata/taskdata-bug406647.zip"));
 		assertFalse(state.getRepositoryData().getRoot().toString().contains("<ke"));
 		assertFalse(state.getRepositoryData().getRoot().toString().contains("<va"));
@@ -335,10 +334,8 @@ public class TaskDataStoreTest {
 
 	@Test
 	public void testRandomDataXml_1_1() throws Exception {
-		if (!hasXerces()) {
-			System.err.println("Skipping testRandomDataXml_1_1 due to Xerces missing");
-			return;
-		}
+		assumeTrue(hasXerces(), "Xerces is not available");
+
 		randomData(0, Integer.MAX_VALUE);
 	}
 

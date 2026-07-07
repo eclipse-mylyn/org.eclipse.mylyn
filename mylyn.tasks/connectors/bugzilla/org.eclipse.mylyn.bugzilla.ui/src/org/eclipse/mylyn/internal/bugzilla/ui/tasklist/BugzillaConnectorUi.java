@@ -1,16 +1,17 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2013 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Eugene Kuleshov - improvements
  *     Frank Becker - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
@@ -26,7 +27,6 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
@@ -67,10 +67,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
 	private static final Pattern PATTERN_ATTACHMENT = Pattern.compile(REGEXP_ATTACHMENT, Pattern.CASE_INSENSITIVE);
 
-	private final boolean doAttachmentTableEditorHyperlink;
-
 	public BugzillaConnectorUi() {
-		doAttachmentTableEditorHyperlink = PlatformUiUtil.supportsMultipleHyperlinkPresenter();
 	}
 
 	@Override
@@ -219,9 +216,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 					hyperlinksFound = new ArrayList<>();
 				}
 				hyperlinksFound.add(link0);
-				if (doAttachmentTableEditorHyperlink) {
-					hyperlinksFound.add(new TaskAttachmentTableEditorHyperlink(region, repository, ma.group(1)));
-				}
+				hyperlinksFound.add(new TaskAttachmentTableEditorHyperlink(region, repository, ma.group(1)));
 			}
 		}
 

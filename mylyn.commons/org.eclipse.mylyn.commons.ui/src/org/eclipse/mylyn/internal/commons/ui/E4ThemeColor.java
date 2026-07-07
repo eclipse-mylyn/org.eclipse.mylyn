@@ -8,28 +8,38 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.ui;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.stream.IntStream;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
+import org.eclipse.e4.ui.css.swt.theme.IThemeManager;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
+import org.osgi.util.tracker.ServiceTracker;
 import org.w3c.dom.css.CSSStyleDeclaration;
 import org.w3c.dom.css.CSSValue;
 
 public class E4ThemeColor {
 
 	private static boolean loggedError = false;
+
+	private static final BundleContext BUNDLE_CONTEXT = FrameworkUtil.getBundle(E4ThemeColor.class).getBundleContext();
+
+	@SuppressWarnings("restriction")
+	private static final ServiceTracker<IThemeManager, IThemeManager> THEME_MANAGER_TRACKER;
+
+	static {
+		THEME_MANAGER_TRACKER = new ServiceTracker<>(BUNDLE_CONTEXT, IThemeManager.class, null);
+		THEME_MANAGER_TRACKER.open();
+	}
 
 	public static RGB getRGBFromCssString(String cssValue) {
 		try {
@@ -75,37 +85,27 @@ public class E4ThemeColor {
 		}
 	}
 
+	@SuppressWarnings({ "restriction" })
 	public static String getCssValueFromTheme(Display display, String value) {
-		// use reflection so that this can build against Eclipse 3.x
-		BundleContext context = FrameworkUtil.getBundle(E4ThemeColor.class).getBundleContext();
-		try {
-			Object reference = invokeMethod(context, "getServiceReference", //$NON-NLS-1$
-					"org.eclipse.e4.ui.css.swt.theme.IThemeManager"); //$NON-NLS-1$
-			if (reference != null) {
-				Object iThemeManager = invokeMethod(context, "getService", reference); //$NON-NLS-1$
-				if (iThemeManager != null) {
-					Object themeEngine = invokeMethod(iThemeManager, "getEngineForDisplay", display); //$NON-NLS-1$
-					if (themeEngine != null) {
-						CSSStyleDeclaration shellStyle = getStyleDeclaration(themeEngine, display);
-						if (shellStyle != null) {
-							CSSValue cssValue = shellStyle.getPropertyCSSValue(value);
-							if (cssValue != null) {
-								return cssValue.getCssText();
-							}
-						}
-					}
-				}
-			}
-		} catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-			logOnce(e);
+		IThemeManager themeManager = THEME_MANAGER_TRACKER.getService();
+		if (themeManager == null) {
 			return null;
 		}
-
+		IThemeEngine themeEngine = themeManager.getEngineForDisplay(display);
+		if (themeEngine != null) {
+			CSSStyleDeclaration shellStyle = getStyleDeclaration(themeEngine, display);
+			if (shellStyle != null) {
+				CSSValue cssValue = shellStyle.getPropertyCSSValue(value);
+				if (cssValue != null) {
+					return cssValue.getCssText();
+				}
+			}
+	}
 		return null;
 	}
 
-	private static CSSStyleDeclaration getStyleDeclaration(Object themeEngine, Display display)
-			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+	private static CSSStyleDeclaration getStyleDeclaration(@SuppressWarnings("restriction") IThemeEngine themeEngine,
+			Display display) {
 		Shell shell = display.getActiveShell();
 		CSSStyleDeclaration shellStyle = null;
 		if (shell != null) {
@@ -121,26 +121,11 @@ public class E4ThemeColor {
 		return shellStyle;
 	}
 
-	private static CSSStyleDeclaration retrieveStyleFromShell(Object themeEngine, Shell shell)
-			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-		Object shellStyle = invokeMethod(themeEngine, "getStyle", shell); //$NON-NLS-1$
-		if (shellStyle instanceof CSSStyleDeclaration) {
-			return (CSSStyleDeclaration) shellStyle;
-		}
-		return null;
-	}
-
-	private static Object invokeMethod(Object object, String methodName, Object... args)
-			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-		for (Method method : object.getClass().getMethods()) {
-			if (method.getName().equals(methodName) && method.getParameterCount() == args.length) {
-				Class<?>[] p = method.getParameterTypes();
-				if (IntStream.range(0, args.length).allMatch(i -> args[i] == null || p[i].isAssignableFrom(args[i].getClass()))) {
-					return method.invoke(object, args);
-				}
-			}
-		}
-		throw new NoSuchMethodException(object.getClass().getName() + "." + methodName); //$NON-NLS-1$
+	private static CSSStyleDeclaration retrieveStyleFromShell(@SuppressWarnings("restriction") IThemeEngine themeEngine,
+			Shell shell) {
+		@SuppressWarnings("restriction")
+		CSSStyleDeclaration shellStyle = themeEngine.getStyle(shell);
+		return (CSSStyleDeclaration) shellStyle;
 	}
 
 	private static void logOnce(Exception e) {

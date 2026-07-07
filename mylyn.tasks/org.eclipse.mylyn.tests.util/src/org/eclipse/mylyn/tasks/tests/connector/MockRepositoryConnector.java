@@ -41,13 +41,6 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	public static final String CONNECTOR_KIND = "mock";
 
-	/**
-	 * @deprecated Use {@link #CONNECTOR_KIND} instead
-	 */
-	// TODO 3.5 remove
-	@Deprecated
-	public static final String REPOSITORY_KIND = CONNECTOR_KIND;
-
 	public static final String REPOSITORY_URL = "http://mockrepository.test";
 
 	public static MockRepositoryConnector getDefault() {

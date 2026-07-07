@@ -10,6 +10,7 @@
  *     Tasktop Technologies - initial API and implementation
  *     David Green - fix for bug 247182
  *     Frank Becker - fixes for bug 259877
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.ui;
@@ -18,11 +19,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.Version;
 
 /**
  * @author Steffen Pingel
@@ -31,20 +29,6 @@ import org.osgi.framework.Version;
 public class PlatformUiUtil {
 
 	private static Boolean internalBrowserAvailable;
-
-	private static class Eclipse36Checker {
-		public static final boolean result;
-
-		static {
-			boolean methodAvailable = false;
-			try {
-				StyledText.class.getMethod("setTabStops", int[].class); //$NON-NLS-1$
-				methodAvailable = true;
-			} catch (NoSuchMethodException e) {
-			}
-			result = methodAvailable;
-		}
-	}
 
 	/**
 	 * bug 247182: file import dialog doesn't work on Mac OS X if the file extension has more than one dot.
@@ -64,8 +48,7 @@ public class PlatformUiUtil {
 	}
 
 	public static int getToolTipXShift() {
-		if ("gtk".equals(SWT.getPlatform()) || "carbon".equals(SWT.getPlatform()) //$NON-NLS-1$//$NON-NLS-2$
-				|| "cocoa".equals(SWT.getPlatform())) { //$NON-NLS-1$
+		if ("gtk".equals(SWT.getPlatform()) || "cocoa".equals(SWT.getPlatform())) { //$NON-NLS-1$
 			return -26;
 		} else {
 			return -23;
@@ -73,9 +56,7 @@ public class PlatformUiUtil {
 	}
 
 	public static int getTreeImageOffset() {
-		if ("carbon".equals(SWT.getPlatform())) { //$NON-NLS-1$
-			return 16;
-		} else if ("cocoa".equals(SWT.getPlatform())) { //$NON-NLS-1$
+		if ("cocoa".equals(SWT.getPlatform())) { //$NON-NLS-1$
 			return 13;
 		} else {
 			return 20;
@@ -83,9 +64,7 @@ public class PlatformUiUtil {
 	}
 
 	public static int getIncomingImageOffset() {
-		if ("carbon".equals(SWT.getPlatform())) { //$NON-NLS-1$
-			return 5;
-		} else if ("cocoa".equals(SWT.getPlatform())) { //$NON-NLS-1$
+		if ("cocoa".equals(SWT.getPlatform())) { //$NON-NLS-1$
 			return 2;
 		} else {
 			return 6;
@@ -103,23 +82,16 @@ public class PlatformUiUtil {
 	}
 
 	private static boolean isMac() {
-		return "carbon".equals(SWT.getPlatform()) || "cocoa".equals(SWT.getPlatform()); //$NON-NLS-1$ //$NON-NLS-2$
+		return "cocoa".equals(SWT.getPlatform()); //$NON-NLS-1$
 	}
 
-	/**
-	 * @deprecated no longer required as platform bug 272046 has been fixed
-	 */
-	@Deprecated
+	@Deprecated(forRemoval = true, since = "bug 272046")
 	public static boolean isPaintItemClippingRequired() {
-		return "gtk".equals(SWT.getPlatform()); //$NON-NLS-1$
+		return true;
 	}
 
-	public static boolean spinnerHasNativeBorder() {
-		return isMac() && !isEclipse36orLater();
-	}
-
-	private static boolean isEclipse36orLater() {
-		return Eclipse36Checker.result;
+	public static boolean spinnerHasNativeBorder() { // TODO see if this still the case
+		return isMac();
 	}
 
 	public static boolean hasNarrowToolBar() {
@@ -143,33 +115,12 @@ public class PlatformUiUtil {
 	/**
 	 * Returns the width of the view menu drop-down button.
 	 */
-	public static int getViewMenuWidth() {
+	public static int getViewMenuWidth() { // FIXME Should be dynamic
 		return 32;
 	}
 
-	/**
-	 * Because of bug# 322293 (NPE when select Hyperlink from MultipleHyperlinkPresenter List) for MacOS we enable this only if running on
-	 * Eclipse >= "3.7.0.v201101192000"
-	 */
+	@Deprecated(forRemoval = true, since = "3.7.0.v201101192000")
 	public static boolean supportsMultipleHyperlinkPresenter() {
-		if (isMac()) {
-			Bundle bundle = Platform.getBundle("org.eclipse.platform"); //$NON-NLS-1$
-			if (bundle != null) {
-				String versionString = bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
-				Version version = new Version(versionString);
-				return version.compareTo(new Version("3.7.0.v201101192000")) >= 0; //$NON-NLS-1$
-			} else {
-				bundle = Platform.getBundle("org.eclipse.swt"); //$NON-NLS-1$
-				if (bundle != null) {
-					String versionString = bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
-					Version version = new Version(versionString);
-					return version.compareTo(new Version("3.7.0.v3721")) >= 0; //$NON-NLS-1$
-				} else {
-					//TODO e3.7 change this to true when eclipse 3.6 reach end of live!
-					return false;
-				}
-			}
-		}
 		return true;
 	}
 
@@ -207,24 +158,8 @@ public class PlatformUiUtil {
 		return internalBrowserAvailable;
 	}
 
-	/**
-	 * @since 3.18
-	 */
+	@Deprecated(forRemoval = true, since = "3.18")
 	public static boolean isNeonOrLater() {
-		Bundle bundle = Platform.getBundle("org.eclipse.platform"); //$NON-NLS-1$
-		if (bundle != null) {
-			String versionString = bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
-			Version version = new Version(versionString);
-			return version.compareTo(new Version("4.6.0.v20151020-0800")) >= 0; //$NON-NLS-1$
-		}
-		bundle = Platform.getBundle("org.eclipse.swt"); //$NON-NLS-1$
-		if (bundle != null) {
-			String versionString = bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
-			Version version = new Version(versionString);
-			return version.compareTo(new Version("3.105.0.v20151020-0634")) >= 0; //$NON-NLS-1$
-		}
-		return false;
-
+		return true;
 	}
-
 }

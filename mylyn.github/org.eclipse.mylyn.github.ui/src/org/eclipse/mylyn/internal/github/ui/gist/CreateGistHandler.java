@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Chris Aniszczyk <caniszczyk@gmail.com> - initial contribution
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.github.ui.gist;
 
@@ -70,19 +71,6 @@ public class CreateGistHandler extends AbstractHandler {
 	}
 
 	/**
-	 * TODO replace this with HandlerUtil.getActiveEditorInput(ExecutionEvent) as soon as we don't support Eclipse 3.6 anymore copied from
-	 * HandlerUtil in 3.7 to be able to run this on 3.6 Return the input of the active editor.
-	 *
-	 * @param event
-	 *            The execution event that contains the application context
-	 * @return the input of the active editor, or <code>null</code>.
-	 */
-	private static IEditorInput getActiveEditorInput(ExecutionEvent event) {
-		Object var = HandlerUtil.getVariable(event, ISources.ACTIVE_EDITOR_INPUT_NAME);
-		return var instanceof IEditorInput i ? i : null;
-	}
-
-	/**
 	 * Get active part
 	 *
 	 * @param event
@@ -96,10 +84,7 @@ public class CreateGistHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		// TODO replace this with
-		// HandlerUtil.getActiveEditorInput(ExecutionEvent) as soon
-		// as we don't support Eclipse 3.6 anymore
-		IEditorInput input = getActiveEditorInput(event);
+		IEditorInput input = HandlerUtil.getActiveEditorInput(event);
 		IWorkbenchPart part = getActivePart(event);
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection == null || selection.isEmpty()) {

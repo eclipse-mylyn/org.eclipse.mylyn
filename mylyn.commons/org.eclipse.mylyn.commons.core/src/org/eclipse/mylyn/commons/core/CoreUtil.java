@@ -38,13 +38,7 @@ public class CoreUtil {
 
 	static {
 		String application = System.getProperty("eclipse.application", ""); //$NON-NLS-1$ //$NON-NLS-2$
-		if (application.length() > 0) {
-			TEST_MODE = application.endsWith("testapplication") || application.endsWith("uitest"); //$NON-NLS-1$ //$NON-NLS-2$
-		} else {
-			// eclipse 3.3 does not the eclipse.application property
-			String commands = System.getProperty("eclipse.commands", ""); //$NON-NLS-1$ //$NON-NLS-2$
-			TEST_MODE = commands.contains("testapplication\n"); //$NON-NLS-1$
-		}
+		TEST_MODE = application.endsWith("testapplication") || application.endsWith("uitest"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private static final String FRAMEWORK_VERSION = "4.0.0"; //$NON-NLS-1$

@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -64,7 +65,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
-import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.internal.forms.widgets.FormUtil;
 
 /**
@@ -373,14 +373,9 @@ public class EditorUtil {
 	/**
 	 * @deprecated use {@link RowLayout#center} instead
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	public static void center(RowLayout rowLayout) {
-		try {
-			Field field = RowLayout.class.getDeclaredField("center"); //$NON-NLS-1$
-			field.set(rowLayout, Boolean.TRUE);
-		} catch (Throwable e) {
-			// ignore
-		}
+		rowLayout.center = true;
 	}
 
 	public static Composite createBorder(Composite composite, final FormToolkit toolkit, boolean paintBorder) {
@@ -397,10 +392,10 @@ public class EditorUtil {
 			roundedBorder.setLayout(GridLayoutFactory.fillDefaults().margins(0, 6).create());
 		}
 		GridDataFactory.fillDefaults()
-				.align(SWT.FILL, SWT.BEGINNING)
-				.hint(EditorUtil.MAXIMUM_WIDTH, SWT.DEFAULT)
-				.grab(true, false)
-				.applyTo(roundedBorder);
+		.align(SWT.FILL, SWT.BEGINNING)
+		.hint(EditorUtil.MAXIMUM_WIDTH, SWT.DEFAULT)
+		.grab(true, false)
+		.applyTo(roundedBorder);
 		return roundedBorder;
 	}
 
@@ -479,11 +474,6 @@ public class EditorUtil {
 //			if (editorManager != null && editorManager.getLayoutPart() != null) {
 //				widthHint = editorManager.getLayoutPart().getControl().getBounds().width - 90;
 //			}
-			// XXX e4.0 this does not work, the composite is always null
-			Composite composite = ((WorkbenchPage) page.getEditor().getEditorSite().getPage()).getClientComposite();
-			if (composite != null) {
-				widthHint = composite.getBounds().width - 90;
-			}
 		}
 		if (widthHint <= 0) {
 			widthHint = EditorUtil.MAXIMUM_WIDTH;
@@ -538,9 +528,9 @@ public class EditorUtil {
 						EditorUtil.scroll(form, 0, form.getVerticalBar().getIncrement());
 					}
 				} else // scroll form up
-				if (verticalBar == null || verticalBar.getSelection() == verticalBar.getMinimum()) {
-					EditorUtil.scroll(form, 0, -form.getVerticalBar().getIncrement());
-				}
+					if (verticalBar == null || verticalBar.getSelection() == verticalBar.getMinimum()) {
+						EditorUtil.scroll(form, 0, -form.getVerticalBar().getIncrement());
+					}
 			}
 		});
 	}
