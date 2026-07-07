@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.repositories.ui;
@@ -21,7 +22,6 @@ import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.repositories.core.auth.ICredentialsStore;
 import org.eclipse.mylyn.commons.repositories.core.auth.UnavailableException;
-import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.commons.repositories.core.LocationService;
 import org.eclipse.mylyn.internal.commons.repositories.core.RepositoriesCoreInternal;
 import org.eclipse.osgi.util.NLS;
@@ -48,19 +48,11 @@ public class RepositoryUiUtil {
 
 	public static <T> T adapt(Object sourceObject, Class<T> adapter) {
 		try {
-			if (PlatformUiUtil.isNeonOrLater()) {
-				Bundle bundle = Platform.getBundle("org.eclipse.platform"); //$NON-NLS-1$
-				Class<?> clazz = bundle.loadClass("org.eclipse.core.runtime.Adapters"); //$NON-NLS-1$
-				Method adaptMethod = clazz.getMethod("adapt", Object.class, Class.class); //$NON-NLS-1$
-				Object result = adaptMethod.invoke(clazz, sourceObject, adapter);
-				return adapter.cast(result);
-			} else {
-				Bundle bundle = Platform.getBundle("org.eclipse.ui.workbench"); //$NON-NLS-1$
-				Class<?> clazz = bundle.loadClass("org.eclipse.ui.internal.util.Util"); //$NON-NLS-1$
-				Method adaptMethod = clazz.getMethod("getAdapter", Object.class, Class.class); //$NON-NLS-1$
-				Object result = adaptMethod.invoke(clazz, sourceObject, adapter);
-				return adapter.cast(result);
-			}
+			Bundle bundle = Platform.getBundle("org.eclipse.platform"); //$NON-NLS-1$
+			Class<?> clazz = bundle.loadClass("org.eclipse.core.runtime.Adapters"); //$NON-NLS-1$
+			Method adaptMethod = clazz.getMethod("adapt", Object.class, Class.class); //$NON-NLS-1$
+			Object result = adaptMethod.invoke(clazz, sourceObject, adapter);
+			return adapter.cast(result);
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, RepositoriesUiPlugin.ID_PLUGIN, "Could not adapt", e)); //$NON-NLS-1$
 		}

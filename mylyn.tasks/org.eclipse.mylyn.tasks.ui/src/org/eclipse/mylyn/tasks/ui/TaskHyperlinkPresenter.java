@@ -10,11 +10,11 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Frank Becker - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.ui;
 
-import java.lang.reflect.Method;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IStatus;
@@ -65,9 +65,6 @@ public final class TaskHyperlinkPresenter extends MultipleHyperlinkPresenter {
 
 	private boolean restoreToolTip;
 
-	// TODO e3.7 remove all references to delegate and replace with calls to super methods
-	private final MultipleHyperlinkPresenter delegate;
-
 	private boolean errorLogged;
 
 	/**
@@ -75,7 +72,6 @@ public final class TaskHyperlinkPresenter extends MultipleHyperlinkPresenter {
 	 */
 	public TaskHyperlinkPresenter(IPreferenceStore store) {
 		super(store);
-		delegate = new MultipleHyperlinkPresenter(store);
 	}
 
 	/**
@@ -83,25 +79,24 @@ public final class TaskHyperlinkPresenter extends MultipleHyperlinkPresenter {
 	 */
 	public TaskHyperlinkPresenter(RGB color) {
 		super(color);
-		delegate = new MultipleHyperlinkPresenter(color);
 	}
 
 	@Override
 	public void install(ITextViewer textViewer) {
 		this.textViewer = textViewer;
-		delegate.install(textViewer);
+		super.install(textViewer);
 	}
 
 	@Override
 	public void uninstall() {
 		hideHyperlinks();
 		textViewer = null;
-		delegate.uninstall();
+		super.uninstall();
 	}
 
 	@Override
 	public void applyTextPresentation(TextPresentation textPresentation) {
-		delegate.applyTextPresentation(textPresentation);
+		super.applyTextPresentation(textPresentation);
 		// decorate hyperlink as strike-through if task is completed, this is now also handled by TaskHyperlinkTextPresentationManager
 		if (activeRegion != null && currentTask != null && currentTask.isCompleted()) {
 			Iterator<StyleRange> styleRangeIterator = textPresentation.getAllStyleRangeIterator();
@@ -115,13 +110,6 @@ public final class TaskHyperlinkPresenter extends MultipleHyperlinkPresenter {
 		}
 	}
 
-	// TODO e3.7 remove method
-	@Override
-	public void showHyperlinks(IHyperlink[] hyperlinks) {
-		showHyperlinks(hyperlinks, false);
-	}
-
-	// TODO e3.7 add @Override annotation
 	@Override
 	public void showHyperlinks(IHyperlink[] hyperlinks, boolean takesFocusWhenVisible) {
 		activeRegion = null;
@@ -147,7 +135,7 @@ public final class TaskHyperlinkPresenter extends MultipleHyperlinkPresenter {
 						String taskLabel = TasksUiInternal.getTaskPrefix(hyperlink.getRepository().getConnectorKind());
 						taskLabel += currentTaskHyperlink.getTaskId();
 						textViewer.getTextWidget()
-								.setToolTipText(NLS.bind(Messages.TaskHyperlinkPresenter_Not_In_Task_List, taskLabel));
+						.setToolTipText(NLS.bind(Messages.TaskHyperlinkPresenter_Not_In_Task_List, taskLabel));
 					} else if (task.getTaskKey() == null) {
 						textViewer.getTextWidget().setToolTipText(task.getSummary());
 					} else {
@@ -160,13 +148,7 @@ public final class TaskHyperlinkPresenter extends MultipleHyperlinkPresenter {
 		// invoke super implementation
 
 		try {
-			// Eclipse 3.7
-			Method method = MultipleHyperlinkPresenter.class.getDeclaredMethod("showHyperlinks", //$NON-NLS-1$
-					IHyperlink[].class, boolean.class);
-			method.invoke(delegate, hyperlinks, takesFocusWhenVisible);
-		} catch (NoSuchMethodException e) {
-			// Eclipse 3.6 and earlier
-			delegate.showHyperlinks(hyperlinks);
+			super.showHyperlinks(hyperlinks, takesFocusWhenVisible);
 		} catch (Exception e) {
 			if (!errorLogged) {
 				errorLogged = true;
@@ -187,42 +169,42 @@ public final class TaskHyperlinkPresenter extends MultipleHyperlinkPresenter {
 			currentTaskHyperlink = null;
 			currentTask = null;
 		}
-		delegate.hideHyperlinks();
+		super.hideHyperlinks();
 	}
 
 	@Override
 	public boolean canHideHyperlinks() {
-		return delegate.canHideHyperlinks();
+		return super.canHideHyperlinks();
 	}
 
 	@Override
 	public boolean canShowMultipleHyperlinks() {
-		return delegate.canShowMultipleHyperlinks();
+		return super.canShowMultipleHyperlinks();
 	}
 
 	@Override
 	public void documentAboutToBeChanged(DocumentEvent event) {
-		delegate.documentAboutToBeChanged(event);
+		super.documentAboutToBeChanged(event);
 	}
 
 	@Override
 	public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
-		delegate.inputDocumentAboutToBeChanged(oldInput, newInput);
+		super.inputDocumentAboutToBeChanged(oldInput, newInput);
 	}
 
 	@Override
 	public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
-		delegate.inputDocumentChanged(oldInput, newInput);
+		super.inputDocumentChanged(oldInput, newInput);
 	}
 
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		delegate.propertyChange(event);
+		super.propertyChange(event);
 	}
 
 	@Override
 	public void setColor(Color color) {
-		delegate.setColor(color);
+		super.setColor(color);
 	}
 
 }

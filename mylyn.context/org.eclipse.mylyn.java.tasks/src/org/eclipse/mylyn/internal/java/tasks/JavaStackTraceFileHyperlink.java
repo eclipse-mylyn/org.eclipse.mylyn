@@ -8,12 +8,10 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.java.tasks;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,6 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.ui.IDebugModelPresentation;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.debug.ui.JDIDebugUIPlugin;
 import org.eclipse.jdt.internal.debug.ui.actions.OpenTypeAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -111,33 +110,14 @@ public class JavaStackTraceFileHyperlink implements IHyperlink, IHighlightingHyp
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					// search for the type in the workspace
-					Object result;
-					try {
-						// TODO e3.8 remove reflection
-						try {
-							// e3.7 and earlier: OpenTypeAction.findTypeInWorkspace(typeName);
-							Method findTypeInWorspace = OpenTypeAction.class.getDeclaredMethod("findTypeInWorkspace", //$NON-NLS-1$
-									String.class);
-							result = findTypeInWorspace.invoke(null, typeName);
-						} catch (NoSuchMethodException e) {
-							// e3.8: OpenTypeAction.findTypeInWorkspace(typeName, false);
-							Method findTypeInWorspace = OpenTypeAction.class.getDeclaredMethod("findTypeInWorkspace", //$NON-NLS-1$
-									String.class, boolean.class);
-							result = findTypeInWorspace.invoke(null, typeName, false);
-						}
-					} catch (InvocationTargetException e) {
-						if (e.getCause() instanceof CoreException) {
-							searchCompleted(null, typeName, lineNumber, ((CoreException) e.getCause()).getStatus());
-						}
-						throw e;
-					}
+					IType result = OpenTypeAction.findTypeInWorkspace(typeName, false);
 					searchCompleted(result, typeName, lineNumber, null);
 				} catch (Exception e) {
 					if (!reflectionErrorLogged) {
 						reflectionErrorLogged = true;
 						StatusManager.getManager()
-								.handle(new Status(IStatus.ERROR, ID_PLUGIN, "Unexpected error searching for Java type", //$NON-NLS-1$
-										e), StatusManager.LOG);
+						.handle(new Status(IStatus.ERROR, ID_PLUGIN, "Unexpected error searching for Java type", //$NON-NLS-1$
+								e), StatusManager.LOG);
 					}
 				}
 				return Status.OK_STATUS;

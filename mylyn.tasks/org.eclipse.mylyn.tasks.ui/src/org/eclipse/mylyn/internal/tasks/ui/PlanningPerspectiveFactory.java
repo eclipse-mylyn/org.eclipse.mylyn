@@ -10,12 +10,10 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     ArSysOp - adapt to SimRel 2023-06
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui;
-
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.ui.IFolderLayout;
@@ -40,7 +38,6 @@ public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 		// layout.addShowViewShortcut(TaskActivityView.ID);
 
 		layout.addActionSet(IPageLayout.ID_NAVIGATE_ACTION_SET);
-		removeUninterestingActionSets(layout);
 	}
 
 	public void defineLayout(IPageLayout layout) {
@@ -61,21 +58,5 @@ public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 		//
 		// bottomRight.addView(IPageLayout.ID_TASK_LIST);
 
-	}
-
-	// XXX e4.0 hiding action sets is no longer supported
-	public static void removeUninterestingActionSets(IPageLayout layout) {
-		try {
-			Class<?> clazz = Class.forName("org.eclipse.ui.internal.PageLayout"); //$NON-NLS-1$
-			if (clazz != null && clazz.isInstance(layout)) {
-				Method method = clazz.getDeclaredMethod("getActionSets"); //$NON-NLS-1$
-				ArrayList<?> actionSets = (ArrayList<?>) method.invoke(layout);
-				actionSets.remove("org.eclipse.ui.edit.text.actionSet.annotationNavigation"); //$NON-NLS-1$
-				actionSets.remove("org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo"); //$NON-NLS-1$
-				actionSets.remove("org.eclipse.ui.externaltools.ExternalToolsSet"); //$NON-NLS-1$
-			}
-		} catch (Exception e) {
-			// ignore
-		}
 	}
 }
