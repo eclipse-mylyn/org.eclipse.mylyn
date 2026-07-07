@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.core;
@@ -75,7 +76,7 @@ public interface ITasksCoreConstants {
 	/**
 	 * @deprecated Since Mylyn 3.11, all TaskRepositories store their credentials in the secure store.
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	String PROPERTY_USE_SECURE_STORAGE = "org.eclipse.mylyn.tasklist.repositories.configuration.securestorage"; //$NON-NLS-1$
 
 	String PROPERTY_BRAND_ID = "org.eclipse.mylyn.brand.id"; //$NON-NLS-1$

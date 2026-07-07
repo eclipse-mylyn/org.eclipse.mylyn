@@ -160,6 +160,7 @@ public class InterestFilter extends ViewerFilter {
 
 	protected boolean isInteresting(IInteractionElement element) {
 		// FIXME temporarily disabled, see bug 210011
+		// FIXME Claimed to be fixed: https://bugs.eclipse.org/bugs/show_bug.cgi?id=210011. How to test?
 		//		if (element.getInterest().isPredicted()) {
 //			return false;
 //		} else {

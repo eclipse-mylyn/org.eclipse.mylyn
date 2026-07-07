@@ -9,6 +9,7 @@
  *
  *  Contributors:
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
+ *    See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.github.ui;
 
@@ -55,6 +56,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PatternFilter;
+import org.eclipse.ui.model.IWorkbenchAdapter3;
 import org.eclipse.ui.model.WorkbenchAdapter;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
@@ -94,16 +96,7 @@ public class RepositorySelectionWizardPage extends WizardPage {
 
 		@Override
 		public StyledString getStyledText(Object element) {
-			// TODO Replace with use of IWorkbenchAdapter3 when 3.6 is no longer
-			// supported
-			if (element instanceof RepositoryAdapter) {
-				return ((RepositoryAdapter) element).getStyledText(element);
-			}
-			if (element instanceof OrganizationAdapter) {
-				return ((OrganizationAdapter) element).getStyledText(element);
-			}
-
-			return new StyledString(wrapped.getText(element));
+			return ((IWorkbenchAdapter3) element).getStyledText(element);
 		}
 
 		@Override

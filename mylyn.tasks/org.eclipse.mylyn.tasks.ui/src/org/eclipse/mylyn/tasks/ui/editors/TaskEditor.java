@@ -10,6 +10,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Eric Booth - initial prototype
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.ui.editors;
@@ -1063,7 +1064,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements ISaveablePart2
 
 		leftToolBarManager.update(true);
 
-		if (hasLeftToolBar()) {
+		if (hasLeftToolBar()) { // FIXME Still needed?
 			// fix size of toolbar on Gtk with Eclipse 3.3
 			Point size = leftToolBar.getSize();
 			if (size.x == 0 && size.y == 0) {

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.java.ui.editor;
@@ -71,7 +72,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
 						"Could not install active folding on provider: " + adapter + ", must extend " //$NON-NLS-1$ //$NON-NLS-2$
-								+ IJavaFoldingStructureProviderExtension.class.getName()));
+						+ IJavaFoldingStructureProviderExtension.class.getName()));
 			}
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
@@ -83,11 +84,6 @@ public class ActiveFoldingListener extends AbstractContextListener {
 	public void dispose() {
 		ContextCore.getContextManager().removeListener(this);
 		JavaUiBridgePlugin.getDefault().getPreferenceStore().removePropertyChangeListener(preferenceListener);
-	}
-
-	@Deprecated
-	public static void resetProjection(JavaEditor javaEditor) {
-		// TODO 3.9 remove
 	}
 
 	public void updateFolding() {
@@ -120,7 +116,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 				}
 			} catch (Exception e) {
 				StatusHandler
-						.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not update folding", e)); //$NON-NLS-1$
+				.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not update folding", e)); //$NON-NLS-1$
 			}
 		}
 	}

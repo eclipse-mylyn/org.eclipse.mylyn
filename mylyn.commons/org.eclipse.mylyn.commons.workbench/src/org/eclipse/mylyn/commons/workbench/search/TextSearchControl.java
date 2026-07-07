@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.workbench.search;
@@ -80,11 +81,17 @@ public class TextSearchControl extends Composite {
 	 */
 	private static final String FIND_ICON = "org.eclipse.ui.internal.dialogs.FIND_ICON"; //$NON-NLS-1$
 
-	/* SWT STYLE BIT AVAILABLE ON 3.5 AND HIGHER */
-	public static final int ICON_SEARCH = 1 << 9;
+	/**
+	 * @deprecated use {@link org.eclipse.swt.SWT#ICON_SEARCH} instead
+	 */
+	@Deprecated(forRemoval = true)
+	public static final int ICON_SEARCH = SWT.ICON_SEARCH;
 
-	/* SWT STYLE BIT AVAILABLE ON 3.5 AND HIGHER */
-	public static final int ICON_CANCEL = 1 << 8;
+	/**
+	 * @deprecated use {@link org.eclipse.swt.SWT#ICON_CANCEL} instead
+	 */
+	@Deprecated(forRemoval = true)
+	public static final int ICON_CANCEL = SWT.ICON_CANCEL;
 
 	/**
 	 * Get image descriptors for the clear button.
@@ -132,9 +139,9 @@ public class TextSearchControl extends Composite {
 		int numColumns = 1;
 		if (useNativeSearchField(automaticFind, parent)) {
 			if (automaticFind) {
-				textStyle |= SWT.SEARCH | ICON_CANCEL;
+				textStyle |= SWT.SEARCH | SWT.ICON_CANCEL;
 			} else {
-				textStyle |= SWT.SEARCH | ICON_SEARCH | ICON_CANCEL;
+				textStyle |= SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL;
 			}
 		} else {
 			super.setBackground(getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
@@ -145,11 +152,11 @@ public class TextSearchControl extends Composite {
 			}
 		}
 		GridLayoutFactory.swtDefaults()
-				.margins(0, 0)
-				.extendedMargins(0, 0, 0, 0)
-				.spacing(0, 1)
-				.numColumns(numColumns)
-				.applyTo(this);
+		.margins(0, 0)
+		.extendedMargins(0, 0, 0, 0)
+		.spacing(0, 1)
+		.numColumns(numColumns)
+		.applyTo(this);
 
 		textControl = new Text(this, textStyle);
 
@@ -159,11 +166,12 @@ public class TextSearchControl extends Composite {
 		if (useNativeSearchField == null || !useNativeSearchField) {
 			findControl = createLabelButtonControl(this, textControl,
 					JFaceResources.getImageRegistry().getDescriptor(FIND_ICON),
-					Messages.TextControl_AccessibleListenerFindButton, Messages.TextControl_FindToolTip, ICON_SEARCH);
+					Messages.TextControl_AccessibleListenerFindButton, Messages.TextControl_FindToolTip,
+					SWT.ICON_SEARCH);
 			clearControl = createLabelButtonControl(this, textControl,
 					JFaceResources.getImageRegistry().getDescriptor(CLEAR_ICON),
 					WorkbenchMessages.FilteredTree_ClearToolTip, //FilteredTree_AccessibleListenerClearButton,
-					WorkbenchMessages.FilteredTree_ClearToolTip, ICON_CANCEL);
+					WorkbenchMessages.FilteredTree_ClearToolTip, SWT.ICON_CANCEL);
 			addModifyListener(e -> updateButtonVisibilityAndEnablement());
 			updateButtonVisibilityAndEnablement();
 		}
@@ -215,13 +223,13 @@ public class TextSearchControl extends Composite {
 				useNativeSearchField = Boolean.FALSE;
 				Text testText = null;
 				try {
-					int style = SWT.SEARCH | ICON_CANCEL;
+					int style = SWT.SEARCH | SWT.ICON_CANCEL;
 					if (automaticFind) {
-						style |= ICON_SEARCH;
+						style |= SWT.ICON_SEARCH;
 					}
 					testText = new Text(parent, style);
-					useNativeSearchField = (testText.getStyle() & ICON_CANCEL) != 0
-							&& (!automaticFind || (testText.getStyle() & ICON_SEARCH) != 0);
+					useNativeSearchField = (testText.getStyle() & SWT.ICON_CANCEL) != 0
+							&& (!automaticFind || (testText.getStyle() & SWT.ICON_SEARCH) != 0);
 				} finally {
 					if (testText != null) {
 						testText.dispose();

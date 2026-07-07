@@ -8,11 +8,10 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Hiroyuki Inaba - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.workbench;
-
-import java.lang.reflect.Field;
 
 import org.eclipse.mylyn.commons.workbench.search.SearchHistoryPopupDialog;
 import org.eclipse.mylyn.commons.workbench.search.TextSearchControl;
@@ -64,9 +63,6 @@ public class EnhancedFilteredTree extends FilteredTree {
 	@Override
 	protected void createControl(Composite parent, int treeStyle) {
 		super.createControl(parent, treeStyle);
-
-		// set this after so that there isn't a double border created around the search
-		useNewLook = setNewLook(this);
 	}
 
 	@Deprecated
@@ -76,17 +72,9 @@ public class EnhancedFilteredTree extends FilteredTree {
 		return parent;
 	}
 
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	public static boolean setNewLook(FilteredTree tree) {
-		try {
-			Field newStyleField = FilteredTree.class.getDeclaredField("useNewLook"); //$NON-NLS-1$
-			newStyleField.setAccessible(true);
-			newStyleField.setBoolean(tree, true);
-			return newStyleField.getBoolean(tree);
-		} catch (Exception e) {
-			// ignore
-		}
-		return false;
+		return true;
 	}
 
 	@Deprecated
@@ -105,9 +93,9 @@ public class EnhancedFilteredTree extends FilteredTree {
 				for (Listener listener : listeners) {
 					if (listener instanceof TypedListener
 							&& ((TypedListener) listener).getEventListener()
-									.getClass()
-									.getName()
-									.startsWith("org.eclipse.ui.dialogs.FilteredTree$") //$NON-NLS-1$
+							.getClass()
+							.getName()
+							.startsWith("org.eclipse.ui.dialogs.FilteredTree$") //$NON-NLS-1$
 							&& ((TypedListener) listener).getEventListener() instanceof KeyListener) {
 						downArrowListener = (KeyListener) ((TypedListener) listener).getEventListener();
 						break;

@@ -25,7 +25,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
-import org.eclipse.mylyn.internal.java.ui.editor.ActiveFoldingListener;
 import org.eclipse.mylyn.internal.java.ui.editor.BreakpointEditorTracker;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.ui.IEditorPart;
@@ -193,7 +192,6 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 					IEditorPart part = reference.getEditor(false);
 					if (part != null && part instanceof JavaEditor editor) {
 						editorTracker.registerEditor(editor);
-						ActiveFoldingListener.resetProjection(editor);
 					}
 				}
 			}

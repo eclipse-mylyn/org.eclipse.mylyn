@@ -11,6 +11,7 @@
  *     Torkild U. Resheim - Uniquely identify Jenkins servers, bug 341725
  *     Torkild U. Resheim - Distinguish between Hudson and Jenkins, bug 353861
  *     Tasktop Technologies - improvements
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.jenkins.ui;
@@ -44,16 +45,7 @@ import org.eclipse.osgi.util.NLS;
  * @author Steffen Pingel
  */
 public class JenkinsDiscovery {
-	/**
-	 * This class works around a source incompatibility between the org.eclipse.ecf.discovery version in Luna and earlier versions. Version
-	 * 5.0 added the triggerDiscovery method to IServiceListener. This class can be extended in order to implement this method without
-	 * the @Overide annotation causing compilation to fail against earlier versions (e.g. Kepler).
-	 */
-	private static abstract class AbstractServiceListener {
-		public abstract boolean triggerDiscovery();
-	}
-
-	private final class JenkinsServiceListener extends AbstractServiceListener implements IServiceListener {
+	private final class JenkinsServiceListener implements IServiceListener {
 		@Override
 		public void serviceDiscovered(IServiceEvent anEvent) {
 			IServiceInfo serviceInfo = anEvent.getServiceInfo();

@@ -9,39 +9,26 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.ui.viewer;
 
 import java.util.Iterator;
 
-import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
+import org.eclipse.jface.text.source.IAnnotationModelExtension2;
 
 class Util {
 
 	static boolean annotationsIncludeOffset(IAnnotationModel annotationModel, int offset) {
-		if (annotationModel == null) {
-			return false;
-		}
-		try {
-			// eclipse 3.4
-			Iterator<?> annotationIterator = (Iterator<?>) annotationModel.getClass()
-					.getMethod("getAnnotationIterator", int.class, int.class, boolean.class, boolean.class) //$NON-NLS-1$
-					.invoke(annotationModel, offset, 1, true, true);
+		if (annotationModel != null) {
+			Iterator<Annotation> annotationIterator = ((IAnnotationModelExtension2) annotationModel)
+					.getAnnotationIterator(offset, 1, true, true);
 			return annotationIterator.hasNext();
-		} catch (Exception e) {
-			// eclipse 3.3
-			Iterator<Annotation> annotationIterator = annotationModel.getAnnotationIterator();
-			while (annotationIterator.hasNext()) {
-				Position position = annotationModel.getPosition(annotationIterator.next());
-				if (position != null && (position.offset == offset || position.includes(offset))) {
-					return true;
-				}
-			}
-			return false;
 		}
+		return false;
 	}
 
 }

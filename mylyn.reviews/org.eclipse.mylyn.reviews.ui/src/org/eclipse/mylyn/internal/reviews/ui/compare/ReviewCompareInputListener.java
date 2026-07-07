@@ -9,6 +9,7 @@
  *
  *     Atlassian - initial API and implementation
  *     Sebastien Dubois (Ericsson) - Improvements for bug 400266
+ *     See git history
  ******************************************************************************/
 
 package org.eclipse.mylyn.internal.reviews.ui.compare;
@@ -26,7 +27,6 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextInputListener;
 import org.eclipse.jface.text.TextSelection;
-import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.AnnotationBarHoverManager;
 import org.eclipse.jface.text.source.CompositeRuler;
@@ -189,20 +189,12 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 	}
 
 	public void forceCustomAnnotationHover() throws NoSuchFieldException, IllegalAccessException {
-		Class<SourceViewer> sourceViewerClazz = SourceViewer.class;
 		sourceViewer.setAnnotationHover(new CommentAnnotationHover(null));
+		sourceViewer.setHoverControlCreator(new CommentInformationControlCreator());
 
-		// hack for Eclipse 3.5
+		// hack for Eclipse 4.0
 		try {
-			Field hoverControlCreator = TextViewer.class.getDeclaredField("fHoverControlCreator"); //$NON-NLS-1$
-			hoverControlCreator.setAccessible(true);
-			hoverControlCreator.set(sourceViewer, new CommentInformationControlCreator());
-		} catch (Throwable t) {
-			// ignore as it may not exist in other versions
-		}
-
-		// hack for Eclipse 3.5
-		try {
+			Class<SourceViewer> sourceViewerClazz = SourceViewer.class;
 			Method ensureMethod = sourceViewerClazz.getDeclaredMethod("ensureAnnotationHoverManagerInstalled"); //$NON-NLS-1$
 			ensureMethod.setAccessible(true);
 			ensureMethod.invoke(sourceViewer);
@@ -332,9 +324,8 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 		IAnnotationAccess annotationAccess = new DefaultMarkerAnnotationAccess();
 		final SourceViewerDecorationSupport support = new SourceViewerDecorationSupport(sourceViewer, ruler,
 				annotationAccess, EditorsUI.getSharedTextColors());
-		Iterator<?> e = new MarkerAnnotationPreferences().getAnnotationPreferences().iterator();
-		while (e.hasNext()) {
-			support.setAnnotationPreference((AnnotationPreference) e.next());
+		for (AnnotationPreference element : new MarkerAnnotationPreferences().getAnnotationPreferences()) {
+			support.setAnnotationPreference((AnnotationPreference) element);
 		}
 		support.install(EditorsUI.getPreferenceStore());
 		sourceViewer.getControl().addDisposeListener(e1 -> support.dispose());
