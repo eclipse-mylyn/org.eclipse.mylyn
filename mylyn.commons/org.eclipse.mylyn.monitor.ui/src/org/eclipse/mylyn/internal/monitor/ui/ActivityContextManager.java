@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.monitor.ui;
@@ -152,7 +153,7 @@ public class ActivityContextManager implements IActivityContextManager {
 		}
 		// if the platform is shutting down the workbench manager has already been disposed
 		// and removing the listener would trigger loading of working sets again
-		// the working set manager null check is required on Eclipse 4.3
+		// the working set manager null check is required on Eclipse 4.3+
 		if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getWorkingSetManager() != null) {
 			PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(WORKING_SET_CHANGE_LISTENER);
 		}
@@ -194,18 +195,18 @@ public class ActivityContextManager implements IActivityContextManager {
 
 	private void processWorkbenchEvent(String origin, String structureKind, String handle, long start, long end) {
 		ContextCorePlugin.getContextManager()
-				.processActivityMetaContextEvent(
-						new InteractionEvent(InteractionEvent.Kind.ATTENTION, structureKind, handle, origin, null,
-								InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
+		.processActivityMetaContextEvent(
+				new InteractionEvent(InteractionEvent.Kind.ATTENTION, structureKind, handle, origin, null,
+						InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
 	}
 
 	public void addActivityTime(String handle, long start, long end) {
 		if (handle != null) {
 			ContextCorePlugin.getContextManager()
-					.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-							InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, handle,
-							InteractionContextManager.ACTIVITY_ORIGINID_USER, null,
-							InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
+			.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
+					InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, handle,
+					InteractionContextManager.ACTIVITY_ORIGINID_USER, null,
+					InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
 		}
 	}
 
@@ -213,10 +214,10 @@ public class ActivityContextManager implements IActivityContextManager {
 	public void removeActivityTime(String handle, long start, long end) {
 		if (handle != null) {
 			ContextCorePlugin.getContextManager()
-					.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-							InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, handle,
-							InteractionContextManager.ACTIVITY_ORIGINID_USER, null,
-							InteractionContextManager.ACTIVITY_DELTA_REMOVED, 1f, new Date(start), new Date(end)));
+			.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
+					InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, handle,
+					InteractionContextManager.ACTIVITY_ORIGINID_USER, null,
+					InteractionContextManager.ACTIVITY_DELTA_REMOVED, 1f, new Date(start), new Date(end)));
 		}
 	}
 

@@ -36,12 +36,6 @@ class TestResultSession extends TestRunSession {
 				build.getPlan() == null ? Messages.TestResultSession_unknownPlan : build.getPlan().getLabel(), build.getLabel()), null);
 	}
 
-	// Eclipse 3.5 and earlier
-	public boolean rerunTest(String testId, String className, String testName, String launchMode) throws CoreException {
-		return rerunTest(testId, className, testName, launchMode, false);
-	}
-
-	// Eclipse 3.6 and later
 	public boolean rerunTest(String testId, final String className, final String testName, String launchMode,
 			boolean buildBeforeLaunch) throws CoreException {
 		final AtomicReference<IJavaElement> result = new AtomicReference<>();

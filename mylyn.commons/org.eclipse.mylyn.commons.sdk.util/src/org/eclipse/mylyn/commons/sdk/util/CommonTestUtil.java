@@ -40,7 +40,6 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
@@ -54,6 +53,7 @@ import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 import org.eclipse.osgi.service.resolver.VersionRange;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 /**
  * @author Steffen Pingel
@@ -247,21 +247,11 @@ public class CommonTestUtil {
 
 	}
 
-	private static boolean isOsgiVersion310orNewer(ClassLoader classLoader) {
-		return classLoader.getClass().getName().equals("org.eclipse.osgi.internal.loader.ModuleClassLoader") // user before 4.4M4
-				|| classLoader.getClass().getName().equals("org.eclipse.osgi.internal.loader.EquinoxClassLoader");
-	}
-
 	public static File getFile(Object source, String filename) throws IOException {
 		Class<?> clazz = source instanceof Class<?> ? (Class<?>) source : source.getClass();
 		if (Platform.isRunning()) {
-			ClassLoader classLoader = clazz.getClassLoader();
 			try {
-				if (isOsgiVersion310orNewer(classLoader)) {
-					return Objects.requireNonNull(getFileFromClassLoader4Luna(filename, classLoader));
-				} else {
-					return Objects.requireNonNull(getFileFromClassLoaderBeforeLuna(filename, classLoader));
-				}
+				return Objects.requireNonNull(getFileFromClassLoader(filename, clazz));
 			} catch (Exception e) {
 				MylynResourceMissingException exception = new MylynResourceMissingException(
 						NLS.bind("Could not locate {0} using classloader for {1}", filename, clazz));
@@ -306,31 +296,14 @@ public class CommonTestUtil {
 		}
 	}
 
-	private static File getFileFromClassLoaderBeforeLuna(String filename, ClassLoader classLoader) throws Exception {
-		Object classpathManager = invokeExactMethod(classLoader, "getClasspathManager", null, null);
-		Object baseData = invokeExactMethod(classpathManager, "getBaseData", null, null);
-		Bundle bundle = (Bundle) invokeExactMethod(baseData, "getBundle", null, null);
-		URL localURL = FileLocator.toFileURL(bundle.getEntry(filename));
-		return new File(localURL.getFile());
-	}
-
-	private static File getFileFromClassLoader4Luna(String filename, ClassLoader classLoader) throws Exception {
-		Object classpathManager = invokeExactMethod(classLoader, "getClasspathManager", null, null);
-		Object generation = invokeExactMethod(classpathManager, "getGeneration", null, null);
-		Object bundleFile = invokeExactMethod(generation, "getBundleFile", null, null);
-		return (File) invokeExactMethod(bundleFile, "getFile", new Object[] { filename, true },
-				new Class<?>[] { String.class, boolean.class });
-	}
-
-	private static Object invokeExactMethod(Object object, String methodName, Object[] args, Class<?>[] paramTypes)
-			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-		if (paramTypes == null) {
-			paramTypes = new Class<?>[0];
+	private static File getFileFromClassLoader(String filename, Class<?> clazz) throws Exception {
+		Bundle bundle = FrameworkUtil.getBundle(clazz);
+		// FileLocator.find searches the bundle and its fragments
+		URL url = FileLocator.find(bundle, IPath.fromPortableString(filename), null);
+		if (url == null) {
+			throw new IOException("Resource not found in bundle: " + filename);
 		}
-		if (args == null) {
-			args = new Object[0];
-		}
-		return object.getClass().getMethod(methodName, paramTypes).invoke(object, args);
+		return new File(FileLocator.toFileURL(url).toURI());
 	}
 
 	public static InputStream getResource(Object source, String filename) throws IOException {
@@ -539,10 +512,6 @@ public class CommonTestUtil {
 		}
 		out.println();
 		out.println();
-	}
-
-	public static boolean isEclipse4() {
-		return Platform.getBundle("org.eclipse.e4.core.commands") != null;
 	}
 
 	/**

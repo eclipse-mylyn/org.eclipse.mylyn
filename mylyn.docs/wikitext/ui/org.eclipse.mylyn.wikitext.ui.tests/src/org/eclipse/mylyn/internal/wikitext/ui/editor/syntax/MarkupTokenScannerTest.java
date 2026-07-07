@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;
@@ -30,6 +31,8 @@ import org.eclipse.mylyn.wikitext.tests.HeadRequired;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -39,10 +42,27 @@ public class MarkupTokenScannerTest extends AbstractDocumentTest {
 
 	private MarkupTokenScanner tokenScanner;
 
+	private static Font normalFont;
+	private static Font monospaceFont;
+
+	@BeforeAll
+	public static void setUpClass() {
+		normalFont = new Font(null, new FontData[] { new FontData("normalFont", 12, 0) });
+		monospaceFont = new Font(null, new FontData[] { new FontData("monoFont", 12, 0) });
+	}
+
+	@AfterAll
+	public static void tearDownClass() {
+		if (normalFont != null) {
+			normalFont.dispose();
+		}
+		if (monospaceFont != null) {
+			monospaceFont.dispose();
+		}
+	}
+
 	@BeforeEach
 	void setUp() throws Exception {
-		Font normalFont = new Font(null, new FontData[] { new FontData("normalFont", 12, 0) });
-		Font monospaceFont = new Font(null, new FontData[] { new FontData("monoFont", 12, 0) });
 		tokenScanner = new MarkupTokenScanner(normalFont, monospaceFont);
 	}
 

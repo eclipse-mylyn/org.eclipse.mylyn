@@ -62,7 +62,8 @@ public class CommonFonts {
 					defaultData[0].getStyle());
 
 			if ("win32".equals(SWT.getPlatform())) { //$NON-NLS-1$
-				// NOTE: Windows only, for: data.data.lfStrikeOut = 1;
+				// FIXME NOTE: Windows only, for: data.data.lfStrikeOut = 1;
+				// Is this still needed? Works fine on Windows 11 25H2
 				try {
 					Field dataField = data.getClass().getDeclaredField("data"); //$NON-NLS-1$
 					Object dataObject = dataField.get(data);

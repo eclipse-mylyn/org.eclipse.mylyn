@@ -60,34 +60,12 @@ import org.junit.jupiter.api.Test;
 public class EditorStateParticipantTest {
 
 	private final class MyEditorStateParticipant extends EditorStateParticipant {
-		// make visible
 		@Override
-		protected boolean is_3_x() {
-			return super.is_3_x();
-		}
-
-		@Override
-		protected void saveEditors_e_3_x(WorkbenchPage page, IMemento memento) throws Exception {
+		protected void saveEditors(WorkbenchPage page, IMemento memento) throws Exception {
 			if (exceptionOnSave != null) {
 				throw exceptionOnSave;
 			}
-			super.saveEditors_e_3_x(page, memento);
-		}
-
-		@Override
-		protected void saveEditors_e_8_2(IWorkbenchPage page, IMemento memento) throws Exception {
-			if (exceptionOnSave != null) {
-				throw exceptionOnSave;
-			}
-			super.saveEditors_e_8_2(page, memento);
-		}
-
-		@Override
-		protected void saveEditors_e_4_legacy(WorkbenchPage page, IMemento memento) throws Exception {
-			if (exceptionOnSave != null) {
-				throw exceptionOnSave;
-			}
-			super.saveEditors_e_4_legacy(page, memento);
+			super.saveEditors(page, memento);
 		}
 	}
 
@@ -169,16 +147,10 @@ public class EditorStateParticipantTest {
 		IInteractionContext context = new InteractionContext("id", new InteractionContextScaling());
 		ContextState state = new ContextState(context, context.getHandleIdentifier(), memento);
 		participant.restoreState(state);
-		if (participant.is_3_x()) {
-			// 3.x doesn't have sufficient properties to restore editors persisted with 4.x
-			assertEquals(0, page.getEditorReferences().length,
-					"Expected 0 editors, got: " + Arrays.asList(page.getEditorReferences()));
-		} else {
-			assertEquals(2, page.getEditorReferences().length,
-					"Expected 2 editors, got: " + Arrays.asList(page.getEditorReferences()));
-			assertEquals(new FileEditorInput(fileB), page.getEditorReferences()[0].getEditorInput());
-			assertEquals(new FileEditorInput(fileA), page.getEditorReferences()[1].getEditorInput());
-		}
+		assertEquals(2, page.getEditorReferences().length,
+				"Expected 2 editors, got: " + Arrays.asList(page.getEditorReferences()));
+		assertEquals(new FileEditorInput(fileB), page.getEditorReferences()[0].getEditorInput());
+		assertEquals(new FileEditorInput(fileA), page.getEditorReferences()[1].getEditorInput());
 		assertNotNull(memento.getChild(EditorStateParticipant.MEMENTO_EDITORS));
 	}
 
@@ -253,13 +225,7 @@ public class EditorStateParticipantTest {
 		createFiles();
 
 		IEditorInput[] inputs;
-		if (CommonTestUtil.isEclipse4()) {
-			// on 3.x openEditors() opens editors starting from the first index
-			inputs = new IEditorInput[] { new FileEditorInput(fileB), new FileEditorInput(fileA) };
-		} else {
-			// on 3.x openEditors() opens editors starting from the last index
-			inputs = new IEditorInput[] { new FileEditorInput(fileA), new FileEditorInput(fileB) };
-		}
+		inputs = new IEditorInput[] { new FileEditorInput(fileB), new FileEditorInput(fileA) };
 
 		IEditorDescriptor editor = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(fileA.getName());
 		String[] ids = new String[inputs.length];

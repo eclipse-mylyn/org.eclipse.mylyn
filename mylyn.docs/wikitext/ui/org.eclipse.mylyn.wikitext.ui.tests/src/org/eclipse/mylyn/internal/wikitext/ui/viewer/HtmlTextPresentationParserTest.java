@@ -37,6 +37,8 @@ import org.eclipse.mylyn.wikitext.tests.HeadRequired;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -48,13 +50,27 @@ import org.xml.sax.SAXException;
 @SuppressWarnings({ "nls", "restriction" })
 public class HtmlTextPresentationParserTest {
 
+	private static Font defaultFont;
 	private HtmlTextPresentationParser parser;
+
+	@BeforeAll
+	public static void setUpClass() {
+		defaultFont = new Font(null, new FontData[] { new FontData("fake", 12, 0) });
+	}
+
+	@AfterAll
+	public static void tearDownClass() {
+		if (defaultFont != null) {
+			defaultFont.dispose();
+		}
+	}
 
 	@BeforeEach
 	void setUp() {
 		parser = new HtmlTextPresentationParser();
 		parser.setPresentation(new TextPresentation());
-		parser.setDefaultFont(new Font(null, new FontData[] { new FontData("fake", 12, 0) }));
+
+		parser.setDefaultFont(defaultFont);
 	}
 
 	@Test

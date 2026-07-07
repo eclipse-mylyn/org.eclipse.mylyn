@@ -25,8 +25,6 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.mylyn.commons.sdk.util.junit5.MylynTestSetup;
-import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -653,14 +651,9 @@ public class BugzillaTaskHyperlinkDetectorTest {
 		Region region = new Region(0, testString.length());
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, false);
 		assertNotNull(links);
-		if (PlatformUiUtil.supportsMultipleHyperlinkPresenter()) {
-			assertEquals(2, links.length);
-			assertEquals(testString.indexOf(ATTACHMENT_OLD), links[0].getHyperlinkRegion().getOffset());
-			assertEquals(testString.indexOf(ATTACHMENT_OLD), links[1].getHyperlinkRegion().getOffset());
-		} else {
-			assertEquals(1, links.length);
-			assertEquals(testString.indexOf(ATTACHMENT_OLD), links[0].getHyperlinkRegion().getOffset());
-		}
+		assertEquals(2, links.length);
+		assertEquals(testString.indexOf(ATTACHMENT_OLD), links[0].getHyperlinkRegion().getOffset());
+		assertEquals(testString.indexOf(ATTACHMENT_OLD), links[1].getHyperlinkRegion().getOffset());
 	}
 
 	@Test
@@ -670,14 +663,9 @@ public class BugzillaTaskHyperlinkDetectorTest {
 		Region region = new Region(0, testString.length());
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, false);
 		assertNotNull(links);
-		if (PlatformUiUtil.supportsMultipleHyperlinkPresenter()) {
-			assertEquals(2, links.length);
-			assertEquals(testString.indexOf(ATTACHMENT_NEW), links[0].getHyperlinkRegion().getOffset());
-			assertEquals(testString.indexOf(ATTACHMENT_NEW), links[1].getHyperlinkRegion().getOffset());
-		} else {
-			assertEquals(1, links.length);
-			assertEquals(testString.indexOf(ATTACHMENT_NEW), links[0].getHyperlinkRegion().getOffset());
-		}
+		assertEquals(2, links.length);
+		assertEquals(testString.indexOf(ATTACHMENT_NEW), links[0].getHyperlinkRegion().getOffset());
+		assertEquals(testString.indexOf(ATTACHMENT_NEW), links[1].getHyperlinkRegion().getOffset());
 	}
 
 	@Test
