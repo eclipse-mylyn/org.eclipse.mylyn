@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016, 2024 Jeremie Bresson and others.
+ * Copyright (c) 2016, 2026 Jeremie Bresson and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -22,10 +22,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.mylyn.wikitext.asciidoc.AsciiDocLanguage;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
@@ -355,13 +356,13 @@ public class AsciiDocDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		if (attributes instanceof ImageAttributes imageAttr) {
 			altText = imageAttr.getAlt();
 		}
-		if (StringUtils.isNotEmpty(attributes.getTitle())) {
+		if (Optional.ofNullable(attributes.getTitle()).filter(Predicate.not(String::isEmpty)).isPresent()) {
 			title = "title=\"" + attributes.getTitle() + '"'; //$NON-NLS-1$
 		}
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("image:"); //$NON-NLS-1$
-		sb.append(StringUtils.defaultString(url));
+		sb.append(Optional.ofNullable(url).map(Object::toString).orElse("")); //$NON-NLS-1$
 		sb.append("["); //$NON-NLS-1$
 		sb.append(Arrays.asList(altText, title).stream().filter(Objects::nonNull).collect(Collectors.joining(", "))); //$NON-NLS-1$
 		sb.append("]"); //$NON-NLS-1$
@@ -375,11 +376,7 @@ public class AsciiDocDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		linkAttr.setTitle(attributes.getTitle());
 		linkAttr.setHref(hrefOrHashName);
 		beginSpan(SpanType.LINK, linkAttr);
-		if (StringUtils.isEmpty(text)) {
-			characters(hrefOrHashName);
-		} else {
-			characters(text);
-		}
+		characters(Optional.ofNullable(text).filter(Predicate.not(String::isEmpty)).orElse(hrefOrHashName));
 		endSpan();
 	}
 
