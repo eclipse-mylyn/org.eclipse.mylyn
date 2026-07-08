@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2024 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2026 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -71,7 +71,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.token.PatternLineBreakReplacemen
  *
  * @author Stefan Seelmann
  * @author Max Rydahl Andersen
- * @since 3.0
+ * @since 4.12
  */
 public class AsciiDocLanguage extends AbstractMarkupLanguage {
 

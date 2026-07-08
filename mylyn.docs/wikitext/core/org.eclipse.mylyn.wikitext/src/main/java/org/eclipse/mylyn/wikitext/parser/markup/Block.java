@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2021 David Green and others.
+ * Copyright (c) 2007, 2026 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Jeremie Bresson - Bug 381912
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.parser.markup;
 
@@ -19,7 +20,7 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
  * A markup block that may span multiple lines. Implements {@link Cloneable} for the template design pattern.
  *
  * @author David Green
- * @since 3.0
+ * @since 4.12
  */
 public abstract class Block extends Processor {
 	private boolean closed;

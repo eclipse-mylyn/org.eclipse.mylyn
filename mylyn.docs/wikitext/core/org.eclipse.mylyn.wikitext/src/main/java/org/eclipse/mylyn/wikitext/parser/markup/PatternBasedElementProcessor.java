@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 David Green and others.
+ * Copyright (c) 2007, 2026 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.parser.markup;
 
@@ -20,10 +21,10 @@ import java.util.regex.Matcher;
  * A processor that is capable of processing a specific type of markup element
  *
  * @author David Green
- * @since 3.0
+ * @since 4.12
  */
 public abstract class PatternBasedElementProcessor extends Processor
-		implements org.eclipse.mylyn.wikitext.parser.util.Matcher {
+implements org.eclipse.mylyn.wikitext.parser.util.Matcher {
 
 	protected int lineStartOffset;
 
