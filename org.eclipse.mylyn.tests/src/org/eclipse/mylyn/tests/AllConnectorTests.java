@@ -27,9 +27,7 @@ import org.junit.jupiter.api.Test;
 //	AllBugzillaRestCoreTests.class, //
 //FIXME: AF: remove? we already did these tests during component build
 //		AllBugzillaTests.class, //
-//		AllJenkinsTests.class, //
-//		AllGerritTests.class, //
-//		AllTracTests.class //
+//		AllJenkinsTests.class
 //})
 public class AllConnectorTests {
 //	@BeforeSuite

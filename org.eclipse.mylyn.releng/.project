@@ -4,7 +4,6 @@
 	<comment></comment>
 	<projects>
 		<project>org.eclipse.mylyn.bugzilla.releng</project>
-		<project>org.eclipse.mylyn.gerrit.releng</project>
 		<project>org.eclipse.mylyn.jackson.releng</project>
 	</projects>
 	<buildSpec>

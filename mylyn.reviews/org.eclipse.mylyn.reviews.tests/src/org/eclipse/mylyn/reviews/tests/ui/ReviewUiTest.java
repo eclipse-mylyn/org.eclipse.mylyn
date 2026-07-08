@@ -29,7 +29,7 @@ public class ReviewUiTest {
 
 	@Test
 	public void testGetActiveReview() {
-		ReviewBehavior activeReview = new MockReviewBehavior();
+		ReviewBehavior activeReview = new MockReviewBehavior(null);
 		ReviewUi.setActiveReview(activeReview);
 		assertEquals(activeReview, ReviewUi.getActiveReview());
 	}

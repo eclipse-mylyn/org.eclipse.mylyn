@@ -396,10 +396,6 @@
         <requirement
             name="org.eclipse.mylyn.egit.feature.feature.group"/>
         <requirement
-            name="org.eclipse.mylyn.gerrit.dashboard.feature.feature.group"/>
-        <requirement
-            name="org.eclipse.mylyn.gerrit.feature.feature.group"/>
-        <requirement
             name="org.eclipse.mylyn.git.feature.feature.group"/>
         <requirement
             name="org.eclipse.mylyn.github.feature.feature.group"/>

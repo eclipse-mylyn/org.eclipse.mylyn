@@ -22,7 +22,7 @@ import org.junit.platform.suite.api.Suite;
 @Suite
 @SelectClasses({ AllNonConnectorTests.class
 	//FIXME: AF: remove? we already did these tests during component build
-// AllBugzillaTests.class, AllTracTests.class, AllJenkinsTests.class, AllGerritTests.class, AllBugzillaRestCoreTests.class })
+// AllBugzillaTests.class, AllJenkinsTests.class, AllBugzillaRestCoreTests.class })
 })
 public class AllLocalTests {
 }

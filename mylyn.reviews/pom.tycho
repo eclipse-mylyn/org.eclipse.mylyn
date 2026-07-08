@@ -11,15 +11,6 @@
 #      ArSysOp - initial API and implementation
 ###############################################################################
 # This file is required to not consider "tbr" subfolder during tycho pomless build
-org.eclipse.mylyn.gerrit.core
-org.eclipse.mylyn.gerrit.core.tests
-org.eclipse.mylyn.gerrit.dashboard.core
-org.eclipse.mylyn.gerrit.dashboard.feature
-org.eclipse.mylyn.gerrit.dashboard.ui
-org.eclipse.mylyn.gerrit.feature
-org.eclipse.mylyn.gerrit.tests
-org.eclipse.mylyn.gerrit.ui
-org.eclipse.mylyn.gerrit.ui.tests
 org.eclipse.mylyn.reviews.core
 org.eclipse.mylyn.reviews.core.tests
 org.eclipse.mylyn.reviews.edit

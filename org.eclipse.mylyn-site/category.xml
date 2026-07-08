@@ -32,12 +32,6 @@
    <feature id="org.eclipse.mylyn.cdt.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
-   <feature id="org.eclipse.mylyn.gerrit.feature">
-      <category name="org.eclipse.mylyn.integrations.category"/>
-   </feature>
-   <feature id="org.eclipse.mylyn.gerrit.dashboard.feature">
-      <category name="org.eclipse.mylyn.integrations.category"/>
-   </feature>
    <feature id="org.eclipse.mylyn.git.feature">
       <category name="org.eclipse.mylyn.integrations.category"/>
    </feature>
@@ -99,13 +93,7 @@
       <category name="org.eclipse.mylyn.tests.category"/>
    </feature>
    <bundle id="com.github.ben-manes.caffeine"/>
-   <bundle id="com.google.gerrit.common"/>
-   <bundle id="com.google.gerrit.prettify"/>
-   <bundle id="com.google.gerrit.reviewdb"/>
    <bundle id="com.google.gson"/>
-   <bundle id="com.google.gwt.servlet"/>
-   <bundle id="com.google.gwtjsonrpc"/>
-   <bundle id="com.google.gwtorm"/>
    <bundle id="com.sun.xml.bind.jaxb-osgi"/>
    <bundle id="jakarta.activation-api"/>
    <bundle id="org.apache.ant"/>

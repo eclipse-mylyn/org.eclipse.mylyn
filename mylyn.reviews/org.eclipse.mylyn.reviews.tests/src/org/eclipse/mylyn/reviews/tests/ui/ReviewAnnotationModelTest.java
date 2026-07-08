@@ -63,7 +63,7 @@ public class ReviewAnnotationModelTest {
 		generateComment(DEFAULT_TEXT, new Date(DEFAULT_TIMESTAMP));
 
 		model = new ReviewAnnotationModel();
-		model.setItem(review, new MockReviewBehavior());
+		model.setItem(review, new MockReviewBehavior(null));
 		model.connect(doc);
 	}
 
