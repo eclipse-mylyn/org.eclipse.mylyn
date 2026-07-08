@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2026 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.html;
@@ -113,7 +114,7 @@ import org.xml.sax.SAXException;
  * @see HtmlParser
  * @see HtmlLanguageBuilder
  * @see #builder()
- * @since 3.0
+ * @since 4.12
  */
 public class HtmlLanguage extends MarkupLanguage {
 

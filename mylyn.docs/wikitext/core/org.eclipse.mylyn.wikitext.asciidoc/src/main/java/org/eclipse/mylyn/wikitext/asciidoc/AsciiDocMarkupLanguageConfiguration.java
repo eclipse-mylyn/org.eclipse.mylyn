@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2024 Jeremie Bresson and others.
+ * Copyright (c) 2017, 2026 Jeremie Bresson and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -24,14 +24,13 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
  * Extended configuration for the AsciiDoc markup language
  *
  * @author Jeremie Bresson
- * @since 3.0.0
+ * @since 4.12
  */
 public class AsciiDocMarkupLanguageConfiguration extends MarkupLanguageConfiguration {
 
 	private Map<String, String> initialAttributes = Collections.emptyMap();
 
 	/**
-	 * @since 3.0.0
 	 * @return initial attributes (key, values)
 	 */
 	public Map<String, String> getInitialAttributes() {
@@ -39,7 +38,6 @@ public class AsciiDocMarkupLanguageConfiguration extends MarkupLanguageConfigura
 	}
 
 	/**
-	 * @since 3.0.0
 	 * @param initialAttributes
 	 *            initial attributes (key, values)
 	 */
