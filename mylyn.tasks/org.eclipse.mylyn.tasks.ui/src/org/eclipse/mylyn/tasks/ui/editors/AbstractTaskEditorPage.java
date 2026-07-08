@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2015 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2026 Tasktop Technologies and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -440,7 +440,7 @@ implements ISelectionProvider, ISelectionChangedListener {
 
 	private volatile boolean refreshDisabled;
 
-	private final ListenerList selectionChangedListeners;
+	private final ListenerList<ISelectionChangedListener> selectionChangedListeners;
 
 	private SynchronizeEditorAction synchronizeEditorAction;
 
@@ -484,7 +484,7 @@ implements ISelectionProvider, ISelectionChangedListener {
 		Assert.isNotNull(connectorKind);
 		this.connectorKind = connectorKind;
 		reflow = true;
-		selectionChangedListeners = new ListenerList();
+		selectionChangedListeners = new ListenerList<>();
 		submitEnabled = true;
 		needsSubmit = true;
 	}

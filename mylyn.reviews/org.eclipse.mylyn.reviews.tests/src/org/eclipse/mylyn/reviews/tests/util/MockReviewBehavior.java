@@ -18,12 +18,13 @@ import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.team.core.history.IFileRevision;
 
 public class MockReviewBehavior extends ReviewBehavior {
 
-	public MockReviewBehavior() {
-		super(null);
+	public MockReviewBehavior(ITask task) {
+		super(task);
 	}
 
 	@Override

@@ -219,7 +219,6 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 				return userID;
 			}
 			userID = new BugzillaXmlRpcOperation<Integer>(this) {
-				@SuppressWarnings("serial")
 				@Override
 				public Integer execute() throws XmlRpcException {
 					HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_USER_LOGIN,
@@ -275,7 +274,6 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 		}.execute();
 	}
 
-	@SuppressWarnings("serial")
 	public Object[] getUserInfoFromIDs(final IProgressMonitor monitor, final Integer[] ids) throws XmlRpcException {
 		return getUserInfoInternal(monitor, new Object[] { new HashMap<String, Object>() {
 			{
@@ -287,7 +285,6 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 		} });
 	}
 
-	@SuppressWarnings("serial")
 	public Object[] getUserInfoFromNames(final IProgressMonitor monitor, final String[] names) throws XmlRpcException {
 		return getUserInfoInternal(monitor, new Object[] { new HashMap<String, Object>() {
 			{
@@ -322,7 +319,6 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 		return getFieldsInternal(monitor, null);
 	}
 
-	@SuppressWarnings("serial")
 	public Object[] getFieldsWithNames(final IProgressMonitor monitor, final String[] names) throws XmlRpcException {
 		return getFieldsInternal(monitor, new Object[] { new HashMap<String, Object>() {
 			{
@@ -335,7 +331,6 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 		} });
 	}
 
-	@SuppressWarnings("serial")
 	public Object[] getFieldsWithIDs(final IProgressMonitor monitor, final Integer[] ids) throws XmlRpcException {
 		return getFieldsInternal(monitor, new Object[] { new HashMap<String, Object>() {
 			{
@@ -389,7 +384,6 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 
 	public Object[] getProducts(final IProgressMonitor monitor, final Object[] ids) throws XmlRpcException {
 		return new BugzillaXmlRpcOperation<Object[]>(this) {
-			@SuppressWarnings("serial")
 			@Override
 			public Object[] execute() throws XmlRpcException {
 				Object[] result = null;
@@ -596,7 +590,6 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 
 	public Object[] getBugs(final IProgressMonitor monitor, final Object[] ids) throws XmlRpcException {
 		return new BugzillaXmlRpcOperation<Object[]>(this) {
-			@SuppressWarnings("serial")
 			@Override
 			public Object[] execute() throws XmlRpcException {
 				Object[] result = null;
@@ -614,7 +607,6 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 	public HashMap<String, HashMap<String, Object[]>> getCommentsInternal(final IProgressMonitor monitor,
 			final Object[] ids) throws XmlRpcException {
 		return new BugzillaXmlRpcOperation<HashMap<String, HashMap<String, Object[]>>>(this) {
-			@SuppressWarnings("serial")
 			@Override
 			public HashMap<String, HashMap<String, Object[]>> execute() throws XmlRpcException {
 				HashMap<String, HashMap<String, Object[]>> result = null;
@@ -633,7 +625,6 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 	public HashMap<String, Object[]> getAttachmentsInternal(final IProgressMonitor monitor, final Object[] ids)
 			throws XmlRpcException {
 		return new BugzillaXmlRpcOperation<HashMap<String, Object[]>>(this) {
-			@SuppressWarnings("serial")
 			@Override
 			public HashMap<String, Object[]> execute() throws XmlRpcException {
 				HashMap<String, Object[]> result = null;
