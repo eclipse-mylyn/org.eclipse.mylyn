@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.team.ui.AbstractActiveChangeSetProvider;
@@ -192,35 +191,6 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		return null;
 	}
 
-	// TODO m4.0 remove deprecated method that is needed maintain backwards compatibility
-	@SuppressWarnings({ "deprecation" })
-	@Override
-	public void contextActivated(IInteractionContext context) {
-		try {
-			ITask task = getTask(context);
-			if (task != null) {
-				for (ActiveChangeSetManager manager : changeSetManagers) {
-					IContextChangeSet contextChangeSet = getOrCreateSet(manager, task);
-					if (contextChangeSet instanceof ActiveChangeSet activeChangeSet) {
-						//						List<IResource> interestingResources = ResourcesUiBridgePlugin.getDefault()
-//								.getInterestingResources(context);
-//						activeChangeSet.add(interestingResources.toArray(new IResource[interestingResources.size()]));
-						activeChangeSets.add(contextChangeSet);
-
-						// makeDefault() will add the change set
-//						if (!manager.contains(activeChangeSet)) {
-//							manager.add(activeChangeSet);
-//						}
-						manager.makeDefault(activeChangeSet);
-					}
-				}
-			}
-		} catch (Exception e) {
-			StatusHandler
-			.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN, "Could not update change set", e)); //$NON-NLS-1$
-		}
-	}
-
 	private IContextChangeSet getOrCreateSet(ActiveChangeSetManager manager, ITask task) {
 		ChangeSet[] sets = manager.getSets();
 		for (ChangeSet set : sets) {
@@ -231,68 +201,6 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		// change set does not exist, create a new one
 		AbstractActiveChangeSetProvider provider = FocusedTeamUiPlugin.getDefault().getActiveChangeSetProvider(manager);
 		return provider.createChangeSet(task);
-	}
-
-	// TODO m4.0 remove deprecated method that is needed maintain backwards compatibility
-	@SuppressWarnings("deprecation")
-	@Override
-	public void contextDeactivated(IInteractionContext context) {
-		for (ActiveChangeSetManager collector : changeSetManagers) {
-			ChangeSet[] sets = collector.getSets();
-			for (ChangeSet set : sets) {
-				if (set instanceof ActiveChangeSet) {
-					IResource[] resources = set.getResources();
-					if (resources == null || resources.length == 0) {
-						collector.remove(set);
-					}
-				}
-			}
-
-			AbstractActiveChangeSetProvider changeSetProvider = FocusedTeamUiPlugin.getDefault()
-					.getActiveChangeSetProvider(collector);
-
-			changeSetProvider.activateDefaultChangeSet();
-		}
-		activeChangeSets.clear();
-	}
-
-	// TODO m4.0 remove deprecated method that is needed maintain backwards compatibility
-	@SuppressWarnings("deprecation")
-	@Override
-	public void interestChanged(List<IInteractionElement> elements) {
-		// disabled, see bug 162007
-		//		for (IInteractionElement element : elements) {
-//			AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(element.getContentType());
-//			try {
-//				if (bridge.isDocument(element.getHandleIdentifier())) {
-//					IResource resource = ResourcesUiBridgePlugin.getDefault().getResourceForElement(element, false);
-//					if (resource != null && resource.exists()) {
-//						for (IContextChangeSet activeContextChangeSet : getActiveChangeSets()) {
-//							if (activeContextChangeSet instanceof ActiveChangeSet) {
-//								if (!((ActiveChangeSet) activeContextChangeSet).contains(resource)) {
-//									if (element.getInterest().isInteresting()) {
-//										((ActiveChangeSet) activeContextChangeSet).add(new IResource[] { resource });
-//									}
-//								}
-//							}
-//						}
-//						if (shouldRemove(element)) {
-//							for (ActiveChangeSetManager collector : changeSetManagers) {
-//								ChangeSet[] sets = collector.getSets();
-//								for (ChangeSet set : sets) {
-//									if (set instanceof ActiveChangeSet) {
-//										set.remove(resource);
-//									}
-//								}
-//							}
-//						}
-//					}
-//				}
-//			} catch (Exception e) {
-//				StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
-//						"Could not manipulate change set resources", e)); //$NON-NLS-1$
-//			}
-//		}
 	}
 
 	public List<IContextChangeSet> getActiveChangeSets() {

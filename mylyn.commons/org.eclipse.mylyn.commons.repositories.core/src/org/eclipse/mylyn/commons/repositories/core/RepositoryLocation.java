@@ -252,14 +252,14 @@ public class RepositoryLocation extends PlatformObject {
 			} catch (NumberFormatException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, RepositoriesCoreInternal.ID_PLUGIN, 0,
 						"Error occured while configuring proxy. Invalid port \"" //$NON-NLS-1$
-								+ proxyPort + "\" specified.", //$NON-NLS-1$
+						+ proxyPort + "\" specified.", //$NON-NLS-1$
 						e));
 			}
 		}
 		return null;
 	}
 
-	// FIXME e3.5 replace with 3.5 proxy API
+	// FIXME e3.5 replace with 3.5 proxy API. What does this mean?
 	public Proxy getProxyForHost(String host, String proxyType) {
 		Proxy proxy = getProxy();
 		if (proxy != null) {
