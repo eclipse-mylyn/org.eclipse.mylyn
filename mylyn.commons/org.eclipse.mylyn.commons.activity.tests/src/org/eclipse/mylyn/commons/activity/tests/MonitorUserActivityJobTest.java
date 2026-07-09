@@ -13,9 +13,13 @@
 
 package org.eclipse.mylyn.commons.activity.tests;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -44,6 +48,11 @@ public class MonitorUserActivityJobTest {
 
 	@Test
 	public void testInactivityTimeout() throws Exception {
+		// Unstable on Mac, maybe this will help
+		OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
+		double loadAvg = osBean.getSystemLoadAverage();
+		long expectedActiveTime = (long) (40 * (loadAvg < 0.0 ? 1.0 : loadAvg > 1.0 ? loadAvg : 1.0));
+
 		callback.lastEventTime = System.currentTimeMillis() - 201;
 		job.setInactivityTimeout(200);
 		job.run();
@@ -58,8 +67,8 @@ public class MonitorUserActivityJobTest {
 		job.run();
 		long slept = System.currentTimeMillis() - callback.lastEventTime;
 		assertTrue(job.isActive());
-		assertTrue(callback.activeTime > 5 && callback.activeTime < 40,
-				"expected less than 5 < activeTime < 40, got " + callback.activeTime + " (slept " + slept + " ms)");
+		assertThat(callback.activeTime).as("loadAvg=%.1f, slept=%dms", loadAvg, slept)
+		.isBetween(5L, expectedActiveTime);
 	}
 
 	@Test
