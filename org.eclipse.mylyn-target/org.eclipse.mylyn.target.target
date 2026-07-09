@@ -29,6 +29,7 @@
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <repository location="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/milestone/latest"/>
+      <unit id="assertj-core" version="0.0.0"/>
       <unit id="com.evolvedbinary.thirdparty.org.apache.xmlrpc.xmlrpc-client" version="0.0.0"/>
       <unit id="com.evolvedbinary.thirdparty.org.apache.xmlrpc.xmlrpc-server" version="0.0.0"/>
       <unit id="com.github.ben-manes.caffeine" version="0.0.0"/>
