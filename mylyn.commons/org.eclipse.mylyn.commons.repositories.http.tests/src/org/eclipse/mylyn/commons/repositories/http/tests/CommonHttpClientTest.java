@@ -77,7 +77,7 @@ public class CommonHttpClientTest {
 	@EnabledIfCI
 	@Disabled("Requires authentication that is not available in CI environment") // FIXME
 	public void testCertificateAuthenticationCertificate() throws Exception {
-		assumeFalse(CommonTestUtil.isCertificateAuthBroken() || CommonTestUtil.isBehindProxy(), "incompatible JVM"); // TODO is this still an issue with Java 21+?
+		assumeFalse(CommonTestUtil.isBehindProxy(), "incompatible JVM"); // TODO is this still an issue with Java 21+?
 		assumeTrue(CommonTestUtil.hasCertificateCredentials(), "missing credentials");
 
 		RepositoryLocation location = new RepositoryLocation();
@@ -98,7 +98,7 @@ public class CommonHttpClientTest {
 	@Test
 	@EnabledIfCI
 	public void testCertificateAuthenticationCertificateReset() throws Exception {
-		assumeFalse(CommonTestUtil.isCertificateAuthBroken() || CommonTestUtil.isBehindProxy(), "incompatible JVM"); // TODO is this still an issue with Java 21+?
+		assumeFalse(CommonTestUtil.isBehindProxy(), "incompatible JVM"); // TODO is this still an issue with Java 21+?
 		assumeTrue(CommonTestUtil.hasCertificateCredentials(), "missing credentials");
 
 		RepositoryLocation location = new RepositoryLocation();

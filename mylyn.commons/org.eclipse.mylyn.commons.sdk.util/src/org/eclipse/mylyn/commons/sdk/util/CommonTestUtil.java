@@ -50,7 +50,6 @@ import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.repositories.core.auth.CertificateCredentials;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
-import org.eclipse.osgi.service.resolver.VersionRange;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
@@ -444,11 +443,6 @@ public class CommonTestUtil {
 				// don't need to catch this
 			}
 		}
-	}
-
-	public static boolean isCertificateAuthBroken() {
-		// not entirely correct since 1.6.0_3 would also satisfy this check but it should be sufficient in reality
-		return new VersionRange("[0.0.0,1.6.0.25]").isIncluded(CoreUtil.getRuntimeVersion());
 	}
 
 	public static boolean hasCertificateCredentials() {

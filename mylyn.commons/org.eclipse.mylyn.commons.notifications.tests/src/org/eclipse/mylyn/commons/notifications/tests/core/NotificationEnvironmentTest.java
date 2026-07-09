@@ -97,8 +97,8 @@ public class NotificationEnvironmentTest {
 	@Test
 	public void testGetRuntimeVersion() {
 		Version runtimeVersion = environment.getRuntimeVersion();
-		assertTrue(new VersionRange("[17.0.0,25.0.0)").isIncluded(runtimeVersion),
-				"Expected value between 17.0-25.0, got " + runtimeVersion);
+		assertTrue(new VersionRange("21.0").isIncluded(runtimeVersion),
+				"Expected value >= 21.0, got " + runtimeVersion);
 	}
 
 	@Test
