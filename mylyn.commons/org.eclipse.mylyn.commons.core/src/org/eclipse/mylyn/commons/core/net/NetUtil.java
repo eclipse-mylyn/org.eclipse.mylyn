@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.core.net;
@@ -197,27 +198,25 @@ public class NetUtil {
 		return getProxy(host, getPlatformProxyType(proxyType));
 	}
 
-	@SuppressWarnings("deprecation")
 	public static Proxy getProxy(String host, String proxyType) {
 		Assert.isNotNull(host);
 		Assert.isNotNull(proxyType);
 		IProxyService service = CommonsCorePlugin.getProxyService();
-		if (service != null && service.isProxiesEnabled()) {
-			// TODO e3.5 move to new proxy API
-			IProxyData data = service.getProxyDataForHost(host, proxyType);
-			if (data != null && data.getHost() != null) {
-				String proxyHost = data.getHost();
-				int proxyPort = data.getPort();
-				// change the IProxyData default port to the Java default port
-				if (proxyPort == -1) {
-					proxyPort = 0;
+		try {
+			URI uri = new URI(proxyType, "//" + host, null); //$NON-NLS-1$
+			if (service != null && service.isProxiesEnabled()) {
+				IProxyData[] data = service.select(uri);
+				if (data != null && data.length > 0 && data[0].getHost() != null) {
+					String proxyHost = data[0].getHost();
+					int proxyPort = data[0].getPort();
+					// change the IProxyData default port to the Java default port
+					if (proxyPort == -1) {
+						proxyPort = 0;
+					}
+					return createProxy(proxyHost, proxyPort, data[0].getUserId(), data[0].getPassword(), null);
 				}
-				return createProxy(proxyHost, proxyPort, data.getUserId(), data.getPassword(), null);
-			}
-		} else {
-			try {
+			} else {
 				// fall back to JDK proxy selector
-				URI uri = new URI(proxyType, "//" + host, null); //$NON-NLS-1$
 				List<Proxy> proxies = ProxySelector.getDefault().select(uri);
 				if (proxies != null && proxies.size() > 0) {
 					Proxy proxy = proxies.iterator().next();
@@ -225,9 +224,9 @@ public class NetUtil {
 						return proxy;
 					}
 				}
-			} catch (URISyntaxException e) {
-				// ignore
 			}
+		} catch (URISyntaxException e) {
+			// ignore
 		}
 		return null;
 	}

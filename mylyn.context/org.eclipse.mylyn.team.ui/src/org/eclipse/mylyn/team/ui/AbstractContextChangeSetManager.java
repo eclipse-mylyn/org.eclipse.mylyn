@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.team.ui;
@@ -44,10 +45,6 @@ public abstract class AbstractContextChangeSetManager extends AbstractContextLis
 				initContextChangeSets(); // otherwise listener will do it
 			}
 
-			if (ContextCore.getContextManager().isContextActive()) {
-				// TODO m4.0 remove call to deprecated method that is needed maintain backwards compatibility
-				contextActivated(ContextCore.getContextManager().getActiveContext());
-			}
 			ContextCore.getContextManager().addListener(this);
 		}
 	}

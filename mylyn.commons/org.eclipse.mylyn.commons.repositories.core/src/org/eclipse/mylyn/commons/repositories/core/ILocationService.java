@@ -31,7 +31,7 @@ import org.eclipse.mylyn.commons.repositories.core.auth.ICredentialsStore;
  */
 public interface ILocationService {
 
-	// FIXME e3.5 replace with 3.5 proxy API
+	// FIXME e3.5 replace with 3.5 proxy API. What does this mean?
 	Proxy getProxyForHost(String host, String proxyType);
 
 	X509TrustManager getTrustManager();
