@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
@@ -57,7 +56,7 @@ public class JenkinsClientTest extends AbstractDefaultJenkinsFixtureTest {
 	@BeforeEach
 	void conditionalRun() {
 		assumeFalse(fixture.isExcluded());
-		assumeFalse(fixture.isUseCertificateAuthentication() && CommonTestUtil.isCertificateAuthBroken());
+		assumeFalse(fixture.isUseCertificateAuthentication());
 	}
 
 	@BeforeEach

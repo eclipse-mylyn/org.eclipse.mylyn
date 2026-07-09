@@ -28,7 +28,6 @@ import org.eclipse.mylyn.builds.core.spi.BuildPlanRequest;
 import org.eclipse.mylyn.builds.core.spi.BuildServerBehaviour;
 import org.eclipse.mylyn.builds.internal.core.BuildFactory;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.jenkins.core.JenkinsCore;
 import org.eclipse.mylyn.jenkins.tests.AbstractDefaultJenkinsFixtureTest;
 import org.eclipse.mylyn.jenkins.tests.support.JenkinsHarness;
@@ -47,7 +46,7 @@ public class JenkinsIntegrationTest extends AbstractDefaultJenkinsFixtureTest {
 	@BeforeEach
 	public void conditionalRUn() {
 		assumeFalse(fixture.isExcluded());
-		assumeFalse(fixture.isUseCertificateAuthentication() && CommonTestUtil.isCertificateAuthBroken());
+		assumeFalse(fixture.isUseCertificateAuthentication());
 		assumeFalse(fixture.isUseCertificateAuthentication());
 	}
 
