@@ -360,8 +360,6 @@
                 url="https://download.eclipse.org/tools/cdt/builds/cdt/main/"/>
             <repository
                 url="https://download.eclipse.org/rt/ecf/3.16.8/site.p2/3.16.8.v20260415-2025"/>
-            <repository
-                url="https://download.eclipse.org/tools/orbit/downloads/drops/R20180206163158/repository"/>
           </repositoryList>
         </targlet>
       </setupTask>
