@@ -207,10 +207,6 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		return new ArrayList<>(activeChangeSets);
 	}
 
-	private ITask getTask(IInteractionContext context) {
-		return TasksUi.getTaskActivityManager().getActiveTask();
-	}
-
 	/**
 	 * Ignores decay.
 	 */
