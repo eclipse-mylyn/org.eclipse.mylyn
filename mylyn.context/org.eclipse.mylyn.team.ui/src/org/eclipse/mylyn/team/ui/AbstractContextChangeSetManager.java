@@ -36,7 +36,6 @@ public abstract class AbstractContextChangeSetManager extends AbstractContextLis
 
 	private boolean isInitialized = false;
 
-	@SuppressWarnings("deprecation")
 	public void enable() {
 		if (!isEnabled) {
 			isEnabled = true;
