@@ -8,11 +8,11 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.java.ui;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +21,7 @@ import org.eclipse.core.internal.resources.Marker;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
@@ -29,7 +30,6 @@ import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IParent;
@@ -84,12 +84,11 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 		Object object = getObjectForHandle(handle);
 		if (object instanceof IJavaElement element) {
 			if (element instanceof IParent parent) {
-				IJavaElement[] children;
 				try {
-					children = parent.getChildren();
+					IJavaElement[] children = parent.getChildren();
 					List<String> childHandles = new ArrayList<>();
-					for (IJavaElement element2 : children) {
-						String childHandle = getHandleIdentifier(element2);
+					for (IJavaElement child : children) {
+						String childHandle = child.getHandleIdentifier();
 						if (childHandle != null) {
 							childHandles.add(childHandle);
 						}
@@ -136,50 +135,13 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 	 */
 	@Override
 	public String getHandleIdentifier(Object object) {
-		if (object instanceof IJavaElement) {
-			return ((IJavaElement) object).getHandleIdentifier();
-		} else if (object instanceof IAdaptable) {
-			Object adapter = ((IAdaptable) object).getAdapter(IJavaElement.class);
-			if (adapter instanceof IJavaElement) {
-				return ((IJavaElement) adapter).getHandleIdentifier();
-			}
-		} else if (isWtpClass(object)) {
-			return getWtpElementHandle(object);
-		}
-		return null;
-	}
-
-	/**
-	 * TODO: remove after WTP 1.5.1 is generally available
-	 */
-	private String getWtpElementHandle(Object object) {
-		Class<?> objectClass = object.getClass();
-		try {
-			Method getProjectMethod = objectClass.getMethod("getProject"); //$NON-NLS-1$
-			Object javaProject = getProjectMethod.invoke(object);
-			if (javaProject instanceof IJavaProject) {
-				return ((IJavaElement) javaProject).getHandleIdentifier();
-			}
-		} catch (Exception e) {
-			// ignore
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	private boolean isWtpClass(Object object) {
-		try {
-			return object != null && object.getClass().getSimpleName().equals("CompressedJavaProject"); //$NON-NLS-1$
-		} catch (Throwable t) {
-			// could have malformed name, see bug 165065
-			return false;
-		}
+		return Adapters.of(object, IJavaElement.class).map(IJavaElement::getHandleIdentifier).orElse(null);
 	}
 
 	@Override
 	public String getLabel(Object object) {
-		if (object instanceof IJavaElement) {
-			return ((IJavaElement) object).getElementName();
+		if (object instanceof IJavaElement javaElement) {
+			return javaElement.getElementName();
 		} else {
 			return ""; //$NON-NLS-1$
 		}
@@ -200,14 +162,14 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 	 */
 	@Override
 	public boolean acceptsObject(Object object) {
-		if (object instanceof IResource) {
-			Object adapter = ((IResource) object).getAdapter(IJavaElement.class);
+		if (object instanceof IResource resource) {
+			IJavaElement adapter = resource.getAdapter(IJavaElement.class);
 			return adapter instanceof IJavaElement;
 		}
 
 		boolean accepts = object instanceof IJavaElement || object instanceof PackageFragmentRootContainer
 				|| object instanceof ClassPathContainer.RequiredProjectWrapper || object instanceof JarEntryFile
-				|| object instanceof IPackageFragment || isWtpClass(object);
+				|| object instanceof IPackageFragment;
 
 		return accepts;
 	}
@@ -221,9 +183,9 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 			return true;
 		} else if (object instanceof PackageFragmentRootContainer container) {
 			// since not in model, check if it contains anything interesting
-			Object[] children = container.getChildren();
-			for (Object element2 : children) {
-				if (element2 instanceof JarPackageFragmentRoot element) {
+			IAdaptable[] children = container.getChildren();
+			for (IAdaptable child : children) {
+				if (child instanceof JarPackageFragmentRoot element) {
 					IInteractionElement node = ContextCore.getContextManager()
 							.getElement(element.getHandleIdentifier());
 					if (node != null && node.getInterest().isInteresting()) {
@@ -243,11 +205,11 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public String getHandleForOffsetInObject(Object object, int offset) {
-		IMarker marker;
-		if (object instanceof ConcreteMarker) {
-			marker = ((ConcreteMarker) object).getMarker();
-		} else if (object instanceof Marker) {
-			marker = (Marker) object;
+		final IMarker marker;
+		if (object instanceof ConcreteMarker concreteMarker) {
+			marker = concreteMarker.getMarker();
+		} else if (object instanceof Marker markr) {
+			marker = markr;
 		} else {
 			return null;
 		}
@@ -265,20 +227,12 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 			}
 			if (compilationUnit != null) {
 				// first try to resolve the character start, then the line number if not present
-				int charStart = 0;
-				Object attribute = marker.getAttribute(IMarker.CHAR_START, 0);
-				if (attribute instanceof Integer) {
-					charStart = (Integer) attribute;
-				}
+				int charStart = marker.getAttribute(IMarker.CHAR_START, 0);
 				IJavaElement javaElement = null;
 				if (charStart != -1) {
 					javaElement = compilationUnit.getElementAt(charStart);
 				} else {
-					int lineNumber = 0;
-					Object lineNumberAttribute = marker.getAttribute(IMarker.LINE_NUMBER, 0);
-					if (lineNumberAttribute instanceof Integer) {
-						lineNumber = (Integer) lineNumberAttribute;
-					}
+					int lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, 0);
 					if (lineNumber != -1) {
 						// could do finer granularity by uncommenting what's below, see bug 132092
 //						Document document = new Document(compilationUnit.getSource());
@@ -325,25 +279,19 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 		try {
 			IJavaElement element = (IJavaElement) getObjectForHandle(node.getHandleIdentifier());
 			switch (element.getElementType()) {
-				case IJavaElement.JAVA_PROJECT:
-				case IJavaElement.PACKAGE_FRAGMENT_ROOT:
+				case IJavaElement.JAVA_PROJECT, IJavaElement.PACKAGE_FRAGMENT_ROOT -> {
 					return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_INFINITE, null);
-				case IJavaElement.PACKAGE_FRAGMENT:
-				case IJavaElement.COMPILATION_UNIT:
-				case IJavaElement.CLASS_FILE:
+				}
+				case IJavaElement.PACKAGE_FRAGMENT, IJavaElement.COMPILATION_UNIT, IJavaElement.CLASS_FILE -> {
 					return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_ONE, null);
-				case IJavaElement.PACKAGE_DECLARATION:
-				case IJavaElement.IMPORT_DECLARATION:
-				case IJavaElement.IMPORT_CONTAINER:
-				case IJavaElement.TYPE:
-				case IJavaElement.INITIALIZER:
-				case IJavaElement.METHOD:
-				case IJavaElement.FIELD:
-				case IJavaElement.LOCAL_VARIABLE:
+				}
+				case IJavaElement.PACKAGE_DECLARATION, IJavaElement.IMPORT_DECLARATION, IJavaElement.IMPORT_CONTAINER, IJavaElement.TYPE, //
+				IJavaElement.INITIALIZER, IJavaElement.METHOD, IJavaElement.FIELD, IJavaElement.LOCAL_VARIABLE -> {
 					ICompilationUnit cu = (ICompilationUnit) element.getAncestor(IJavaElement.COMPILATION_UNIT);
 					if (cu != null) {
 						return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_ONE, null);
 					}
+				}
 			}
 		} catch (CoreException e) {
 			// ignore
