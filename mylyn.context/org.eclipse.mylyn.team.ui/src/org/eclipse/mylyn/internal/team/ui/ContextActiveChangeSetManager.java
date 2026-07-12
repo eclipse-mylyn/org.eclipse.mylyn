@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.team.ui.AbstractActiveChangeSetProvider;
