@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.PullRequest;
@@ -195,7 +196,8 @@ public class PullRequestConnector extends RepositoryConnector {
 		List<String> statuses = QueryUtils.getAttributes(
 				IssueService.FILTER_STATE, query);
 
-		monitor.beginTask(Messages.PullRequestConnector_TaskFetching, statuses.size());
+		SubMonitor subMonitor = SubMonitor.convert(monitor, Messages.PullRequestConnector_TaskFetching,
+				statuses.size() * 100);
 		try {
 			RepositoryId repo = getRepository(repository.getRepositoryUrl());
 
@@ -204,9 +206,14 @@ public class PullRequestConnector extends RepositoryConnector {
 			IssueService commentService = new IssueService(client);
 
 			for (String status : statuses) {
+				SubMonitor statusMonitor = subMonitor.split(100);
+				statusMonitor.setTaskName(status + Messages.PullRequestConnector_LabelPullRequests);
+
 				List<PullRequest> pulls = service.getPullRequests(repo, status);
+				statusMonitor.checkCanceled();
 
 				// collect task data
+				statusMonitor.setWorkRemaining(pulls.size());
 				for (PullRequest pr : pulls) {
 					pr = service.getPullRequest(repo, pr.getNumber());
 					PullRequestComposite prComp = new PullRequestComposite();
@@ -220,16 +227,19 @@ public class PullRequestConnector extends RepositoryConnector {
 						prComp.setCommits(service.getCommits(repo, pr.getNumber()));
 					}
 					TaskData taskData = taskDataHandler.createTaskData(
-							repository, monitor, repo, prComp, comments);
+							repository, statusMonitor, repo, prComp, comments);
 					collector.accept(taskData);
+
+					statusMonitor.split(1);
 				}
-				monitor.worked(1);
+				statusMonitor.done();
 			}
 		} catch (IOException e) {
 			result = GitHub.createWrappedStatus(e);
+		} finally {
+			subMonitor.done();
 		}
 
-		monitor.done();
 		return result;
 	}
 
