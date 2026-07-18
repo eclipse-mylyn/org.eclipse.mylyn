@@ -36,6 +36,8 @@ public class Messages extends NLS {
 	/** */
 	public static String FieldError_AlreadyExists;
 
+	public static String Review_Comment_Thread;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

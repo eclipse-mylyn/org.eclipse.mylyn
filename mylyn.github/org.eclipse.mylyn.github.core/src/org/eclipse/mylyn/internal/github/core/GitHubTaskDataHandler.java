@@ -13,10 +13,17 @@
 package org.eclipse.mylyn.internal.github.core;
 
 import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.function.Function;
 
 import org.eclipse.egit.github.core.Comment;
+import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
@@ -86,24 +93,37 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		return attribute;
 	}
 
+	protected void addComments(final TaskAttribute parent, final List<Comment> comments,
+			final TaskRepository repository) {
+		addComments(parent, comments, Collections.emptyList(), repository);
+	}
+
 	/**
 	 * Add task attributes for given comments under given parent
 	 *
 	 * @param parent
 	 * @param comments
+	 * @param commitComments
 	 * @param repository
+	 * @return task attribute
 	 */
-	protected void addComments(final TaskAttribute parent, final List<Comment> comments,
+
+	protected void addComments(final TaskAttribute parent, List<Comment> comments,
+			List<CommitComment> commitComments,
 			final TaskRepository repository) {
-		if (comments == null || comments.isEmpty()) {
-			return;
+		if (comments == null) {
+			comments = Collections.emptyList();
+		}
+		if (commitComments == null) {
+			commitComments = Collections.emptyList();
 		}
 
 		int count = 1;
+
 		for (Comment comment : comments) {
 			TaskCommentMapper commentMapper = new TaskCommentMapper();
-			commentMapper.setAuthor(createPerson(comment.getUser(), repository));
 			commentMapper.setCreationDate(comment.getCreatedAt());
+			commentMapper.setAuthor(createPerson(comment.getUser(), repository));
 			commentMapper.setText(comment.getBody());
 			commentMapper.setCommentId(comment.getUrl());
 			commentMapper.setNumber(count);
@@ -111,6 +131,50 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 			TaskAttribute attribute = parent.createAttribute(TaskAttribute.PREFIX_COMMENT + count);
 			commentMapper.applyTo(attribute);
 			count++;
+		}
+
+		if (!commitComments.isEmpty()) {
+			LinkedHashMap<Integer, List<CommitComment>> commitCommentMap = new LinkedHashMap<>();
+			commitComments.stream() //
+			.sorted(Comparator.comparingInt(CommitComment::getOriginalPosition) //
+					.thenComparing(
+							(Function<CommitComment, Date>) CommitComment::getCreatedAt)
+					) //
+			.forEach(commitComment -> {
+				commitCommentMap.computeIfAbsent(commitComment.getOriginalPosition(), k -> new ArrayList<>())
+				.add(commitComment);
+			});
+
+			int reviewCount = 1;
+
+			for (List<CommitComment> commitCommentz : commitCommentMap.values()) {
+				boolean showDiffHunk = true;
+				count = 1;
+				for (CommitComment commitComment : commitCommentz) {
+					TaskCommentMapper commentMapper = new TaskCommentMapper();
+					commentMapper.setCreationDate(commitComment.getCreatedAt());
+					IRepositoryPerson person = createPerson(commitComment.getUser(), repository);
+					person.setName(person.getPersonId() + MessageFormat.format(Messages.Review_Comment_Thread, reviewCount));
+					commentMapper.setAuthor(person);
+
+					String commentText = commitComment.getBody();
+
+					if (showDiffHunk) { // Add some markdown annotations to make the diff hunk more readable in the comment text
+						commentText = "# " + commitComment.getPath() + // //$NON-NLS-1$
+								"\n```\n" + commitComment.getDiffHunk() + "\n```\n" + //  //$NON-NLS-1$//$NON-NLS-2$
+								"---\n" + commentText; //$NON-NLS-1$
+						showDiffHunk = false;
+					}
+					commentMapper.setText(commentText);
+					commentMapper.setCommentId(commitComment.getUrl());
+					commentMapper.setNumber(count);
+
+					TaskAttribute attribute = parent.createAttribute(TaskAttribute.PREFIX_COMMENT + count);
+					commentMapper.applyTo(attribute);
+					count++;
+				}
+				reviewCount++;
+			}
 		}
 	}
 

@@ -19,6 +19,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.github.core.Comment;
+import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.RepositoryId;
@@ -132,11 +133,11 @@ public class PullRequestTaskDataHandler extends GitHubTaskDataHandler {
 	 * @return task data
 	 */
 	public TaskData createTaskData(TaskRepository repository, IProgressMonitor monitor, IRepositoryIdProvider repo,
-			PullRequestComposite pr, List<Comment> comments) {
+			PullRequestComposite pr, List<Comment> comments, final List<CommitComment> commitComments) {
 		TaskData taskData = createTaskData(repository, monitor, repo, pr);
 		taskData.setPartial(false);
 
-		addComments(taskData.getRoot(), comments, repository);
+		addComments(taskData.getRoot(), comments, commitComments, repository);
 
 		return taskData;
 	}

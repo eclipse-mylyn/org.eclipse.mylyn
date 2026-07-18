@@ -13,6 +13,7 @@
 package org.eclipse.mylyn.internal.github.core.pr;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -21,6 +22,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.egit.github.core.Comment;
+import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.Repository;
@@ -215,19 +217,8 @@ public class PullRequestConnector extends RepositoryConnector {
 				// collect task data
 				statusMonitor.setWorkRemaining(pulls.size());
 				for (PullRequest pr : pulls) {
-					pr = service.getPullRequest(repo, pr.getNumber());
-					PullRequestComposite prComp = new PullRequestComposite();
-					prComp.setRequest(pr);
-					List<Comment> comments = null;
-					if (pr.getComments() > 0) {
-						comments = commentService.getComments(repo.getOwner(), repo.getName(),
-								Integer.toString(pr.getNumber()));
-					}
-					if (pr.getCommits() > 0) {
-						prComp.setCommits(service.getCommits(repo, pr.getNumber()));
-					}
-					TaskData taskData = taskDataHandler.createTaskData(
-							repository, statusMonitor, repo, prComp, comments);
+					TaskData taskData = getTaskData(repository, pr.getNumber(), statusMonitor, repo, commentService,
+							service);
 					collector.accept(taskData);
 
 					statusMonitor.split(1);
@@ -251,21 +242,35 @@ public class PullRequestConnector extends RepositoryConnector {
 		try {
 			GitHubClient client = IssueConnector.createClient(repository);
 			PullRequestService service = new PullRequestService(client);
-			PullRequest pr = service.getPullRequest(repo, Integer.parseInt(taskId));
-			PullRequestComposite prComp = new PullRequestComposite();
-			prComp.setRequest(pr);
 			IssueService commentService = new IssueService(client);
-			List<Comment> comments = null;
-			if (pr.getComments() > 0) {
-				comments = commentService.getComments(repo.getOwner(), repo.getName(), taskId);
-			}
-			if (pr.getCommits() > 0) {
-				prComp.setCommits(service.getCommits(repo, pr.getNumber()));
-			}
-			return taskDataHandler.createTaskData(repository, monitor, repo, prComp, comments);
+
+			return getTaskData(repository, Integer.parseInt(taskId), monitor, repo, commentService, service);
 		} catch (IOException e) {
 			throw new CoreException(GitHub.createWrappedStatus(e));
 		}
+	}
+
+	private TaskData getTaskData(TaskRepository repository, int taskId, IProgressMonitor monitor, RepositoryId repo,
+			IssueService commentService, PullRequestService service) throws IOException, NumberFormatException {
+
+		PullRequest pr = service.getPullRequest(repo, taskId);
+		PullRequestComposite prComp = new PullRequestComposite();
+		prComp.setRequest(pr);
+
+		List<Comment> comments = Collections.emptyList();
+		if (pr.getComments() > 0) {
+			comments = commentService.getComments(repo.getOwner(), repo.getName(), taskId);
+		}
+
+		List<CommitComment> commitComments = Collections.emptyList();
+		if (pr.getReviewComments() > 0) {
+			commitComments = service.getComments(repo, pr.getNumber());
+		}
+
+		if (pr.getCommits() > 0) {
+			prComp.setCommits(service.getCommits(repo, pr.getNumber()));
+		}
+		return taskDataHandler.createTaskData(repository, monitor, repo, prComp, comments, commitComments);
 	}
 
 	@Override
