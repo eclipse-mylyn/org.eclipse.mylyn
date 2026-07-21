@@ -8,11 +8,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.pde.ui;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -188,8 +190,8 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 							Field field2 = clazz2.getDeclaredField("viewer"); //$NON-NLS-1$
 							field2.setAccessible(true);
 							Object f2 = field2.get(page);
-							if (f2 != null && f2 instanceof TreeViewer) {
-								viewers.add((TreeViewer) f2);
+							if (f2 instanceof TreeViewer treeViewer) {
+								viewers.add(treeViewer);
 							}
 						}
 					} catch (Exception e) {
@@ -202,29 +204,16 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 
 			try {
 				// get the current page of the outline
-				Class<?> clazz = PDEFormEditor.class;
-				Field field = null;
-				try {
-					field = clazz.getDeclaredField("formOutline"); //$NON-NLS-1$
-				} catch (NoSuchFieldException e) {
-					field = clazz.getDeclaredField("fFormOutline"); //$NON-NLS-1$
-				}
+
+				Field field = PDEFormEditor.class.getDeclaredField("fFormOutline"); //$NON-NLS-1$
 				field.setAccessible(true);
 				Object f = field.get(editor);
-				if (f != null && f instanceof FormOutlinePage) {
+				if (f instanceof FormOutlinePage) {
 					// get the tree viewer for the outline
-					Class<?> clazz2 = FormOutlinePage.class;
-					Field field2 = null;
-					try {
-						field2 = clazz2.getDeclaredField("treeViewer"); //$NON-NLS-1$
-					} catch (NoSuchFieldException e) {
-						field2 = clazz2.getDeclaredField("fTreeViewer"); //$NON-NLS-1$
-					}
+					Method field2 = FormOutlinePage.class.getDeclaredMethod("getTreeViewer"); //$NON-NLS-1$
 					field2.setAccessible(true);
-					Object f2 = field2.get(f);
-					if (f2 != null && f2 instanceof TreeViewer treeViewer) {
-						viewers.add(treeViewer);
-					}
+					TreeViewer treeViewer = (TreeViewer) field2.invoke(f);
+					viewers.add(treeViewer);
 				}
 			} catch (Exception e) {
 				StatusHandler

@@ -353,9 +353,6 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 		}
 		sourceViewer.showAnnotations(true);
 		sourceViewer.showAnnotationsOverview(true);
-
-		declareMethod = sourceViewerClazz.getDeclaredMethod("showAnnotationsOverview", Boolean.TYPE); //$NON-NLS-1$
-		declareMethod.setAccessible(true);
 	}
 
 	private void createVerticalRuler(IDocument newInput, Class<SourceViewer> sourceViewerClazz)

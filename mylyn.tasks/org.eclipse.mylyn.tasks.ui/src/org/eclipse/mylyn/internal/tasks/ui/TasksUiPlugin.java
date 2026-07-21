@@ -16,7 +16,6 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +30,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.net.proxy.IProxyChangeListener;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.resources.IResource;
@@ -343,12 +343,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				boolean activateTask = !commandLineArgs.contains(ITasksCoreConstants.COMMAND_LINE_NO_ACTIVATE_TASK);
 				if (activateTask) {
 					try {
-						Field field = org.eclipse.core.internal.resources.Workspace.class.getDeclaredField("crashed"); //$NON-NLS-1$
-						field.setAccessible(true);
-						Object value = field.get(ResourcesPlugin.getWorkspace());
-						if (value instanceof Boolean) {
-							activateTask = !(Boolean) value;
-						}
+						activateTask = !((Workspace) ResourcesPlugin.getWorkspace()).isCrashed();
 					} catch (Throwable t) {
 						t.printStackTrace();
 						// ignore
@@ -449,9 +444,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				@Override
 				public void run() {
 					ActivateTaskDialogAction activateTaskDialogAction = new ActivateTaskDialogAction();
-					IWorkbenchWindow window = getWorkbench().getActiveWorkbenchWindow();
-					if (window == null && getWorkbench().getWorkbenchWindows().length > 0) {
-						window = getWorkbench().getWorkbenchWindows()[0];
+					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+					if (window == null && PlatformUI.getWorkbench().getWorkbenchWindows().length > 0) {
+						window = PlatformUI.getWorkbench().getWorkbenchWindows()[0];
 					}
 					activateTaskDialogAction.init(window);
 					activateTaskDialogAction.run(null);
