@@ -14,7 +14,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -580,13 +579,7 @@ public class EditorUtil {
 	}
 
 	public static void setTitleBarForeground(ExpandableComposite composite, Color color) {
-		try {
-			Field field = ExpandableComposite.class.getDeclaredField("titleBarForeground"); //$NON-NLS-1$
-			field.setAccessible(true);
-			field.set(composite, color);
-		} catch (Exception e) {
-			composite.setTitleBarForeground(color);
-		}
+		composite.setTitleBarForeground(color);
 	}
 
 }
