@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010, 2016 Markus Knittig and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Markus Knittig - initial API and implementation
@@ -351,7 +351,7 @@ public class JenkinsServerBehaviour extends BuildServerBehaviour {
 		}
 		if (failCount != 0 || totalCount != 0 || skipCount != 0) {
 			append(sb,
-					NLS.bind("{0} tests: {1} failed, {2} skipped", new Object[] { totalCount, failCount, skipCount }));
+					NLS.bind("{0} tests: {1} failed, {2} skipped", totalCount, failCount, skipCount));
 		}
 		if (sb.length() > 0) {
 			return sb.toString();
