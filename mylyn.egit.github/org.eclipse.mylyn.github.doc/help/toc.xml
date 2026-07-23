@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<toc topic="help/EGit/GitHub/User_Guide/User-Guide.html" label="EGit GitHub Documentation">
+	<topic href="help/EGit/GitHub/User_Guide/User-Guide.html" label="Mylyn GitHub Connector User Guide">
+		<topic href="help/EGit/GitHub/User_Guide/User-Guide.html" label="Overview"></topic>
+		<topic href="help/EGit/GitHub/User_Guide/User-Guide.html#Getting_Started" label="Getting Started"></topic>
+		<topic href="help/EGit/GitHub/User_Guide/User-Guide.html#Issues" label="Issues">
+			<topic href="help/EGit/GitHub/User_Guide/User-Guide.html#Queries" label="Queries"></topic>
+			<topic href="help/EGit/GitHub/User_Guide/User-Guide.html#Issue_Editor" label="Issue Editor"></topic>
+		</topic>
+		<topic href="help/EGit/GitHub/User_Guide/User-Guide.html#Gists" label="Gists">
+			<topic href="help/EGit/GitHub/User_Guide/User-Guide.html#Creating" label="Creating"></topic>
+			<topic href="help/EGit/GitHub/User_Guide/User-Guide.html#Queries_2" label="Queries"></topic>
+			<topic href="help/EGit/GitHub/User_Guide/User-Guide.html#Gist_Editor" label="Gist Editor"></topic>
+		</topic>
+		<topic href="help/EGit/GitHub/User_Guide/User-Guide.html#Frequently_Asked_Questions_.28FAQ.29" label="Frequently Asked Questions (FAQ)"></topic>
+		<topic href="help/EGit/GitHub/User_Guide/Updating-This-Document.html" label="Updating This Document"></topic>
+	</topic>
+</toc>

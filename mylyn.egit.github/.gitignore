@@ -1,0 +1,9 @@
+# workspace metadata
+.metadata
+
+# class files
+*/bin/
+*/target/
+
+# SWTBot screenshots
+*/screenshots/
