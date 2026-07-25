@@ -353,8 +353,6 @@
             <repository
                 url="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/milestone/latest"/>
             <repository
-                url="https://download.eclipse.org/egit/github/updates"/>
-            <repository
                 url="https://download.eclipse.org/egit/updates-stable-nightly"/>
             <repository
                 url="https://download.eclipse.org/tools/cdt/builds/cdt/main/"/>
