@@ -10,6 +10,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Alexander Fedorov (ArSysOp) - ongoing support
+ *     See git history
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.viewer;
 
@@ -34,6 +35,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
+import org.eclipse.e4.ui.css.swt.theme.IThemeManager;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.source.Annotation;
@@ -57,6 +60,10 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceReference;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -328,7 +335,27 @@ public class HtmlTextPresentationParser {
 	}
 
 	public static InputStream getDefaultStylesheetContent() {
-		return HtmlTextPresentationParser.class.getResourceAsStream("default.css"); //$NON-NLS-1$
+		/**
+		 * FIXME: Using the theme extension in plugin.xml causes the css to bleed into other mylyn components
+		 */
+		if (isDarkThemeActive()) {
+			return HtmlTextPresentationParser.class.getResourceAsStream("/css/dark.css"); //$NON-NLS-1$
+		} else {
+			return HtmlTextPresentationParser.class.getResourceAsStream("/css/default.css"); //$NON-NLS-1$
+		}
+	}
+
+	public static boolean isDarkThemeActive() {
+		BundleContext context = FrameworkUtil.getBundle(HtmlTextPresentationParser.class).getBundleContext();
+		ServiceReference<IThemeManager> ref = context.getServiceReference(IThemeManager.class);
+		if (ref != null) {
+			IThemeManager manager = context.getService(ref);
+			IThemeEngine engine = manager.getEngineForDisplay(Display.getCurrent());
+			if (engine != null && engine.getActiveTheme() != null) {
+				return engine.getActiveTheme().getId().toLowerCase().contains("dark"); //$NON-NLS-1$
+			}
+		}
+		return false;
 	}
 
 	public TextPresentation getPresentation() {

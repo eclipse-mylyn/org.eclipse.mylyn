@@ -1,0 +1,188 @@
+/*******************************************************************************
+ * Copyright (c) 2026 George Lindholm
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     See git history
+ *******************************************************************************/
+:root {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #e0e0e0;
+	background-color: #1e1e1e;
+}
+
+html, body {
+	height: 100%;
+	 margin: 0;
+	 font-family: var(--font-stack);
+	 color: var(--fg);
+	 background-color:
+	 var(--bg); }
+
+h1 {
+	font-size: 120%;
+	font-weight: bold;
+	color: #7eb8f7;
+}
+
+h2 {
+	font-size: 110%;
+	font-weight: bold;
+	color: #7eb8f7;
+}
+
+h3 {
+	font-size: 105%;
+	font-weight: bold;
+	color: #7eb8f7;
+}
+
+h4 {
+	font-weight: bold;
+	color: #7eb8f7;
+}
+
+h5 {
+	font-size: 90%;
+	font-weight: bold;
+	color: #7eb8f7;
+}
+
+h6 {
+	font-size: 80%;
+	font-weight: bold;
+	color: #7eb8f7;
+}
+
+b {
+	font-weight: bold;
+}
+
+strong {
+	font-weight: bold;
+}
+
+i {
+	font-style: italic;
+}
+
+cite {
+	font-style: italic;
+}
+
+em {
+	font-style: italic;
+}
+
+mark {
+	background-color: #6b5900;
+	color: #ffe066;
+}
+
+var {
+	font-style: italic;
+}
+
+dfn {
+	font-style: italic;
+}
+
+code {
+	font-family: monospace;
+	color: #9999ff;
+}
+
+pre {
+	font-family: monospace;
+}
+
+/* Java stack traces
+pre.javaStackTrace {
+	font-family: monospace;
+}
+*/
+
+/* sections beginning with -- Error Details --
+pre.eclipseErrorDetails {
+	font-family: monospace;
+}
+*/
+
+ins {
+	text-decoration: underline;
+}
+
+del {
+	text-decoration: line-through;
+}
+
+sup {
+	font-size: smaller;
+	vertical-align: super;
+}
+
+a {
+	text-decoration: underline;
+	color: #6ab0f5;
+}
+
+sup a {
+	text-decoration: none;
+}
+
+sub {
+	font-size: smaller;
+	vertical-align: sub;
+}
+
+dt {
+	font-weight: bold;
+}
+
+blockquote {
+	color: #7aadda;
+}
+
+tt {
+	font-family: monospace;
+}
+
+q {
+	color: #7aadda;
+}
+
+h1.editorPreview, h2.editorPreview, h3.editorPreview, h4.editorPreview {
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  border-bottom: 1px solid #444;
+}
+
+pre.editorPreview {
+  padding: 16px;
+  overflow: auto;
+  line-height: 1.45;
+  background-color: #2d2d2d;
+  border-radius: 3px;
+}
+
+table.editorPreview {
+  border-collapse: collapse;
+  border-spacing: 0;
+  border-color: #555;
+}
+
+tr.editorPreview td.editorPreview {
+  border: 1px solid #444;
+  padding: 6px 13px;
+}
+
+tr.editorPreview th.editorPreview {
+  border: 1px solid #444;
+  padding: 6px 13px;
+  background-color: #2a2a2a;
+}
