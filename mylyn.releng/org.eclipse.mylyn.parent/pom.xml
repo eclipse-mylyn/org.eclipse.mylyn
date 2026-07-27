@@ -375,7 +375,7 @@
             <forkedProcessTimeoutInSeconds>10800</forkedProcessTimeoutInSeconds>
             <product>org.eclipse.sdk.ide</product>
             <application>org.eclipse.ui.ide.workbench</application>
-            <argLine>${tycho.testArgLine} -Xmx512m -Djava.io.tmpdir=${project.build.directory} ${test.vmargs}</argLine>
+            <argLine>${tycho.testArgLine} -Xmx512m -Dorg.eclipse.swt.graphics.Resource.reportNonDisposed=true -Djava.io.tmpdir=${project.build.directory} ${test.vmargs}</argLine>
             <appArgLine>${test.args}</appArgLine>
             <application>org.eclipse.ui.ide.workbench</application>
             <rerunFailingTestsCount>1</rerunFailingTestsCount>
