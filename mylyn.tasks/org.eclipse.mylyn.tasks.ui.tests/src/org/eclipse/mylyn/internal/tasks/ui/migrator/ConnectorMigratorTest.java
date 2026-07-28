@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -418,9 +419,7 @@ public class ConnectorMigratorTest {
 				manager.getRepositoryConnector("mock.new"), monitor);
 
 		verify(migrator, never()).getTaskData("key1", newConnector, newRepository, monitor);
-		// Disabled for https://github.com/eclipse-mylyn/org.eclipse.mylyn/pull/148
-		// Reminder to re-enable: https://github.com/eclipse-mylyn/org.eclipse.mylyn/issues/149
-		// verify(migrator, never()).createTask(argThat(not(taskData2)), any(TaskRepository.class));
+		verify(migrator, never()).createTask(argThat(task -> !task.equals(taskData2)), any(TaskRepository.class));
 		verify(migrator).getTaskData("key2", newConnector, newRepository, monitor);
 		verify(migrator).createTask(taskData2, newRepository);
 		verify(migrator).migratePrivateData((AbstractTask) task1, (AbstractTask) task1Migrated, monitor);
