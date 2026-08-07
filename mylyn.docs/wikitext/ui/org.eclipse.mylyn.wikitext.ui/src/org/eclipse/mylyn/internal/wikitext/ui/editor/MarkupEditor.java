@@ -400,21 +400,33 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 						// workaround end
 
 						event.doit = false;
-						if (tryToOpenAsWorkspaceFile(event.location)) {
-							return;
-						}
-						try {
-							PlatformUI.getWorkbench()
-									.getBrowserSupport()
-									.createBrowser("org.eclipse.ui.browser") //$NON-NLS-1$
-									.openURL(new URL(event.location));
-						} catch (Exception e) {
-							new URLHyperlink(new Region(0, 1), event.location).open();
-						}
+						executeAsync(() -> {
+							if (tryToOpenAsWorkspaceFile(event.location)) {
+								return;
+							}
+							try {
+								PlatformUI.getWorkbench()
+										.getBrowserSupport()
+										.createBrowser("org.eclipse.ui.browser") //$NON-NLS-1$
+										.openURL(new URL(event.location));
+							} catch (Exception e) {
+								new URLHyperlink(new Region(0, 1), event.location).open();
+							}
+						});
 					} else {
-						tryToOpenAsWorkspaceFile(event.location);
+						executeAsync(() -> tryToOpenAsWorkspaceFile(event.location));
 					}
 				}
+
+				private static void executeAsync(Runnable runnable) {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+						if (!PlatformUI.isWorkbenchRunning()) {
+							return;
+						}
+						runnable.run();
+					});
+				}
+
 			});
 			previewTab.setControl(browser);
 		} catch (SWTError e) {
