@@ -121,6 +121,12 @@ public class AdmonitionBlock extends Block {
 	}
 
 	private int handleSecondLine(String line, int offset) {
+		if (line.isEmpty()) {
+			//user may started a line assume title
+			blockLineCount++;
+			hasTitle = true;
+			return -1;
+		}
 		if (line.charAt(0) == '.') {
 			Attributes titleAtt = new Attributes();
 			titleAtt.setCssClass("title"); //$NON-NLS-1$
