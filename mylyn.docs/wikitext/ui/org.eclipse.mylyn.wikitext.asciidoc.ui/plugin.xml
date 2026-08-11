@@ -45,11 +45,11 @@
          <template name="CAUTION" description="%template.admonition.caution" content="\nCAUTION: ${text}\n\n" block="true"/>
          <template name="WARNING" description="%template.admonition.warning" content="\nWARNING: ${text}\n\n" block="true"/>
 
-         <template name="NOTE Block" description="%template.admonition.noteblock" content="\n[NOTE]\n====\n${text}\n====\n" block="true"/>
-         <template name="TIP Block" description="%template.admonition.tipblock" content="\n[TIP]\n====\n${text}\n====\n" block="true"/>
-         <template name="IMPORTANT Block" description="%template.admonition.importantblock" content="\n[IMPORTANT]\n====\n${text}\n====\n" block="true"/>
-         <template name="CAUTION Block" description="%template.admonition.cautionblock" content="\n[CAUTION]\n====\n${text}\n====\n" block="true"/>
-         <template name="WARNING Block" description="%template.admonition.warningblock" content="\n[WARNING]\n====\n${text}\n====\n" block="true"/>
+         <template name="NOTE Block" description="%template.admonition.noteblock" content="\n[NOTE]\n.${title}\n====\n${text}\n====\n" block="true"/>
+         <template name="TIP Block" description="%template.admonition.tipblock" content="\n[TIP]\n.${title}\n====\n${text}\n====\n" block="true"/>
+         <template name="IMPORTANT Block" description="%template.admonition.importantblock" content="\n[IMPORTANT]\n.${title}\n====\n${text}\n====\n" block="true"/>
+         <template name="CAUTION Block" description="%template.admonition.cautionblock" content="\n[CAUTION]\n.${title}\n====\n${text}\n====\n" block="true"/>
+         <template name="WARNING Block" description="%template.admonition.warningblock" content="\n[WARNING]\n.${title}\n====\n${text}\n====\n" block="true"/>
 
          <template name="include" description="%template.include" content="\ninclude::${path}[]\n\n" block="true"/>
 
