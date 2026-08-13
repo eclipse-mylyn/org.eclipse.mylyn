@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.ui.internal.fetch.FetchOperationUI;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.RemoteConfig;
@@ -33,6 +32,7 @@ import org.eclipse.mylyn.internal.github.core.pr.PullRequestUtils;
 import org.eclipse.mylyn.internal.github.ui.GitHubUi;
 import org.eclipse.mylyn.internal.github.ui.TaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.kohsuke.github.GHPullRequest;
 
 /**
  * Handler class that fetches changes from a selected pull request
@@ -68,7 +68,7 @@ public class FetchPullRequestHandler extends TaskDataHandler {
 					if (prComp == null) {
 						return Status.CANCEL_STATUS;
 					}
-					PullRequest request = prComp.getRequest();
+					GHPullRequest request = prComp.getRequest();
 					Repository repo = PullRequestUtils.getRepository(request);
 					if (repo == null) {
 						PullRequestConnectorUi.showNoRepositoryDialog(request);

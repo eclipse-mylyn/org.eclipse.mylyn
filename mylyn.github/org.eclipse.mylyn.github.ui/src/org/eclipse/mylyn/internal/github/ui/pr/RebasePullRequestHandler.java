@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.core.op.RebaseOperation;
-import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.ui.internal.branch.BranchOperationUI;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
@@ -34,6 +33,7 @@ import org.eclipse.mylyn.internal.github.core.pr.PullRequestUtils;
 import org.eclipse.mylyn.internal.github.ui.GitHubUi;
 import org.eclipse.mylyn.internal.github.ui.TaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.kohsuke.github.GHPullRequest;
 
 /**
  * Rebases pull request head onto tip of base
@@ -57,17 +57,17 @@ public class RebasePullRequestHandler extends TaskDataHandler {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					PullRequestComposite prComp = PullRequestConnector.getPullRequest(data);
-					if (prComp == null) {
-						return Status.CANCEL_STATUS;
-					}
-					PullRequest request = prComp.getRequest();
-					Repository repo = PullRequestUtils.getRepository(request);
-					if (repo == null) {
-						return Status.CANCEL_STATUS;
-					}
-					String branchName = PullRequestUtils.getBranchName(request);
 					try {
+						PullRequestComposite prComp = PullRequestConnector.getPullRequest(data);
+						if (prComp == null) {
+							return Status.CANCEL_STATUS;
+						}
+						GHPullRequest request = prComp.getRequest();
+						Repository repo = PullRequestUtils.getRepository(request);
+						if (repo == null) {
+							return Status.CANCEL_STATUS;
+						}
+						String branchName = PullRequestUtils.getBranchName(request);
 						String target = request.getBase().getRef();
 						Ref targetRef = repo.findRef(request.getBase().getRef());
 						if (targetRef != null) {

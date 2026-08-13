@@ -15,10 +15,10 @@ package org.eclipse.mylyn.internal.github.ui.pr;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.mylyn.internal.github.core.QueryUtils;
+import org.eclipse.mylyn.internal.github.egit.github.core.client.IssueService;
 import org.eclipse.mylyn.internal.github.ui.GitHubRepositoryQueryPage;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;

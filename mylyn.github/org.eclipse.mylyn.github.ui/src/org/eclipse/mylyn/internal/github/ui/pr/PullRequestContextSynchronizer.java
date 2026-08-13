@@ -22,7 +22,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
@@ -41,6 +40,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.kohsuke.github.GHPullRequest;
 
 /**
  * Adds the files from a pull request's commits to the context when it is activated.
@@ -49,7 +49,7 @@ public class PullRequestContextSynchronizer extends TaskActivationAdapter {
 
 	@Override
 	public void taskActivated(ITask task) {
-		if ((task == null) || !PullRequestConnector.KIND.equals(task.getConnectorKind())) {
+		if (task == null || !PullRequestConnector.KIND.equals(task.getConnectorKind())) {
 			return;
 		}
 		IInteractionContext context = ContextCore.getContextManager().getActiveContext();
@@ -63,7 +63,7 @@ public class PullRequestContextSynchronizer extends TaskActivationAdapter {
 			if (prComp == null) {
 				return;
 			}
-			PullRequest request = prComp.getRequest();
+			GHPullRequest request = prComp.getRequest();
 			Repository repository = PullRequestUtils.getRepository(request);
 			if (repository == null) {
 				return;

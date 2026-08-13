@@ -28,13 +28,11 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.service.GistService;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
+import org.eclipse.mylyn.internal.github.core.GithubApi;
 import org.eclipse.mylyn.internal.github.ui.GitHubUi;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.ui.IEditorInput;
@@ -130,7 +128,11 @@ public class CreateGistHandler extends AbstractHandler {
 			if (name == null) {
 				name = DEFAULT_FILENAME;
 			}
-			createGistJob(event, name, text.getText(), isPublic);
+			try {
+				createGistJob(event, name, text.getText(), isPublic);
+			} catch (IOException e) {
+				throw new ExecutionException("Error creating Gist", e); //$NON-NLS-1$
+			}
 		} else if (selection instanceof IStructuredSelection structuredSelection) {
 			Object obj = structuredSelection.getFirstElement();
 			IResource file = null;
@@ -149,7 +151,8 @@ public class CreateGistHandler extends AbstractHandler {
 		return null;
 	}
 
-	private void createGistJob(ExecutionEvent event, String name, String contents, boolean isPublic) {
+	private void createGistJob(ExecutionEvent event, String name, String contents, boolean isPublic)
+			throws IOException {
 		Set<TaskRepository> repositories = GistConnectorUi.getRepositories();
 		if (repositories.isEmpty()) {
 			return;
@@ -170,8 +173,7 @@ public class CreateGistHandler extends AbstractHandler {
 			return;
 		}
 
-		GitHubClient client = GistConnector.createClient(repository);
-		GistService service = new GistService(client);
+		GithubApi service = GithubApi.createGithubClient(repository);
 		CreateGistJob job = new CreateGistJob(
 				Messages.CreateGistHandler_CreateGistJobName, name, contents, service, isPublic, repository);
 		job.schedule();

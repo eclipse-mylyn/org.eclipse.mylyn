@@ -13,11 +13,11 @@
 package org.eclipse.mylyn.internal.github.ui.pr;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.text.MessageFormat;
 
 import org.eclipse.core.commands.common.CommandException;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.ui.UIUtils;
 import org.eclipse.egit.ui.internal.UIIcons;
 import org.eclipse.egit.ui.internal.commit.CommitEditor;
@@ -58,6 +58,7 @@ import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.kohsuke.github.GHPullRequest;
 
 /**
  * Task editor section to view commits attached to a pull request
@@ -129,12 +130,16 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(commitViewer.getControl());
 		commitViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 		commitViewer.addOpenListener(event -> {
-			PullRequest pr = request.getRequest();
-			Repository repo = PullRequestUtils.getRepository(pr);
-			if (repo != null) {
-				openCommits(repo, ((IStructuredSelection) event.getSelection()).toArray());
-			} else {
-				PullRequestConnectorUi.showNoRepositoryDialog(pr);
+			GHPullRequest pr = request.getRequest();
+			try {
+				Repository repo = PullRequestUtils.getRepository(pr);
+				if (repo != null) {
+					openCommits(repo, ((IStructuredSelection) event.getSelection()).toArray());
+				} else {
+					PullRequestConnectorUi.showNoRepositoryDialog(pr);
+				}
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
 			}
 		});
 
@@ -153,7 +158,7 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 	}
 
 	private void openCommits(final Repository repository, final Object[] elements) {
-		if ((elements.length == 0) || (repository == null)) {
+		if (elements.length == 0 || repository == null) {
 			return;
 		}
 		try (RevWalk walk = new RevWalk(repository)) {
@@ -167,9 +172,9 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 					if (fetch) {
 						fetchCommits(() -> {
 							PlatformUI.getWorkbench()
-									.getDisplay()
-									.asyncExec(
-											() -> openCommits(repository, elements));
+							.getDisplay()
+							.asyncExec(
+									() -> openCommits(repository, elements));
 						});
 					}
 
@@ -188,7 +193,7 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 
 	@Override
 	protected void fillToolBar(ToolBarManager toolBarManager) {
-		if (TasksUiUtil.isOutgoingNewTask(getTaskEditorPage().getTask(), IssueConnector.KIND) || (request == null)) {
+		if (TasksUiUtil.isOutgoingNewTask(getTaskEditorPage().getTask(), IssueConnector.KIND) || request == null) {
 			return;
 		}
 

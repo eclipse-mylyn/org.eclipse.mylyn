@@ -12,25 +12,20 @@
  *****************************************************************************/
 package org.eclipse.mylyn.internal.github.ui.pr;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.egit.github.core.RepositoryId;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.client.NoSuchPageException;
-import org.eclipse.egit.github.core.service.IssueService;
-import org.eclipse.egit.github.core.service.PullRequestService;
 import org.eclipse.mylyn.internal.github.core.GitHub;
-import org.eclipse.mylyn.internal.github.core.GitHubException;
-import org.eclipse.mylyn.internal.github.core.issue.IssueConnector;
 import org.eclipse.mylyn.internal.github.core.pr.PullRequestConnector;
 import org.eclipse.mylyn.internal.github.ui.GitHubUi;
 import org.eclipse.mylyn.internal.github.ui.HttpRepositorySettingsPage;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.widgets.Composite;
+import org.kohsuke.github.GHRepository;
 
 /**
  * Pull request task repository settings page.
@@ -76,14 +71,12 @@ public class PullRequestRepositorySettingsPage extends HttpRepositorySettingsPag
 						Messages.PullRequestRepositorySettingsPage_TaskValidating, 100);
 				monitor.subTask(Messages.PullRequestRepositorySettingsPage_TaskContacting);
 				try {
-					GitHubClient client = IssueConnector.createClient(taskRepository);
-					PullRequestService service = new PullRequestService(client);
-					RepositoryId repo = GitHub.getRepository(taskRepository.getRepositoryUrl());
+					GHRepository repo = PullRequestConnector.createClient(taskRepository);
 					monitor.worked(50);
-					service.pagePullRequests(repo, IssueService.STATE_OPEN, 1).next();
-				} catch (NoSuchPageException e) {
+					repo.getName();
+				} catch (IOException e) {
 					String message = MessageFormat.format(Messages.PullRequestRepositorySettingsPage_ValidateError,
-							GitHubException.wrap(e.getCause()).getLocalizedMessage());
+							e.getLocalizedMessage());
 					setStatus(GitHubUi.createErrorStatus(message));
 					return;
 				} finally {

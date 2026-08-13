@@ -12,7 +12,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.github.ui;
 
-import org.eclipse.egit.github.core.Repository;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -31,6 +33,7 @@ import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
 import org.eclipse.ui.internal.WorkbenchImages;
+import org.kohsuke.github.GHRepository;
 
 /**
  * Import repositories wizard class.
@@ -96,10 +99,14 @@ public class TaskRepositoryImportWizard extends Wizard implements IImportWizard 
 		String password = credentialsPage.getPassword();
 		boolean isToken = credentialsPage.isToken();
 		final IRepositoryManager manager = TasksUi.getRepositoryManager();
-		for (Repository repo : reposPage.getRepositories()) {
-			manager.addRepository(IssueConnector.createTaskRepository(repo, user, password, isToken));
-			manager.addRepository(PullRequestConnector.createTaskRepository(
-					repo, user, password, isToken));
+		for (GHRepository repo : reposPage.getRepositories()) {
+			try {
+				manager.addRepository(IssueConnector.createTaskRepository(repo, user, password, isToken));
+				manager.addRepository(PullRequestConnector.createTaskRepository(
+						repo, user, password, isToken));
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
 		}
 		if (reposPage.createGistRepository()) {
 			AuthenticationCredentials credentials = new AuthenticationCredentials(

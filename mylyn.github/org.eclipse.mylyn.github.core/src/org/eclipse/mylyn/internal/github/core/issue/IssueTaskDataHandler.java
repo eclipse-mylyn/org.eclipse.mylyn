@@ -15,30 +15,32 @@
 package org.eclipse.mylyn.internal.github.core.issue;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.egit.github.core.Comment;
-import org.eclipse.egit.github.core.Issue;
-import org.eclipse.egit.github.core.Label;
-import org.eclipse.egit.github.core.Milestone;
-import org.eclipse.egit.github.core.RepositoryId;
-import org.eclipse.egit.github.core.User;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.service.IssueService;
-import org.eclipse.egit.github.core.service.LabelService;
 import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.GitHubTaskDataHandler;
+import org.eclipse.mylyn.internal.github.core.GithubApi;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.kohsuke.github.GHIssue;
+import org.kohsuke.github.GHIssueBuilder;
+import org.kohsuke.github.GHIssueComment;
+import org.kohsuke.github.GHIssueState;
+import org.kohsuke.github.GHLabel;
+import org.kohsuke.github.GHMilestone;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GHUser;
 
 /**
  * GitHub issue task data handler
@@ -61,6 +63,28 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 	}
 
 	/**
+	 * Create task data for issue
+	 *
+	 * @param repository
+	 * @param monitor
+	 * @param user
+	 * @param project
+	 * @param issue
+	 * @param comments
+	 * @return task data
+	 * @throws IOException
+	 */
+	public TaskData createTaskData(TaskRepository repository, IProgressMonitor monitor, String user, String project,
+			GHIssue issue, List<GHIssueComment> comments) throws IOException {
+		TaskData taskData = createTaskData(repository, monitor, user, project, issue);
+		taskData.setPartial(false);
+
+		addComments(taskData.getRoot(), comments, repository);
+
+		return taskData;
+	}
+
+	/**
 	 * Create task data
 	 *
 	 * @param repository
@@ -69,9 +93,10 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 	 * @param project
 	 * @param issue
 	 * @return task data
+	 * @throws IOException
 	 */
-	public TaskData createTaskData(TaskRepository repository, IProgressMonitor monitor, String user, String project,
-			Issue issue) {
+	public TaskData createTaskData(TaskRepository repository, IProgressMonitor statusMonitor, String owner, String name,
+			GHIssue issue) throws IOException {
 
 		String key = Integer.toString(issue.getNumber());
 		TaskData data = new TaskData(getAttributeMapper(repository), IssueConnector.KIND, repository.getRepositoryUrl(),
@@ -83,17 +108,19 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 		createAttribute(data, IssueAttribute.KEY.getMetadata(), key);
 		createAttribute(data, IssueAttribute.TITLE.getMetadata(), issue.getTitle());
 		createAttribute(data, IssueAttribute.BODY.getMetadata(), issue.getBody());
-		createAttribute(data, IssueAttribute.STATUS.getMetadata(), issue.getState());
-		createAttribute(data, IssueAttribute.CREATION_DATE.getMetadata(), issue.getCreatedAt());
-		createAttribute(data, IssueAttribute.MODIFICATION_DATE.getMetadata(), issue.getUpdatedAt());
-		createAttribute(data, IssueAttribute.CLOSED_DATE.getMetadata(), issue.getClosedAt());
+		createAttribute(data, IssueAttribute.STATUS.getMetadata(), issue.getState().toString());
+		createAttribute(data, IssueAttribute.CREATION_DATE.getMetadata(), Date.from(issue.getCreatedAt()));
+		createAttribute(data, IssueAttribute.MODIFICATION_DATE.getMetadata(), Date.from(issue.getUpdatedAt()));
+		if (issue.getClosedAt() != null) {
+			createAttribute(data, IssueAttribute.CLOSED_DATE.getMetadata(), Date.from(issue.getClosedAt()));
+		}
 
-		User reporter = issue.getUser();
+		GHUser reporter = issue.getUser();
 		createAttribute(data, IssueAttribute.REPORTER.getMetadata(), reporter, repository);
 		String reporterGravatar = reporter != null ? reporter.getAvatarUrl() : null;
 		createAttribute(data, IssueAttribute.REPORTER_GRAVATAR.getMetadata(), reporterGravatar);
 
-		User assignee = issue.getAssignee();
+		GHUser assignee = issue.getAssignee();
 		createAttribute(data, IssueAttribute.ASSIGNEE.getMetadata(), assignee, repository);
 		String assigneeGravatar = assignee != null ? assignee.getAvatarUrl() : null;
 		createAttribute(data, IssueAttribute.ASSIGNEE_GRAVATAR.getMetadata(), assigneeGravatar);
@@ -107,8 +134,8 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 		return data;
 	}
 
-	private void createMilestones(TaskRepository repository, TaskData data, Issue issue) {
-		Milestone current = issue.getMilestone();
+	private void createMilestones(TaskRepository repository, TaskData data, GHIssue issue) {
+		GHMilestone current = issue.getMilestone();
 		String number = current != null ? Integer.toString(current.getNumber()) : MILESTONE_NONE_KEY;
 		TaskAttribute milestoneAttribute = createAttribute(data, IssueAttribute.MILESTONE.getMetadata(), number);
 
@@ -120,15 +147,15 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 			}
 		}
 
-		List<Milestone> cachedMilestones = connector.getMilestones(repository);
+		List<GHMilestone> cachedMilestones = connector.getMilestones(repository);
 		milestoneAttribute.putOption(MILESTONE_NONE_KEY, Messages.IssueAttribute_MilestoneNone);
-		for (Milestone milestone : cachedMilestones) {
+		for (GHMilestone milestone : cachedMilestones) {
 			milestoneAttribute.putOption(
 					Integer.toString(milestone.getNumber()), milestone.getTitle());
 		}
 	}
 
-	private void createLabels(TaskRepository repository, TaskData data, Issue issue) {
+	private void createLabels(TaskRepository repository, TaskData data, GHIssue issue) throws IOException {
 		TaskAttribute labels = createAttribute(data, IssueAttribute.LABELS, issue.getLabels());
 
 		if (!connector.hasCachedLabels(repository)) {
@@ -139,93 +166,102 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 			}
 		}
 
-		List<Label> cachedLabels = connector.getLabels(repository);
-		for (Label label : cachedLabels) {
+		List<GHLabel> cachedLabels = connector.getLabels(repository);
+		for (GHLabel label : cachedLabels) {
 			labels.putOption(label.getName(), label.getName());
 		}
 	}
 
-	private void createOperations(TaskData data, Issue issue) {
+	private void createOperations(TaskData data, GHIssue issue) {
 		createOperationAttribute(data);
 
 		if (!data.isNew()) {
-			String state = issue.getState();
+			GHIssueState state = issue.getState();
 			if (state != null) {
 				addOperation(data, issue, IssueOperation.LEAVE, true);
-				if (state.equals(IssueService.STATE_OPEN)) {
+				if (state.equals(GHIssueState.OPEN)) {
 					addOperation(data, issue, IssueOperation.CLOSE, false);
-				} else if (state.equals(IssueService.STATE_CLOSED)) {
+				} else if (state.equals(GHIssueState.CLOSED)) {
 					addOperation(data, issue, IssueOperation.REOPEN, false);
 				}
 			}
 		}
 	}
 
-	private void addOperation(TaskData data, Issue issue, IssueOperation operation, boolean isDefault) {
+	private void addOperation(TaskData data, GHIssue issue, IssueOperation operation, boolean isDefault) {
 		String id = operation.getId();
 		String label = createOperationLabel(issue, operation);
 		addOperation(data, id, label, isDefault);
 	}
 
-	private String createOperationLabel(Issue issue, IssueOperation operation) {
+	private String createOperationLabel(GHIssue issue, IssueOperation operation) {
 		return operation == IssueOperation.LEAVE ? operation.getLabel() + issue.getState() : operation.getLabel();
 	}
 
 	/**
-	 * Create task data for issue
+	 * Create or update issue from task data
 	 *
-	 * @param repository
-	 * @param monitor
-	 * @param user
-	 * @param project
-	 * @param issue
-	 * @param comments
-	 * @return task data
+	 * @param repo
+	 * @param taskData
+	 * @return
+	 * @throws IOException
 	 */
-	public TaskData createTaskData(TaskRepository repository, IProgressMonitor monitor, String user, String project,
-			Issue issue, List<Comment> comments) {
-		TaskData taskData = createTaskData(repository, monitor, user, project, issue);
-		taskData.setPartial(false);
-
-		addComments(taskData.getRoot(), comments, repository);
-
-		return taskData;
-	}
-
-	private Issue createIssue(TaskData taskData) {
-		Issue issue = new Issue();
+	private GHIssue createIssue(GHRepository repo, TaskData taskData) throws IOException {
+		GHIssueBuilder issueBuilder = repo.createIssue(getAttributeValue(taskData, IssueAttribute.TITLE.getMetadata()));
 		if (!taskData.isNew()) {
-			issue.setNumber(Integer.parseInt(taskData.getTaskId()));
-		}
+			GHIssue issue = repo.getIssue(Integer.parseInt(taskData.getTaskId()));
 
-		issue.setBody(getAttributeValue(taskData, IssueAttribute.BODY.getMetadata()));
-		issue.setTitle(getAttributeValue(taskData, IssueAttribute.TITLE.getMetadata()));
+			String milestoneValue = getAttributeValue(taskData, IssueAttribute.MILESTONE.getMetadata());
+			if (milestoneValue != null) {
+				try {
+					repo.queryMilestones()
+							.list()
+							.toList()
+							.stream()
+							.filter(m -> Integer.toString(m.getNumber()).equals(milestoneValue))
+							.findFirst()
+							.ifPresent(t -> {
+								try {
+									issue.setMilestone(t);
+								} catch (IOException e) {
+									throw new UncheckedIOException(e);
+								}
+							});
+				} catch (UncheckedIOException e) {
+					throw e.getCause();
+				}
+			}
+
+			return issue;
+		}
+		issueBuilder.body(getAttributeValue(taskData, IssueAttribute.BODY.getMetadata()));
 
 		String assigneeValue = getAttributeValue(taskData, IssueAttribute.ASSIGNEE.getMetadata());
 		if (assigneeValue != null) {
 			if (assigneeValue.trim().length() == 0) {
 				assigneeValue = null;
 			}
-			User assignee = new User().setLogin(assigneeValue);
-			issue.setAssignee(assignee);
+			issueBuilder.assignee(assigneeValue);
 		}
 
 		String milestoneValue = getAttributeValue(taskData, IssueAttribute.MILESTONE.getMetadata());
 		if (milestoneValue != null) {
-			Milestone milestone = new Milestone();
-			if (milestoneValue.length() > 0) {
-				milestone.setNumber(Integer.parseInt(milestoneValue));
-			}
-			issue.setMilestone(milestone);
+			repo.queryMilestones()
+			.list()
+			.toList()
+			.stream()
+			.filter(m -> Integer.toString(m.getNumber()).equals(milestoneValue))
+			.findFirst()
+			.ifPresent(issueBuilder::milestone);
 		}
-		return issue;
+		return issueBuilder.create();
 	}
 
-	private TaskAttribute createAttribute(TaskData data, IssueAttribute attribute, List<Label> values) {
+	private TaskAttribute createAttribute(TaskData data, IssueAttribute attribute, Collection<GHLabel> collection) {
 		TaskAttribute attr = createAttribute(data, attribute.getMetadata());
-		if (values != null) {
-			List<String> labels = new ArrayList<>(values.size());
-			for (Label label : values) {
+		if (collection != null) {
+			List<String> labels = new ArrayList<>(collection.size());
+			for (GHLabel label : collection) {
 				labels.add(label.getName());
 			}
 			data.getAttributeMapper().setValues(attr, labels);
@@ -237,15 +273,19 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 	public boolean initializeTaskData(TaskRepository repository, TaskData data, ITaskMapping initializationData,
 			IProgressMonitor monitor) throws CoreException {
 		data.setVersion(DATA_VERSION);
-		for (IssueAttribute attr : IssueAttribute.values()) {
-			if (attr.getMetadata().isInitTask()) {
-				createAttribute(data, attr.getMetadata(), (String) null);
+		try {
+			for (IssueAttribute attr : IssueAttribute.values()) {
+				if (attr.getMetadata().isInitTask()) {
+					createAttribute(data, attr.getMetadata(), (String) null);
+				}
 			}
+			GHIssue dummy = new GHIssue();
+			createLabels(repository, data, dummy);
+			createMilestones(repository, data, dummy);
+			return true;
+		} catch (IOException e) {
+			throw new CoreException(GitHub.createWrappedStatus(e));
 		}
-		Issue dummy = new Issue();
-		createLabels(repository, data, dummy);
-		createMilestones(repository, data, dummy);
-		return true;
 	}
 
 	/**
@@ -258,15 +298,14 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 	 * @param data
 	 * @param oldAttributes
 	 * @param issue
+	 * @throws IOException
 	 */
-	protected void updateLabels(String user, String repo, GitHubClient client, TaskRepository repository, TaskData data,
-			Set<TaskAttribute> oldAttributes, Issue issue) {
+	protected void updateLabels(GHRepository repo, TaskRepository repository, TaskData data,
+			Set<TaskAttribute> oldAttributes, GHIssue issue) throws IOException {
 		TaskAttribute labelsAttribute = data.getRoot()
 				.getAttribute(
 						IssueAttribute.LABELS.getMetadata().getId());
 		if (oldAttributes.contains(labelsAttribute) || data.isNew()) {
-			LabelService labelService = new LabelService(client);
-
 			if (!connector.hasCachedLabels(repository)) {
 				try {
 					connector.refreshLabels(repository);
@@ -274,32 +313,21 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 					// Ignore
 				}
 			}
-			List<Label> currentLabels = connector.getLabels(repository);
-			List<Label> newLabels = new LinkedList<>();
-			List<Label> labels = new LinkedList<>();
+			Collection<GHLabel> currentLabels = issue.getLabels();
+			Collection<String> newLabels = new ArrayList<>();
 			for (String value : labelsAttribute.getValues()) {
-				Label label = new Label().setName(value);
-				if (!currentLabels.contains(label)) {
-					newLabels.add(label);
+				boolean found = false;
+				for (GHLabel ghLabel : currentLabels) {
+					if (ghLabel.getName().equals(value)) {
+						found = true;
+					}
 				}
-				labels.add(label);
-			}
-			issue.setLabels(labels);
-			for (Label label : newLabels) {
-				try {
-					labelService.createLabel(user, repo, label);
-				} catch (IOException e) {
-					// TODO detect failure and handle label already created
+				if (!found) {
+					newLabels.add(value);
 				}
 			}
 
-			if (!newLabels.isEmpty()) {
-				try {
-					connector.refreshLabels(repository);
-				} catch (CoreException ignore) {
-					// Ignore
-				}
-			}
+			issue.addLabels(newLabels.toArray(new String[0]));
 		}
 	}
 
@@ -307,24 +335,24 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 	public RepositoryResponse postTaskData(TaskRepository repository, TaskData taskData,
 			Set<TaskAttribute> oldAttributes, IProgressMonitor monitor) throws CoreException {
 		String taskId = taskData.getTaskId();
-		Issue issue = createIssue(taskData);
-		RepositoryId repo = GitHub.getRepository(repository.getRepositoryUrl());
 		try {
-			GitHubClient client = IssueConnector.createClient(repository);
+			GithubApi client = GithubApi.createGithubClient(repository);
+			GHRepository repo = client.getRepo(repository.getRepositoryUrl());
 			boolean collaborator = isCollaborator(client, repo);
+
+			GHIssue issue = createIssue(repo, taskData);
+
 			if (collaborator) {
-				updateLabels(repo.getOwner(), repo.getName(), client, repository, taskData, oldAttributes, issue);
+				updateLabels(repo, repository, taskData, oldAttributes, issue);
 			}
-			IssueService service = new IssueService(client);
 			if (taskData.isNew()) {
-				issue.setState(IssueService.STATE_OPEN);
-				issue = service.createIssue(repo.getOwner(), repo.getName(), issue);
+
 				taskId = Integer.toString(issue.getNumber());
 			} else {
 				// Handle new comment
 				String comment = getAttributeValue(taskData, IssueAttribute.COMMENT_NEW.getMetadata());
 				if (comment != null && comment.length() > 0) {
-					service.createComment(repo.getOwner(), repo.getName(), taskId, comment);
+					issue.comment(comment);
 				}
 
 				boolean reporter = attributeMatchesUser(client, IssueAttribute.REPORTER.getMetadata(), taskData);
@@ -334,12 +362,11 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 					if (operationAttribute != null) {
 						IssueOperation operation = IssueOperation.fromId(operationAttribute.getValue());
 						if (operation == IssueOperation.REOPEN) {
-							issue.setState(IssueService.STATE_OPEN);
+							issue.reopen();
 						} else if (operation == IssueOperation.CLOSE) {
-							issue.setState(IssueService.STATE_CLOSED);
+							issue.close();
 						}
 					}
-					service.editIssue(repo.getOwner(), repo.getName(), issue);
 				}
 			}
 			return new RepositoryResponse(
@@ -348,4 +375,5 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 			throw new CoreException(GitHub.createWrappedStatus(e));
 		}
 	}
+
 }

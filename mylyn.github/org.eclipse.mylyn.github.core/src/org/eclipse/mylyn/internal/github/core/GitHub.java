@@ -21,13 +21,8 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.egit.github.core.RepositoryId;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.client.RequestException;
-import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
-import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.internal.github.egit.github.core.RepositoryId;
+import org.eclipse.mylyn.internal.github.egit.github.core.client.RequestException;
 
 /**
  * GitHub class
@@ -58,35 +53,6 @@ public class GitHub {
 	 */
 	@Deprecated(since = "4.1")
 	public static final String PROPERTY_USE_TOKEN = GitHub.class.getPackage().getName() + ".REPO_USE_TOKEN"; //$NON-NLS-1$
-
-	/**
-	 * Configure client with standard configuration
-	 *
-	 * @param client
-	 * @return given client
-	 */
-	public static GitHubClient configureClient(GitHubClient client) {
-		return client.setUserAgent(USER_AGENT);
-	}
-
-	/**
-	 * Set credentials on client from task repository
-	 *
-	 * @param client
-	 * @param repository
-	 * @return specified client
-	 */
-	public static GitHubClient addCredentials(GitHubClient client, TaskRepository repository) {
-		AuthenticationCredentials credentials = repository.getCredentials(AuthenticationType.REPOSITORY);
-		if (credentials != null) {
-			if (Boolean.parseBoolean(repository.getProperty(IRepositoryConstants.PROPERTY_USE_TOKEN))) {
-				client.setOAuth2Token(credentials.getPassword());
-			} else {
-				client.setCredentials(credentials.getUserName(), credentials.getPassword());
-			}
-		}
-		return client;
-	}
 
 	/**
 	 * Create status of severity with message

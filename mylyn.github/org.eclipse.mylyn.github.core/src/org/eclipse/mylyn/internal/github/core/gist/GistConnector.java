@@ -13,15 +13,15 @@
 package org.eclipse.mylyn.internal.github.core.gist;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.egit.github.core.Gist;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.service.GistService;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.github.core.GitHub;
+import org.eclipse.mylyn.internal.github.core.GithubApi;
 import org.eclipse.mylyn.internal.github.core.RepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -31,6 +31,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
+import org.kohsuke.github.GHGist;
+import org.kohsuke.github.GHIssueComment;
 
 /**
  * Gist repository connector class.
@@ -41,29 +43,6 @@ public class GistConnector extends RepositoryConnector {
 	 * KIND
 	 */
 	public static final String KIND = "githubGists"; //$NON-NLS-1$
-
-	/**
-	 * Create client for repository
-	 *
-	 * @param repository
-	 * @return client
-	 */
-	public static GitHubClient createClient(TaskRepository repository) {
-		GitHubClient client = GitHubClient.createClient(repository.getRepositoryUrl());
-		return configureClient(client, repository);
-	}
-
-	/**
-	 * Configure client for repository
-	 *
-	 * @param client
-	 * @param repository
-	 * @return client
-	 */
-	public static GitHubClient configureClient(GitHubClient client, TaskRepository repository) {
-		GitHub.addCredentials(client, repository);
-		return GitHub.configureClient(client);
-	}
 
 	private final GistTaskDataHandler dataHandler = new GistTaskDataHandler();
 
@@ -126,15 +105,17 @@ public class GistConnector extends RepositoryConnector {
 	@Override
 	public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
-		GistService service = new GistService(createClient(repository));
 		try {
 			TaskAttributeMapper mapper = dataHandler.getAttributeMapper(repository);
-			Gist gist = service.getGist(taskId);
-			TaskData data = new TaskData(mapper, getConnectorKind(), repository.getUrl(), gist.getId());
+			GithubApi githubApi = GithubApi.createGithubClient(
+					repository.getCredentials(AuthenticationType.REPOSITORY));
+			GHGist gist = githubApi.getGist(taskId);
+			TaskData data = new TaskData(mapper, getConnectorKind(), repository.getUrl(), gist.getGistId());
 			data.setPartial(false);
 			dataHandler.fillTaskData(repository, data, gist);
-			if (gist.getComments() > 0) {
-				dataHandler.fillComments(repository, data, service.getComments(gist.getId()));
+			if (gist.getCommentCount() > 0) {
+				List<GHIssueComment> comments = githubApi.listGistComments(gist);
+				dataHandler.fillComments(repository, data, comments);
 			}
 			return data;
 		} catch (IOException e) {
@@ -151,12 +132,11 @@ public class GistConnector extends RepositoryConnector {
 	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query, TaskDataCollector collector,
 			ISynchronizationSession session, IProgressMonitor monitor) {
 		IStatus status = Status.OK_STATUS;
-		GistService service = new GistService(createClient(repository));
-		String user = query.getAttribute(IGistQueryConstants.USER);
 		try {
+			GithubApi github = GithubApi.createGithubClient(repository.getCredentials(AuthenticationType.REPOSITORY));
 			TaskAttributeMapper mapper = dataHandler.getAttributeMapper(repository);
-			for (Gist gist : service.getGists(user)) {
-				TaskData data = new TaskData(mapper, getConnectorKind(), repository.getUrl(), gist.getId());
+			for (GHGist gist : github.listGists()) {
+				TaskData data = new TaskData(mapper, getConnectorKind(), repository.getUrl(), gist.getGistId());
 				data.setPartial(true);
 				dataHandler.fillTaskData(repository, data, gist);
 				collector.accept(data);

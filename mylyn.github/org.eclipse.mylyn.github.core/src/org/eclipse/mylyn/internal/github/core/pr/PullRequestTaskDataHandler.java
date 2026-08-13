@@ -13,30 +13,27 @@
 package org.eclipse.mylyn.internal.github.core.pr;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.egit.github.core.Comment;
-import org.eclipse.egit.github.core.CommitComment;
-import org.eclipse.egit.github.core.IRepositoryIdProvider;
-import org.eclipse.egit.github.core.PullRequest;
-import org.eclipse.egit.github.core.RepositoryId;
-import org.eclipse.egit.github.core.User;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.client.GsonUtils;
-import org.eclipse.egit.github.core.service.IssueService;
-import org.eclipse.egit.github.core.service.PullRequestService;
 import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.GitHubTaskDataHandler;
-import org.eclipse.mylyn.internal.github.core.issue.IssueConnector;
+import org.eclipse.mylyn.internal.github.core.GithubApi;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.kohsuke.github.GHIssueComment;
+import org.kohsuke.github.GHIssueState;
+import org.kohsuke.github.GHPullRequest;
+import org.kohsuke.github.GHPullRequestReviewComment;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GHUser;
 
 /**
  * GitHub issue task data handler
@@ -62,10 +59,11 @@ public class PullRequestTaskDataHandler extends GitHubTaskDataHandler {
 	 * @param repo
 	 * @param prComp
 	 * @return task data
+	 * @throws IOException
 	 */
-	public TaskData createTaskData(TaskRepository repository, IProgressMonitor monitor, IRepositoryIdProvider repo,
-			PullRequestComposite prComp) {
-		PullRequest pr = prComp.getRequest();
+	public TaskData createTaskData(TaskRepository repository, IProgressMonitor monitor, GHRepository repo,
+			PullRequestComposite prComp) throws IOException {
+		GHPullRequest pr = prComp.getRequest();
 		String key = Integer.toString(pr.getNumber());
 		TaskData data = new TaskData(getAttributeMapper(repository), PullRequestConnector.KIND,
 				repository.getRepositoryUrl(), key);
@@ -76,24 +74,26 @@ public class PullRequestTaskDataHandler extends GitHubTaskDataHandler {
 		createAttribute(data, PullRequestAttribute.KEY.getMetadata(), key);
 		createAttribute(data, PullRequestAttribute.TITLE.getMetadata(), pr.getTitle());
 		createAttribute(data, PullRequestAttribute.BODY.getMetadata(), pr.getBody());
-		createAttribute(data, PullRequestAttribute.STATUS.getMetadata(), pr.getState());
-		createAttribute(data, PullRequestAttribute.CREATION_DATE.getMetadata(), pr.getCreatedAt());
-		createAttribute(data, PullRequestAttribute.MODIFICATION_DATE.getMetadata(), pr.getUpdatedAt());
-		createAttribute(data, PullRequestAttribute.CLOSED_DATE.getMetadata(), pr.getClosedAt());
+		createAttribute(data, PullRequestAttribute.STATUS.getMetadata(), pr.getState().toString());
+		createAttribute(data, PullRequestAttribute.CREATION_DATE.getMetadata(), Date.from(pr.getCreatedAt()));
+		createAttribute(data, PullRequestAttribute.MODIFICATION_DATE.getMetadata(), Date.from(pr.getUpdatedAt()));
+		if (pr.getClosedAt() != null) {
+			createAttribute(data, PullRequestAttribute.CLOSED_DATE.getMetadata(), Date.from(pr.getClosedAt()));
+		}
 
-		User reporter = pr.getUser();
+		GHUser reporter = pr.getUser();
 		createAttribute(data, PullRequestAttribute.REPORTER.getMetadata(), reporter, repository);
 		String reporterGravatar = reporter != null ? reporter.getAvatarUrl() : null;
 		createAttribute(data, PullRequestAttribute.REPORTER_GRAVATAR.getMetadata(), reporterGravatar);
 
 		createAttribute(data, PullRequestAttribute.COMMENT_NEW.getMetadata());
 
-		createAttribute(data, PullRequestAttribute.MODEL.getMetadata(), GsonUtils.toJson(prComp));
+		createAttribute(data, PullRequestAttribute.MODEL.getMetadata(), prComp.valueOf());
 
 		return data;
 	}
 
-	private void createOperations(TaskData data, PullRequest pr) {
+	private void createOperations(TaskData data, GHPullRequest pr) throws IOException {
 		createOperationAttribute(data);
 
 		// Merged pull requests cannot be reopened
@@ -101,24 +101,24 @@ public class PullRequestTaskDataHandler extends GitHubTaskDataHandler {
 			return;
 		}
 
-		String state = pr.getState();
+		GHIssueState state = pr.getState();
 		if (state != null) {
 			addOperation(data, pr, PullRequestOperation.LEAVE, true);
-			if (state.equals(IssueService.STATE_OPEN)) {
+			if (state.equals(GHIssueState.OPEN)) {
 				addOperation(data, pr, PullRequestOperation.CLOSE, false);
-			} else if (state.equals(IssueService.STATE_CLOSED)) {
+			} else if (state.equals(GHIssueState.CLOSED)) {
 				addOperation(data, pr, PullRequestOperation.REOPEN, false);
 			}
 		}
 	}
 
-	private void addOperation(TaskData data, PullRequest pr, PullRequestOperation operation, boolean isDefault) {
+	private void addOperation(TaskData data, GHPullRequest pr, PullRequestOperation operation, boolean isDefault) {
 		String id = operation.getId();
 		String label = createOperationLabel(pr, operation);
 		addOperation(data, id, label, isDefault);
 	}
 
-	private String createOperationLabel(PullRequest pr, PullRequestOperation operation) {
+	private String createOperationLabel(GHPullRequest pr, PullRequestOperation operation) {
 		return operation == PullRequestOperation.LEAVE ? operation.getLabel() + pr.getState() : operation.getLabel();
 	}
 
@@ -128,13 +128,16 @@ public class PullRequestTaskDataHandler extends GitHubTaskDataHandler {
 	 * @param repository
 	 * @param monitor
 	 * @param repo
-	 * @param pr
+	 * @param prComp
 	 * @param comments
 	 * @return task data
+	 * @throws IOException
 	 */
-	public TaskData createTaskData(TaskRepository repository, IProgressMonitor monitor, IRepositoryIdProvider repo,
-			PullRequestComposite pr, List<Comment> comments, final List<CommitComment> commitComments) {
-		TaskData taskData = createTaskData(repository, monitor, repo, pr);
+	public TaskData createTaskData(TaskRepository repository, IProgressMonitor monitor, GHRepository repo,
+			PullRequestComposite prComp, List<GHIssueComment> comments,
+			final List<GHPullRequestReviewComment> commitComments)
+					throws IOException {
+		TaskData taskData = createTaskData(repository, monitor, repo, prComp);
 		taskData.setPartial(false);
 
 		addComments(taskData.getRoot(), comments, commitComments, repository);
@@ -142,11 +145,11 @@ public class PullRequestTaskDataHandler extends GitHubTaskDataHandler {
 		return taskData;
 	}
 
-	private PullRequest createPullRequest(TaskData taskData) {
-		PullRequest pr = new PullRequest();
-		if (!taskData.isNew()) {
-			pr.setNumber(Integer.parseInt(taskData.getTaskId()));
-		}
+	private GHPullRequest createPullRequest(TaskData taskData) throws IOException {
+		GHPullRequest pr = new GHPullRequest();
+//		if (!taskData.isNew()) {
+//			pr.setNumber(Integer.parseInt(taskData.getTaskId()));
+//		}
 
 		pr.setBody(getAttributeValue(taskData, PullRequestAttribute.BODY.getMetadata()));
 		pr.setTitle(getAttributeValue(taskData, PullRequestAttribute.TITLE.getMetadata()));
@@ -170,22 +173,25 @@ public class PullRequestTaskDataHandler extends GitHubTaskDataHandler {
 	public RepositoryResponse postTaskData(TaskRepository repository, TaskData taskData,
 			Set<TaskAttribute> oldAttributes, IProgressMonitor monitor) throws CoreException {
 		String taskId = taskData.getTaskId();
-		PullRequest pr = createPullRequest(taskData);
-		RepositoryId repo = PullRequestConnector.getRepository(repository.getRepositoryUrl());
 		try {
-			GitHubClient client = IssueConnector.createClient(repository);
+			GithubApi client = GithubApi.createGithubClient(repository);
+			GHRepository repo = PullRequestConnector.getRepo(client, repository);
 			boolean collaborator = isCollaborator(client, repo);
-			PullRequestService prService = new PullRequestService(client);
-			IssueService issueService = new IssueService(client);
+
 			if (taskData.isNew()) {
-				pr.setState(IssueService.STATE_OPEN);
-				pr = prService.createPullRequest(repo, pr);
-				taskId = Integer.toString(pr.getNumber());
+//				GHPullRequest pr = createPullRequest(taskData);
+//				GHPullRequest newPr = repo.createPullRequest(repo, pr);
+//				taskId = Integer.toString(newPr.getNumber());
+				/*
+				 * need branches to create a new pull request, so for now just throw an exception
+				 */
+				throw new CoreException(GitHub.createErrorStatus("Creating new pull requests is not supported.")); //$NON-NLS-1$
 			} else {
+				GHPullRequest pr = repo.getPullRequest(Integer.parseInt(taskId));
 				// Handle new comment
 				String comment = getAttributeValue(taskData, PullRequestAttribute.COMMENT_NEW.getMetadata());
-				if (comment != null && comment.length() > 0) {
-					issueService.createComment(repo.getOwner(), repo.getName(), taskId, comment);
+				if (comment != null && !comment.isEmpty()) {
+					pr.comment(comment);
 				}
 
 				boolean reporter = attributeMatchesUser(client, PullRequestAttribute.REPORTER.getMetadata(), taskData);
@@ -195,12 +201,11 @@ public class PullRequestTaskDataHandler extends GitHubTaskDataHandler {
 					if (operationAttribute != null) {
 						PullRequestOperation operation = PullRequestOperation.fromId(operationAttribute.getValue());
 						if (operation == PullRequestOperation.REOPEN) {
-							pr.setState(IssueService.STATE_OPEN);
+							pr.reopen();
 						} else if (operation == PullRequestOperation.CLOSE) {
-							pr.setState(IssueService.STATE_CLOSED);
+							pr.close();
 						}
 					}
-					prService.editPullRequest(repo, pr);
 				}
 			}
 			return new RepositoryResponse(

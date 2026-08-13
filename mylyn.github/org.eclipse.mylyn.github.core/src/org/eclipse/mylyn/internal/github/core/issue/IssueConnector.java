@@ -15,6 +15,8 @@
 package org.eclipse.mylyn.internal.github.core.issue;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -29,26 +31,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.egit.github.core.Comment;
-import org.eclipse.egit.github.core.IRepositoryIdProvider;
-import org.eclipse.egit.github.core.Issue;
-import org.eclipse.egit.github.core.Label;
-import org.eclipse.egit.github.core.Milestone;
-import org.eclipse.egit.github.core.PullRequest;
-import org.eclipse.egit.github.core.Repository;
-import org.eclipse.egit.github.core.RepositoryId;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.service.IssueService;
-import org.eclipse.egit.github.core.service.LabelService;
-import org.eclipse.egit.github.core.service.MilestoneService;
-import org.eclipse.egit.github.core.util.LabelComparator;
-import org.eclipse.egit.github.core.util.MilestoneComparator;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.QueryUtils;
 import org.eclipse.mylyn.internal.github.core.RepositoryConnector;
+import org.eclipse.mylyn.internal.github.egit.github.core.RepositoryId;
+import org.eclipse.mylyn.internal.github.egit.github.core.client.IssueService;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -56,6 +46,19 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
+import org.kohsuke.github.GHIssue;
+import org.kohsuke.github.GHIssue.PullRequest;
+import org.kohsuke.github.GHIssueComment;
+import org.kohsuke.github.GHIssueQueryBuilder.ForRepository;
+import org.kohsuke.github.GHIssueState;
+import org.kohsuke.github.GHLabel;
+import org.kohsuke.github.GHMilestone;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GitHubAbuseLimitHandler;
+import org.kohsuke.github.GitHubBuilder;
+import org.kohsuke.github.connector.GitHubConnector;
+import org.kohsuke.github.connector.GitHubConnectorResponse;
+import org.kohsuke.github.internal.DefaultGitHubConnector;
 
 /**
  * GitHub issue repository connector.
@@ -73,7 +76,11 @@ public class IssueConnector extends RepositoryConnector {
 	 * @param repo
 	 * @return label
 	 */
-	public static String getRepositoryLabel(IRepositoryIdProvider repo) {
+	public static String getRepositoryLabel(GHRepository repo) {
+		return repo.getFullName() + Messages.IssueConnector_LabelIssues;
+	}
+
+	public static String getRepositoryLabel(RepositoryId repo) {
 		return repo.generateId() + Messages.IssueConnector_LabelIssues;
 	}
 
@@ -89,10 +96,11 @@ public class IssueConnector extends RepositoryConnector {
 	 * @param isToken
 	 *            whether the password is a token
 	 * @return the {@link TaskRepository}
+	 * @throws IOException
 	 */
-	public static TaskRepository createTaskRepository(Repository repo, String username, String password,
-			boolean isToken) {
-		String url = GitHub.createGitHubUrl(repo.getOwner().getLogin(), repo.getName());
+	public static TaskRepository createTaskRepository(GHRepository repo, String username, String password,
+			boolean isToken) throws IOException {
+		String url = repo.getHtmlUrl().toString();
 		TaskRepository repository = new TaskRepository(KIND, url);
 		repository.setRepositoryLabel(getRepositoryLabel(repo));
 		String loginName = username;
@@ -113,11 +121,41 @@ public class IssueConnector extends RepositoryConnector {
 	 *
 	 * @param repository
 	 * @return client
+	 * @throws IOException
 	 */
-	public static GitHubClient createClient(TaskRepository repository) {
-		GitHubClient client = GitHubClient.createClient(repository.getRepositoryUrl());
-		GitHub.addCredentials(client, repository);
-		return GitHub.configureClient(client);
+	public static GHRepository createClient(TaskRepository repository) throws IOException {
+		return createClient(repository.getRepositoryUrl(), repository.getCredentials(AuthenticationType.REPOSITORY));
+	}
+
+	public static org.kohsuke.github.GitHub createGithubClient(AuthenticationCredentials credentials) throws IOException {
+		GitHubConnector connector = DefaultGitHubConnector.create();
+		GitHubAbuseLimitHandler limitHandler = new GitHubAbuseLimitHandler() {
+			@Override
+			public void onError(GitHubConnectorResponse connectorResponse) throws IOException {
+				throw new IOException(
+						"GitHub abuse limit exceeded"); //$NON-NLS-1$
+			}
+		};
+		GitHubBuilder github = new GitHubBuilder() //
+				.withConnector(connector) //
+				.withAbuseLimitHandler(limitHandler);
+
+		if (!credentials.getPassword().isEmpty()) {
+			github.withOAuthToken(credentials.getPassword(), ""); //$NON-NLS-1$
+		}
+		org.kohsuke.github.GitHub client = github.build();
+		return client;
+	}
+
+	public static GHRepository createClient(String url, AuthenticationCredentials credentials) throws IOException {
+		org.kohsuke.github.GitHub client = createGithubClient(credentials);
+		try {
+			URI uri = new URI(url);
+			GHRepository repo = client.getRepository(uri.getPath().substring(1));
+			return repo;
+		} catch (URISyntaxException e) {
+			throw new IOException(e);
+		}
 	}
 
 	/**
@@ -125,11 +163,11 @@ public class IssueConnector extends RepositoryConnector {
 	 */
 	private final IssueTaskDataHandler taskDataHandler;
 
-	private final Map<TaskRepository, List<Label>> repositoryLabels = Collections
-			.synchronizedMap(new HashMap<TaskRepository, List<Label>>());
+	private final Map<TaskRepository, List<GHLabel>> repositoryLabels = Collections
+			.synchronizedMap(new HashMap<TaskRepository, List<GHLabel>>());
 
-	private final Map<TaskRepository, List<Milestone>> repositoryMilestones = Collections
-			.synchronizedMap(new HashMap<TaskRepository, List<Milestone>>());
+	private final Map<TaskRepository, List<GHMilestone>> repositoryMilestones = Collections
+			.synchronizedMap(new HashMap<TaskRepository, List<GHMilestone>>());
 
 	/**
 	 * Create GitHub issue repository connector
@@ -144,15 +182,13 @@ public class IssueConnector extends RepositoryConnector {
 	 * @param repository
 	 * @return labels
 	 * @throws CoreException
+	 * @throws IOException
 	 */
-	public List<Label> refreshLabels(TaskRepository repository) throws CoreException {
+	public List<GHLabel> refreshLabels(TaskRepository repository) throws CoreException {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
-		RepositoryId repo = GitHub.getRepository(repository.getRepositoryUrl());
-		GitHubClient client = createClient(repository);
-		LabelService service = new LabelService(client);
 		try {
-			List<Label> labels = service.getLabels(repo.getOwner(), repo.getName());
-			Collections.sort(labels, new LabelComparator());
+			GHRepository client = createClient(repository);
+			List<GHLabel> labels = client.listLabels().toList();
 			repositoryLabels.put(repository, labels);
 			return labels;
 		} catch (IOException e) {
@@ -166,10 +202,10 @@ public class IssueConnector extends RepositoryConnector {
 	 * @param repository
 	 * @return non-null but possibly empty list of labels
 	 */
-	public List<Label> getLabels(TaskRepository repository) {
+	public List<GHLabel> getLabels(TaskRepository repository) {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
-		List<Label> labels = new LinkedList<>();
-		List<Label> cached = repositoryLabels.get(repository);
+		List<GHLabel> labels = new LinkedList<>();
+		List<GHLabel> cached = repositoryLabels.get(repository);
 		if (cached != null) {
 			labels.addAll(cached);
 		}
@@ -193,15 +229,13 @@ public class IssueConnector extends RepositoryConnector {
 	 * @return milestones
 	 * @throws CoreException
 	 */
-	public List<Milestone> refreshMilestones(TaskRepository repository) throws CoreException {
+	public List<GHMilestone> refreshMilestones(TaskRepository repository) throws CoreException {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
-		RepositoryId repo = GitHub.getRepository(repository.getRepositoryUrl());
-		GitHubClient client = createClient(repository);
-		MilestoneService service = new MilestoneService(client);
 		try {
-			List<Milestone> milestones = new LinkedList<>(service.getMilestones(repo.getOwner(), repo.getName(), IssueService.STATE_OPEN));
-			milestones.addAll(service.getMilestones(repo.getOwner(), repo.getName(), IssueService.STATE_CLOSED));
-			Collections.sort(milestones, new MilestoneComparator());
+			GHRepository repo = createClient(repository);
+			List<GHMilestone> milestones = new LinkedList<>(
+					repo.listMilestones(GHIssueState.OPEN).toList());
+			milestones.addAll(repo.listMilestones(GHIssueState.CLOSED).toList());
 			repositoryMilestones.put(repository, milestones);
 			return milestones;
 		} catch (IOException e) {
@@ -215,10 +249,10 @@ public class IssueConnector extends RepositoryConnector {
 	 * @param repository
 	 * @return non-null but possibly empty list of milestones
 	 */
-	public List<Milestone> getMilestones(TaskRepository repository) {
+	public List<GHMilestone> getMilestones(TaskRepository repository) {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
-		List<Milestone> milestones = new LinkedList<>();
-		List<Milestone> cached = repositoryMilestones.get(repository);
+		List<GHMilestone> milestones = new LinkedList<>();
+		List<GHMilestone> cached = repositoryMilestones.get(repository);
 		if (cached != null) {
 			milestones.addAll(cached);
 		}
@@ -290,25 +324,23 @@ public class IssueConnector extends RepositoryConnector {
 
 		SubMonitor subMonitor = SubMonitor.convert(monitor, Messages.IssueConector_TaskQuerying, statuses.size() * 100);
 		try {
-			RepositoryId repo = GitHub.getRepository(repository.getRepositoryUrl());
+			GHRepository repo = createClient(repository);
 
-			GitHubClient client = createClient(repository);
-			IssueService service = new IssueService(client);
+			ForRepository queryBuilder = repo.queryIssues();
 
-			Map<String, String> filterData = new HashMap<>();
 			String mentions = query.getAttribute(IssueService.FILTER_MENTIONED);
 			if (mentions != null) {
-				filterData.put(IssueService.FILTER_MENTIONED, mentions);
+				queryBuilder.mentioned(mentions);
 			}
 
 			String assignee = query.getAttribute(IssueService.FILTER_ASSIGNEE);
 			if (assignee != null) {
-				filterData.put(IssueService.FILTER_ASSIGNEE, assignee);
+				queryBuilder.assignee(assignee);
 			}
 
 			String milestone = query.getAttribute(IssueService.FILTER_MILESTONE);
 			if (milestone != null) {
-				filterData.put(IssueService.FILTER_MILESTONE, milestone);
+				queryBuilder.milestone(milestone);
 			}
 
 			List<String> labels = QueryUtils.getAttributes(
@@ -316,34 +348,39 @@ public class IssueConnector extends RepositoryConnector {
 			if (!labels.isEmpty()) {
 				StringBuilder labelsQuery = new StringBuilder();
 				for (String label : labels) {
-					labelsQuery.append(label).append(',');
+					queryBuilder.label(label);
 				}
-				filterData.put(IssueService.FILTER_LABELS, labelsQuery.toString());
 			}
 
-			String owner = repo.getOwner();
+			String owner = repo.getOwner().getName();
 			String name = repo.getName();
 			for (String status : statuses) {
-				filterData.put(IssueService.FILTER_STATE, status);
+				if ("open".equalsIgnoreCase(status)) { //$NON-NLS-1$
+					queryBuilder.state(GHIssueState.OPEN);
+				} else if ("closed".equalsIgnoreCase(status)) { //$NON-NLS-1$
+					queryBuilder.state(GHIssueState.CLOSED);
+				} else if ("all".equalsIgnoreCase(status)) { //$NON-NLS-1$
+					queryBuilder.state(GHIssueState.ALL);
+				}
+
 				SubMonitor statusMonitor = subMonitor.split(100);
 				statusMonitor.setTaskName(status + Messages.IssueConnector_LabelIssues);
-				List<Issue> issues = service.getIssues(repo.getOwner(), repo.getName(), filterData);
+//				List<Issue> issues = service.getIssues(repo.getOwner(), repoId.getName(), filterData);
+				List<GHIssue> issues = queryBuilder.list().toList();
 				statusMonitor.checkCanceled();
 
-				// collect task data
+// collect task data
 				statusMonitor.setWorkRemaining(issues.size());
-				for (Issue issue : issues) {
-					if (!isPullRequest(issue)) {
-						List<Comment> comments = null;
-						if (issue.getComments() > 0) {
-							comments = service.getComments(owner, name, Integer.toString(issue.getNumber()));
-						}
-						TaskData taskData = taskDataHandler.createTaskData(repository, statusMonitor, owner, name,
-								issue, comments);
-						collector.accept(taskData);
+				for (GHIssue issue : issues) {
+					List<GHIssueComment> comments = null;
+					if (issue.getCommentsCount() > 0) {
+						comments = issue.getComments();
 					}
-					statusMonitor.split(1);
+					TaskData taskData = taskDataHandler.createTaskData(repository, statusMonitor, owner, name,
+							issue, comments);
+					collector.accept(taskData);
 				}
+				statusMonitor.split(1);
 				statusMonitor.done();
 			}
 		} catch (IOException e) {
@@ -354,7 +391,7 @@ public class IssueConnector extends RepositoryConnector {
 		return result;
 	}
 
-	private boolean isPullRequest(Issue issue) {
+	private boolean isPullRequest(GHIssue issue) {
 		PullRequest request = issue.getPullRequest();
 		return request != null && request.getDiffUrl() != null;
 	}
@@ -365,15 +402,14 @@ public class IssueConnector extends RepositoryConnector {
 		RepositoryId repo = GitHub.getRepository(repository.getRepositoryUrl());
 
 		try {
-			GitHubClient client = createClient(repository);
-			IssueService service = new IssueService(client);
-			Issue issue = service.getIssue(repo.getOwner(), repo.getName(), taskId);
+			GHRepository client = createClient(repository);
+			GHIssue issue = client.getIssue(Integer.parseInt(taskId));
 			if (isPullRequest(issue)) {
 				return null;
 			}
-			List<Comment> comments = null;
-			if (issue.getComments() > 0) {
-				comments = service.getComments(repo.getOwner(), repo.getName(), taskId);
+			List<GHIssueComment> comments = null;
+			if (issue.getCommentsCount() > 0) {
+				comments = issue.getComments();
 			}
 			return taskDataHandler.createTaskData(repository, monitor, repo.getOwner(), repo.getName(), issue,
 					comments);
@@ -422,4 +458,5 @@ public class IssueConnector extends RepositoryConnector {
 		refreshMilestones(taskRepository);
 		m.done();
 	}
+
 }
