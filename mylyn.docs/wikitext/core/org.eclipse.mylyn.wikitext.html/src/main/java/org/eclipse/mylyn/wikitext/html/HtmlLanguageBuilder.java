@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2021 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2026 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -42,7 +42,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
  *
  * @author david.green
  * @see HtmlLanguage#builder()
- * @since 3.0
+ * @since 4.12
  */
 public class HtmlLanguageBuilder {
 	private String name;
