@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Tasktop Technologies and others.
+ * Copyright (c) 2011, 2026 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.parser.markup;
@@ -22,7 +23,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.block.JavaStackTraceBlock;
  * A builder for creating {@link MarkupLanguageConfiguration}
  *
  * @author David Green
- * @since 3.0
+ * @since 4.12
  */
 public class ConfigurationBuilder {
 
@@ -48,11 +49,11 @@ public class ConfigurationBuilder {
 	public ConfigurationBuilder repositorySettings() {
 		ConfigurationBuilder builder = create();
 		builder.disableUnwrappedParagraphs()
-				.escapingHtmlAndXml()
-				.newlinesMustCauseLineBreak()
-				.optimizeForRepositoryUsage()
-				.block(new EclipseErrorDetailsBlock())
-				.block(new JavaStackTraceBlock());
+		.escapingHtmlAndXml()
+		.newlinesMustCauseLineBreak()
+		.optimizeForRepositoryUsage()
+		.block(new EclipseErrorDetailsBlock())
+		.block(new JavaStackTraceBlock());
 		return builder;
 	}
 
