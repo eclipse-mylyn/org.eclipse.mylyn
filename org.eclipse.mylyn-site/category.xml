@@ -121,6 +121,11 @@
    <bundle id="org.eclipse.ecf.discovery"/>
    <bundle id="org.eclipse.ecf.provider.jmdns"/>
    <bundle id="org.glassfish.hk2.osgi-resource-locator"/>
+   <bundle id="com.fasterxml.jackson.core.jackson-annotations"/>
+   <bundle id="com.fasterxml.jackson.core.jackson-core"/>
+   <bundle id="com.fasterxml.jackson.core.jackson-databind"/>
+   <bundle id="com.fasterxml.jackson.datatype.jackson-datatype-jsr310"/>
+   <bundle id="wrapped.org.kohsuke.github-api"/>
    <category-def name="org.eclipse.mylyn.docs.category" label="Mylyn Docs">
       <description>
          Mylyn Docs

@@ -14,12 +14,13 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.github.ui.issue;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.URLHyperlink;
@@ -39,6 +40,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
+import org.kohsuke.github.GHRepository;
 
 /**
  * GitHub connector specific UI extensions.
@@ -118,10 +120,13 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 
 				if (project == null && user != null) {
 					// same project name, different user
-					String url = repository.getUrl();
-					RepositoryId repo = GitHub.getRepository(url);
-					if (repo != null) {
-						project = repo.getName();
+					try {
+						GHRepository repo = IssueConnector.createClient(repository);
+						if (repo != null) {
+							project = repo.getName();
+						}
+					} catch (IOException e) {
+						throw new UncheckedIOException(e);
 					}
 				}
 

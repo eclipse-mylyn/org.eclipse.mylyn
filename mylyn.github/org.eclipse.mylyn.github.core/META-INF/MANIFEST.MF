@@ -10,10 +10,23 @@ Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: org.eclipse.mylyn.internal.github.core;version="6.2.1";x-friends:="org.eclipse.mylyn.github.ui",
  org.eclipse.mylyn.internal.github.core.gist;version="6.2.1";x-friends:="org.eclipse.mylyn.github.ui",
  org.eclipse.mylyn.internal.github.core.issue;version="6.2.1";x-friends:="org.eclipse.mylyn.github.ui",
- org.eclipse.mylyn.internal.github.core.pr;version="6.2.1";x-friends:="org.eclipse.mylyn.github.ui"
+ org.eclipse.mylyn.internal.github.core.pr;version="6.2.1";x-friends:="org.eclipse.mylyn.github.ui",
+ org.eclipse.mylyn.internal.github.egit.github.core,
+ org.eclipse.mylyn.internal.github.egit.github.core.client
+Import-Package: com.fasterxml.jackson.annotation;version="[2.21.0,3.0.0)",
+ com.fasterxml.jackson.core;version="[2.21.0,3.0.0)",
+ com.fasterxml.jackson.databind;version="[2.21.0,3.0.0)",
+ com.fasterxml.jackson.databind.json;version="[2.21.0,3.0.0)",
+ com.fasterxml.jackson.datatype.jsr310;version="[2.21.0,3.0.0)",
+ com.google.gson;version="[2.14.0,3.0.0)",
+ com.google.gson.annotations;version="[2.14.0,3.0.0)",
+ com.google.gson.stream;version="[2.14.0,3.0.0)",
+ org.eclipse.mylyn.internal.github.core.pr;version="[6.2.0,7.0.0)",
+ org.kohsuke.github;version="2.0.0.rc7",
+ org.kohsuke.github.connector;version="2.0.0.rc7",
+ org.kohsuke.github.internal;version="[2.0.0,3.0.0)"
 Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.19.0,4.0.0)",
  org.eclipse.egit.core;bundle-version="6.2.0",
- org.eclipse.egit.github.core;bundle-version="6.1.0",
  org.eclipse.jgit;bundle-version="6.2.0",
  org.eclipse.mylyn.commons.net;bundle-version="[4.0.0,5.0.0)",
  org.eclipse.mylyn.tasks.core;bundle-version="[4.0.0,5.0.0)"

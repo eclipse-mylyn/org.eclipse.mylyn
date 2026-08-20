@@ -13,6 +13,7 @@
 package org.eclipse.mylyn.internal.github.core.pr;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,23 +22,16 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.egit.github.core.Comment;
-import org.eclipse.egit.github.core.CommitComment;
-import org.eclipse.egit.github.core.IRepositoryIdProvider;
-import org.eclipse.egit.github.core.PullRequest;
-import org.eclipse.egit.github.core.Repository;
-import org.eclipse.egit.github.core.RepositoryId;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.client.GsonUtils;
-import org.eclipse.egit.github.core.client.IGitHubConstants;
-import org.eclipse.egit.github.core.service.IssueService;
-import org.eclipse.egit.github.core.service.PullRequestService;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.github.core.GitHub;
+import org.eclipse.mylyn.internal.github.core.GithubApi;
 import org.eclipse.mylyn.internal.github.core.QueryUtils;
 import org.eclipse.mylyn.internal.github.core.RepositoryConnector;
-import org.eclipse.mylyn.internal.github.core.issue.IssueConnector;
+import org.eclipse.mylyn.internal.github.egit.github.core.RepositoryCommit;
+import org.eclipse.mylyn.internal.github.egit.github.core.RepositoryId;
+import org.eclipse.mylyn.internal.github.egit.github.core.client.IGitHubConstants;
+import org.eclipse.mylyn.internal.github.egit.github.core.client.IssueService;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -45,6 +39,14 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
+import org.kohsuke.github.GHCommit;
+import org.kohsuke.github.GHIssueComment;
+import org.kohsuke.github.GHIssueState;
+import org.kohsuke.github.GHPullRequest;
+import org.kohsuke.github.GHPullRequestCommitDetail;
+import org.kohsuke.github.GHPullRequestQueryBuilder;
+import org.kohsuke.github.GHPullRequestReviewComment;
+import org.kohsuke.github.GHRepository;
 
 /**
  * GitHub pull request connector.
@@ -67,7 +69,10 @@ public class PullRequestConnector extends RepositoryConnector {
 	 * @param repo
 	 * @return label
 	 */
-	public static String getRepositoryLabel(IRepositoryIdProvider repo) {
+	public static String getRepositoryLabel(GHRepository repo) {
+		return repo.getFullName() + Messages.PullRequestConnector_LabelPullRequests;
+	}
+	public static String getRepositoryLabel(RepositoryId repo) {
 		return repo.generateId() + Messages.PullRequestConnector_LabelPullRequests;
 	}
 
@@ -83,11 +88,11 @@ public class PullRequestConnector extends RepositoryConnector {
 	 * @param isToken
 	 *            whether the password is a token
 	 * @return the {@link TaskRepository}
+	 * @throws IOException
 	 */
-	public static TaskRepository createTaskRepository(Repository repo, String username, String password,
-			boolean isToken) {
-		String url = PullRequestConnector.appendPulls(GitHub.createGitHubUrl(
-				repo.getOwner().getLogin(), repo.getName()));
+	public static TaskRepository createTaskRepository(GHRepository repo, String username, String password,
+			boolean isToken) throws IOException {
+		String url = PullRequestConnector.appendPulls(repo.getHtmlUrl().toString());
 		TaskRepository repository = new TaskRepository(KIND, url);
 		repository.setRepositoryLabel(getRepositoryLabel(repo));
 		String loginName = username;
@@ -110,7 +115,11 @@ public class PullRequestConnector extends RepositoryConnector {
 	 * @return appended string
 	 */
 	public static String appendPulls(final String repoUrl) {
-		return repoUrl + IGitHubConstants.SEGMENT_PULLS;
+		if (repoUrl.endsWith(IGitHubConstants.SEGMENT_PULLS)) {
+			return repoUrl;
+		} else {
+			return repoUrl + IGitHubConstants.SEGMENT_PULLS;
+		}
 	}
 
 	/**
@@ -131,8 +140,9 @@ public class PullRequestConnector extends RepositoryConnector {
 	 *
 	 * @param data
 	 * @return pull request
+	 * @throws IOException
 	 */
-	public static PullRequestComposite getPullRequest(TaskData data) {
+	public static PullRequestComposite getPullRequest(TaskData data) throws IOException {
 		if (data == null) {
 			return null;
 		}
@@ -140,7 +150,8 @@ public class PullRequestConnector extends RepositoryConnector {
 		if (value.length() == 0) {
 			return null;
 		}
-		return GsonUtils.fromJson(value, PullRequestComposite.class);
+
+		return PullRequestComposite.valueOf(value);
 	}
 
 	/**
@@ -201,24 +212,26 @@ public class PullRequestConnector extends RepositoryConnector {
 		SubMonitor subMonitor = SubMonitor.convert(monitor, Messages.PullRequestConnector_TaskFetching,
 				statuses.size() * 100);
 		try {
-			RepositoryId repo = getRepository(repository.getRepositoryUrl());
-
-			GitHubClient client = IssueConnector.createClient(repository);
-			PullRequestService service = new PullRequestService(client);
-			IssueService commentService = new IssueService(client);
-
+			GHRepository repo = createClient(repository);
 			for (String status : statuses) {
 				SubMonitor statusMonitor = subMonitor.split(100);
 				statusMonitor.setTaskName(status + Messages.PullRequestConnector_LabelPullRequests);
 
-				List<PullRequest> pulls = service.getPullRequests(repo, status);
+				GHPullRequestQueryBuilder queryBuilder = repo.queryPullRequests();
+				if ("open".equalsIgnoreCase(status)) { //$NON-NLS-1$
+					queryBuilder.state(GHIssueState.OPEN);
+				} else if ("closed".equalsIgnoreCase(status)) { //$NON-NLS-1$
+					queryBuilder.state(GHIssueState.CLOSED);
+				} else if ("all".equalsIgnoreCase(status)) { //$NON-NLS-1$
+					queryBuilder.state(GHIssueState.ALL);
+				}
+				List<GHPullRequest> pulls = queryBuilder.list().toList();
 				statusMonitor.checkCanceled();
 
 				// collect task data
 				statusMonitor.setWorkRemaining(pulls.size());
-				for (PullRequest pr : pulls) {
-					TaskData taskData = getTaskData(repository, pr.getNumber(), statusMonitor, repo, commentService,
-							service);
+				for (GHPullRequest pr : pulls) {
+					TaskData taskData = getTaskData(repository, pr.getNumber(), statusMonitor, repo, pr);
 					collector.accept(taskData);
 
 					statusMonitor.split(1);
@@ -237,38 +250,49 @@ public class PullRequestConnector extends RepositoryConnector {
 	@Override
 	public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
-		RepositoryId repo = getRepository(repository.getRepositoryUrl());
-
 		try {
-			GitHubClient client = IssueConnector.createClient(repository);
-			PullRequestService service = new PullRequestService(client);
-			IssueService commentService = new IssueService(client);
-
-			return getTaskData(repository, Integer.parseInt(taskId), monitor, repo, commentService, service);
+			int taskNr = Integer.parseInt(taskId);
+			GHRepository repo = createClient(repository);
+			GHPullRequest pr = repo.getPullRequest(taskNr);
+			return getTaskData(repository, taskNr, monitor, repo, pr);
 		} catch (IOException e) {
 			throw new CoreException(GitHub.createWrappedStatus(e));
 		}
 	}
 
-	private TaskData getTaskData(TaskRepository repository, int taskId, IProgressMonitor monitor, RepositoryId repo,
-			IssueService commentService, PullRequestService service) throws IOException, NumberFormatException {
+	private TaskData getTaskData(TaskRepository repository, int taskId, IProgressMonitor monitor, GHRepository repo,
+			GHPullRequest pr) throws IOException, NumberFormatException {
 
-		PullRequest pr = service.getPullRequest(repo, taskId);
 		PullRequestComposite prComp = new PullRequestComposite();
 		prComp.setRequest(pr);
 
-		List<Comment> comments = Collections.emptyList();
-		if (pr.getComments() > 0) {
-			comments = commentService.getComments(repo.getOwner(), repo.getName(), taskId);
+		List<GHIssueComment> comments = Collections.emptyList();
+		if (pr.getCommentsCount() > 0) {
+			comments = pr.getComments();
 		}
 
-		List<CommitComment> commitComments = Collections.emptyList();
+		List<GHPullRequestReviewComment> commitComments = Collections.emptyList();
 		if (pr.getReviewComments() > 0) {
-			commitComments = service.getComments(repo, pr.getNumber());
+			commitComments = pr.listReviewComments().toList();
 		}
 
 		if (pr.getCommits() > 0) {
-			prComp.setCommits(service.getCommits(repo, pr.getNumber()));
+
+			List<GHPullRequestCommitDetail> commits = pr.listCommits().toList();
+			List<RepositoryCommit> repComposits = new ArrayList<>(commits.size());
+			for (GHPullRequestCommitDetail commit : commits) {
+				RepositoryCommit repComposite = new RepositoryCommit();
+
+				repComposite.setSha(commit.getSha());
+				repComposite.setAuthor(commit.getCommit().getAuthor());
+				repComposite.setCommitter(commit.getCommit().getCommitter());
+				GHCommit fullCommit = repo.getCommit(commit.getSha());
+				repComposite.setFiles(fullCommit.listFiles().toList());
+				repComposite.setCommit(fullCommit);
+
+				repComposits.add(repComposite);
+			}
+			prComp.setCommits(repComposits);
 		}
 		return taskDataHandler.createTaskData(repository, monitor, repo, prComp, comments, commitComments);
 	}
@@ -284,6 +308,14 @@ public class PullRequestConnector extends RepositoryConnector {
 
 	@Override
 	public String getTaskUrl(String repositoryUrl, String taskId) {
-		return stripPulls(repositoryUrl) + SEGMENT_PULL + "/" + taskId; //$NON-NLS-1$
+		return appendPulls(repositoryUrl) + "/" + taskId; //$NON-NLS-1$
+	}
+
+	public static GHRepository createClient(TaskRepository taskRepository) throws IOException {
+		return getRepo(GithubApi.createGithubClient(taskRepository), taskRepository);
+	}
+
+	public static GHRepository getRepo(GithubApi client, TaskRepository repository) throws IOException {
+		return client.getRepo(stripPulls(repository.getRepositoryUrl()));
 	}
 }

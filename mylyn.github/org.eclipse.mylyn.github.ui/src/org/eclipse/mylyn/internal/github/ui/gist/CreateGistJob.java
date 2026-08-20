@@ -13,21 +13,19 @@
 package org.eclipse.mylyn.internal.github.ui.gist;
 
 import java.io.IOException;
-import java.util.Collections;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.egit.github.core.Gist;
-import org.eclipse.egit.github.core.GistFile;
-import org.eclipse.egit.github.core.service.GistService;
 import org.eclipse.mylyn.internal.github.core.GitHubException;
+import org.eclipse.mylyn.internal.github.core.GithubApi;
 import org.eclipse.mylyn.internal.github.ui.GitHubUi;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+import org.kohsuke.github.GHGist;
 
 /**
  * Create Gist job class
@@ -39,7 +37,7 @@ public class CreateGistJob extends Job {
 
 	private final String content;
 
-	private final GistService service;
+	private final GithubApi service;
 
 	private final boolean isPublic;
 
@@ -55,7 +53,7 @@ public class CreateGistJob extends Job {
 	 * @param isPublic
 	 * @param repository
 	 */
-	public CreateGistJob(String name, String title, String content, GistService service, boolean isPublic,
+	public CreateGistJob(String name, String title, String content, GithubApi service, boolean isPublic,
 			TaskRepository repository) {
 		super(name);
 		this.title = title;
@@ -68,22 +66,24 @@ public class CreateGistJob extends Job {
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
 		try {
-			Gist gist = new Gist().setPublic(isPublic);
-			gist.setDescription(title);
-			GistFile file = new GistFile().setContent(content);
-			gist.setFiles(Collections.singletonMap(title, file));
-			final Gist created = service.createGist(gist);
+
+			GHGist gist = service.createGist() //
+					.public_(isPublic) //
+					.description(title) //
+					.file(title, content) //
+					.create();
+
 			final Display display = PlatformUI.getWorkbench().getDisplay();
 			display.asyncExec(() -> {
 				GistNotificationPopup popup = new GistNotificationPopup(
-						display, created, title, repository);
+						display, gist, title, repository);
 				popup.create();
 				popup.open();
 			});
 			TasksUiPlugin.getTaskJobFactory()
-					.createSynchronizeRepositoriesJob(
-							GistConnectorUi.getRepositories())
-					.schedule();
+			.createSynchronizeRepositoriesJob(
+					GistConnectorUi.getRepositories())
+			.schedule();
 		} catch (IOException e) {
 			GitHubUi.logError(GitHubException.wrap(e));
 		}

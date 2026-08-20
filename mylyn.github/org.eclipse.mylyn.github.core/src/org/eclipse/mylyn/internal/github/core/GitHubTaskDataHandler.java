@@ -13,7 +13,9 @@
 package org.eclipse.mylyn.internal.github.core;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.text.MessageFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -22,12 +24,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.Function;
 
-import org.eclipse.egit.github.core.Comment;
-import org.eclipse.egit.github.core.CommitComment;
-import org.eclipse.egit.github.core.RepositoryId;
-import org.eclipse.egit.github.core.User;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.service.CollaboratorService;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
@@ -37,6 +33,10 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
+import org.kohsuke.github.GHIssueComment;
+import org.kohsuke.github.GHPullRequestReviewComment;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GHUser;
 
 /**
  * Core task data handler
@@ -56,9 +56,10 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	 * @param user
 	 * @param repository
 	 * @return task attribute
+	 * @throws IOException
 	 */
-	protected TaskAttribute setPersonValue(TaskData data, TaskAttribute attribute, User user,
-			TaskRepository repository) {
+	protected TaskAttribute setPersonValue(TaskData data, TaskAttribute attribute, GHUser user,
+			TaskRepository repository) throws IOException {
 		if (user != null) {
 			data.getAttributeMapper().setRepositoryPerson(attribute, createPerson(user, repository));
 		}
@@ -71,8 +72,9 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	 * @param user
 	 * @param repository
 	 * @return repository person
+	 * @throws IOException
 	 */
-	protected IRepositoryPerson createPerson(User user, TaskRepository repository) {
+	protected IRepositoryPerson createPerson(GHUser user, TaskRepository repository) throws IOException {
 		IRepositoryPerson person = repository.createPerson(user.getLogin());
 		person.setName(user.getName());
 		return person;
@@ -93,8 +95,8 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		return attribute;
 	}
 
-	protected void addComments(final TaskAttribute parent, final List<Comment> comments,
-			final TaskRepository repository) {
+	protected void addComments(final TaskAttribute parent, final List<GHIssueComment> comments,
+			final TaskRepository repository) throws IOException {
 		addComments(parent, comments, Collections.emptyList(), repository);
 	}
 
@@ -106,11 +108,12 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	 * @param commitComments
 	 * @param repository
 	 * @return task attribute
+	 * @throws IOException
 	 */
 
-	protected void addComments(final TaskAttribute parent, List<Comment> comments,
-			List<CommitComment> commitComments,
-			final TaskRepository repository) {
+	protected void addComments(final TaskAttribute parent, List<GHIssueComment> comments,
+			List<GHPullRequestReviewComment> commitComments,
+			final TaskRepository repository) throws IOException {
 		if (comments == null) {
 			comments = Collections.emptyList();
 		}
@@ -120,12 +123,12 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 
 		int count = 1;
 
-		for (Comment comment : comments) {
+		for (GHIssueComment comment : comments) {
 			TaskCommentMapper commentMapper = new TaskCommentMapper();
-			commentMapper.setCreationDate(comment.getCreatedAt());
+			commentMapper.setCreationDate(Date.from(comment.getCreatedAt()));
 			commentMapper.setAuthor(createPerson(comment.getUser(), repository));
 			commentMapper.setText(comment.getBody());
-			commentMapper.setCommentId(comment.getUrl());
+			commentMapper.setCommentId(String.valueOf(comment.getId()));
 			commentMapper.setNumber(count);
 
 			TaskAttribute attribute = parent.createAttribute(TaskAttribute.PREFIX_COMMENT + count);
@@ -134,27 +137,38 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		if (!commitComments.isEmpty()) {
-			LinkedHashMap<Integer, List<CommitComment>> commitCommentMap = new LinkedHashMap<>();
-			commitComments.stream() //
-			.sorted(Comparator.comparingInt(CommitComment::getOriginalPosition) //
-					.thenComparing(
-							(Function<CommitComment, Date>) CommitComment::getCreatedAt)
-					) //
-			.forEach(commitComment -> {
-				commitCommentMap.computeIfAbsent(commitComment.getOriginalPosition(), k -> new ArrayList<>())
-				.add(commitComment);
-			});
+			LinkedHashMap<Integer, List<GHPullRequestReviewComment>> commitCommentMap = new LinkedHashMap<>();
+			try {
+				commitComments.stream() //
+						.sorted(Comparator.comparingInt(GHPullRequestReviewComment::getOriginalPosition) //
+								.thenComparing(
+										(Function<GHPullRequestReviewComment, Instant>) t -> {
+											try {
+												return t.getCreatedAt();
+											} catch (IOException e) {
+												throw new UncheckedIOException(e);
+											}
+										})
+						) //
+						.forEach(commitComment -> {
+							commitCommentMap
+									.computeIfAbsent(commitComment.getOriginalPosition(), k -> new ArrayList<>())
+									.add(commitComment);
+						});
+			} catch (UncheckedIOException e) {
+				throw e.getCause();
+			}
 
 			int reviewCount = 1;
 
-			for (List<CommitComment> commitCommentz : commitCommentMap.values()) {
+			for (List<GHPullRequestReviewComment> commitCommentz : commitCommentMap.values()) {
 				boolean showDiffHunk = true;
-				count = 1;
-				for (CommitComment commitComment : commitCommentz) {
+				for (GHPullRequestReviewComment commitComment : commitCommentz) {
 					TaskCommentMapper commentMapper = new TaskCommentMapper();
-					commentMapper.setCreationDate(commitComment.getCreatedAt());
+					commentMapper.setCreationDate(Date.from(commitComment.getCreatedAt()));
 					IRepositoryPerson person = createPerson(commitComment.getUser(), repository);
-					person.setName(person.getPersonId() + MessageFormat.format(Messages.Review_Comment_Thread, reviewCount));
+					person.setName(person.getPersonId() + " " //$NON-NLS-1$
+							+ MessageFormat.format(Messages.Review_Comment_Thread, reviewCount));
 					commentMapper.setAuthor(person);
 
 					String commentText = commitComment.getBody();
@@ -166,7 +180,7 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 						showDiffHunk = false;
 					}
 					commentMapper.setText(commentText);
-					commentMapper.setCommentId(commitComment.getUrl());
+					commentMapper.setCommentId(String.valueOf(commitComment.getId()));
 					commentMapper.setNumber(count);
 
 					TaskAttribute attribute = parent.createAttribute(TaskAttribute.PREFIX_COMMENT + count);
@@ -201,10 +215,10 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 		TaskAttribute attr = data.getRoot().createAttribute(attribute.getId());
 		TaskAttributeMetaData metaData = attr.getMetaData();
 		metaData.defaults()
-				.setType(attribute.getType())
-				.setKind(attribute.getKind())
-				.setLabel(attribute.getLabel())
-				.setReadOnly(attribute.isReadOnly());
+		.setType(attribute.getType())
+		.setKind(attribute.getKind())
+		.setLabel(attribute.getLabel())
+		.setReadOnly(attribute.isReadOnly());
 		return attr;
 	}
 
@@ -244,9 +258,10 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	 * @param user
 	 * @param repository
 	 * @return created attribute
+	 * @throws IOException
 	 */
-	protected TaskAttribute createAttribute(TaskData data, GitHubAttributeMetadata metadata, User user,
-			TaskRepository repository) {
+	protected TaskAttribute createAttribute(TaskData data, GitHubAttributeMetadata metadata, GHUser user,
+			TaskRepository repository) throws IOException {
 		return setPersonValue(data, createAttribute(data, metadata), user, repository);
 	}
 
@@ -291,12 +306,14 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	 * @param metadata
 	 * @param data
 	 * @return true if match, false otherwise
+	 * @throws IOException
 	 */
-	protected boolean attributeMatchesUser(GitHubClient client, GitHubAttributeMetadata metadata, TaskData data) {
+	protected boolean attributeMatchesUser(GithubApi client, GitHubAttributeMetadata metadata, TaskData data)
+			throws IOException {
 		if (client == null || metadata == null || data == null) {
 			return false;
 		}
-		String user = client.getUser();
+		String user = client.getMyself().getLogin();
 		if (user == null || user.length() == 0) {
 			return false;
 		}
@@ -311,11 +328,11 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 	 * @return true if collaborator, false otherwise
 	 * @throws IOException
 	 */
-	protected boolean isCollaborator(GitHubClient client, RepositoryId repo) throws IOException {
-		String user = client.getUser();
+	protected boolean isCollaborator(GithubApi client, GHRepository repo) throws IOException {
+		String user = client.getMyself().getLogin();
 		if (user == null || user.length() == 0) {
 			return false;
 		}
-		return new CollaboratorService(client).isCollaborator(repo, user);
+		return repo.isCollaborator(client.getMyself());
 	}
 }

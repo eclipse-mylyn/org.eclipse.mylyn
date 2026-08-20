@@ -14,9 +14,9 @@ package org.eclipse.mylyn.internal.github.ui;
 
 import java.util.function.Function;
 
-import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.mylyn.internal.github.core.GitHub;
+import org.eclipse.mylyn.internal.github.egit.github.core.RepositoryId;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.graphics.Point;

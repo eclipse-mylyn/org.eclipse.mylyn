@@ -12,6 +12,8 @@
  *****************************************************************************/
 package org.eclipse.mylyn.internal.github.ui.pr;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -45,31 +47,35 @@ public class PullRequestTaskEditorPage extends AbstractTaskEditorPage {
 
 	@Override
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
-		prComp = PullRequestConnector.getPullRequest(getModel().getTaskData());
-		Set<TaskEditorPartDescriptor> partDescriptors = super.createPartDescriptors();
-		Iterator<TaskEditorPartDescriptor> descriptorIt = partDescriptors.iterator();
-		while (descriptorIt.hasNext()) {
-			TaskEditorPartDescriptor partDescriptor = descriptorIt.next();
-			String id = partDescriptor.getId();
-			if (id.equals(ID_PART_ATTRIBUTES) || id.equals(ID_PART_SUMMARY)) {
-				descriptorIt.remove();
+		try {
+			prComp = PullRequestConnector.getPullRequest(getModel().getTaskData());
+			Set<TaskEditorPartDescriptor> partDescriptors = super.createPartDescriptors();
+			Iterator<TaskEditorPartDescriptor> descriptorIt = partDescriptors.iterator();
+			while (descriptorIt.hasNext()) {
+				TaskEditorPartDescriptor partDescriptor = descriptorIt.next();
+				String id = partDescriptor.getId();
+				if (id.equals(ID_PART_ATTRIBUTES) || id.equals(ID_PART_SUMMARY)) {
+					descriptorIt.remove();
+				}
 			}
+			partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_SUMMARY) {
+
+				@Override
+				public AbstractTaskEditorPart createPart() {
+					return new IssueSummaryPart(
+							PullRequestAttribute.REPORTER_GRAVATAR.getMetadata().getId(), null);
+				}
+			}.setPath(PATH_HEADER));
+			partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_ATTRIBUTES) {
+
+				@Override
+				public AbstractTaskEditorPart createPart() {
+					return new CommitAttributePart(prComp);
+				}
+			}.setPath(PATH_ATTACHMENTS));
+			return partDescriptors;
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
 		}
-		partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_SUMMARY) {
-
-			@Override
-			public AbstractTaskEditorPart createPart() {
-				return new IssueSummaryPart(
-						PullRequestAttribute.REPORTER_GRAVATAR.getMetadata().getId(), null);
-			}
-		}.setPath(PATH_HEADER));
-		partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_ATTRIBUTES) {
-
-			@Override
-			public AbstractTaskEditorPart createPart() {
-				return new CommitAttributePart(prComp);
-			}
-		}.setPath(PATH_ATTACHMENTS));
-		return partDescriptors;
 	}
 }

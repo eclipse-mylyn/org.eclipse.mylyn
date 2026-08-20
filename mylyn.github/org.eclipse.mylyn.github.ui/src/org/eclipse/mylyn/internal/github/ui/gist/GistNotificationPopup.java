@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.github.ui.gist;
 
 import java.text.MessageFormat;
 
-import org.eclipse.egit.github.core.Gist;
 import org.eclipse.mylyn.commons.ui.dialogs.AbstractNotificationPopup;
 import org.eclipse.mylyn.internal.github.ui.GitHubImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -30,6 +29,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
+import org.kohsuke.github.GHGist;
 
 /**
  * Gist notification popup class
@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Link;
 @SuppressWarnings("restriction")
 public class GistNotificationPopup extends AbstractNotificationPopup {
 
-	private final Gist gist;
+	private final GHGist gist;
 
 	private final String title;
 
@@ -51,7 +51,7 @@ public class GistNotificationPopup extends AbstractNotificationPopup {
 	 * @param title
 	 * @param repository
 	 */
-	public GistNotificationPopup(Display display, Gist gist, String title, TaskRepository repository) {
+	public GistNotificationPopup(Display display, GHGist gist, String title, TaskRepository repository) {
 		super(display);
 		this.gist = gist;
 		this.title = title;
@@ -66,7 +66,7 @@ public class GistNotificationPopup extends AbstractNotificationPopup {
 				Messages.GistNotificationPopup_GistTitle, title));
 		Link link = new Link(composite, SWT.WRAP);
 		link.setText(MessageFormat.format(
-				Messages.GistNotificationPopup_GistLink, gist.getId()));
+				Messages.GistNotificationPopup_GistLink, gist.getGistId()));
 		link.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		link.setBackground(composite.getBackground());
 		link.addSelectionListener(new SelectionAdapter() {
@@ -74,11 +74,11 @@ public class GistNotificationPopup extends AbstractNotificationPopup {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				AbstractTask task = TasksUiInternal.getTask(
-						repository.getRepositoryUrl(), gist.getId(), gist.getHtmlUrl());
+						repository.getRepositoryUrl(), gist.getGistId(), gist.getHtmlUrl().toString());
 				if (task != null) {
 					TasksUiInternal.refreshAndOpenTaskListElement(task);
 				} else {
-					TasksUiInternal.openTask(repository, gist.getId(), null);
+					TasksUiInternal.openTask(repository, gist.getGistId(), null);
 				}
 			}
 		});

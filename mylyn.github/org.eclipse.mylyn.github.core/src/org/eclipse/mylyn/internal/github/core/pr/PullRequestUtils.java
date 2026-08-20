@@ -18,10 +18,6 @@ import java.net.URISyntaxException;
 
 import org.eclipse.egit.core.RepositoryCache;
 import org.eclipse.egit.core.RepositoryUtil;
-import org.eclipse.egit.github.core.PullRequest;
-import org.eclipse.egit.github.core.PullRequestMarker;
-import org.eclipse.egit.github.core.User;
-import org.eclipse.egit.github.core.util.UrlUtils;
 import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
@@ -30,6 +26,11 @@ import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.mylyn.internal.github.core.GitHub;
+import org.eclipse.mylyn.internal.github.egit.github.core.util.UrlUtils;
+import org.kohsuke.github.GHCommitPointer;
+import org.kohsuke.github.GHPullRequest;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GHUser;
 
 /**
  * Pull request utilities
@@ -57,7 +58,7 @@ public abstract class PullRequestUtils {
 	 * @param request
 	 * @return non-null/non-empty branch name
 	 */
-	public static String getBranchName(PullRequest request) {
+	public static String getBranchName(GHPullRequest request) {
 		return "pull-request-" + request.getNumber(); //$NON-NLS-1$
 	}
 
@@ -66,9 +67,10 @@ public abstract class PullRequestUtils {
 	 *
 	 * @param request
 	 * @return repository or null if none found
+	 * @throws IOException
 	 */
-	public static Repository getRepository(PullRequest request) {
-		org.eclipse.egit.github.core.Repository remoteRepo = request.getBase().getRepo();
+	public static Repository getRepository(GHPullRequest request) throws IOException {
+		GHRepository remoteRepo = request.getBase().getRepository();
 		String id = remoteRepo.getOwner().getLogin() + '/' + remoteRepo.getName() + Constants.DOT_GIT;
 		for (String path : RepositoryUtil.INSTANCE.getConfiguredRepositories()) {
 			try {
@@ -94,9 +96,9 @@ public abstract class PullRequestUtils {
 	 * @param request
 	 * @throws IOException
 	 */
-	public static void configureTopicBranch(Repository repo, PullRequest request) throws IOException {
+	public static void configureTopicBranch(Repository repo, GHPullRequest request) throws IOException {
 		String branch = getBranchName(request);
-		String remote = request.getHead().getRepo().getOwner().getLogin();
+		String remote = request.getHead().getRepository().getOwner().getLogin();
 		StoredConfig config = repo.getConfig();
 		config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, branch, ConfigConstants.CONFIG_KEY_MERGE,
 				getHeadBranch(request));
@@ -107,18 +109,19 @@ public abstract class PullRequestUtils {
 	/**
 	 * Get owner of marker
 	 *
-	 * @param marker
+	 * @param ghCommitPointer
 	 * @return owner login name, may be null
+	 * @throws IOException
 	 */
-	public static String getOwner(PullRequestMarker marker) {
-		if (marker == null) {
+	public static String getOwner(GHCommitPointer ghCommitPointer) throws IOException {
+		if (ghCommitPointer == null) {
 			return null;
 		}
-		org.eclipse.egit.github.core.Repository repo = marker.getRepo();
+		GHRepository repo = ghCommitPointer.getRepository();
 		if (repo == null) {
 			return null;
 		}
-		User owner = repo.getOwner();
+		GHUser owner = repo.getOwner();
 		return owner != null ? owner.getLogin() : null;
 	}
 
@@ -127,8 +130,9 @@ public abstract class PullRequestUtils {
 	 *
 	 * @param request
 	 * @return true if same, false otherwise
+	 * @throws IOException
 	 */
-	public static boolean isFromSameRepository(PullRequest request) {
+	public static boolean isFromSameRepository(GHPullRequest request) throws IOException {
 		if (request == null) {
 			return false;
 		}
@@ -146,8 +150,10 @@ public abstract class PullRequestUtils {
 	 * @param request
 	 * @return remote config
 	 * @throws URISyntaxException
+	 * @throws IOException
 	 */
-	public static RemoteConfig getRemote(Repository repo, PullRequest request) throws URISyntaxException {
+	public static RemoteConfig getRemote(Repository repo, GHPullRequest request)
+			throws URISyntaxException, IOException {
 		if (isFromSameRepository(request)) {
 			return getRemoteConfig(repo, Constants.DEFAULT_REMOTE_NAME);
 		} else {
@@ -181,14 +187,15 @@ public abstract class PullRequestUtils {
 	 * @throws IOException
 	 * @throws URISyntaxException
 	 */
-	public static RemoteConfig addRemote(Repository repo, PullRequest request) throws IOException, URISyntaxException {
+	public static RemoteConfig addRemote(Repository repo, GHPullRequest request)
+			throws IOException, URISyntaxException {
 		RemoteConfig remote = getRemote(repo, request);
 		if (remote != null) {
 			return remote;
 		}
 
 		StoredConfig config = repo.getConfig();
-		org.eclipse.egit.github.core.Repository head = request.getHead().getRepo();
+		GHRepository head = request.getHead().getRepository();
 		remote = new RemoteConfig(config, head.getOwner().getLogin());
 		if (head.isPrivate()) {
 			remote.addURI(new URIish(UrlUtils.createRemoteSshUrl(head)));
@@ -222,9 +229,10 @@ public abstract class PullRequestUtils {
 	 *
 	 * @param request
 	 * @return remote head branch ref name
+	 * @throws IOException
 	 */
-	public static String getHeadBranch(PullRequest request) {
-		PullRequestMarker head = request.getHead();
-		return Constants.R_REMOTES + head.getRepo().getOwner().getLogin() + '/' + head.getRef();
+	public static String getHeadBranch(GHPullRequest request) throws IOException {
+		GHCommitPointer head = request.getHead();
+		return Constants.R_REMOTES + head.getRepository().getOwner().getLogin() + '/' + head.getRef();
 	}
 }

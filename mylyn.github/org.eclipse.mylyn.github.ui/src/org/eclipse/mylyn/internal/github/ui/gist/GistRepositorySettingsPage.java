@@ -20,10 +20,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.service.GistService;
-import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.github.core.GitHubException;
+import org.eclipse.mylyn.internal.github.core.GithubApi;
 import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
 import org.eclipse.mylyn.internal.github.ui.GitHubUi;
 import org.eclipse.mylyn.internal.github.ui.HttpRepositorySettingsPage;
@@ -73,12 +71,9 @@ public class GistRepositorySettingsPage extends HttpRepositorySettingsPage {
 				try {
 					monitor.subTask(Messages.GistRepositorySettingsPage_TaskContacting);
 					try {
-						GitHubClient client = GistConnector.createClient(taskRepository);
-						GistService service = new GistService(client);
-						String user = taskRepository.getCredentials(
-								AuthenticationType.REPOSITORY).getUserName();
-						monitor.worked(20);
-						service.getGists(user);
+						GithubApi github = GithubApi.createGithubClient(taskRepository);
+						monitor.worked(50);
+						github.getMyself().listGists().iterator().hasNext();
 					} catch (IOException e) {
 						e = GitHubException.wrap(e);
 						String message = MessageFormat.format(Messages.GistRepositorySettingsPage_StatusError,
@@ -94,6 +89,7 @@ public class GistRepositorySettingsPage extends HttpRepositorySettingsPage {
 					monitor.done();
 				}
 			}
+
 		};
 	}
 

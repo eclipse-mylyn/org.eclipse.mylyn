@@ -15,13 +15,11 @@ package org.eclipse.mylyn.internal.github.ui;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.egit.github.core.Languages;
-import org.eclipse.egit.github.core.Repository;
-import org.eclipse.egit.github.core.SearchRepository;
-import org.eclipse.egit.github.core.service.RepositoryService;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.egit.ui.internal.UIIcons;
 import org.eclipse.egit.ui.internal.provisional.wizards.GitRepositoryInfo;
 import org.eclipse.egit.ui.internal.provisional.wizards.IRepositorySearchResult;
@@ -38,8 +36,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.GitHubException;
+import org.eclipse.mylyn.internal.github.core.GithubApi;
+import org.eclipse.mylyn.internal.github.egit.github.core.Languages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -50,6 +49,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GHRepositorySearchBuilder;
+import org.kohsuke.github.PagedSearchIterable;
 
 /**
  * Search for GitHub repositories wizard page.
@@ -57,9 +59,8 @@ import org.eclipse.ui.PlatformUI;
 @SuppressWarnings("restriction")
 public class RepositorySearchWizardPage extends WizardPage implements IRepositorySearchResult {
 
-	private SearchRepository[] repositories = null;
+	private GHRepository[] repositories = null;
 
-	private final RepositoryService repositoryService;
 
 	private Text searchText;
 
@@ -71,8 +72,7 @@ public class RepositorySearchWizardPage extends WizardPage implements IRepositor
 		setDescription(Messages.RepositorySearchWizardPage_Description);
 		setPageComplete(false);
 
-		repositoryService = new RepositoryService();
-		GitHub.configureClient(repositoryService.getClient());
+//		GitHub.configureClient(repositoryService.getClient());
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class RepositorySearchWizardPage extends WizardPage implements IRepositor
 	 *
 	 * @return repositories
 	 */
-	protected SearchRepository[] getRepositories() {
+	protected GHRepository[] getRepositories() {
 		return repositories;
 	}
 
@@ -150,8 +150,8 @@ public class RepositorySearchWizardPage extends WizardPage implements IRepositor
 					@Override
 					public StyledString getStyledText(Object element) {
 						StyledString styled = new StyledString();
-						SearchRepository repo = (SearchRepository) element;
-						styled.append(repo.getOwner() + "/" + repo.getName()); //$NON-NLS-1$
+						GHRepository repo = (GHRepository) element;
+						styled.append(repo.getFullName());
 						String language = repo.getLanguage();
 						if (language != null && language.length() > 0) {
 							styled.append(" (" + language + ")", //$NON-NLS-1$ //$NON-NLS-2$
@@ -159,8 +159,8 @@ public class RepositorySearchWizardPage extends WizardPage implements IRepositor
 						}
 
 						String counters = " " + MessageFormat.format( //$NON-NLS-1$
-								Messages.RepositorySearchWizardPage_counters, Integer.valueOf(repo.getForks()),
-								Integer.valueOf(repo.getWatchers()));
+								Messages.RepositorySearchWizardPage_counters, Integer.valueOf(repo.getForksCount()),
+								Integer.valueOf(repo.getWatchersCount()));
 						styled.append(counters, StyledString.COUNTER_STYLER);
 						return styled;
 					}
@@ -194,7 +194,7 @@ public class RepositorySearchWizardPage extends WizardPage implements IRepositor
 		ISelection selection = viewer.getSelection();
 		if (selection instanceof IStructuredSelection) {
 			Object[] selected = ((IStructuredSelection) selection).toArray();
-			repositories = new SearchRepository[selected.length];
+			repositories = new GHRepository[selected.length];
 			System.arraycopy(selected, 0, repositories, 0, selected.length);
 		}
 		setPageComplete(!selection.isEmpty());
@@ -212,11 +212,27 @@ public class RepositorySearchWizardPage extends WizardPage implements IRepositor
 		viewer.setSelection(StructuredSelection.EMPTY);
 		try {
 			getContainer().run(true, true, monitor -> {
-				monitor.beginTask(
+				SubMonitor subMonitor = SubMonitor.convert(monitor,
 						MessageFormat.format(Messages.RepositorySearchWizardPage_Searching, text), 10);
 				try {
-					final List<SearchRepository> repositories = repositoryService.searchRepositories(text.trim(),
-							language);
+					GithubApi github = GithubApi.createAnonymousGithubClient();
+					GHRepositorySearchBuilder searchBuilder = github.searchRepositories()
+							.q(text.trim());
+					if (language != null && !language.isBlank()) {
+						searchBuilder.language(language);
+					}
+					PagedSearchIterable<GHRepository> repos = searchBuilder.list();
+					subMonitor.worked(2);
+
+					List<GHRepository> repositories = new ArrayList<>(repos.getTotalCount());
+					subMonitor.setWorkRemaining(repos.getTotalCount());
+					for (GHRepository repo : repos) {
+						if (subMonitor.isCanceled()) {
+							throw new InterruptedException();
+						}
+						repositories.add(repo);
+						subMonitor.worked(1);
+					}
 					PlatformUI.getWorkbench().getDisplay().syncExec(() -> {
 						if (viewer.getControl().isDisposed()) {
 							return;
@@ -251,9 +267,9 @@ public class RepositorySearchWizardPage extends WizardPage implements IRepositor
 	public GitRepositoryInfo getGitRepositoryInfo() throws NoRepositoryInfoException {
 		String cloneUrl = null;
 		try {
-			Repository fullRepo = repositoryService.getRepository(repositories[0]);
-			cloneUrl = fullRepo.getCloneUrl();
-		} catch (IOException e) {
+			GHRepository fullRepo = repositories[0];
+			cloneUrl = fullRepo.getHttpTransportUrl();
+		} catch (ArrayIndexOutOfBoundsException e) {
 			throw new NoRepositoryInfoException(e.getMessage(), e);
 		}
 		return new GitRepositoryInfo(cloneUrl);

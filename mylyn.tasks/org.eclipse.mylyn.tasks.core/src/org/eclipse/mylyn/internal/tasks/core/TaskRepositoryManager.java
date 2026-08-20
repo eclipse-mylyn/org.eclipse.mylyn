@@ -199,6 +199,9 @@ public class TaskRepositoryManager implements IRepositoryManager {
 	/* Public for testing. */
 	public static String stripSlashes(String url) {
 		Assert.isNotNull(url);
+		if (url.isEmpty()) {
+			return url;
+		}
 		StringBuilder sb = new StringBuilder(url.trim());
 		while (sb.length() > 0 && sb.charAt(sb.length() - 1) == '/') {
 			sb.setLength(sb.length() - 1);
@@ -431,7 +434,7 @@ public class TaskRepositoryManager implements IRepositoryManager {
 			externalizer.writeRepositoriesToXML(repositoriesToWrite, repositoriesFile);
 		} catch (Throwable t) {
 			StatusHandler
-					.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not save repositories", t)); //$NON-NLS-1$
+			.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not save repositories", t)); //$NON-NLS-1$
 			return false;
 		}
 		return true;

@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.core.op.MergeOperation;
-import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.ui.internal.branch.BranchOperationUI;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
@@ -34,6 +33,7 @@ import org.eclipse.mylyn.internal.github.core.pr.PullRequestUtils;
 import org.eclipse.mylyn.internal.github.ui.GitHubUi;
 import org.eclipse.mylyn.internal.github.ui.TaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.kohsuke.github.GHPullRequest;
 
 /**
  * Merges a pull request topic branch into the destination branch
@@ -61,31 +61,30 @@ public class MergePullRequestHandler extends TaskDataHandler {
 					if (prComp == null) {
 						return Status.CANCEL_STATUS;
 					}
-					PullRequest request = prComp.getRequest();
+					GHPullRequest request = prComp.getRequest();
 					Repository repo = PullRequestUtils.getRepository(request);
 					if (repo == null) {
 						return Status.CANCEL_STATUS;
 					}
 					String target = request.getBase().getRef();
 					String branchName = PullRequestUtils.getBranchName(request);
-					try {
-						Ref sourceRef = repo.findRef(branchName);
-						if (sourceRef != null) {
-							SubMonitor progress = SubMonitor.convert(monitor, 2);
-							if (!PullRequestUtils.isCurrentBranch(target, repo)) {
-								progress.subTask(MessageFormat.format(
-										Messages.MergePullRequestHandler_TaskCheckout, target));
-								BranchOperationUI.checkout(repo, target).run(progress.newChild(1));
-							}
+					Ref sourceRef = repo.findRef(branchName);
+					if (sourceRef != null) {
+						SubMonitor progress = SubMonitor.convert(monitor, 2);
+						if (!PullRequestUtils.isCurrentBranch(target, repo)) {
 							progress.subTask(MessageFormat.format(
-									Messages.MergePullRequestHandler_TaskMerge, branchName, target));
-							new MergeOperation(repo, branchName).execute(progress.newChild(1));
-							executeCallback(event);
+									Messages.MergePullRequestHandler_TaskCheckout, target));
+							BranchOperationUI.checkout(repo, target).run(progress.newChild(1));
 						}
-					} catch (IOException | CoreException e) {
-						GitHubUi.logError(e);
+						progress.subTask(MessageFormat.format(
+								Messages.MergePullRequestHandler_TaskMerge, branchName, target));
+						new MergeOperation(repo, branchName).execute(progress.newChild(1));
+						executeCallback(event);
 					}
 					return Status.OK_STATUS;
+				} catch (IOException | CoreException e) {
+					GitHubUi.logError(e);
+					return Status.CANCEL_STATUS;
 				} finally {
 					if (monitor != null) {
 						monitor.done();
