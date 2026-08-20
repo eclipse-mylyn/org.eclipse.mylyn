@@ -11,6 +11,7 @@ Export-Package: org.eclipse.mylyn.commons.notifications.ui;x-internal:=true,
  org.eclipse.mylyn.internal.commons.notifications.ui.popup;x-internal:=true
 Require-Bundle: org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.jface;bundle-version="0.0.0",
+ org.eclipse.jface.notifications;bundle-version="0.8.100",
  org.eclipse.mylyn.commons.core;bundle-version="4.4.0",
  org.eclipse.mylyn.commons.notifications.core;bundle-version="4.4.0",
  org.eclipse.mylyn.commons.ui;bundle-version="4.4.0",
