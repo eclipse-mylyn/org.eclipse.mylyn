@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2013 IBM Corporation and others.
+ * Copyright (c) 2000, 2026 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  *     IBM Corporation - initial API and implementation
  *     Manuel Doninger - fixes for bug 360365
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 package org.eclipse.mylyn.commons.core;
 
@@ -20,7 +21,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.core.runtime.IStatus;
@@ -94,8 +94,7 @@ public final class XmlMemento {
 		Exception exception = null;
 
 		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder parser = factory.newDocumentBuilder();
+			DocumentBuilder parser = CoreUtil.newDocumentBuilder();
 			InputSource source = new InputSource(reader);
 			if (baseDir != null) {
 				source.setSystemId(baseDir);
@@ -164,7 +163,7 @@ public final class XmlMemento {
 	public static XmlMemento createWriteRoot(String type) throws DOMException {
 		Document document;
 		try {
-			document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+			document = CoreUtil.newDocumentBuilder().newDocument();
 			Element element = document.createElement(type);
 			document.appendChild(element);
 			return new XmlMemento(document, element);
@@ -321,7 +320,7 @@ public final class XmlMemento {
 		} catch (NumberFormatException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ICommonsCoreConstants.ID_PLUGIN,
 					"Memento problem - Invalid float for key: " //$NON-NLS-1$
-							+ key + " value: " + strValue, //$NON-NLS-1$
+					+ key + " value: " + strValue, //$NON-NLS-1$
 					e));
 			return null;
 		}
@@ -355,7 +354,7 @@ public final class XmlMemento {
 		} catch (NumberFormatException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ICommonsCoreConstants.ID_PLUGIN,
 					"Memento problem - invalid integer for key: " + key //$NON-NLS-1$
-							+ " value: " + strValue, //$NON-NLS-1$
+					+ " value: " + strValue, //$NON-NLS-1$
 					e));
 			return null;
 		}

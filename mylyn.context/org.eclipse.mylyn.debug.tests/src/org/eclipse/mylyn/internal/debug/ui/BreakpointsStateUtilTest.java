@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Sebastian Schmidt and others.
+ * Copyright (c) 2012, 2026 Sebastian Schmidt and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -42,6 +41,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.internal.commons.core.FileUtil;
 import org.eclipse.mylyn.java.tests.WorkspaceSetupHelper;
 import org.junit.jupiter.api.AfterEach;
@@ -172,9 +172,8 @@ public class BreakpointsStateUtilTest {
 	}
 
 	private Document getDocument(File inputFile) throws IOException, ParserConfigurationException, SAXException {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		try (FileInputStream fileInputStream = new FileInputStream(inputFile)) {
-			DocumentBuilder builder = factory.newDocumentBuilder();
+			DocumentBuilder builder = CoreUtil.newDocumentBuilder();
 			return builder.parse(fileInputStream);
 		}
 	}

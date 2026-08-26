@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2016 Markus Knittig and others.
+ * Copyright (c) 2010, 2026 Markus Knittig and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -11,6 +11,7 @@
  *     Tasktop Technologies - improvements
  *     Eike Stepper - improvements for bug 323759
  *     Benjamin Muskalla - 323920: [build] config retrival fails for jobs with whitespaces
+ *     Alexander Fedorov (ArSysOp) - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.jenkins.core.client;
@@ -29,7 +30,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.Header;
@@ -39,6 +39,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.builds.core.spi.AbstractConfigurationCache;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
@@ -240,10 +241,6 @@ public class RestfulJenkinsClient {
 		}.run();
 	}
 
-	private DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
-		return DocumentBuilderFactory.newInstance().newDocumentBuilder();
-	}
-
 	public List<HudsonModelJob> getJobs(final List<String> ids, final IOperationMonitor monitor)
 			throws JenkinsException {
 		if (ids != null && ids.isEmpty()) {
@@ -353,7 +350,7 @@ public class RestfulJenkinsClient {
 
 	Element parse(InputStream in, String url) throws JenkinsException {
 		try {
-			return getDocumentBuilder().parse(in).getDocumentElement();
+			return CoreUtil.newDocumentBuilder().parse(in).getDocumentElement();
 		} catch (OperationCanceledException e) {
 			throw e;
 		} catch (Exception e) {
@@ -375,7 +372,7 @@ public class RestfulJenkinsClient {
 					throws IOException, JenkinsException, JAXBException {
 				InputStream in = response.getResponseEntityAsStream();
 				try {
-					DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+					DocumentBuilder builder = CoreUtil.newDocumentBuilder();
 					return builder.parse(in); // TODO Enhance progress monitoring
 				} catch (ParserConfigurationException | SAXException e) {
 					throw new JenkinsException(e);

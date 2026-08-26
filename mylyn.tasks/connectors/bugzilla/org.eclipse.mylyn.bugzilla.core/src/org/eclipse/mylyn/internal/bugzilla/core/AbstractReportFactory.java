@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2013 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2026 Tasktop Technologies and others.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.core;
@@ -21,6 +22,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.security.GeneralSecurityException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.xml.sax.EntityResolver;
@@ -89,7 +93,9 @@ public class AbstractReportFactory {
 		}
 
 		try {
-			final XMLReader reader = CoreUtil.newXmlReader();
+			SAXParserFactory factory = CoreUtil.newSAXParserFactory();
+			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false); //$NON-NLS-1$
+			final XMLReader reader = factory.newSAXParser().getXMLReader();
 			reader.setFeature("http://xml.org/sax/features/validation", false); //$NON-NLS-1$
 			reader.setContentHandler(contentHandler);
 
@@ -123,7 +129,7 @@ public class AbstractReportFactory {
 				}
 			});
 			reader.parse(new InputSource(in));
-		} catch (SAXException e) {
+		} catch (SAXException | ParserConfigurationException e) {
 			throw new IOException(e.getMessage());
 		}
 

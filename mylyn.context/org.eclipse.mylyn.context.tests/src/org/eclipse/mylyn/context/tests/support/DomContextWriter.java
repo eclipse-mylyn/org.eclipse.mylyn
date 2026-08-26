@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2026 Tasktop Technologies and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -29,6 +29,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.internal.context.core.AggregateInteractionEvent;
 import org.eclipse.mylyn.internal.context.core.IInteractionContextWriter;
@@ -55,7 +56,7 @@ public class DomContextWriter implements IInteractionContextWriter {
 	private Result result = null;
 
 	public DomContextWriter() throws Exception {
-		dbf = DocumentBuilderFactory.newInstance();
+		dbf = CoreUtil.newDocumentBuilderFactory();
 		doc = dbf.newDocumentBuilder().newDocument();
 	}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2016 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2026 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,9 @@ package org.eclipse.mylyn.commons.core;
 
 import java.util.Map;
 
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -42,11 +45,6 @@ public class CoreUtil {
 	}
 
 	private static final String FRAMEWORK_VERSION = "4.0.0"; //$NON-NLS-1$
-
-	private static final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-	static {
-		saxParserFactory.setNamespaceAware(true);
-	}
 
 	/**
 	 * Returns a string representation of <code>object</code>. If object is a map or array the returned string will contains a comma
@@ -287,13 +285,34 @@ public class CoreUtil {
 	}
 
 	/**
+	 * Returns a new {@link SAXParserFactory} pre-configured instance.
+	 *
+	 * @since 4.12
+	 */
+	public static SAXParserFactory newSAXParserFactory() throws SAXException {
+		try {
+			SAXParserFactory factory = SAXParserFactory.newInstance();
+			factory.setNamespaceAware(true);
+			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true); //$NON-NLS-1$
+			factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false); //$NON-NLS-1$
+			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+			factory.setFeature("http://xml.org/sax/features/external-general-entities", false); //$NON-NLS-1$
+			factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false); //$NON-NLS-1$
+			factory.setXIncludeAware(false);
+			return factory;
+		} catch (ParserConfigurationException e) {
+			throw new SAXException(e);
+		}
+	}
+
+	/**
 	 * Returns a new {@link XMLReader} instance using default factories.
 	 *
 	 * @since 3.9
 	 */
 	public static SAXParser newSaxParser() throws SAXException {
 		try {
-			return saxParserFactory.newSAXParser();
+			return newSAXParserFactory().newSAXParser();
 		} catch (ParserConfigurationException e) {
 			throw new SAXException(e);
 		}
@@ -306,6 +325,30 @@ public class CoreUtil {
 	 */
 	public static XMLReader newXmlReader() throws SAXException {
 		return newSaxParser().getXMLReader();
+	}
+
+	/**
+	 * Returns a new {@link DocumentBuilderFactory} pre-configured instance.
+	 *
+	 * @since 4.12
+	 */
+	public static DocumentBuilderFactory newDocumentBuilderFactory() throws ParserConfigurationException {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true); //$NON-NLS-1$
+		factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false); //$NON-NLS-1$
+		factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+		factory.setFeature("http://xml.org/sax/features/external-general-entities", false); //$NON-NLS-1$
+		factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false); //$NON-NLS-1$
+		return factory;
+	}
+
+	/**
+	 * Returns a new {@link DocumentBuilder} instance using pre-configured factory.
+	 *
+	 * @since 4.12
+	 */
+	public static DocumentBuilder newDocumentBuilder() throws ParserConfigurationException {
+		return newDocumentBuilderFactory().newDocumentBuilder();
 	}
 
 }
