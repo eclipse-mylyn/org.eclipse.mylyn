@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Tasktop Technologies and others.
+ * Copyright (c) 2016, 2026 Tasktop Technologies and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,17 +9,17 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     ArSysOp - ongoing support
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.core.externalization;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -43,11 +43,8 @@ public class SaxOrphanBuilder {
 	}
 
 	private Document createDocument() throws CoreException {
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db;
 		try {
-			db = dbf.newDocumentBuilder();
-			Document document = db.newDocument();
+			Document document = CoreUtil.newDocumentBuilder().newDocument();
 			Element root = document.createElement("orphans"); //$NON-NLS-1$
 			document.appendChild(root);
 			return document;

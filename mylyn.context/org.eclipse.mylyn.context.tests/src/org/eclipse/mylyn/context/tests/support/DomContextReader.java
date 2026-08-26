@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2026 Tasktop Technologies and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -23,8 +23,8 @@ import java.util.Locale;
 import java.util.zip.ZipInputStream;
 
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.AggregateInteractionEvent;
 import org.eclipse.mylyn.internal.context.core.IInteractionContextReader;
@@ -69,8 +69,6 @@ public class DomContextReader implements IInteractionContextReader {
 
 	public Document openAsDOM(File inputFile) throws IOException {
 
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = null;
 		Document document = null;
 		ZipInputStream zipInputStream = null;
 		FileInputStream fileInputStream = null;
@@ -78,7 +76,7 @@ public class DomContextReader implements IInteractionContextReader {
 			fileInputStream = new FileInputStream(inputFile);
 			zipInputStream = new ZipInputStream(fileInputStream);
 			zipInputStream.getNextEntry();
-			builder = factory.newDocumentBuilder();
+			DocumentBuilder builder = CoreUtil.newDocumentBuilder();
 			document = builder.parse(zipInputStream);
 		} catch (Exception e) {
 			throw new RuntimeException(e);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2012 IBM Corporation and others.
+ * Copyright (c) 2000, 2026 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -29,13 +29,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.XmlMemento;
 import org.eclipse.mylyn.internal.versions.core.ScmInternal;
 import org.eclipse.team.core.ProjectSetCapability;
@@ -140,7 +140,7 @@ public class ProjectSetConverter {
 	}
 
 	private static XmlMemento getXMLMementoRoot() throws ParserConfigurationException {
-		Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		Document document = CoreUtil.newDocumentBuilder().newDocument();
 		Element element = document.createElement("psf"); //$NON-NLS-1$
 		element.setAttribute("version", "2.0"); //$NON-NLS-1$ //$NON-NLS-2$
 		document.appendChild(element);
