@@ -51,11 +51,11 @@ public class ScreenshotImages {
 
 	public static final ImageDescriptor EDIT_ARROW2 = create(T_DRAW, "edit_arrow2.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor EDIT_UNDO = create(T_TOOL, "undo_edit.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor EDIT_UNDO = create(T_TOOL, "undo_edit.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor EDIT_REDO = create(T_TOOL, "redo_edit.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor EDIT_REDO = create(T_TOOL, "redo_edit.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor FILE_OBJ = create(T_TOOL, "file_obj.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor FILE_OBJ = create(T_TOOL, "file_obj.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor CLIPBOARD_OBJ = create(T_TOOL, "clipboard_obj.gif"); //$NON-NLS-1$
 
@@ -91,9 +91,9 @@ public class ScreenshotImages {
 
 	public static final ImageDescriptor CUT = create(T_TOOL, "cut.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor UNDO = create(T_TOOL, "undo_edit.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor UNDO = create(T_TOOL, "undo_edit.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor REDO = create(T_TOOL, "redo_edit.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor REDO = create(T_TOOL, "redo_edit.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor IMAGE_FIT = create(T_TOOL, "capture-fit.png"); //$NON-NLS-1$
 

@@ -34,11 +34,11 @@ public class ReviewsImages {
 
 	public static final ImageDescriptor OVERLAY_RENAMED = create("ovr/renamed.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor REFRESH = create("elcl16/refresh.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor REFRESH = create("elcl16/refresh.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor FLAT_LAYOUT = create("elcl16/flatLayout.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor FLAT_LAYOUT = create("elcl16/flatLayout.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor HIERARCHICAL_LAYOUT = create("elcl16/hierarchicalLayout.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor HIERARCHICAL_LAYOUT = create("elcl16/hierarchicalLayout.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor REVIEW = create("obj16/review.png"); //$NON-NLS-1$
 
@@ -54,7 +54,7 @@ public class ReviewsImages {
 
 	public static final ImageDescriptor UNSTABLE = create("obj12/unstable.png"); //$NON-NLS-1$
 
-	public static final ImageDescriptor BLANK = create("obj12/blank.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor BLANK = create("obj12/blank.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor NEXT_COMMENT = create("elcl16/nxtanmly_menu.png"); //$NON-NLS-1$
 

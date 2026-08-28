@@ -38,7 +38,7 @@ public class BuildImages {
 
 	public static final ImageDescriptor VIEW_BUILDS = create(T_VIEW, "build-view.png"); //$NON-NLS-1$
 
-	public static final ImageDescriptor VIEW_HISTORY = create(T_VIEW, "history_view.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor VIEW_HISTORY = create(T_VIEW, "history_view.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor STATUS_PASSED = create(T_OBJ, "passed-status.png"); //$NON-NLS-1$
 
@@ -48,23 +48,23 @@ public class BuildImages {
 
 	public static final ImageDescriptor STATUS_DISABLED = create(T_OBJ, "disabled-status.png"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TEST = create(T_OBJ, "test.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor TEST = create(T_OBJ, "test.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TEST_PASSED = create(T_OBJ, "testok.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor TEST_PASSED = create(T_OBJ, "testok.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TEST_FAILED = create(T_OBJ, "testfail.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor TEST_FAILED = create(T_OBJ, "testfail.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TEST_ERROR = create(T_OBJ, "testerr.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor TEST_ERROR = create(T_OBJ, "testerr.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TEST_IGNORED = create(T_OBJ, "testignored.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor TEST_IGNORED = create(T_OBJ, "testignored.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TEST_SUITE = create(T_OBJ, "tsuite.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor TEST_SUITE = create(T_OBJ, "tsuite.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TEST_SUITE_PASSED = create(T_OBJ, "tsuiteok.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor TEST_SUITE_PASSED = create(T_OBJ, "tsuiteok.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TEST_SUITE_FAILED = create(T_OBJ, "tsuitefail.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor TEST_SUITE_FAILED = create(T_OBJ, "tsuitefail.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TEST_SUITE_ERROR = create(T_OBJ, "tsuiteerror.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor TEST_SUITE_ERROR = create(T_OBJ, "tsuiteerror.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor TEST_SUITE_IGNORED = create(T_OBJ, "tsuiteignored.gif"); //$NON-NLS-1$
 
@@ -100,7 +100,7 @@ public class BuildImages {
 
 	public static final ImageDescriptor FILTER_SUCCEEDING = create(T_ETOOL, "filter_succeeding.png"); //$NON-NLS-1$
 
-	public static final ImageDescriptor JUNIT = create(T_VIEW, "junit.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor JUNIT = create(T_VIEW, "junit.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor DECORATION_RUNNING = create(T_OVR, "run_co.gif"); //$NON-NLS-1$;
 
