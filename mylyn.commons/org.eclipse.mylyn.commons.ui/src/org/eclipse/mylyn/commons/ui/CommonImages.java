@@ -288,7 +288,7 @@ public class CommonImages {
 
 	public static final ImageDescriptor NOTES_SMALL = create(T_OBJ, "notes-small.png"); //$NON-NLS-1$
 
-	public static final ImageDescriptor QUESTION = create(T_OBJ, "question.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor QUESTION = create(T_OBJ, "question.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor INFORMATION = create(T_OBJ, "message_info.gif"); //$NON-NLS-1$
 
