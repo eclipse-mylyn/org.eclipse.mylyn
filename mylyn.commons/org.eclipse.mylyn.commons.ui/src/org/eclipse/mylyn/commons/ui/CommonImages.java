@@ -102,7 +102,7 @@ public class CommonImages {
 
 	public static final ImageDescriptor SCHEDULE_WEEK = create(T_TOOL, "schedule-week.png"); //$NON-NLS-1$
 
-	public static final ImageDescriptor PERSON = create(T_TOOL, "person.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor PERSON = create(T_TOOL, "person.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor PERSON_NARROW = create(T_TOOL, "person-narrow.gif"); //$NON-NLS-1$
 
@@ -304,7 +304,7 @@ public class CommonImages {
 
 	public static final ImageDescriptor SAVE = create(T_TOOL, "save.gif"); //$NON-NLS-1$;
 
-	public static final ImageDescriptor VALIDATE = create(T_OBJ, "resource_obj.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor VALIDATE = create(T_OBJ, "resource_obj.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor NOTIFICATION_CONFIGURE = create(T_TOOL, "notification-configure.gif"); //$NON-NLS-1$;
 

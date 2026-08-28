@@ -191,7 +191,7 @@
            class="org.eclipse.mylyn.internal.java.ui.actions.FocusPackageExplorerAction"
            disabledIcon="icons/elcl16/focus-disabled.gif"
            enablesFor="*"
-           icon="icons/elcl16/focus.gif"
+           icon="icons/elcl16/focus.svg"
            id="org.eclipse.mylyn.java.actions.focus.packageExplorer"
            label="%FocusPackageExplorerAction.label"
            menubarPath="mylyn"

@@ -12,7 +12,7 @@
 			contributesToHeader="false" 
 			highlightPreferenceKey="comment_highlight" 
 			highlightPreferenceValue="true" 
-			icon="icons/obj16/person.gif" 
+			icon="icons/obj16/person.svg" 
 			includeOnPreferencePage="true" 
 			isGoToNextNavigationTarget="false" 
 			isGoToNextNavigationTargetKey="comment_isGoToNextNavigationTargetKey" 
