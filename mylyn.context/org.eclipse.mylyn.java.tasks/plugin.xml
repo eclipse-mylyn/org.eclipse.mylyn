@@ -29,7 +29,7 @@
             targetID="org.eclipse.jdt.junit.ResultView">
       	<action
 	      	class="org.eclipse.mylyn.internal.java.tasks.NewTaskFromJunitResultViewAction"
-	        icon="icons/etool16/task-new.gif"
+	        icon="icons/etool16/task-new.svg"
 	        id="org.eclipse.mylyn.bugzilla.actions.newTaskFromJunitResultView"
 	        label="%NewTaskFromJunitResultViewAction.label"
 	        menubarPath="org.eclipse.jdt.junit.ResultView"/>
