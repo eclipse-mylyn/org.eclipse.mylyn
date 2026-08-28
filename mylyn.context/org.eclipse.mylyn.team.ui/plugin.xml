@@ -48,7 +48,7 @@
 			<action
 				class="org.eclipse.mylyn.internal.team.ui.actions.OpenCorrespondingTaskAction"
 				enablesFor="1" 
-				icon="icons/elcl16/task-repository.gif"
+				icon="icons/elcl16/task-repository.svg"
 				id="org.eclipse.mylyn.ui.team.synchronize.open.report.linked"
 				label="%OpenCorrespondingTaskAction.label"
 				menubarPath="mylyn"
@@ -57,7 +57,7 @@
 			<action
 				class="org.eclipse.mylyn.internal.team.ui.actions.AddToTaskContextAction"
 				enablesFor="*" 
-				icon="icons/elcl16/context-add.gif"
+				icon="icons/elcl16/context-add.svg"
 				id="org.eclipse.mylyn.ui.team.synchronize.create.context"
 				label="%AddToTaskContextAction.label"
 				menubarPath="mylyn"
@@ -71,7 +71,7 @@
             <action
 				class="org.eclipse.mylyn.internal.team.ui.actions.AddToTaskContextAction"
 				enablesFor="*" 
-				icon="icons/elcl16/context-add.gif"
+				icon="icons/elcl16/context-add.svg"
 				id="org.eclipse.mylyn.ui.team.synchronize.create.context"
 				label="%AddToTaskContextAction.label"
 				menubarPath="mylyn"
@@ -84,7 +84,7 @@
             <action
 				class="org.eclipse.mylyn.internal.team.ui.actions.AddToTaskContextAction"
 				enablesFor="*" 
-				icon="icons/elcl16/context-add.gif"
+				icon="icons/elcl16/context-add.svg"
 				id="org.eclipse.mylyn.ui.team.synchronize.create.context"
 				label="%AddToTaskContextAction.label"
 				menubarPath="mylyn"

@@ -9,7 +9,7 @@
       <view
             category="org.eclipse.mylyn.ui"
             class="org.eclipse.mylyn.internal.commons.repositories.ui.RepositoriesView"
-            icon="icons/eview16/repositories.gif"
+            icon="icons/eview16/repositories.svg"
             id="org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories"
             name="%TeamRepositoriesView.name">
       </view>
@@ -87,7 +87,7 @@
          point="org.eclipse.ui.commandImages">
       <image
             commandId="org.eclipse.mylyn.commons.ui.command.AddRepository"
-            icon="icons/etool16/repository-new.gif">
+            icon="icons/etool16/repository-new.svg">
       </image>
    </extension>
    <extension

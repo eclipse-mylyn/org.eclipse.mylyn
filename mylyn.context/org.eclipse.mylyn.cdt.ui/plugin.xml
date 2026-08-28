@@ -49,7 +49,7 @@
                class="org.eclipse.mylyn.internal.cdt.ui.actions.FocusCViewAction"
                disabledIcon="icons/elcl16/focus-disabled.gif"
                enablesFor="*"
-               icon="icons/elcl16/focus.gif"
+               icon="icons/elcl16/focus.svg"
                id="org.eclipse.mylyn.cdt.ui.cview.focusActiveTask.action"
                label="%FocusActiveTask.label"
                menubarPath="mylyn"
