@@ -152,13 +152,13 @@ public class CommonImages {
 	 */
 	public static final ImageDescriptor OVERLAY_SYNC_ERROR = create(T_OVR, "overlay-sync-error.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor OVERLAY_WARNING = create(T_OVR, "warning_ovr.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor OVERLAY_WARNING = create(T_OVR, "warning_ovr.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor OVERLAY_SUCCESS = create(T_OVR, "success_ovr.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor OVERLAY_SUCCESS = create(T_OVR, "success_ovr.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor OVERLAY_ERROR = create(T_OVR, "error_ovr.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor OVERLAY_ERROR = create(T_OVR, "error_ovr.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor OVERLAY_FAILED = create(T_OVR, "failed_ovr.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor OVERLAY_FAILED = create(T_OVR, "failed_ovr.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor OVERLAY_SYNC_OLD_INCOMMING = create(T_EVIEW, "overlay-synch-incoming.gif"); //$NON-NLS-1$
 
@@ -196,14 +196,14 @@ public class CommonImages {
 
 	public static final ImageDescriptor REMOVE = create(T_ELCL, "remove.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor DELETE = create(T_ELCL, "delete.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DELETE = create(T_ELCL, "delete.svg"); //$NON-NLS-1$
 
 	/**
 	 * @since 3.9
 	 */
 	public static final ImageDescriptor ERROR = create(T_ELCL, "error.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor WARNING = create(T_ELCL, "warning.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor WARNING = create(T_ELCL, "warning.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor FILTER_COMPLETE = create(T_ELCL, "filter-complete.gif"); //$NON-NLS-1$
 
@@ -242,9 +242,9 @@ public class CommonImages {
 
 	public static final ImageDescriptor CUT = create(T_TOOL, "cut.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor UNDO = create(T_TOOL, "undo_edit.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor UNDO = create(T_TOOL, "undo_edit.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor REDO = create(T_TOOL, "redo_edit.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor REDO = create(T_TOOL, "redo_edit.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor STATUS_NORMAL = create(T_EVIEW, "status-normal.gif"); //$NON-NLS-1$
 
@@ -260,7 +260,7 @@ public class CommonImages {
 
 	public static final ImageDescriptor GO_INTO = create(T_TOOL, "go-into.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor REFRESH = create(T_ELCL, "refresh.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor REFRESH = create(T_ELCL, "refresh.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor REFRESH_SMALL = create(T_ELCL, "refresh-small.gif"); //$NON-NLS-1$
 
@@ -268,13 +268,13 @@ public class CommonImages {
 
 	public static final ImageDescriptor COLLAPSE_ALL_SMALL = create(T_ELCL, "collapseall-small.png"); //$NON-NLS-1$
 
-	public static final ImageDescriptor EXPAND_ALL = create(T_ELCL, "expandall.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor EXPAND_ALL = create(T_ELCL, "expandall.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor EXPAND = create(T_ELCL, "expand.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor EXPAND_ALL_SMALL = create(T_ELCL, "expandall-small.png"); //$NON-NLS-1$
 
-	public static final ImageDescriptor BLANK = create(T_ELCL, "blank.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor BLANK = create(T_ELCL, "blank.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor IMAGE_CAPTURE = create(T_TOOL, "capture-screen.png"); //$NON-NLS-1$
 
@@ -290,7 +290,7 @@ public class CommonImages {
 
 	public static final ImageDescriptor QUESTION = create(T_OBJ, "question.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor INFORMATION = create(T_OBJ, "message_info.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor INFORMATION = create(T_OBJ, "message_info.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor SEPARATOR_LIST = create(T_TOOL, "content-assist-separator.gif"); //$NON-NLS-1$
 
@@ -300,9 +300,9 @@ public class CommonImages {
 
 	public static final ImageDescriptor WEB = create(T_TOOL, "web.png"); //$NON-NLS-1$
 
-	public static final ImageDescriptor FIND = create(T_TOOL, "find.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor FIND = create(T_TOOL, "find.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor SAVE = create(T_TOOL, "save.gif"); //$NON-NLS-1$;
+	public static final ImageDescriptor SAVE = create(T_TOOL, "save.svg"); //$NON-NLS-1$;
 
 	public static final ImageDescriptor VALIDATE = create(T_OBJ, "resource_obj.gif"); //$NON-NLS-1$
 

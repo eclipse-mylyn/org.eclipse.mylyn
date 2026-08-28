@@ -193,11 +193,11 @@
     </image>
     <image
           commandId="org.eclipse.mylyn.builds.ui.command.ShowTestResults"
-          icon="icons/eview16/junit.gif">
+          icon="icons/eview16/junit.svg">
     </image>
     <image
           commandId="org.eclipse.mylyn.builds.ui.command.ShowTestResults.url"
-          icon="icons/eview16/junit.gif">
+          icon="icons/eview16/junit.svg">
     </image>
     <image
           commandId="org.eclipse.mylyn.builds.ui.command.RunBuild"
