@@ -47,5 +47,14 @@
     "web_url": "https://gitlab.mylyn.local/groups/eclipse-mylyn/ci-test",
     "members_count_with_descendants": 1,
     "projects_count": 1
+  },
+  {
+    "id": 7,
+    "name": "GitLab Duo",
+    "path": "GitLabDuo",
+    "kind": "user",
+    "full_path": "GitLabDuo",
+    "avatar_url": "https://secure.gravatar.com/avatar/42?s\u003d80\u0026d\u003didenticon",
+    "web_url": "https://gitlab.mylyn.local/GitLabDuo"
   }
 ]
