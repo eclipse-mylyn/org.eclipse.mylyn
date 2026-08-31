@@ -26,15 +26,10 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.core.RepositoryUtil;
 import org.eclipse.egit.core.op.CloneOperation;
 import org.eclipse.egit.core.settings.GitSettings;
-import org.eclipse.egit.github.core.Repository;
-import org.eclipse.egit.github.core.SearchRepository;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.transport.URIish;
-import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.GitHubException;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
@@ -42,6 +37,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
 import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
+import org.kohsuke.github.GHRepository;
 
 /**
  * {@link IImportWizard} for cloning GitHub repositories.
@@ -77,13 +73,12 @@ public class RepositoryImportWizard extends Wizard implements IImportWizard {
 		addPage(repositorySearchWizardPage);
 	}
 
-	private CloneOperation createCloneOperation(SearchRepository repo, RepositoryService service)
+	private CloneOperation createCloneOperation(GHRepository repo)
 			throws IOException, URISyntaxException {
-		Repository fullRepo = service.getRepository(repo);
-		URIish uri = new URIish(fullRepo.getCloneUrl());
+		URIish uri = new URIish(repo.getHtmlUrl());
 
 		String defaultRepoDir = RepositoryUtil.getDefaultRepositoryDir();
-		File directory = new File(new File(defaultRepoDir, repo.getOwner()), repo.getName());
+		File directory = new File(new File(defaultRepoDir, repo.getOwner().getLogin()), repo.getName());
 
 		int timeout = GitSettings.getRemoteConnectionTimeout();
 
@@ -96,7 +91,7 @@ public class RepositoryImportWizard extends Wizard implements IImportWizard {
 	 */
 	@Override
 	public boolean performFinish() {
-		final SearchRepository[] repositories = repositorySearchWizardPage.getRepositories();
+		final GHRepository[] repositories = repositorySearchWizardPage.getRepositories();
 		String name = MessageFormat.format(
 				Messages.RepositoryImportWizard_CloningRepositories, Integer.valueOf(repositories.length));
 		Job job = new Job(name) {
@@ -105,14 +100,12 @@ public class RepositoryImportWizard extends Wizard implements IImportWizard {
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					SubMonitor progress = SubMonitor.convert(monitor, name, repositories.length * 3);
-					GitHubClient client = GitHub.configureClient(new GitHubClient());
-					RepositoryService service = new RepositoryService(client);
-					for (SearchRepository repo : repositories) {
+					for (GHRepository repo : repositories) {
 						try {
-							final String id = repo.getId();
+							final String id = String.valueOf(repo.getId());
 							progress.subTask(MessageFormat.format(
 									Messages.RepositoryImportWizard_CreatingOperation, id));
-							CloneOperation op = createCloneOperation(repo, service);
+							CloneOperation op = createCloneOperation(repo);
 							progress.worked(1);
 
 							monitor.setTaskName(MessageFormat.format(

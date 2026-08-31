@@ -12,13 +12,16 @@
  *****************************************************************************/
 package org.eclipse.mylyn.internal.github.ui.pr;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.util.Date;
 
-import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.ui.internal.UIIcons;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.mylyn.internal.github.egit.github.core.RepositoryCommit;
 import org.eclipse.ui.model.WorkbenchAdapter;
 
 /**
@@ -59,23 +62,31 @@ public class PullRequestCommitAdapter extends WorkbenchAdapter {
 	@Override
 	public StyledString getStyledText(Object object) {
 		StyledString styled = new StyledString(getLabel(object));
-		String desc = commit.getCommit().getMessage();
-		if (desc != null) {
-			int delim = desc.indexOf('\n');
-			if (delim == -1) {
-				delim = 80;
+		try {
+			String desc = null;
+			if (commit.getCommit() != null) {
+				desc = commit.getCommit().getCommitShortInfo().getMessage();
 			}
-			if (delim < desc.length()) {
-				desc = desc.substring(0, delim);
+			if (desc != null) {
+				int delim = desc.indexOf('\n');
+				if (delim == -1) {
+					delim = 80;
+				}
+				if (delim < desc.length()) {
+					desc = desc.substring(0, delim);
+				}
+				styled.append(": ").append(desc); //$NON-NLS-1$
 			}
-			styled.append(": ").append(desc); //$NON-NLS-1$
+			styled.append(' ');
+			String name = commit.getAuthor().getName();
+			String authorWithDate;
+			authorWithDate = MessageFormat.format(
+					Messages.PullRequestCommitAdapter_AuthorWithDate, name,
+					DATE_FORMAT.format(Date.from(commit.getAuthor().getDate())));
+			styled.append(authorWithDate, StyledString.QUALIFIER_STYLER);
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
 		}
-		styled.append(' ');
-		String name = commit.getCommit().getAuthor().getName();
-		String authorWithDate = MessageFormat.format(
-				Messages.PullRequestCommitAdapter_AuthorWithDate, name,
-				DATE_FORMAT.format(commit.getCommit().getAuthor().getDate()));
-		styled.append(authorWithDate, StyledString.QUALIFIER_STYLER);
 		return styled;
 	}
 

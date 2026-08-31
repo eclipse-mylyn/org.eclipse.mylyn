@@ -15,8 +15,8 @@ package org.eclipse.mylyn.internal.github.ui.pr;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.mylyn.internal.github.core.pr.PullRequestComposite;
+import org.eclipse.mylyn.internal.github.egit.github.core.RepositoryCommit;
 import org.eclipse.ui.model.WorkbenchAdapter;
 
 /**

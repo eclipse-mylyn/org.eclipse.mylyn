@@ -40,5 +40,21 @@
       <unit id="org.jsoup" version="0.0.0"/>
       <unit id="org.mockito.junit-jupiter" version="0.0.0"/>
     </location>
+	  <location includeDependencyDepth="infinite" includeDependencyScopes="compile" includeSource="true" missingManifest="generate" type="Maven">
+		  <dependencies>
+			  <dependency>
+				  <groupId>org.kohsuke</groupId>
+				  <artifactId>github-api</artifactId>
+				  <version>2.0-rc.7</version>
+				  <type>jar</type>
+			  </dependency>
+		  </dependencies>
+		  <repositories>
+			  <repository>
+				  <id>jenkins-ci</id>
+				  <url>https://repo.jenkins-ci.org/public/</url>
+			  </repository>
+		  </repositories>
+	  </location>
   </locations>
 </target>

@@ -14,17 +14,14 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.github.ui.issue;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.egit.github.core.Milestone;
-import org.eclipse.egit.github.core.service.IssueService;
-import org.eclipse.egit.github.core.util.LabelComparator;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -35,8 +32,11 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylyn.commons.core.ICoreRunnable;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.ui.CommonUiUtil;
+import org.eclipse.mylyn.internal.github.core.GitHub;
+import org.eclipse.mylyn.internal.github.core.GithubApi;
 import org.eclipse.mylyn.internal.github.core.QueryUtils;
 import org.eclipse.mylyn.internal.github.core.issue.IssueConnector;
+import org.eclipse.mylyn.internal.github.egit.github.core.client.IssueService;
 import org.eclipse.mylyn.internal.github.ui.GitHubImages;
 import org.eclipse.mylyn.internal.github.ui.GitHubRepositoryQueryPage;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -56,6 +56,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.PlatformUI;
+import org.kohsuke.github.GHLabel;
+import org.kohsuke.github.GHMilestone;
+import org.kohsuke.github.GHRepository;
 
 /**
  * GitHub issue repository query page class.
@@ -76,7 +79,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 
 	private CheckboxTableViewer labelsViewer;
 
-	private List<Milestone> milestones;
+	private List<GHMilestone> milestones;
 
 	private final SelectionListener completeListener = new SelectionAdapter() {
 
@@ -207,7 +210,11 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 
 		createLabelsArea(displayArea);
 
-		loadRepository();
+		try {
+			loadRepository();
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
 
 		initialize();
 		setControl(displayArea);
@@ -222,7 +229,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 		String milestoneNumber = query.getAttribute(IssueService.FILTER_MILESTONE);
 		if (milestoneNumber != null && milestones != null) {
 			int index = 0;
-			for (Milestone milestone : milestones) {
+			for (GHMilestone milestone : milestones) {
 				index++;
 				if (milestoneNumber.equals(Integer.toString(milestone.getNumber()))) {
 					milestoneCombo.select(index);
@@ -250,19 +257,21 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 		}
 	}
 
-	private boolean updateLabels() {
+	private boolean updateLabels() throws IOException {
 		if (labelsViewer.getControl().isDisposed()) {
 			return false;
 		}
 
 		IssueConnector connector = IssueConnectorUi.getCoreConnector();
 		TaskRepository repository = getTaskRepository();
+		GithubApi github = GithubApi.createGithubClient(repository);
+		GHRepository repo = github.getRepo(repository.getRepositoryUrl());
+
 		boolean hasLabels = connector.hasCachedLabels(repository);
 		if (hasLabels) {
-			List<org.eclipse.egit.github.core.Label> labels = connector.getLabels(repository);
-			Collections.sort(labels, new LabelComparator());
+			List<GHLabel> labels = repo.listLabels().toList();
 			List<String> labelNames = new ArrayList<>(labels.size());
-			for (org.eclipse.egit.github.core.Label label : labels) {
+			for (GHLabel label : labels) {
 				labelNames.add(label.getName());
 			}
 			labelsViewer.setInput(labelNames);
@@ -282,9 +291,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 			milestones = connector.getMilestones(repository);
 			milestoneCombo.removeAll();
 			milestoneCombo.add(Messages.IssueRepositoryQueryPage_MilestoneNone);
-			Collections.sort(milestones, Comparator.comparing(
-					Milestone::getTitle, String.CASE_INSENSITIVE_ORDER));
-			for (Milestone milestone : milestones) {
+			for (GHMilestone milestone : milestones) {
 				milestoneCombo.add(milestone.getTitle());
 			}
 
@@ -310,8 +317,12 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 				monitor.done();
 
 				PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
-					updateLabels();
-					updateMilestones();
+					try {
+						updateLabels();
+						updateMilestones();
+					} catch (IOException e) {
+						throw new UncheckedIOException(e);
+					}
 					initialize();
 				});
 			};
@@ -324,6 +335,9 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 				}
 			}
 			CommonUiUtil.run(context, runnable);
+		} catch (UncheckedIOException e) {
+			ErrorDialog.openError(getShell(), Messages.IssueRepositoryQueryPage_ErrorLoading, e.getLocalizedMessage(),
+					GitHub.createErrorStatus(e.getCause()));
 		} catch (CoreException e) {
 			IStatus status = e.getStatus();
 			ErrorDialog.openError(getShell(), Messages.IssueRepositoryQueryPage_ErrorLoading, e.getLocalizedMessage(),
@@ -331,7 +345,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 		}
 	}
 
-	private void loadRepository() {
+	private void loadRepository() throws IOException {
 		boolean labelsLoaded = updateLabels();
 		boolean milestonesLoaded = updateMilestones();
 		if (!labelsLoaded || !milestonesLoaded) {

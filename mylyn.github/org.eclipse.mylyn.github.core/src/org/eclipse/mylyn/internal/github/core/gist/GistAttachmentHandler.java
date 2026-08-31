@@ -13,26 +13,30 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.github.core.gist;
 
-import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Collections;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.egit.github.core.Gist;
-import org.eclipse.egit.github.core.GistFile;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.client.GitHubRequest;
-import org.eclipse.egit.github.core.service.GistService;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.github.core.GitHub;
+import org.eclipse.mylyn.internal.github.core.GithubApi;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.kohsuke.github.GHGist;
+import org.kohsuke.github.GHGistFile;
+import org.kohsuke.github.GHGistUpdater;
 
 /**
  * Handles Gist attatchments
@@ -69,19 +73,21 @@ public class GistAttachmentHandler extends AbstractTaskAttachmentHandler {
 			if (urlAttribute == null) {
 				throw new IOException("Unable to obtain raw file URL from Gist"); //$NON-NLS-1$
 			}
-			URL url = new URL(urlAttribute.getValue());
-			GitHubClient client = new GitHubClient(url.getHost()) {
+			URL url = new URI(urlAttribute.getValue()).toURL();
 
-				@Override
-				protected String configureUri(String uri) {
-					// No prefix needed since URI is not an actual API URI
-					return uri;
+			GithubApi github = GithubApi.createGithubClient(repository.getCredentials(AuthenticationType.REPOSITORY));
+			GHGist gist = github.getGist(task.getTaskId());
+			Map<String, GHGistFile> files = gist.getFiles();
+			for (Entry<String, GHGistFile> file : files.entrySet()) {
+				if (url.toString().equals(file.getValue().getRawUrl())) {
+					return new ByteArrayInputStream(file.getValue().getContent().getBytes(StandardCharsets.UTF_8));
 				}
-			};
-			GistConnector.configureClient(client, repository);
-			return client.getStream(new GitHubRequest().setUri(url.getFile()));
+			}
+			return null;
 		} catch (IOException e) {
 			throw new CoreException(GitHub.createWrappedStatus(e));
+		} catch (URISyntaxException e) {
+			throw new CoreException(GitHub.createWrappedStatus(new IOException(e)));
 		}
 	}
 
@@ -94,26 +100,19 @@ public class GistAttachmentHandler extends AbstractTaskAttachmentHandler {
 	public void postContent(TaskRepository repository, ITask task, AbstractTaskAttachmentSource source, String comment,
 			TaskAttribute attachmentAttribute, IProgressMonitor monitor) throws CoreException {
 		TaskAttachmentMapper mapper = TaskAttachmentMapper.createFrom(attachmentAttribute);
-		Gist gist = new Gist().setId(task.getTaskId());
-		gist.setDescription(attachmentAttribute.getParentAttribute()
-				.getAttribute(GistAttribute.DESCRIPTION.getMetadata().getId())
-				.getValue());
-		GistFile file = new GistFile();
-		file.setFilename(mapper.getFileName());
-		gist.setFiles(Collections.singletonMap(file.getFilename(), file));
+		try {
+			GithubApi github = GithubApi.createGithubClient(repository);
 
-		GitHubClient client = GistConnector.createClient(repository);
-		GistService service = new GistService(client);
+			GHGistUpdater gist = github.getGist(task.getTaskId()).update();
 
-		try (InputStream input = source.createInputStream(monitor)) {
-			byte[] buffer = new byte[8192];
-			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			int read;
-			while ((read = input.read(buffer)) != -1) {
-				output.write(buffer, 0, read);
+			gist.description(attachmentAttribute.getParentAttribute()
+					.getAttribute(GistAttribute.DESCRIPTION.getMetadata().getId())
+					.getValue());
+
+			try (InputStream input = source.createInputStream(monitor)) {
+				gist.addFile(mapper.getFileName(), new String(input.readAllBytes(), StandardCharsets.UTF_8));
+				gist.update();
 			}
-			file.setContent(output.toString());
-			service.updateGist(gist);
 		} catch (IOException e) {
 			throw new CoreException(GitHub.createWrappedStatus(e));
 		}

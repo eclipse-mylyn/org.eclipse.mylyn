@@ -21,11 +21,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.egit.github.core.Repository;
-import org.eclipse.egit.github.core.User;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.service.OrganizationService;
-import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.egit.ui.internal.components.FilteredCheckboxTree;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -41,6 +36,7 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.GitHubException;
+import org.eclipse.mylyn.internal.github.core.GithubApi;
 import org.eclipse.mylyn.internal.github.core.gist.GistConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -60,6 +56,8 @@ import org.eclipse.ui.model.IWorkbenchAdapter3;
 import org.eclipse.ui.model.WorkbenchAdapter;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.kohsuke.github.GHOrganization;
+import org.kohsuke.github.GHRepository;
 
 /**
  * Repository selection wizard page.
@@ -129,16 +127,16 @@ public class RepositorySelectionWizardPage extends WizardPage {
 
 	private static class RepositoryAdapter extends WorkbenchAdapter {
 
-		private final Repository repo;
+		private final GHRepository repo;
 
-		RepositoryAdapter(Repository repo) {
+		RepositoryAdapter(GHRepository repo) {
 			this.repo = repo;
 		}
 
 		@Override
 		public String getLabel(Object object) {
-			String label = repo.generateId();
-			return label != null ? label : ""; //$NON-NLS-1$
+			String label = repo.getFullName();
+			return label;
 		}
 
 		@Override
@@ -150,11 +148,11 @@ public class RepositorySelectionWizardPage extends WizardPage {
 
 	private static class OrganizationAdapter extends WorkbenchAdapter {
 
-		private final User org;
+		private final GHOrganization org;
 
 		private final RepositoryAdapter[] repos;
 
-		OrganizationAdapter(User org, List<Repository> repos) {
+		OrganizationAdapter(GHOrganization org, List<GHRepository> repos) {
 			this.org = org;
 			this.repos = new RepositoryAdapter[repos.size()];
 			final int length = this.repos.length;
@@ -208,8 +206,7 @@ public class RepositorySelectionWizardPage extends WizardPage {
 	 * Create repository selection wizard page
 	 */
 	public RepositorySelectionWizardPage() {
-		super(
-				"repositoriesPage", Messages.RepositorySelectionWizardPage_Title, null); //$NON-NLS-1$
+		super("repositoriesPage", Messages.RepositorySelectionWizardPage_Title, null); //$NON-NLS-1$
 		setDescription(Messages.RepositorySelectionWizardPage_Description);
 	}
 
@@ -239,9 +236,9 @@ public class RepositorySelectionWizardPage extends WizardPage {
 	}
 
 	/** @return array of selected repositories */
-	public Repository[] getRepositories() {
+	public GHRepository[] getRepositories() {
 		Object[] checked = tree.getCheckboxTreeViewer().getCheckedLeafElements();
-		Repository[] repos = new Repository[checked.length];
+		GHRepository[] repos = new GHRepository[checked.length];
 		for (int i = 0; i < repos.length; i++) {
 			repos[i] = ((RepositoryAdapter) checked[i]).repo;
 		}
@@ -356,7 +353,7 @@ public class RepositorySelectionWizardPage extends WizardPage {
 		}
 	}
 
-	private void updateInput(final List<Object> repos) {
+	private void updateInput(final List<WorkbenchAdapter> repos) {
 		PlatformUI.getWorkbench().getDisplay().syncExec(() -> {
 			if (getControl().isDisposed()) {
 				return;
@@ -374,10 +371,10 @@ public class RepositorySelectionWizardPage extends WizardPage {
 		});
 	}
 
-	private void removeExisting(List<Repository> repos, List<String> existing) {
-		Iterator<Repository> iter = repos.iterator();
+	private void removeExisting(List<GHRepository> userRepos, List<String> existing) {
+		Iterator<GHRepository> iter = userRepos.iterator();
 		while (iter.hasNext()) {
-			String id = iter.next().generateId();
+			String id = iter.next().getFullName();
 			if (id == null || existing.contains(id)) {
 				iter.remove();
 			}
@@ -392,42 +389,38 @@ public class RepositorySelectionWizardPage extends WizardPage {
 			return;
 		}
 		// For gists a user name is needed.
-		addGistRepoButton.setVisible(user != null && !user.isEmpty()
-				&& TasksUi.getRepositoryManager().getRepositories(GistConnector.KIND).isEmpty());
+		addGistRepoButton
+				.setVisible((isToken && password != null && !password.isEmpty() || user != null && !user.isEmpty())
+						&& TasksUi.getRepositoryManager().getRepositories(GistConnector.KIND).isEmpty());
 		try {
 			getContainer().run(true, true, monitor -> {
-				GitHubClient client = GitHub.configureClient(new GitHubClient());
-				if (isToken) {
-					client.setOAuth2Token(password);
-				} else {
-					client.setCredentials(user, password);
-				}
-				RepositoryService service = new RepositoryService(client);
-				OrganizationService orgs = new OrganizationService(client);
-				repoCount = 0;
-				List<Object> repos = new ArrayList<>();
-				List<String> existing = new ArrayList<>();
-				for (TaskRepository repo : TasksUi.getRepositoryManager().getRepositories(GitHub.CONNECTOR_KIND)) {
-					String id = GitHub.getRepository(
-							repo.getRepositoryUrl()).generateId();
-					if (id != null) {
-						existing.add(id);
-					}
-				}
 				try {
+					GithubApi service = GithubApi.createGithubClient(user, password);
+
+					repoCount = 0;
+					List<WorkbenchAdapter> repos = new ArrayList<>();
+					List<String> existing = new ArrayList<>();
+					for (TaskRepository repo : TasksUi.getRepositoryManager().getRepositories(GitHub.CONNECTOR_KIND)) {
+						String id = GitHub.getRepository(
+								repo.getRepositoryUrl()).generateId();
+						if (id != null) {
+							existing.add(id);
+						}
+					}
 					monitor.beginTask("", 2); //$NON-NLS-1$
 					monitor.setTaskName(Messages.RepositorySelectionWizardPage_TaskFetchingRepositories);
-					List<Repository> userRepos = service.getRepositories();
+					List<GHRepository> userRepos = new ArrayList<>(service.getMyself().getAllRepositories().values());
+
 					removeExisting(userRepos, existing);
 					repoCount += userRepos.size();
-					for (Repository repo : userRepos) {
+					for (GHRepository repo : userRepos) {
 						repos.add(new RepositoryAdapter(repo));
 					}
 					monitor.worked(1);
 					monitor.setTaskName(
 							Messages.RepositorySelectionWizardPage_TaskFetchingOrganizationRepositories);
-					for (User org : orgs.getOrganizations()) {
-						List<Repository> orgRepos = service.getOrgRepositories(org.getLogin());
+					for (GHOrganization org : service.getMyself().getOrganizations()) {
+						List<GHRepository> orgRepos = new ArrayList<>(service.getMyself().listRepositories().toList());
 						removeExisting(orgRepos, existing);
 						repoCount += orgRepos.size();
 						repos.add(new OrganizationAdapter(org, orgRepos));

@@ -14,16 +14,13 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.github.ui.issue;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.egit.github.core.RepositoryId;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.client.NoSuchPageException;
-import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.GitHubException;
 import org.eclipse.mylyn.internal.github.core.issue.IssueConnector;
@@ -31,6 +28,7 @@ import org.eclipse.mylyn.internal.github.ui.GitHubUi;
 import org.eclipse.mylyn.internal.github.ui.HttpRepositorySettingsPage;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.widgets.Composite;
+import org.kohsuke.github.GHRepository;
 
 /**
  * GitHub connector specific extensions.
@@ -76,14 +74,13 @@ public class IssueRepositorySettingsPage extends HttpRepositorySettingsPage {
 				try {
 					monitor.subTask(Messages.IssueRepositorySettingsPage_TaskContactingServer);
 					try {
-						GitHubClient client = IssueConnector.createClient(taskRepository);
-						IssueService service = new IssueService(client);
-						RepositoryId repo = GitHub.getRepository(taskRepository.getRepositoryUrl());
+						GHRepository repo = IssueConnector.createClient(taskRepository);
+
 						monitor.worked(50);
-						service.pageIssues(repo.getOwner(), repo.getName(), null, 1).next();
-					} catch (NoSuchPageException e) {
+						repo.getUpdatedAt();
+					} catch (IOException e) {
 						String message = MessageFormat.format(Messages.IssueRepositorySettingsPage_StatusError,
-								GitHubException.wrap(e.getCause()).getLocalizedMessage());
+								GitHubException.wrap(e).getLocalizedMessage());
 						setStatus(GitHubUi.createErrorStatus(message));
 						return;
 					} finally {

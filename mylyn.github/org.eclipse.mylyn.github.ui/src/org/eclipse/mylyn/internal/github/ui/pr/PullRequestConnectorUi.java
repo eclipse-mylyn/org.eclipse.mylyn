@@ -12,10 +12,9 @@
  *****************************************************************************/
 package org.eclipse.mylyn.internal.github.ui.pr;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 
-import org.eclipse.egit.github.core.PullRequest;
-import org.eclipse.egit.github.core.Repository;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.internal.github.core.pr.PullRequestConnector;
@@ -28,6 +27,8 @@ import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
 import org.eclipse.ui.PlatformUI;
+import org.kohsuke.github.GHPullRequest;
+import org.kohsuke.github.GHRepository;
 
 /**
  * Pull request connector UI
@@ -39,9 +40,10 @@ public class PullRequestConnectorUi extends AbstractRepositoryConnectorUi {
 	 *
 	 * @param request
 	 *            must be non-null
+	 * @throws IOException
 	 */
-	public static void showNoRepositoryDialog(PullRequest request) {
-		Repository remoteRepo = request.getBase().getRepo();
+	public static void showNoRepositoryDialog(GHPullRequest request) throws IOException {
+		GHRepository remoteRepo = request.getBase().getRepository();
 		String id = remoteRepo.getOwner().getLogin() + '/' + remoteRepo.getName();
 		final String message = MessageFormat.format(
 				Messages.PullRequestConnectorUi_MessageRepositoryNotFound, id);

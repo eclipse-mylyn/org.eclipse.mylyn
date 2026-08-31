@@ -16,9 +16,9 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
 
-import org.eclipse.egit.github.core.FieldError;
-import org.eclipse.egit.github.core.RequestError;
-import org.eclipse.egit.github.core.client.RequestException;
+import org.eclipse.mylyn.internal.github.egit.github.core.FieldError;
+import org.eclipse.mylyn.internal.github.egit.github.core.RequestError;
+import org.eclipse.mylyn.internal.github.egit.github.core.client.RequestException;
 
 /**
  * GitHub exception that wraps and formats a {@link RequestException}
@@ -38,7 +38,7 @@ public class GitHubException extends IOException {
 		return exception instanceof RequestException r
 				? new GitHubException(
 						r)
-				: exception;
+						: exception;
 	}
 
 	/**
