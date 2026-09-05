@@ -10,15 +10,18 @@
  *     Tasktop Technologies - initial API and implementation
  *     Benjamin Pasero - initial API and implementation
  *     ArSysOp - ongoing support
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.manual;
 
-import org.eclipse.mylyn.commons.ui.dialogs.AbstractNotificationPopup;
+
+import org.eclipse.jface.notifications.AbstractNotificationPopup;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -43,7 +46,7 @@ public class SampleNotificationPopup extends AbstractNotificationPopup {
 		titleCircleLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
 		titleCircleLabel.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
 
-		Label closeButton = new Label(parent, SWT.NONE);
+		Button closeButton = new Button(parent, SWT.NONE);
 		closeButton.setText("Close");
 		closeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		closeButton.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));

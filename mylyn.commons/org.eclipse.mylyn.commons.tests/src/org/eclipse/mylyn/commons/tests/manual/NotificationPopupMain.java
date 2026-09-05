@@ -9,11 +9,12 @@
  *
  *     Tasktop Technologies - initial API and implementation
  *     Benjamin Pasero - initial API and contribution
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.tests.manual;
 
-import org.eclipse.mylyn.commons.ui.dialogs.AbstractNotificationPopup;
+import org.eclipse.jface.notifications.AbstractNotificationPopup;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -24,7 +25,7 @@ import org.eclipse.swt.widgets.Shell;
  * @author Benjamin Pasero
  * @author Mik Kersten
  */
-public class NoticicationPopupMain {
+public class NotificationPopupMain {
 
 	public static void main(String[] args) {
 		Display display = new Display();
