@@ -30,9 +30,9 @@ public class ContextUiImages {
 
 	public static final ImageDescriptor FILE_XML = create(T_ELCL, "file-xml.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor FILE_GENERIC = create(T_ELCL, "file_obj.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor FILE_GENERIC = create(T_ELCL, "file_obj.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor FOLDER_GENERIC = create(T_ELCL, "fldr_obj.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor FOLDER_GENERIC = create(T_ELCL, "fldr_obj.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor CONTEXT_FOCUS = create(T_ELCL, "focus.gif"); //$NON-NLS-1$
 
