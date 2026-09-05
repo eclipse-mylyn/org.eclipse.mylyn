@@ -34,7 +34,7 @@ public class ContextUiImages {
 
 	public static final ImageDescriptor FOLDER_GENERIC = create(T_ELCL, "fldr_obj.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor CONTEXT_FOCUS = create(T_ELCL, "focus.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor CONTEXT_FOCUS = create(T_ELCL, "focus.svg"); //$NON-NLS-1$
 
 	private static URI toURI(URL url) {
 		if (url == null) {
