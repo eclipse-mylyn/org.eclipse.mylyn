@@ -122,7 +122,7 @@
             locationURI="popup:org.eclipse.ui.ide.MarkersView?after=org.eclipse.ui.ide.markCompleted">
             <command
                   commandId="org.eclipse.mylyn.tasks.bugs.commands.newTaskFromMarker"
-                  icon="icons/etool16/task-new.gif"
+                  icon="icons/etool16/task-new.svg"
                   mnemonic="%commands.newTaskFromMarker.mnemonic"
                   style="push">
               <visibleWhen

@@ -211,11 +211,11 @@
     </image>
     <image
           commandId="org.eclipse.mylyn.builds.ui.command.NewTaskFromBuild"
-          icon="icons/etool16/task-new.gif">
+          icon="icons/etool16/task-new.svg">
     </image>
     <image
           commandId="org.eclipse.mylyn.builds.ui.command.NewTaskFromTest"
-          icon="icons/etool16/task-new.gif">
+          icon="icons/etool16/task-new.svg">
     </image>
  </extension>
  <extension
@@ -702,7 +702,7 @@
           locationURI="menu:org.eclipse.mylyn.builds.navigator.builds?after=group.navigate">
        <command
              commandId="org.eclipse.ui.views.showView"
-             icon="icons/eview16/repositories.gif"
+             icon="icons/eview16/repositories.svg"
              label="Show Team Repositories View"
              style="push">
           <parameter
