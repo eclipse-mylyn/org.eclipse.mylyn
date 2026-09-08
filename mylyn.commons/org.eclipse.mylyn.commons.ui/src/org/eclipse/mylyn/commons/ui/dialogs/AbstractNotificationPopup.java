@@ -9,6 +9,7 @@
  *
  *     Benjamin Pasero - initial API and implementation
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.ui.dialogs;
@@ -55,7 +56,9 @@ import org.eclipse.swt.widgets.Shell;
  * @author Mik Kersten
  * @author Steffen Pingel
  * @since 3.7
+ * @Deprecated Use {@link org.eclipse.jface.notifications.AbstractNotificationPopup} instead.
  */
+@Deprecated(since = "4.12", forRemoval = true)
 public abstract class AbstractNotificationPopup extends Window {
 
 	private static final int TITLE_HEIGHT = 24;
@@ -74,6 +77,7 @@ public abstract class AbstractNotificationPopup extends Window {
 
 	private long delayClose = DEFAULT_DELAY_CLOSE;
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	protected LocalResourceManager resources;
 
 	private GradientColors color;
@@ -121,10 +125,12 @@ public abstract class AbstractNotificationPopup extends Window {
 
 	private boolean fadingEnabled;
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	public AbstractNotificationPopup(Display display) {
 		this(display, SWT.NO_TRIM | SWT.ON_TOP | SWT.NO_FOCUS | SWT.TOOL);
 	}
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	public AbstractNotificationPopup(Display display, int style) {
 		super(new Shell(display));
 		setShellStyle(style);
@@ -136,10 +142,12 @@ public abstract class AbstractNotificationPopup extends Window {
 		closeJob.setSystem(true);
 	}
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	public boolean isFadingEnabled() {
 		return fadingEnabled;
 	}
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	public void setFadingEnabled(boolean fadingEnabled) {
 		this.fadingEnabled = fadingEnabled;
 	}
@@ -151,6 +159,7 @@ public abstract class AbstractNotificationPopup extends Window {
 	 *
 	 * @return the name to be used in the title of the popup.
 	 */
+	@Deprecated(since = "4.12", forRemoval = true)
 	protected String getPopupShellTitle() {
 		String productName = CommonUiUtil.getProductName();
 		if (productName != null) {
@@ -160,6 +169,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		}
 	}
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	protected Image getPopupShellImage(int maximumHeight) {
 		return null;
 	}
@@ -169,6 +179,7 @@ public abstract class AbstractNotificationPopup extends Window {
 	 *
 	 * @param parent
 	 */
+	@Deprecated(since = "4.12", forRemoval = true)
 	protected void createContentArea(Composite parent) {
 		// empty by default
 	}
@@ -176,6 +187,7 @@ public abstract class AbstractNotificationPopup extends Window {
 	/**
 	 * Override to customize the title bar
 	 */
+	@Deprecated(since = "4.12", forRemoval = true)
 	protected void createTitleArea(Composite parent) {
 		((GridData) parent.getLayoutData()).heightHint = TITLE_HEIGHT;
 
@@ -214,6 +226,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		});
 	}
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	protected Color getTitleForeground() {
 		return color.getTitleText();
 	}
@@ -222,6 +235,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		color = new GradientColors(display, resources);
 	}
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -230,6 +244,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		newShell.setBackground(color.getBorder());
 	}
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	@Override
 	public void create() {
 		super.create();
@@ -290,6 +305,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		return shell.getBounds().contains(display.getCursorLocation());
 	}
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	@Override
 	public int open() {
 		if (shell == null || shell.isDisposed()) {
@@ -317,12 +333,14 @@ public abstract class AbstractNotificationPopup extends Window {
 		return Window.OK;
 	}
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	protected void scheduleAutoClose() {
 		if (delayClose > 0) {
 			closeJob.schedule(delayClose);
 		}
 	}
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	@Override
 	protected Control createContents(Composite parent) {
 		((GridLayout) parent.getLayout()).marginWidth = 1;
@@ -475,6 +493,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		}
 	}
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	@Override
 	protected void initializeBounds() {
 		Rectangle clArea = getPrimaryClientArea();
@@ -493,6 +512,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		return primaryMonitor != null ? primaryMonitor.getClientArea() : shell.getDisplay().getClientArea();
 	}
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	public void closeFade() {
 		if (fadeJob != null) {
 			fadeJob.cancelAndWait(false);
@@ -519,6 +539,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		});
 	}
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	@Override
 	public boolean close() {
 		resources.dispose();
@@ -531,10 +552,12 @@ public abstract class AbstractNotificationPopup extends Window {
 		return super.close();
 	}
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	public long getDelayClose() {
 		return delayClose;
 	}
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	public void setDelayClose(long delayClose) {
 		this.delayClose = delayClose;
 	}

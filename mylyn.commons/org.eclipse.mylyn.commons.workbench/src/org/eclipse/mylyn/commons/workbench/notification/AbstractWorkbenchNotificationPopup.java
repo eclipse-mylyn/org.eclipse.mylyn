@@ -11,9 +11,10 @@
  *     See git history
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.workbench;
+package org.eclipse.mylyn.commons.workbench.notification;
 
-import org.eclipse.mylyn.commons.ui.dialogs.AbstractNotificationPopup;
+import org.eclipse.jface.notifications.AbstractNotificationPopup;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
@@ -21,23 +22,18 @@ import org.eclipse.swt.widgets.Display;
  * A popup window that uses the workbench shell image in the title.
  *
  * @author Steffen Pingel
- * @deprecated see {@link org.eclipse.jface.notifications.AbstractNotificationPopup} and
- *             {@link org.eclipse.jface.notifications.NotificationPopup} instead
+ * @since 4.12
  */
-@Deprecated(since = "4.12", forRemoval = true)
 public class AbstractWorkbenchNotificationPopup extends AbstractNotificationPopup {
 
-	@Deprecated(since = "4.12", forRemoval = true)
 	public AbstractWorkbenchNotificationPopup(Display display, int style) {
 		super(display, style);
 	}
 
-	@Deprecated(since = "4.12", forRemoval = true)
 	public AbstractWorkbenchNotificationPopup(Display display) {
 		super(display);
 	}
 
-	@Deprecated(since = "4.12", forRemoval = true)
 	@Override
 	protected Image getPopupShellImage(int maximumHeight) {
 		return WorkbenchUtil.getWorkbenchShellImage(maximumHeight);
