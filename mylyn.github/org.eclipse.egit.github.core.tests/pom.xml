@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (C) 2011, Chris Aniszczyk <caniszczyk@gmail.com>
+   Copyright (C) 2011, 2026 Chris Aniszczyk <caniszczyk@gmail.com> and others
 
    All rights reserved. This program and the accompanying materials
    are made available under the terms of the Eclipse Public License 2.0
@@ -28,17 +28,13 @@
 
 	<name>Eclipse EGit GitHub API Test Plug-in</name>
 
-	<properties>
-		<java-version>21</java-version>
-		<java-release>21</java-release>
-	</properties>
-
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<configuration>
+					<providerHint>junit5</providerHint>
 					<skip>${test.component.skip}</skip>
 					<includes>
 						<include>**/AllHeadlessTests.class</include>
