@@ -175,9 +175,9 @@ public class CommonImages {
 
 	public static final ImageDescriptor BANNER_SCREENSHOT = create(T_WIZBAN, "banner-screenshot.png"); //$NON-NLS-1$
 
-	public static final ImageDescriptor BANNER_IMPORT = create(T_WIZBAN, "banner-import.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor BANNER_IMPORT = create(T_WIZBAN, "banner-import.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor BANNER_EXPORT = create(T_WIZBAN, "banner-export.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor BANNER_EXPORT = create(T_WIZBAN, "banner-export.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor BANNER_SECURE_ROLE = create(T_WIZBAN, "secur_role_wiz.gif"); //$NON-NLS-1$
 
