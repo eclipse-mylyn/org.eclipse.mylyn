@@ -12,31 +12,33 @@
 
 package org.eclipse.mylyn.internal.context.ui;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 
 /**
+ * Colors used to decorate task context elements, defined in the workbench theme so they adapt to the dark theme.
+ *
  * @author Mik Kersten
  */
 public class ColorMap {
 
-	// TODO: use themes?
-	public static final Color LANDMARK = new Color(Display.getDefault(), 80, 140, 200);
+	public static final String LANDMARK = "org.eclipse.mylyn.context.ui.colors.foreground.landmark"; //$NON-NLS-1$
 
-	public static final Color GRAY_MEDIUM = new Color(Display.getDefault(), 105, 105, 105);
+	public static final String PREDICTED = "org.eclipse.mylyn.context.ui.colors.foreground.predicted"; //$NON-NLS-1$
 
-	public static final Color GRAY_LIGHT = new Color(Display.getDefault(), 145, 145, 145);
+	public static final String UNINTERESTING = "org.eclipse.mylyn.context.ui.colors.foreground.uninteresting"; //$NON-NLS-1$
 
-	public static final Color RELATIONSHIP = new Color(Display.getDefault(), 0, 254, 0);
+	public static final String RELATIONSHIP = "org.eclipse.mylyn.context.ui.colors.foreground.relationship"; //$NON-NLS-1$
 
-	public void dispose() {
-		LANDMARK.dispose();
-		GRAY_LIGHT.dispose();
-		GRAY_MEDIUM.dispose();
-		RELATIONSHIP.dispose();
-
-		// below disposed by registry
-		// DEFAULT.dispose();
+	/**
+	 * Returns the theme color for the given id, falling back to the default list foreground so it is never
+	 * {@code null}.
+	 */
+	public static Color getColor(String id) {
+		final Color color = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry().get(id);
+		return color != null ? color : Display.getDefault().getSystemColor(SWT.COLOR_LIST_FOREGROUND);
 	}
 
 	private GammaSetting gammaSetting = GammaSetting.STANDARD;

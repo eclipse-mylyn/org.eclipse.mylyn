@@ -1,0 +1,19 @@
+/*******************************************************************************
+ * Copyright (c) 2026 vogella GmbH and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors: See git history
+ *******************************************************************************/
+
+IEclipsePreferences#org-eclipse-ui-workbench:org-eclipse-mylyn-context-ui {
+	preferences:
+		'org.eclipse.mylyn.context.ui.colors.foreground.landmark=80,140,200'
+		'org.eclipse.mylyn.context.ui.colors.foreground.predicted=150,150,150'
+		'org.eclipse.mylyn.context.ui.colors.foreground.uninteresting=115,115,115'
+		'org.eclipse.mylyn.context.ui.colors.foreground.relationship=0,254,0'
+}

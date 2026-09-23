@@ -56,7 +56,7 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 			if (!"org.eclipse.mylyn.internal.tasks.core.TaskTask".equals(element.getClass().getName())) { //$NON-NLS-1$
 				IInteractionElement node = null;
 				if (element instanceof InteractionContextRelation) {
-					decoration.setForegroundColor(ColorMap.RELATIONSHIP);
+					decoration.setForegroundColor(ColorMap.getColor(ColorMap.RELATIONSHIP));
 				} else if (element instanceof IInteractionElement) {
 					node = (IInteractionElement) element;
 				} else if (bridge != null && bridge.getContentType() != null) {
