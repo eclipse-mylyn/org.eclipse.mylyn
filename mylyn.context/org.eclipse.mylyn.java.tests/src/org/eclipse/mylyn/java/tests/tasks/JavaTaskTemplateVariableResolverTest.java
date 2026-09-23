@@ -24,7 +24,6 @@ import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.Position;
-import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.DocumentTemplateContext;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateBuffer;
@@ -38,6 +37,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.text.templates.ContextTypeRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -112,7 +112,8 @@ public class JavaTaskTemplateVariableResolverTest {
 
 	private void canHandleTemplateResolver(final String contextType, final String templateContent,
 			final String expectedResolvedTemplate) throws TemplateException, BadLocationException {
-		final ContextTypeRegistry registry = JavaPlugin.getDefault().getTemplateContextRegistry();
+		final ContextTypeRegistry registry = JavaPlugin.getDefault()
+				.getTemplateContextRegistry();
 		final TemplateContextType context = registry.getContextType(contextType);
 		final Template template = new Template("name", "description", contextType, templateContent, false);
 		final TemplateTranslator translator = new TemplateTranslator();
