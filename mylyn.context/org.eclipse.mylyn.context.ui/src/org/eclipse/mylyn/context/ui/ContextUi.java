@@ -45,13 +45,13 @@ public final class ContextUi {
 			return null;
 		}
 		if (node.getInterest().isPredicted() || node.getInterest().isPropagated()) {
-			return ColorMap.GRAY_MEDIUM;
+			return ColorMap.getColor(ColorMap.PREDICTED);
 		} else if (node.getInterest().isLandmark()) {
-			return ColorMap.LANDMARK;
+			return ColorMap.getColor(ColorMap.LANDMARK);
 		} else if (node.getInterest().isInteresting()) {
 			return null;
 		}
-		return ColorMap.GRAY_LIGHT;
+		return ColorMap.getColor(ColorMap.UNINTERESTING);
 	}
 
 	public static boolean isEditorAutoCloseEnabled() {

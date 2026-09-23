@@ -269,4 +269,67 @@
   	</viewContribution>
    </extension>
    
+
+   <extension
+         point="org.eclipse.ui.themes">
+      <themeElementCategory
+            id="org.eclipse.mylyn.context.ui.presentation"
+            label="%themeElementCategory.label"/>
+      <colorDefinition
+            categoryId="org.eclipse.mylyn.context.ui.presentation"
+            id="org.eclipse.mylyn.context.ui.colors.foreground.landmark"
+            isEditable="true"
+            label="%colors.foreground.landmark.label"
+            value="80,140,200">
+         <description>
+            %colors.foreground.landmark.description
+         </description>
+      </colorDefinition>
+      <colorDefinition
+            categoryId="org.eclipse.mylyn.context.ui.presentation"
+            id="org.eclipse.mylyn.context.ui.colors.foreground.predicted"
+            isEditable="true"
+            label="%colors.foreground.predicted.label"
+            value="128,128,128">
+         <description>
+            %colors.foreground.predicted.description
+         </description>
+      </colorDefinition>
+      <colorDefinition
+            categoryId="org.eclipse.mylyn.context.ui.presentation"
+            id="org.eclipse.mylyn.context.ui.colors.foreground.uninteresting"
+            isEditable="true"
+            label="%colors.foreground.uninteresting.label"
+            value="128,128,128">
+         <description>
+            %colors.foreground.uninteresting.description
+         </description>
+      </colorDefinition>
+      <colorDefinition
+            categoryId="org.eclipse.mylyn.context.ui.presentation"
+            id="org.eclipse.mylyn.context.ui.colors.foreground.relationship"
+            isEditable="true"
+            label="%colors.foreground.relationship.label"
+            value="0,150,0">
+         <description>
+            %colors.foreground.relationship.description
+         </description>
+      </colorDefinition>
+   </extension>
+
+   <extension
+         point="org.eclipse.e4.ui.css.swt.theme">
+      <stylesheet
+            uri="css/e4-dark_mylyn_context_prefstyle.css">
+         <themeid
+               refid="org.eclipse.e4.ui.css.theme.e4_dark">
+         </themeid>
+      </stylesheet>
+      <stylesheet
+            uri="css/e4-light_mylyn_context_prefstyle.css">
+         <themeid
+               refid="org.eclipse.e4.ui.css.theme.e4_default">
+         </themeid>
+      </stylesheet>
+   </extension>
 </plugin>
