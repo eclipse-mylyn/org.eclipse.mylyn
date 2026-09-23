@@ -751,7 +751,7 @@
            id="org.eclipse.mylyn.tasks.ui.colors.category.gradient.end"
            isEditable="true"
            label="%colors.category.gradient.end.label"
-           value="220,220,220"> <!-- was all 220, 234,233,237 -->
+           value="232,232,232">
          <description>
             %colors.category.gradient.end.description
          </description>
