@@ -37,9 +37,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -57,9 +57,12 @@ public class TaskEditorFindSupport {
 
 	private Action toggleFindAction;
 
-	private static final Color HIGHLIGHTER_YELLOW = new Color(Display.getDefault(), 255, 238, 99);
+	private static final String COLOR_MATCH = "org.eclipse.mylyn.tasks.ui.colors.find.match.background"; //$NON-NLS-1$
 
-	private static final Color ERROR_NO_RESULT = new Color(Display.getDefault(), 255, 150, 150);
+	private static final String COLOR_NO_RESULT = "org.eclipse.mylyn.tasks.ui.colors.find.no.result.background"; //$NON-NLS-1$
+
+	// marks the style ranges added for matches, so clearing them keeps all other ranges
+	private static final Object MATCH_MARKER = new Object();
 
 	private final List<StyledText> styledTexts = new ArrayList<>();
 
@@ -175,7 +178,7 @@ public class TaskEditorFindSupport {
 				highlightMatches(searchString, styledText);
 			}
 			if (styledTexts.isEmpty()) {
-				findBox.setBackground(ERROR_NO_RESULT);
+				findBox.setBackground(getThemeColor(COLOR_NO_RESULT));
 			}
 		} finally {
 			taskEditorPage.setReflow(true);
@@ -347,8 +350,14 @@ public class TaskEditorFindSupport {
 			if (index == -1) {
 				break;
 			}
-			styledText.setStyleRange(new StyleRange(index, searchString.length(), null, HIGHLIGHTER_YELLOW));
+			StyleRange range = new StyleRange(index, searchString.length(), null, getThemeColor(COLOR_MATCH));
+			range.data = MATCH_MARKER;
+			styledText.setStyleRange(range);
 		}
+	}
+
+	private static Color getThemeColor(String id) {
+		return PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry().get(id);
 	}
 
 	private void clearSearchResults() {
@@ -356,8 +365,8 @@ public class TaskEditorFindSupport {
 			List<StyleRange> otherRanges = new ArrayList<>();
 			if (!oldText.isDisposed()) {
 				for (StyleRange styleRange : oldText.getStyleRanges()) {
-					if (styleRange.background == null || !styleRange.background.equals(HIGHLIGHTER_YELLOW)) {
-						otherRanges.add(styleRange); // preserve ranges that aren't from highlighting search results
+					if (styleRange.data != MATCH_MARKER) {
+						otherRanges.add(styleRange);
 					}
 				}
 				oldText.setStyleRanges(otherRanges.toArray(new StyleRange[otherRanges.size()]));
