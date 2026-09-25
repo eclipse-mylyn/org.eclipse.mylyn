@@ -38,7 +38,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardSelectionPage;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.ui.CommonImages;
-import org.eclipse.mylyn.commons.workbench.GradientDrawer;
 import org.eclipse.mylyn.internal.tasks.core.Category;
 import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryFilter;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
@@ -65,7 +64,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * @author Mik Kersten
@@ -242,15 +240,6 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 					.getRepository(LocalRepositoryConnector.CONNECTOR_KIND, LocalRepositoryConnector.REPOSITORY_URL);
 			viewer.setSelection(new StructuredSelection(localRepository));
 		}
-
-		final IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
-
-		new GradientDrawer(themeManager, getViewer()) {
-			@Override
-			protected boolean shouldApplyGradient(org.eclipse.swt.widgets.Event event) {
-				return event.item.getData() instanceof Category;
-			}
-		};
 
 		viewer.addOpenListener(event -> {
 			if (canFlipToNextPage()) {

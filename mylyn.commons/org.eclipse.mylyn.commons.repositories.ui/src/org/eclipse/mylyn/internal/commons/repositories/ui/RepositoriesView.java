@@ -14,12 +14,9 @@
 package org.eclipse.mylyn.internal.commons.repositories.ui;
 
 import org.eclipse.mylyn.commons.repositories.core.RepositoryCategory;
-import org.eclipse.mylyn.commons.workbench.GradientDrawer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.navigator.CommonNavigator;
-import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.part.IShowInTargetList;
-import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * @author Steffen Pingel
@@ -41,19 +38,6 @@ public class RepositoriesView extends CommonNavigator {
 	public void createPartControl(Composite aParent) {
 		super.createPartControl(aParent);
 		getCommonViewer().expandAll();
-	}
-
-	@Override
-	protected CommonViewer createCommonViewer(Composite aParent) {
-		CommonViewer viewer = super.createCommonViewer(aParent);
-		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		new GradientDrawer(themeManager, viewer) {
-			@Override
-			protected boolean shouldApplyGradient(org.eclipse.swt.widgets.Event event) {
-				return event.item.getData() instanceof RepositoryCategory;
-			}
-		};
-		return viewer;
 	}
 
 	@Override

@@ -14,14 +14,10 @@
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.mylyn.commons.ui.GradientCanvas;
-import org.eclipse.mylyn.commons.ui.GradientColors;
 import org.eclipse.mylyn.commons.workbench.search.SearchHistoryPopupDialog;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchUtil;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -33,10 +29,6 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 
 public class TaskListSearchHistoryPopupDialog extends SearchHistoryPopupDialog {
 
-	private static GradientColors colors;
-
-	private LocalResourceManager resourceManager;
-
 	public TaskListSearchHistoryPopupDialog(Shell parent, int side) {
 		super(parent, side);
 	}
@@ -47,13 +39,7 @@ public class TaskListSearchHistoryPopupDialog extends SearchHistoryPopupDialog {
 			return;
 		}
 
-		resourceManager = new LocalResourceManager(JFaceResources.getResources());
-		colors = new GradientColors(composite.getDisplay(), resourceManager);
-
 		GradientCanvas gradient = new GradientCanvas(composite, SWT.NONE);
-
-		gradient.setBackgroundGradient(new Color[] { colors.getGradientBegin(), colors.getGradientEnd() },
-				new int[] { 100 }, true);
 
 		GridLayout headLayout = new GridLayout();
 		headLayout.marginHeight = 5;

@@ -21,9 +21,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.mylyn.commons.workbench.GradientDrawer;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
-import org.eclipse.mylyn.internal.tasks.core.Category;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryModelListener;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryAdapter;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -47,7 +45,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * @author Mik Kersten
@@ -155,14 +152,6 @@ public class TaskRepositoriesView extends ViewPart {
 
 		viewer.setInput(getViewSite());
 		viewer.addDoubleClickListener(event -> WorkbenchUtil.openProperties(getSite()));
-
-		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		new GradientDrawer(themeManager, getViewer()) {
-			@Override
-			protected boolean shouldApplyGradient(org.eclipse.swt.widgets.Event event) {
-				return event.item.getData() instanceof Category;
-			}
-		};
 
 		makeActions();
 		hookContextMenu();
