@@ -683,6 +683,28 @@
          </description>
      </colorDefinition>
 
+     <colorDefinition
+           categoryId="org.eclipse.mylyn.tasks.ui.presentation"
+           id="org.eclipse.mylyn.tasks.ui.colors.find.match.background"
+           isEditable="true"
+           label="%colors.find.match.background.label"
+           value="255,238,99">
+         <description>
+            %colors.find.match.background.description
+         </description>
+     </colorDefinition>
+
+     <colorDefinition
+           categoryId="org.eclipse.mylyn.tasks.ui.presentation"
+           id="org.eclipse.mylyn.tasks.ui.colors.find.no.result.background"
+           isEditable="true"
+           label="%colors.find.no.result.background.label"
+           value="255,150,150">
+         <description>
+            %colors.find.no.result.background.description
+         </description>
+     </colorDefinition>
+
 	 <colorDefinition
            categoryId="org.eclipse.mylyn.tasks.ui.presentation"
            id="org.eclipse.mylyn.tasks.ui.color.text.quoted"
