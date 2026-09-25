@@ -12,66 +12,52 @@
 
 package org.eclipse.mylyn.commons.ui;
 
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.resource.JFaceColors;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 
 /**
- * A Custom JFace ToolTip that applies a gradient to the contents
+ * A Custom JFace ToolTip that paints its contents with the theme's information colors.
  *
  * @author Shawn Minto
  * @since 3.7
  */
 public abstract class GradientToolTip extends ToolTip {
 
-	private GradientColors colors;
-
-	private LocalResourceManager resourceManager;
-
 	public GradientToolTip(Control control, int style, boolean manualActivation) {
 		super(control, style, manualActivation);
-		initResources(control);
 	}
 
 	public GradientToolTip(Control control) {
 		super(control);
-		initResources(control);
-	}
-
-	private void initResources(Control control) {
-		resourceManager = new LocalResourceManager(JFaceResources.getResources());
-		colors = new GradientColors(control.getDisplay(), resourceManager);
 	}
 
 	@Override
 	protected final Composite createToolTipContentArea(Event event, final Composite parent) {
-		GradientCanvas gradient = new GradientCanvas(parent, SWT.NONE);
-		gradient.setSeparatorVisible(false);
+		Composite content = new Composite(parent, SWT.NONE);
 		GridLayout headLayout = new GridLayout();
 		headLayout.marginHeight = 0;
 		headLayout.marginWidth = 0;
 		headLayout.horizontalSpacing = 0;
 		headLayout.verticalSpacing = 0;
 		headLayout.numColumns = 1;
-		gradient.setLayout(headLayout);
+		content.setLayout(headLayout);
+		content.setBackground(JFaceColors.getInformationViewerBackgroundColor(parent.getDisplay()));
+		content.setForeground(JFaceColors.getInformationViewerForegroundColor(parent.getDisplay()));
+		content.setBackgroundMode(SWT.INHERIT_FORCE);
 
-		gradient.setBackgroundGradient(new Color[] { colors.getGradientBegin(), colors.getGradientEnd() },
-				new int[] { 100 }, true);
+		createToolTipArea(event, content);
 
-		createToolTipArea(event, gradient);
-
-		// force a null background so that the gradient shines through
-		for (Control c : gradient.getChildren()) {
+		// force a null background so that the content background shines through
+		for (Control c : content.getChildren()) {
 			setNullBackground(c);
 		}
 
-		return gradient;
+		return content;
 	}
 
 	private void setNullBackground(final Control outerCircle) {

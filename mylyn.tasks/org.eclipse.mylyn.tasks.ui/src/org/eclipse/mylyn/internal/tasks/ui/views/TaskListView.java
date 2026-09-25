@@ -55,7 +55,6 @@ import org.eclipse.mylyn.commons.notifications.feed.ServiceMessageManager;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonThemes;
-import org.eclipse.mylyn.commons.workbench.GradientDrawer;
 import org.eclipse.mylyn.internal.commons.notifications.feed.ServiceMessage;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -700,13 +699,6 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		hookOpenAction();
 		contributeToActionBars();
 		initHandlers();
-
-		new GradientDrawer(themeManager, getViewer()) {
-			@Override
-			protected boolean shouldApplyGradient(Event event) {
-				return event.item.getData() instanceof ITaskContainer && !(event.item.getData() instanceof ITask);
-			}
-		};
 
 		initDragAndDrop(parent);
 		expandToActiveTasks();

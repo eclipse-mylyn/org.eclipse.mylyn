@@ -73,7 +73,7 @@ public class SelectSupportElementPage extends WizardPage {
 
 		private ToolBarManager toolBarManager;
 
-		private boolean gradientBackground;
+		private boolean categoryBackground;
 
 		private GradientCanvas canvas;
 
@@ -85,30 +85,24 @@ public class SelectSupportElementPage extends WizardPage {
 			registerChild(toolBar);
 		}
 
-		public void setGradientBackground(boolean gradientBackground) {
-			this.gradientBackground = gradientBackground;
+		public void setCategoryBackground(boolean categoryBackground) {
+			this.categoryBackground = categoryBackground;
 
-			if (gradientBackground) {
+			if (categoryBackground) {
 				IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
-				Color colorCategoryGradientStart = themeManager.getCurrentTheme()
-						.getColorRegistry()
-						.get(CommonThemes.COLOR_CATEGORY_GRADIENT_START);
-				Color colorCategoryGradientEnd = themeManager.getCurrentTheme()
-						.getColorRegistry()
-						.get(CommonThemes.COLOR_CATEGORY_GRADIENT_END);
+				Color colorCategory = themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_CATEGORY);
 
 				canvas.setSeparatorVisible(true);
 				canvas.setSeparatorAlignment(SWT.TOP);
-				canvas.setBackgroundGradient(new Color[] { colorCategoryGradientStart, colorCategoryGradientEnd },
-						new int[] { 100 }, true);
-				canvas.putColor(GradientCanvas.H_BOTTOM_KEYLINE1, colorCategoryGradientStart);
-				canvas.putColor(GradientCanvas.H_BOTTOM_KEYLINE2, colorCategoryGradientEnd);
+				canvas.setBackground(colorCategory);
+				canvas.putColor(GradientCanvas.H_BOTTOM_KEYLINE1, colorCategory);
+				canvas.putColor(GradientCanvas.H_BOTTOM_KEYLINE2, colorCategory);
 
 			}
 		}
 
-		public boolean isGradientBackground() {
-			return gradientBackground;
+		public boolean isCategoryBackground() {
+			return categoryBackground;
 		}
 
 		@Override
@@ -159,7 +153,7 @@ public class SelectSupportElementPage extends WizardPage {
 
 		@Override
 		public void setBackground(Color color) {
-			if (isGradientBackground()) {
+			if (isCategoryBackground()) {
 				return;
 			}
 			super.setBackground(color);
@@ -167,7 +161,7 @@ public class SelectSupportElementPage extends WizardPage {
 
 		@Override
 		public void setForeground(Color color) {
-			if (isGradientBackground()) {
+			if (isCategoryBackground()) {
 				// ignore
 				return;
 			}
@@ -245,7 +239,7 @@ public class SelectSupportElementPage extends WizardPage {
 		protected ControlListItem doCreateItem(Composite parent, Object element) {
 			if (element instanceof SupportCategory) {
 				SupportElementItem item = new SupportElementItem(parent, SWT.NONE, element);
-				item.setGradientBackground(true);
+				item.setCategoryBackground(true);
 				return item;
 			}
 			return new SupportElementItem(parent, SWT.NONE, element);

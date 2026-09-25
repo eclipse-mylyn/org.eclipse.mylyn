@@ -17,12 +17,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.resource.JFaceColors;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.ui.CommonUiUtil;
-import org.eclipse.mylyn.commons.ui.GradientColors;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonFonts;
 import org.eclipse.mylyn.internal.commons.ui.AnimationUtil;
 import org.eclipse.mylyn.internal.commons.ui.AnimationUtil.FadeJob;
@@ -75,8 +75,6 @@ public abstract class AbstractNotificationPopup extends Window {
 	private long delayClose = DEFAULT_DELAY_CLOSE;
 
 	protected LocalResourceManager resources;
-
-	private GradientColors color;
 
 	private final Display display;
 
@@ -131,7 +129,6 @@ public abstract class AbstractNotificationPopup extends Window {
 
 		this.display = display;
 		resources = new LocalResourceManager(JFaceResources.getResources());
-		initResources();
 
 		closeJob.setSystem(true);
 	}
@@ -186,7 +183,6 @@ public abstract class AbstractNotificationPopup extends Window {
 		titleTextLabel.setText(getPopupShellTitle());
 		titleTextLabel.setFont(CommonFonts.BOLD);
 		titleTextLabel.setForeground(getTitleForeground());
-//		titleTextLabel.setForeground(color.getTitleText());
 		titleTextLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
 		titleTextLabel.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
 
@@ -215,11 +211,11 @@ public abstract class AbstractNotificationPopup extends Window {
 	}
 
 	protected Color getTitleForeground() {
-		return color.getTitleText();
+		return JFaceColors.getInformationViewerForegroundColor(display);
 	}
 
-	private void initResources() {
-		color = new GradientColors(display, resources);
+	private Color getBorderColor() {
+		return display.getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW);
 	}
 
 	@Override
@@ -227,7 +223,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		super.configureShell(newShell);
 
 		shell = newShell;
-		newShell.setBackground(color.getBorder());
+		newShell.setBackground(getBorderColor());
 	}
 
 	@Override
@@ -341,8 +337,7 @@ public abstract class AbstractNotificationPopup extends Window {
 				lastUsedBgImage = new Image(outerCircle.getDisplay(), clArea.width, clArea.height);
 				GC gc = new GC(lastUsedBgImage);
 
-				/* Gradient */
-				drawGradient(gc, clArea);
+				drawBackground(gc, clArea);
 
 				/* Fix Region Shape */
 				fixRegion(gc, clArea);
@@ -357,14 +352,13 @@ public abstract class AbstractNotificationPopup extends Window {
 				}
 			}
 
-			private void drawGradient(GC gc, Rectangle clArea) {
-				gc.setForeground(color.getGradientBegin());
-				gc.setBackground(color.getGradientEnd());
-				gc.fillGradientRectangle(clArea.x, clArea.y, clArea.width, clArea.height, true);
+			private void drawBackground(GC gc, Rectangle clArea) {
+				gc.setBackground(JFaceColors.getInformationViewerBackgroundColor(display));
+				gc.fillRectangle(clArea);
 			}
 
 			private void fixRegion(GC gc, Rectangle clArea) {
-				gc.setForeground(color.getBorder());
+				gc.setForeground(getBorderColor());
 
 				/* Fill Top Left */
 				gc.drawPoint(2, 0);
@@ -442,7 +436,7 @@ public abstract class AbstractNotificationPopup extends Window {
 
 		middleContentCircle.setLayout(layout);
 		middleContentCircle.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		middleContentCircle.setBackground(color.getBorder());
+		middleContentCircle.setBackground(getBorderColor());
 
 		/* Inner composite containing the content controls */
 		Composite innerContent = new Composite(middleContentCircle, SWT.NO_FOCUS);
