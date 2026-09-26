@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.notifications;
@@ -19,7 +20,7 @@ import java.util.List;
 import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.commons.notifications.ui.AbstractUiNotification;
-import org.eclipse.mylyn.commons.workbench.AbstractWorkbenchNotificationPopup;
+import org.eclipse.mylyn.commons.workbench.notification.AbstractWorkbenchNotificationPopup;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.TaskScalingHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;

@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.notifications.ui.popup;
@@ -38,17 +39,21 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 /**
  * @author Rob Elves
  * @author Mik Kersten
+ * @deprecated use {@link org.eclipse.jface.notifications.NotificationPopup} instead
  */
+@Deprecated(since = "4.12", forRemoval = true)
 public class NotificationPopup extends AbstractWorkbenchNotificationPopup {
 
 	private static final int NUM_NOTIFICATIONS_TO_DISPLAY = 4;
 
 	private List<AbstractNotification> notifications;
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	public NotificationPopup(Shell parent) {
 		super(parent.getDisplay());
 	}
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	@Override
 	protected void createContentArea(Composite parent) {
 		int count = 0;
@@ -158,21 +163,25 @@ public class NotificationPopup extends AbstractWorkbenchNotificationPopup {
 		}
 	}
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	@Override
 	protected void createTitleArea(Composite parent) {
 		super.createTitleArea(parent);
 	}
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	public List<AbstractNotification> getNotifications() {
 		return new ArrayList<>(notifications);
 	}
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	@Override
 	protected Color getTitleForeground() {
 		return CommonFormUtil.getSharedColors().getColor(IFormColors.TITLE);
 
 	}
 
+	@Deprecated(since = "4.12", forRemoval = true)
 	public void setContents(List<AbstractNotification> notifications) {
 		this.notifications = notifications;
 	}
