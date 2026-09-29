@@ -228,9 +228,9 @@ public class CommonImages {
 
 	public static final ImageDescriptor BROWSER_OPEN_TASK = create(T_TOOL, "open-browser.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TOOLBAR_ARROW_RIGHT = create(T_TOOL, "toolbar-arrow-right.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor TOOLBAR_ARROW_RIGHT = create(T_TOOL, "toolbar-arrow-right.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TOOLBAR_ARROW_DOWN = create(T_TOOL, "toolbar-arrow-down.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor TOOLBAR_ARROW_DOWN = create(T_TOOL, "toolbar-arrow-down.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor LINK_EDITOR = create(T_TOOL, "link-editor.gif"); //$NON-NLS-1$
 
