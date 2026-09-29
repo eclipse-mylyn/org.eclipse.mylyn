@@ -70,15 +70,15 @@ public class CommonImages {
 
 	// Priorities
 
-	public static final ImageDescriptor PRIORITY_1 = create(T_OBJ, "priority-1.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor PRIORITY_1 = create(T_OBJ, "priority-1.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor PRIORITY_2 = create(T_OBJ, "priority-2.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor PRIORITY_2 = create(T_OBJ, "priority-2.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor PRIORITY_3 = create(T_OBJ, "priority-3.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor PRIORITY_3 = create(T_OBJ, "priority-3.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor PRIORITY_4 = create(T_OBJ, "priority-4.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor PRIORITY_4 = create(T_OBJ, "priority-4.svg"); //$NON-NLS-1$
 
-	public static final ImageDescriptor PRIORITY_5 = create(T_OBJ, "priority-5.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor PRIORITY_5 = create(T_OBJ, "priority-5.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor PRIORITY_1_LARGE = create(T_OBJ_32, "priority-critical.png"); //$NON-NLS-1$
 
