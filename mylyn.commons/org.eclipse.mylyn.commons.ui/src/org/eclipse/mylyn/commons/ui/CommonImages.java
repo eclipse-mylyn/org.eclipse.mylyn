@@ -190,7 +190,7 @@ public class CommonImages {
 	// Miscellaneous
 	// TODO: some of the common images below come from the workbench
 
-	public static final ImageDescriptor COMPLETE = create(T_OBJ, "complete.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor COMPLETE = create(T_OBJ, "complete.svg"); //$NON-NLS-1$
 
 	public static final ImageDescriptor CHECKED = create(T_OBJ, "checked.gif"); //$NON-NLS-1$
 
