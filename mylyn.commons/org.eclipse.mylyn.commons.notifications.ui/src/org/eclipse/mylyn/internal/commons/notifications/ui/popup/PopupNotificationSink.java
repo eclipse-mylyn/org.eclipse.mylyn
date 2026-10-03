@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.notifications.ui.popup;
@@ -25,13 +26,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.notifications.NotificationPopup;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.notifications.core.AbstractNotification;
 import org.eclipse.mylyn.commons.notifications.core.NotificationSink;
 import org.eclipse.mylyn.commons.notifications.core.NotificationSinkEvent;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -53,42 +55,35 @@ public class PopupNotificationSink extends NotificationSink {
 	private final Job openJob = new Job(Messages.PopupNotificationSink_Popup_Noifier_Job_Label) {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			try {
-				if (Platform.isRunning() && PlatformUI.getWorkbench() != null
-						&& PlatformUI.getWorkbench().getDisplay() != null
-						&& !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
-						collectNotifications();
+			if (Platform.isRunning() && PlatformUI.getWorkbench() != null
+					&& PlatformUI.getWorkbench().getDisplay() != null
+					&& !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+					collectNotifications();
 
-						if (popup != null && popup.getReturnCode() == Window.CANCEL) {
-							List<AbstractNotification> notifications = popup.getNotifications();
-							for (AbstractNotification notification : notifications) {
-								if (notification.getToken() != null) {
-									cancelledTokens.put(notification.getToken(), null);
-								}
+					if (popup != null && popup.getReturnCode() == Window.CANCEL) {
+						List<AbstractNotification> notifications = popup.getNotifications();
+						for (AbstractNotification notification : notifications) {
+							if (notification.getToken() != null) {
+								cancelledTokens.put(notification.getToken(), null);
 							}
 						}
+					}
 
-						for (Iterator<AbstractNotification> it = currentlyNotifying.iterator(); it.hasNext();) {
-							AbstractNotification notification = it.next();
-							if (notification.getToken() != null
-									&& cancelledTokens.containsKey(notification.getToken())) {
-								it.remove();
-							}
+					for (Iterator<AbstractNotification> it = currentlyNotifying.iterator(); it.hasNext();) {
+						AbstractNotification notification = it.next();
+						if (notification.getToken() != null && cancelledTokens.containsKey(notification.getToken())) {
+							it.remove();
 						}
+					}
 
-						synchronized (PopupNotificationSink.class) {
-							if (currentlyNotifying.size() > 0) {
+					synchronized (PopupNotificationSink.class) {
+						if (currentlyNotifying.size() > 0) {
 //										popup.close();
-								showPopup();
-							}
+							showPopup();
 						}
-					});
-				}
-			} finally {
-				if (popup != null) {
-					schedule(popup.getDelayClose() / 2);
-				}
+					}
+				});
 			}
 
 			if (monitor.isCanceled()) {
@@ -100,7 +95,7 @@ public class PopupNotificationSink extends NotificationSink {
 
 	};
 
-	private NotificationPopup popup;
+	private NotificationPopupContent popup;
 
 	public PopupNotificationSink() {
 		openJob.setSystem(runSystem);
@@ -123,11 +118,6 @@ public class PopupNotificationSink extends NotificationSink {
 		}
 	}
 
-	public boolean isAnimationsEnabled() {
-		IPreferenceStore store = PlatformUI.getPreferenceStore();
-		return store.getBoolean(IWorkbenchPreferenceConstants.ENABLE_ANIMATIONS);
-	}
-
 	@Override
 	public void notify(NotificationSinkEvent event) {
 		currentlyNotifying.addAll(event.getNotifications());
@@ -146,16 +136,22 @@ public class PopupNotificationSink extends NotificationSink {
 		if (popup != null) {
 			popup.close();
 		}
-
-		Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
-		popup = new NotificationPopup(shell);
-		popup.setFadingEnabled(isAnimationsEnabled());
+		Display display = PlatformUI.getWorkbench().getDisplay();
+		Shell shell = new Shell(display);
 		List<AbstractNotification> toDisplay = new ArrayList<>(currentlyNotifying);
 		Collections.sort(toDisplay);
-		popup.setContents(toDisplay);
 		cleanNotified();
-		popup.setBlockOnOpen(false);
-		popup.open();
+		NotificationPopupContent content = new NotificationPopupContent(display);
+		content.setContents(toDisplay);
+		NotificationPopup.forShell(shell) //
+				.fadeIn(true) //
+				.content(content) //
+				/**
+				 * NotificationPopup does not have a public constructor so we cannot subclass it to override getPopupShellImage. Instead, we
+				 * use the builder API to set the title image.
+				 */
+				.titleImage(WorkbenchUtil.getWorkbenchShellImage(16)) //
+				.open();
 	}
 
 }
