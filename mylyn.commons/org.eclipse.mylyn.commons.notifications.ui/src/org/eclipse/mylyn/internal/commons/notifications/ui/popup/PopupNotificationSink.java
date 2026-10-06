@@ -8,14 +8,15 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  *     Tasktop Technologies - initial API and implementation
+ *     See git history
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.notifications.ui.popup;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -25,13 +26,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.notifications.NotificationPopup;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.notifications.core.AbstractNotification;
 import org.eclipse.mylyn.commons.notifications.core.NotificationSink;
 import org.eclipse.mylyn.commons.notifications.core.NotificationSinkEvent;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchPreferenceConstants;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -50,7 +51,16 @@ public class PopupNotificationSink extends NotificationSink {
 
 	private final Set<AbstractNotification> currentlyNotifying = Collections.synchronizedSet(notifications);
 
+	private NotificationPopup popup;
+
 	private final Job openJob = new Job(Messages.PopupNotificationSink_Popup_Noifier_Job_Label) {
+		private static NotificationPopupContent getPopupContent(NotificationPopup notificationPopup)
+				throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+			Field field = NotificationPopup.class.getDeclaredField("contentCreator"); //$NON-NLS-1$
+			field.setAccessible(true);
+			return (NotificationPopupContent) field.get(notificationPopup);
+		}
+
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			try {
@@ -60,26 +70,26 @@ public class PopupNotificationSink extends NotificationSink {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
 						collectNotifications();
 
-						if (popup != null && popup.getReturnCode() == Window.CANCEL) {
-							List<AbstractNotification> notifications = popup.getNotifications();
-							for (AbstractNotification notification : notifications) {
-								if (notification.getToken() != null) {
-									cancelledTokens.put(notification.getToken(), null);
-								}
+						try {
+							if (popup != null && popup.getReturnCode() == Window.CANCEL) {
+								NotificationPopupContent popupContent = getPopupContent(popup);
+								List<AbstractNotification> notifications = popupContent != null
+										? popupContent.getNotifications()
+												: Collections.emptyList();
+								notifications.stream()
+								.filter(notification -> notification.getToken() != null)
+								.forEach(notification -> cancelledTokens.put(notification.getToken(), null));
 							}
-						}
 
-						for (Iterator<AbstractNotification> it = currentlyNotifying.iterator(); it.hasNext();) {
-							AbstractNotification notification = it.next();
-							if (notification.getToken() != null
-									&& cancelledTokens.containsKey(notification.getToken())) {
-								it.remove();
-							}
+							currentlyNotifying.removeIf(notification -> notification.getToken() != null
+									&& cancelledTokens.containsKey(notification.getToken()));
+						} catch (NoSuchFieldException | IllegalAccessException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
 
 						synchronized (PopupNotificationSink.class) {
-							if (currentlyNotifying.size() > 0) {
-//										popup.close();
+							if (!currentlyNotifying.isEmpty()) {
 								showPopup();
 							}
 						}
@@ -99,8 +109,6 @@ public class PopupNotificationSink extends NotificationSink {
 		}
 
 	};
-
-	private NotificationPopup popup;
 
 	public PopupNotificationSink() {
 		openJob.setSystem(runSystem);
@@ -123,11 +131,6 @@ public class PopupNotificationSink extends NotificationSink {
 		}
 	}
 
-	public boolean isAnimationsEnabled() {
-		IPreferenceStore store = PlatformUI.getPreferenceStore();
-		return store.getBoolean(IWorkbenchPreferenceConstants.ENABLE_ANIMATIONS);
-	}
-
 	@Override
 	public void notify(NotificationSinkEvent event) {
 		currentlyNotifying.addAll(event.getNotifications());
@@ -146,16 +149,18 @@ public class PopupNotificationSink extends NotificationSink {
 		if (popup != null) {
 			popup.close();
 		}
-
-		Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
-		popup = new NotificationPopup(shell);
-		popup.setFadingEnabled(isAnimationsEnabled());
-		List<AbstractNotification> toDisplay = new ArrayList<>(currentlyNotifying);
-		Collections.sort(toDisplay);
-		popup.setContents(toDisplay);
+		Display display = PlatformUI.getWorkbench().getDisplay();
+		List<AbstractNotification> notificationsToDisplay = new ArrayList<>(currentlyNotifying);
+		Collections.sort(notificationsToDisplay);
 		cleanNotified();
-		popup.setBlockOnOpen(false);
-		popup.open();
-	}
+		NotificationPopupContent popupContent = new NotificationPopupContent(notificationsToDisplay);
+		popup = NotificationPopup.forDisplay(display) //
+				.fadeIn(true) //
+				.content(popupContent) //
+				.titleImage(WorkbenchUtil.getWorkbenchShellImage(16)) //
+				.build();
 
+		popup.open();
+
+	}
 }
