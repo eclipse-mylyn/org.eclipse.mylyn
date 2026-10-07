@@ -20,7 +20,10 @@ import org.eclipse.swt.widgets.Display;
  * A popup window that uses the workbench shell image in the title.
  *
  * @author Steffen Pingel
+ * @deprecated extend {@code org.eclipse.jface.notifications.AbstractNotificationPopup} and override
+ *             {@link #getPopupShellImage(int)} to return {@link WorkbenchUtil#getWorkbenchShellImage(int)}
  */
+@Deprecated(forRemoval = true, since = "4.13.0")
 public class AbstractWorkbenchNotificationPopup extends AbstractNotificationPopup {
 
 	public AbstractWorkbenchNotificationPopup(Display display, int style) {

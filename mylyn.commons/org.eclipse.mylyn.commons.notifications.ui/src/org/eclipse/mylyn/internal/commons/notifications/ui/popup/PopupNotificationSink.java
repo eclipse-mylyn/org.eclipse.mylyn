@@ -25,12 +25,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.notifications.NotificationPopup;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.notifications.core.AbstractNotification;
 import org.eclipse.mylyn.commons.notifications.core.NotificationSink;
 import org.eclipse.mylyn.commons.notifications.core.NotificationSinkEvent;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.PlatformUI;
 
@@ -61,8 +61,7 @@ public class PopupNotificationSink extends NotificationSink {
 						collectNotifications();
 
 						if (popup != null && popup.getReturnCode() == Window.CANCEL) {
-							List<AbstractNotification> notifications = popup.getNotifications();
-							for (AbstractNotification notification : notifications) {
+							for (AbstractNotification notification : popupNotifications) {
 								if (notification.getToken() != null) {
 									cancelledTokens.put(notification.getToken(), null);
 								}
@@ -101,6 +100,8 @@ public class PopupNotificationSink extends NotificationSink {
 	};
 
 	private NotificationPopup popup;
+
+	private List<AbstractNotification> popupNotifications = List.of();
 
 	public PopupNotificationSink() {
 		openJob.setSystem(runSystem);
@@ -147,12 +148,13 @@ public class PopupNotificationSink extends NotificationSink {
 			popup.close();
 		}
 
-		Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
-		popup = new NotificationPopup(shell);
-		popup.setFadingEnabled(isAnimationsEnabled());
 		List<AbstractNotification> toDisplay = new ArrayList<>(currentlyNotifying);
 		Collections.sort(toDisplay);
-		popup.setContents(toDisplay);
+		popupNotifications = toDisplay;
+		popup = NotificationPopup.forDisplay(PlatformUI.getWorkbench().getDisplay())
+				.content(new NotificationPopupContent(toDisplay))
+				.fadeIn(isAnimationsEnabled())
+				.build();
 		cleanNotified();
 		popup.setBlockOnOpen(false);
 		popup.open();
