@@ -26,14 +26,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.notifications.NotificationPopup;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.notifications.ui.AbstractUiNotification;
-import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationPopup;
+import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationPopupContent;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotifier;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -45,7 +45,9 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	private static final boolean runSystem = true;
 
-	private TaskListNotificationPopup popup;
+	private NotificationPopup popup;
+
+	private List<AbstractUiNotification> popupNotifications = List.of();
 
 	private final Set<AbstractUiNotification> notifications = new HashSet<>();
 
@@ -67,8 +69,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 						collectNotifications();
 
 						if (popup != null && popup.getReturnCode() == Window.CANCEL) {
-							List<AbstractUiNotification> notifications = popup.getNotifications();
-							for (AbstractUiNotification notification : notifications) {
+							for (AbstractUiNotification notification : popupNotifications) {
 								if (notification.getToken() != null) {
 									cancelledTokens.put(notification.getToken(), null);
 								}
@@ -116,12 +117,13 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 			popup.close();
 		}
 
-		Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
-		popup = new TaskListNotificationPopup(shell);
-		popup.setFadingEnabled(TasksUiInternal.isAnimationsEnabled());
 		List<AbstractUiNotification> toDisplay = new ArrayList<>(currentlyNotifying);
 		Collections.sort(toDisplay);
-		popup.setContents(toDisplay);
+		popupNotifications = toDisplay;
+		popup = NotificationPopup.forDisplay(PlatformUI.getWorkbench().getDisplay())
+				.content(new TaskListNotificationPopupContent(toDisplay))
+				.fadeIn(TasksUiInternal.isAnimationsEnabled())
+				.build();
 		cleanNotified();
 		popup.setBlockOnOpen(false);
 		popup.open();
