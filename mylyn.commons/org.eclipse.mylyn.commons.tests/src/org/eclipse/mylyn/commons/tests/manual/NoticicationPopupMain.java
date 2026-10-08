@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.commons.tests.manual;
 
-import org.eclipse.mylyn.commons.ui.dialogs.AbstractNotificationPopup;
+import org.eclipse.jface.notifications.AbstractNotificationPopup;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.layout.FillLayout;

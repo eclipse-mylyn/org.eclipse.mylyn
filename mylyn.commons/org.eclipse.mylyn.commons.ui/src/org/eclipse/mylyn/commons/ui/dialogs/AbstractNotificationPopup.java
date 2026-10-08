@@ -55,7 +55,9 @@ import org.eclipse.swt.widgets.Shell;
  * @author Mik Kersten
  * @author Steffen Pingel
  * @since 3.7
+ * @deprecated use {@code org.eclipse.jface.notifications.AbstractNotificationPopup} instead
  */
+@Deprecated(forRemoval = true, since = "4.13.0")
 public abstract class AbstractNotificationPopup extends Window {
 
 	private static final int TITLE_HEIGHT = 24;
