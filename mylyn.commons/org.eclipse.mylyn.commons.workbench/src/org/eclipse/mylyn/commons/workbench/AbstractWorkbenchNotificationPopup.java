@@ -26,14 +26,17 @@ import org.eclipse.swt.widgets.Display;
 @Deprecated(forRemoval = true, since = "4.13.0")
 public class AbstractWorkbenchNotificationPopup extends AbstractNotificationPopup {
 
+	@Deprecated(forRemoval = true, since = "4.13.0")
 	public AbstractWorkbenchNotificationPopup(Display display, int style) {
 		super(display, style);
 	}
 
+	@Deprecated(forRemoval = true, since = "4.13.0")
 	public AbstractWorkbenchNotificationPopup(Display display) {
 		super(display);
 	}
 
+	@Deprecated(forRemoval = true, since = "4.13.0")
 	@Override
 	protected Image getPopupShellImage(int maximumHeight) {
 		return WorkbenchUtil.getWorkbenchShellImage(maximumHeight);
