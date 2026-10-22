@@ -33,17 +33,22 @@
   set_fact:
     serviceLabel: '{"type":"{{ jenkins_type }}","url":"/{{act_item.servmame}}", "version": "{{version.stdout}}", "info": "", "properties":  { "host-name": "{{ common_domain_name }}" {{ extra_info_label }} } }'
 
+- name: debug serviceLabel {{ act_item.image_tag }}
+  debug:
+    msg:
+      - "serviceLabel:  {{serviceLabel }}"
+
 - name: setlabels {{act_item.servmame}}
   ansible.builtin.set_fact:
     label_data:  |
        { traefik.enable: "true" ,
          traefik.docker.network: mylyn_net ,
-         traefik.http.routers.{{ act_item.servmame }}_https.rule: "Host(`{{ common_domain_name }}`) && PathPrefix(`/{{ act_item.servmame }}`)" ,
+         traefik.http.routers.{{ act_item.servmame }}_https.rule: "(Host(`{{mylyn_service_vm_name}}`) || Host(`{{common_domain_name}}`)) && PathPrefix(`/{{ act_item.servmame }}`)" ,
          traefik.http.routers.{{ act_item.servmame }}_https.entrypoints: websecure ,
          traefik.http.routers.{{ act_item.servmame }}_https.tls: "true" ,
          traefik.http.routers.{{ act_item.servmame }}_https.service: {{ act_item.servmame }} ,
          traefik.http.services.{{ act_item.servmame }}.loadbalancer.server.port: "8080" ,
-         org.eclipse.mylyn.service: '{{ serviceLabel  | to_json }}'
+         org.eclipse.mylyn.service: "{{ serviceLabel | from_yaml }}"
        }
     
 - name: Deploy swarm service {{act_item.servmame}}

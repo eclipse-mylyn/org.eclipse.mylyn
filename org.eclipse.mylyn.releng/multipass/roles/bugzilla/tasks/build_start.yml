@@ -1,4 +1,42 @@
 ---
+- name: setFact
+  set_fact:
+    bugzilla_info_array: []
+    extra_info_keys: []
+    extra_info_label: ' '
+- name: setFact00
+  set_fact:
+    extra_info_keys: "{{ act_item.extra_info.keys() }}"
+  when: "'extra_info' in act_item"
+
+- name: set_mytest dict
+  debug:
+    msg: "{{item }}"
+  loop: "{{ act_item.extra_info | dict2items }}" 
+  when: "'extra_info' in act_item"
+
+#- name: set_mytest dict
+#  debug:
+#    msg: "{{item }}"	
+#  loop: "{{ act_item.extra_info | dict2items }}" 
+#  when: "'extra_info' in act_item"
+#
+- name: set_mytest dict1
+  set_fact:
+    extra_info_label: "{{ extra_info_label + ', \"' + item.key + '\" : \"' + item.value + '\"'}}"
+  loop: "{{ act_item.extra_info | dict2items }}" 
+  when: "'extra_info' in act_item"
+#
+- name: xxxxxxxxxx
+  debug:
+    var: extra_info_label
+  when: "'extra_info' in act_item"
+#
+#
+#- debug:
+#    msg: " {{ act_item.extra_info |json_query('[].freeform_tags') }}"
+#  when: "'extra_info' in act_item"
+
 - name: Build the version image {{ act_item.image_tag }}
   community.docker.docker_image:
     name: "127.0.0.1:5000/bugzilla"
@@ -8,7 +46,7 @@
       path: /mylyn-config-dir/{{ role_name }}/versions
       args:
         GIT_BRANCH_TAG: "{{ act_item.git_branch }}"
-        EXTRAINFO: "{{ act_item.extra_info }}"
+        EXTRAINFO: "{{ act_item.extra_info if (extra_info_keys | length > 0 ) else '' }}"
     source: build
 #  register: build_out
 #- name: build_out {{ act_item.image_tag }}
@@ -16,49 +54,81 @@
 #    var: build_out.stdout_lines
 - name: get version {{ act_item.image_tag }}
   ansible.builtin.shell: |
-    docker run --rm 127.0.0.1:5000/bugzilla:{{ act_item.image_tag }} sh -c 'cat /var/www/html/Bugzilla/Constants.pm | grep "BUGZILLA_VERSION =>"'   | cut -d'"' -f 2 
+    docker run --rm 127.0.0.1:5000/bugzilla:{{ act_item.image_tag }} sh -c 'cat /var/www/html/Bugzilla/Constants.pm | grep "use constant BUGZILLA_VERSION =>"'   | cut -d'"' -f 2 
   register: bugzilla_version
 
-- name: myServiceInfo {{ act_item.image_tag }}
+- name: setFact1
   set_fact:
-    bugzilla_info_array: []
-    extra_info_entries: "{{  ('{' + act_item.extra_info + '}') | from_yaml }} "
-- set_fact:
-    bugzilla_info_array: "{{ bugzilla_info_array + ['Custom Workflow'] if ('custom_wf' in extra_info_entries and extra_info_entries['custom_wf'] | bool == true)  else bugzilla_info_array }}"
-    bugzilla_type: "{{ 'bugzillaREST' if ('rest_enabled' in extra_info_entries and extra_info_entries['rest_enabled'] | bool == true) else 'bugzilla' }}"
-- set_fact:
-    bugzilla_info_array: "{{ bugzilla_info_array + ['Custom Workflow and Status'] if ('custom_wf_and_status' in extra_info_entries and extra_info_entries['custom_wf_and_status'] | bool == true) else bugzilla_info_array }}"
-- set_fact:
-    bugzilla_info_array: "{{ bugzilla_info_array + ['Use Bugaliases'] if ('use_bug_alias' in extra_info_entries and extra_info_entries['use_bug_alias'] | bool == true) else bugzilla_info_array }}"
-- set_fact:
-    bugzilla_info_array: "{{ bugzilla_info_array + ['APIKEY enabled'] if ('api_key_enabled' in extra_info_entries and extra_info_entries['api_key_enabled'] | bool == true) else bugzilla_info_array }}"
-- set_fact:
-    bugzilla_info_array: "{{ bugzilla_info_array + ['_'] if (bugzilla_info_array | length == 0) else bugzilla_info_array }}"
-- set_fact:
-    bugzilla_info: "{{bugzilla_info_array | join(', ') | to_yaml }}"
-    extra_info_label: "{{ (',' + act_item.extra_info) if (act_item.extra_info | length > 0 ) else ''}}"
+    bugzilla_type : "{{ 'bugzillaREST' if ('rest_enabled' in extra_info_keys and (act_item.extra_info.rest_enabled | bool == true))  else 'bugzilla'}}"
+    bugzilla_info_array: "{{ bugzilla_info_array + ['Custom Workflow'] if ('custom_wf' in extra_info_keys and (act_item.extra_info.custom_wf | bool == true))  else bugzilla_info_array }}"
+- name: setFact2
+  set_fact:
+    bugzilla_info_array: "{{ bugzilla_info_array + ['Custom Workflow and Status'] if ('custom_wf_and_status' in extra_info_keys and (act_item.extra_info.custom_wf_and_status | bool == true))  else bugzilla_info_array }}"
+- name: setFact3
+  set_fact:
+    bugzilla_info_array: "{{ bugzilla_info_array + ['Use Bugaliases'] if ('use_bug_alias' in extra_info_keys and (act_item.extra_info.use_bug_alias | bool == true))  else bugzilla_info_array }}"
+- name: setFact4
+  set_fact:
+    bugzilla_info_array: "{{ bugzilla_info_array + ['APIKEY enabled'] if ('api_key_enabled' in extra_info_keys and (act_item.extra_info.api_key_enabled | bool == true))  else bugzilla_info_array }}"
+- name: setFact6
+  set_fact:
+    bugzilla_info_array: "{{ bugzilla_info_array + ['_'] if (extra_info_keys | length == 0) else bugzilla_info_array }}"
+
+- name: debug serviceLabel {{ act_item.image_tag }}
+  debug:
+    msg:
+     - "act_item.extra_info: {{act_item.extra_info }}"
+     - "                   : {{ act_item.extra_info.keys()|  zip(act_item.extra_info.values())| map('join', ':')|join(',') }}"
+  when: "'extra_info' in act_item"
+
+- name: set_fact7
+  set_fact:
+    bugzilla_info: "{{ bugzilla_info_array | join(', ')  }}"
+  #    extra_info_label: "{{', ' + (act_item.extra_info.keys()|  zip(act_item.extra_info.values()|)| map('join', ':')|join(',')) if (extra_info_keys | length > 0 ) else ''}}"
+#    extra_info_label: ", \"xxx\" : \"aa\" "
 - name: myServiceLabel {{ act_item.image_tag }}
   set_fact:
     serviceLabel: '{"type":"{{ bugzilla_type }}","url":"/{{ act_item.servmame }}", "version": "{{ bugzilla_version.stdout }}", "info": "{{ bugzilla_info }}", "properties":  { "host-name": "{{ common_domain_name }}"  {{ extra_info_label }} } }'
+
+- name: debug serviceLabel1 {{ act_item.image_tag }}
+  debug:
+    msg:
+     - "bugzilla_info_array: {{bugzilla_info_array }}"
+     - "extra_info_label   : {{extra_info_label }}"
+     - "bugzilla_info      : {{bugzilla_info }}"
+     - "bugzilla_version   : {{bugzilla_version }}"
+     - "                   : {{bugzilla_version.stdout }}"
+     - "serviceLabel       : {{serviceLabel }}"
+
 
 - name: setlabels {{ act_item.image_tag }}
   ansible.builtin.set_fact:
 #    contname: "bugzilla{{ act_item.image_tag }}"
     label_data:  |
        { traefik.enable: "true" ,
-         traefik.docker.network: mylyn_net ,
-         traefik.http.routers.{{ act_item.servmame }}_https.rule: "Host(`{{ common_domain_name }}`) && PathPrefix(`/{{ act_item.servmame }}`)" ,
+         traefik.docker.network: "mylyn_net" ,
+         traefik.http.routers.{{ act_item.servmame }}_https.rule: "(Host(`{{mylyn_service_vm_name}}`) || Host(`{{common_domain_name}}`)) && PathPrefix(`/{{ act_item.servmame }}`)" ,
          traefik.http.routers.{{ act_item.servmame }}_https.entrypoints: websecure ,
          traefik.http.routers.{{ act_item.servmame }}_https.tls: "true" ,
          traefik.http.routers.{{ act_item.servmame }}_https.middlewares: stripprefix_{{ act_item.servmame }} ,
          traefik.http.middlewares.stripprefix_{{ act_item.servmame }}.stripprefix.prefixes: "/{{ act_item.servmame }}" ,
          traefik.http.routers.{{ act_item.servmame }}_https.service: {{ act_item.servmame }} ,
          traefik.http.services.{{ act_item.servmame }}.loadbalancer.server.port: "80" ,
-         org.eclipse.mylyn.service: '{{ serviceLabel }}'
+         org.eclipse.mylyn.service: {{ serviceLabel | from_yaml }}
        }
 #         traefik.http.routers.{{ act_item.servmame }}_https.service: {{ act_item.servmame }} ,
 #         traefik.http.services.{{ act_item.servmame }}.loadbalancer.server.port: "8090" ,
 #         traefik.http.services.{{ act_item.servmame }}.loadbalancer.passhostheader: "true" ,
+
+- name: debug label_data {{ act_item.image_tag }}
+  debug:
+    msg:
+     - "label_data: {{label_data }}"
+
+- name: debug label_data yaml {{ act_item.image_tag }}
+  debug:
+    msg:
+      - "label_data: {{label_data | from_yaml  }}"
 
 - name: Deploy swarm service {{ act_item.image_tag }}
   community.docker.docker_swarm_service:

@@ -18,7 +18,7 @@
 - name: setlabels
   ansible.builtin.set_fact:
     label_data:  |
-      {
+      '{
         traefik.enable: "true",
         traefik.docker.network: mylyn_net,
         traefik.http.routers.http-catchall.rule: "hostregexp(`{host:.+}`)",
@@ -37,13 +37,13 @@
         traefik.http.middlewares.stripprefix_api.stripprefix.prefixes: /traefikdashboard,
         traefik.http.services.api.loadbalancer.passhostheader: "true",
         traefik.http.services.api.loadbalancer.server.port: "8080" 
-      }
+      }'
   when: hostvars[inventory_hostname].internal_traefik_adress is undefined
   
 - name: setlabels with internal
   ansible.builtin.set_fact:
     label_data:  |
-      {
+      '{
         traefik.enable: "true",
         traefik.docker.network: mylyn_net,
         traefik.http.routers.http-catchall.rule: "hostregexp(`{host:.+}`)",
@@ -67,7 +67,7 @@
         traefik.http.routers.api_traefik2.middlewares: stripprefix_api,
         traefik.http.services.api.loadbalancer.passhostheader: "true",
         traefik.http.services.api.loadbalancer.server.port: "8080"
-      }
+      }'
   when: hostvars[inventory_hostname].internal_traefik_adress is defined
 
 - name: Deploy Container

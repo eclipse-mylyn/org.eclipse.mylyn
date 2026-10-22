@@ -23,14 +23,19 @@ echo "parm2 = $2"
 echo "GITLAB_SERVER = $GITLAB_SERVER"
 #
 #creating root group
-#
+# curl -k --header "PRIVATE-TOKEN: glpat-Adm1nPwdTok123" "https://mylynpb.local/gitlab/api/v4/groups?search=eclipse-mylyn"
 echo "gitlab creating root group"
-rootGroupId=$(curl -k --header "PRIVATE-TOKEN: $GITLAB_TOKEN" "$GITLAB_SERVER/api/v4/groups?search=$GITLAB_ROOTGROUP" | jq '.[0]["id"]' )
-if [ "$rootGroupId" == "null" ] 
+rootGroupResult=$(curl -k --header "PRIVATE-TOKEN: $GITLAB_TOKEN" "$GITLAB_SERVER/api/v4/groups?search=$GITLAB_ROOTGROUP" )
+if [ "$rootGroupResult" == "[]" ] 
 then
+  echo "Root group not created with Id: $rootGroupResult"
   rootGroupId=$(curl -k -d "name=$GITLAB_ROOTGROUP&path=$GITLAB_ROOTGROUP&visibility=private&lfs_enabled=true&description=Root group" -X POST "$GITLAB_SERVER/api/v4/groups" -H "PRIVATE-TOKEN: $GITLAB_TOKEN" | jq '.["id"]')
   echo "Root group created with Id: $rootGroupId"
+else
+  rootGroupId=$(echo "$rootGroupResult" | jq '.[0]["id"]' )
+  echo "Root group exsists with Id: $rootGroupId"
 fi
+
 
 #
 #creating sub group
@@ -46,9 +51,13 @@ fi
 #
 #project creation
 #
-projectId=$(curl -k "$GITLAB_SERVER/api/v4/groups/$rootSubGroupId/projects?search=$GITLAB_PROJECT" -H "PRIVATE-TOKEN: $GITLAB_TOKEN" | jq '.[0]["id"]' )
+echo "create project $GITLAB_SERVER/api/v4/groups/$rootSubGroupId/projects?search=$GITLAB_PROJECT"
+projectResult=$(curl -k "$GITLAB_SERVER/api/v4/groups/$rootSubGroupId/projects?search=$GITLAB_PROJECT" -H "PRIVATE-TOKEN: $GITLAB_TOKEN"  )
+echo "ProjektResult:: $projectResult"
+projectId=$(echo "$projectResult" | jq '.[0]["id"]')
 if [ "$projectId" == "null" ] 
 then
+echo "path=$GITLAB_PROJECT&namespace_id=$rootSubGroupId -X POST $GITLAB_SERVER/api/v4/projects -H PRIVATE-TOKEN: $GITLAB_TOKEN"
   projectId=$(curl -k -d "path=$GITLAB_PROJECT&namespace_id=$rootSubGroupId" -X POST "$GITLAB_SERVER/api/v4/projects" -H "PRIVATE-TOKEN: $GITLAB_TOKEN" | jq '.["id"]')
   echo "Project created with Id: $projectId"
 fi

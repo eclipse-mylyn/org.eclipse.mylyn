@@ -12,7 +12,7 @@ all:
       hosts:
         mylynmstr01:
       vars:
-        multipass_disk: 35G
+        multipass_disk: 75G
         multipass_memory: 10G
         multipass_cpus: 4
     mylyn_swarm_worker:
@@ -25,14 +25,14 @@ all:
   hosts:
     mylynadm01:
       ansible_connection: ssh
-      ansible_host: "192.168.64.3"
+      ansible_host: "192.168.252.3"
       ansible_user: ubuntu
       ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o ControlMaster=no -o ControlPath=none"
       ansible_ssh_private_key_file: first_setup/ubuntu_key
       default_etc_hosts: "mylynadm01"
     mylynmstr01:
       ansible_connection: ssh
-      ansible_host: "192.168.64.2"
+      ansible_host: "192.168.252.2"
       ansible_user: ubuntu
       ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o ControlMaster=no -o ControlPath=none"
       ansible_ssh_private_key_file: first_setup/ubuntu_key
@@ -47,7 +47,7 @@ all:
 #      additional_network_addresses: "[192.168.2.142/24]"
     mylynwrk01:
       ansible_connection: ssh
-      ansible_host: "192.168.64.4"
+      ansible_host: "192.168.252.4"
       ansible_user: ubuntu
       ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o ControlMaster=no -o ControlPath=none"
       ansible_ssh_private_key_file: first_setup/ubuntu_key

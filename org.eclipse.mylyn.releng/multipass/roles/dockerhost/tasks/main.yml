@@ -4,8 +4,35 @@
     - name: apt update
       ansible.builtin.apt:
         update_cache: true
-     
-    - name: Install required system packages
+    - name: remove docker packages
+      ansible.builtin.apt:
+        pkg:
+          - docker.io
+          - docker-doc
+          - docker-compose
+          - docker-compose-v2
+          - podman-docker
+          - containerd runc
+        state: absent
+
+    - name: add docker apt
+      ansible.builtin.shell: |
+        sudo install -m 0755 -d /etc/apt/keyrings
+        sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+        sudo chmod a+r /etc/apt/keyrings/docker.asc
+        sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
+        Types: deb
+        URIs: https://download.docker.com/linux/ubuntu
+        Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+        Components: stable
+        Architectures: $(dpkg --print-architecture)
+        Signed-By: /etc/apt/keyrings/docker.asc
+        EOF
+    - name: apt update
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install required system packages and docker / java
       ansible.builtin.apt:
         pkg:
           - apt-transport-https
@@ -20,52 +47,78 @@
           - maven
           - python3-jsondiff
           - python3-docker
-        state: latest
-        update_cache: true
-    
-    - name: Add Temurin GPG key
-      apt_key:
-        url: https://packages.adoptium.net/artifactory/api/gpg/key/public
-    - name: Add Docker APT repository
-      apt_repository:
-        repo: deb https://packages.adoptium.net/artifactory/deb {{ ansible_distribution_release }} main
-
-    - name: Add Docker GPG key
-      apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
-
-    - name: Add Docker APT repository
-      apt_repository:
-        repo: deb [arch=arm64] https://download.docker.com/{{ ansible_system | lower }}/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable
-#       repo: deb [arch={{ansible_architecture}}] https://download.docker.com/{{ ansible_system | lower }}/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable
-    
-    - name: apt update
-      ansible.builtin.apt:
-        update_cache: true
-    
-    - name: install docker and java
-      ansible.builtin.apt:
-        pkg:
           - docker-ce
           - docker-ce-cli
           - containerd.io
           - docker-buildx-plugin
           - docker-compose-plugin
-          - temurin-21-jdk
+          - openjdk-25-jdk
         state: latest
         update_cache: true
-    - name: remove default-jre
-      ansible.builtin.apt:
-        pkg:
-          - openjdk-21-jre-headless
-        state: absent
-        update_cache: true
-
+    
+#     - name: Add Temurin GPG key
+#       ansible.builtin.apt_key:
+#         url: https://packages.adoptium.net/artifactory/api/gpg/key/public
+#     - name: Add Docker APT repository
+#       apt_repository:
+#         repo: deb https://packages.adoptium.net/artifactory/deb {{ ansible_distribution_release }} main
+# 
+#     - name: Add repository with signed-by
+#       ansible.builtin.apt_repository:
+#         repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/<repo_name>.gpg] <REPO_URL> {{ ansible_lsb.codename }} stable"
+#         state: present
+#         filename: <repo_name>
+# 		
+#     - name: Add Docker GPG key
+#       ansible.builtin.apt_key:
+#         url: https://download.docker.com/linux/ubuntu/gpg
+#     - name: Add Docker APT repository
+#       apt_repository:
+#         repo: deb [arch=arm64] https://download.docker.com/{{ ansible_system | lower }}/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable
+# #       repo: deb [arch={{ansible_architecture}}] https://download.docker.com/{{ ansible_system | lower }}/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable
+ 
+#    - name: xxxx
+#      ansible.builtin.shell: |
+#        install -m 0755 -d /etc/apt/keyrings
+#        curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+#        chmod a+r /etc/apt/keyrings/docker.asc
+#        tee /etc/apt/sources.list.d/docker.sources <<EOF
+#        Types: deb    - name: apt update
+#        URIs: https://download.docker.com/linux/ubuntu      ansible.builtin.apt:
+#        Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")        update_cache: true
+#        Components: stable    
+#        Architectures: $(dpkg --print-architecture)    - name: install docker and java
+#        Signed-By: /etc/apt/keyrings/docker.asc
+#
+#    - name: apt update
+#      ansible.builtin.apt:
+#        EOF        pkg:
+#          - docker-ce
+#          - docker-ce-cli
+#          - containerd.io
+#          - docker-buildx-plugin
+#          - docker-compose-plugin
+##          - openjdk-25-jre-headless
+#        state: latest
+#        update_cache: true
+#    - name: remove default-jre
+#      ansible.builtin.apt:
+#        pkg:
+#          - openjdk-21-jre-headless
+#        state: absent
+#        update_cache: true
+#
+#    - name: Add remote "ubuntu" user to "docker" group
+#      ansible.builtin.user:
+#        name: "ubuntu"
+#        groups: "docker"
+#        append: true
     - name: Add remote "ubuntu" user to "docker" group
       ansible.builtin.user:
         name: "ubuntu"
         groups: "docker"
         append: true
+
     - name: Creates directory
       ansible.builtin.file:
         path: "{{ item }}"
