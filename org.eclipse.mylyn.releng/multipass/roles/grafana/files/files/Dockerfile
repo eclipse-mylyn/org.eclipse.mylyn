@@ -1,4 +1,4 @@
-FROM grafana/grafana:12.2.0-16636675413-ubuntu
+FROM grafana/grafana:latest-ubuntu
 
 ADD ./dashboards/ /etc/grafana/provisioning/dashboards/
 ADD ./datasources/ /etc/grafana/provisioning/datasources/

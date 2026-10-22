@@ -6,16 +6,28 @@
   pre_tasks:
     - file:
         path: mylyn_vars
-        state: absent
-    - file:
-        path: mylyn_vars
         state: directory
+
   post_tasks:
+    - name: Initiate json lists
+      set_fact:
+        all_values: []
+        all_names: "{{ query('ansible.builtin.varnames', '^mylyn_') }}"  
+
+    - name: Add new JSON Objects to List
+      set_fact:
+        all_values: "{{ all_values +  [ query('ansible.builtin.vars', item)[0] ]  }}"
+      loop: "{{ all_names }}"
+    - name: Add new JSON Objects to List
+      set_fact:
+        all_json: "{{ dict(query('ansible.builtin.varnames', '^mylyn_') | zip(all_values)) }}"
+
     - no_log: false
+      delegate_to: localhost
+
       copy:
-        force: true
         dest: "mylyn_vars/{{ inventory_hostname }}-{{local_prefix}}.json"
-        content: "{{ vars | dict2items | json_query('[?starts_with(key, `mylyn_`)]') | items2dict }}"
+        content: "{{ all_json }}"
   tasks:
     - name: include global mode
       ansible.builtin.include_tasks:
@@ -29,11 +41,25 @@
   pre_tasks:
     - ansible.builtin.include_vars: "mylyn_vars/localhost-{{local_prefix}}.json"
   post_tasks:
+    - name: Initiate json lists
+      set_fact:
+        all_values: []
+        all_names: "{{ query('ansible.builtin.varnames', '^mylyn_') }}"  
+
+    - name: Add new JSON Objects to List
+      set_fact:
+        all_values: "{{ all_values +  [ query('ansible.builtin.vars', item)[0] ]  }}"
+      loop: "{{ all_names }}"
+    - name: Add new JSON Objects to List
+      set_fact:
+        all_json: "{{ dict(query('ansible.builtin.varnames', '^mylyn_') | zip(all_values)) }}"
+
     - no_log: false
       delegate_to: localhost
+
       copy:
         dest: "mylyn_vars/{{ inventory_hostname }}-{{local_prefix}}.json"
-        content: "{{ vars | dict2items | json_query('[?starts_with(key, `mylyn_`)]') | items2dict }}"
+        content: "{{ all_json }}"
   roles:
     - role: multipass_create_vm
       tags:
@@ -49,7 +75,7 @@
     become: true
     become_user: root
     ansible.builtin.shell: |
-      cat << EOF > /etc/netplan/10-custom.yaml
+      cat << EOF > /etc/netplan/60-custom.yaml
       network:
         version: 2
         ethernets:
@@ -60,7 +86,7 @@
               macaddress: "{{ hostvars[inventory_hostname].additional_network_mac_adr }}"
             addresses: {{ hostvars[inventory_hostname].additional_network_addresses }}
       EOF
-      sudo chmod 600 /etc/netplan/10-custom.yaml
+      sudo chmod 600 /etc/netplan/60-custom.yaml
       sudo netplan apply
     when: hostvars[inventory_hostname].additional_network_mac_adr is defined
 
@@ -71,11 +97,25 @@
   pre_tasks:
     - ansible.builtin.include_vars: "mylyn_vars/localhost-{{local_prefix}}.json"
   post_tasks:
+    - name: Initiate json lists
+      set_fact:
+        all_values: []
+        all_names: "{{ query('ansible.builtin.varnames', '^mylyn_') }}"  
+
+    - name: Add new JSON Objects to List
+      set_fact:
+        all_values: "{{ all_values +  [ query('ansible.builtin.vars', item)[0] ]  }}"
+      loop: "{{ all_names }}"
+    - name: Add new JSON Objects to List
+      set_fact:
+        all_json: "{{ dict(query('ansible.builtin.varnames', '^mylyn_') | zip(all_values)) }}"
+
     - no_log: false
       delegate_to: localhost
+
       copy:
         dest: "mylyn_vars/{{ inventory_hostname }}-{{local_prefix}}.json"
-        content: "{{ vars | dict2items | json_query('[?starts_with(key, `mylyn_`)]') | items2dict }}"
+        content: "{{ all_json }}"
   vars:
     rootca_name: "{{ hostvars['localhost'].rootca_server_name }}"
   roles:
@@ -161,4 +201,4 @@
         src: ../../../../certs/cacerts
         dest: ../../../../certs/mylyncacerts
     - name: add mylynadm01.crt
-      command: keytool -alias mylyn -storepass changeit -noprompt -import -file ../../../../certs/root_ca/mylynadm01.crt -keystore ../../../../certs/mylyncacerts
+      command: keytool -alias mylyn -storepass changeit -noprompt -import -file ../../../../certs/root_ca/{{ hostvars['localhost'].rootca_server_name }}.crt -keystore ../../../../certs/mylyncacerts
