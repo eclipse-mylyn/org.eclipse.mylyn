@@ -28,21 +28,21 @@
 - name: setlabels 
   ansible.builtin.set_fact:
     label_data: 
-       { traefik.enable: "true",
+       '{ traefik.enable: "true",
          traefik.docker.network: "mylyn_net",
-         traefik.http.routers.grafana_https.rule: "Host(`{{ common_domain_name }}`)  && PathPrefix(`/grafana`)",
+         traefik.http.routers.grafana_https.rule: "(Host(`{{mylyn_service_vm_name}}`) || Host(`{{common_domain_name}}`))  && PathPrefix(`/grafana`)",
          traefik.http.routers.grafana_https.entrypoints: "websecure", 
          traefik.http.routers.grafana_https.tls: "true",
          traefik.http.routers.grafana_https.service: "grafana",
          traefik.http.services.grafana.loadbalancer.server.port: "3000",
-       }
+       }'
 #         traefik.http.routers.grafana_https.middlewares: "stripprefix_grafana",
 #         traefik.http.middlewares.stripprefix_grafana.stripprefix.prefixes: "/grafana",
 # traefik.http.services.prometheus.loadbalancer.passhostheader: "true"
 
 - name: Pull image
   community.docker.docker_image:
-    name: "grafana/grafana:12.2.0-16636675413-ubuntu"
+    name: "grafana/grafana:latest-ubuntu"
     source: pull
 
 - name: Build the base image

@@ -4,7 +4,7 @@
         mylyn_service_domain: "{{ local_domain | default('mylyn.local')}}"
         mylyn_docker_swarm_recreate: "{{ swarm_recreate | default(false) }}"
         mylyn_docker_mode_global: "{{ docker_run_mode | default('container') }}"
-        mylyn_network_ip_matcher: "{{ local_network_ip_matcher | default('^192\\.168\\.64\\..*') }}"
+        mylyn_network_ip_matcher: "{{ local_network_ip_matcher | default('^192\\.168\\.252\\..*') }}"
       tags:
         - global
         

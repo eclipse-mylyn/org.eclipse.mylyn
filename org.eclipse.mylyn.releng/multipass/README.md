@@ -30,12 +30,8 @@ Here are the following steps.
      ```
   - create the VM's
      ```
-     ansible-playbook -i inventory.yml create_vm.yml --ask-become-pass --extra-vars="local_prefix=mylyn"
+     ansible-playbook -i inventory.yml create_vm.yml --ask-become-pass --extra-vars="local_prefix=mylynpb" --extra-vars="local_domain=mylynpbmstr01.local"
      ```
-     this is the same as
-     ```
-     ansible-playbook -i inventory.yml create_vm.yml --ask-become-pass --extra-vars="local_prefix=mylyn" --extra-vars="docker_run_mode=container      
-	 ```  
 	 This does the following steps
 	   1. creates the VM's
 	   2. sure that /etc/hosts contains the correct entries
@@ -47,11 +43,11 @@ Here are the following steps.
 
 4. First time Setup the VM's
    ```
-   ansible-playbook -i inventory.yml mylyn_setup.yml --extra-vars="local_prefix=mylyn"
+   ansible-playbook -i inventory.yml mylyn_setup.yml  --extra-vars="local_prefix=mylynpb"  --skip-tags artifactory
    ```
 5. restart the services the VM's 
    ```
-   ansible-playbook mylyn_setup.yml -i inventory.yml --skip-tags base_software --extra-vars="local_prefix=mylyn"
+   ansible-playbook -i inventory.yml mylyn_setup.yml  --extra-vars="local_prefix=mylynpb"  --skip-tags artifactory,base_software
    ```
 
 6. delete VM's and recreate VM's 

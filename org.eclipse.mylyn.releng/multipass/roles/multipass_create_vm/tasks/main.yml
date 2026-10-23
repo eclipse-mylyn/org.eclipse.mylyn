@@ -28,7 +28,7 @@
               - {{ user_data }}
 
 - name: create if needed
-  shell: multipass launch -n {{ item.name }} --disk {{ item.disk }} --memory {{ item.memory }} --cpus {{ item.cpus }} {{ item.launch_extra }} --cloud-init first_setup/cloud-init.yaml
+  shell: multipass launch 26.04 -n {{ item.name }} --disk {{ item.disk }} --memory {{ item.memory }} --cpus {{ item.cpus }} {{ item.launch_extra }} --cloud-init first_setup/cloud-init.yaml
   when: item.name not in inst_list | map(attribute='inst_name') 
   with_items: "{{ mylyn_vm_hosts }}"
 - name: new list
@@ -85,3 +85,4 @@
     state: present
   with_items: "{{ mylyn_vm_hosts }}"
   when: item.name == mylyn_service_vm_name
+  

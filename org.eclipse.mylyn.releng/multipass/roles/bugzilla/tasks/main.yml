@@ -19,6 +19,6 @@
   ansible.builtin.include_tasks:
     file: build_start.yml
   with_items: 
-    "{{ bugzilla_instances  }}"
+    "{{ bugzilla_instances }}"
   loop_control:
     loop_var: act_item

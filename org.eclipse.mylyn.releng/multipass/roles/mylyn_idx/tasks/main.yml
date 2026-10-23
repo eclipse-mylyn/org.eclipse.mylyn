@@ -25,12 +25,12 @@
         APP_VERSION: "{{ docker_mode }}"
     source: build
 
-- name: setlabels {{ act_item.image_tag }}
+- name: setlabels
   ansible.builtin.set_fact:
     label_data: 
-       { traefik.enable: "true",
+       '{ traefik.enable: "true",
          traefik.docker.network: "mylyn_net",
-         traefik.http.routers.mylyn_idx_https.rule: "Host(`{{ common_domain_name }}`)  && PathPrefix(`/mylyn_idx`)",
+         traefik.http.routers.mylyn_idx_https.rule: "(Host(`{{mylyn_service_vm_name}}`) || Host(`{{common_domain_name}}`)) && PathPrefix(`/mylyn_idx`)",
          traefik.http.routers.mylyn_idx_https.entrypoints: "websecure", 
          traefik.http.routers.mylyn_idx_https.tls: "true",
          traefik.http.routers.mylyn_idx_https.service: "mylyn_idx",
@@ -38,7 +38,7 @@
          traefik.http.middlewares.stripprefix_mylyn_idx.stripprefix.prefixes: "/mylyn_idx",
          traefik.http.services.mylyn_idx.loadbalancer.server.port: "8001",
          traefik.http.services.mylyn_idx.loadbalancer.passhostheader: "true"
-       }
+       }'
 
 - name: Deploy swarm service
   community.docker.docker_swarm_service:

@@ -34,12 +34,17 @@
   set_fact:
     serviceLabel: '{"type":"gitlab","url":"/gitlab","version":"{{gitlabImageVersion}}","info":"","properties":{"host-name":"{{ common_domain_name }}","default":"true"} }'
 
+- name: debug serviceLabel
+  debug:
+    msg:
+      - "serviceLabel:  {{serviceLabel }}"
+
 - name: setlabels registry
   ansible.builtin.set_fact:
     label_data: |
        { traefik.enable: "true",
          traefik.docker.network: "mylyn_net",
-         traefik.http.routers.{{ role_name }}.rule: "Host(`{{ common_domain_name }}`)  && PathPrefix(`/gitlab`)",
+         traefik.http.routers.{{ role_name }}.rule: "(Host(`{{mylyn_service_vm_name}}`) || Host(`{{common_domain_name}}`)) && PathPrefix(`/gitlab`)",
          traefik.http.routers.{{ role_name }}.entrypoints: websecure ,
          traefik.http.routers.{{ role_name }}.tls: "true",
          traefik.http.routers.{{ role_name }}.service: {{ role_name }} ,
@@ -113,11 +118,9 @@
 
 - name: Copy file into existing container 
   ansible.builtin.shell: docker cp /mylyn-config-dir/{{ role_name }}/initialSetup.rb gitlab:/etc/gitlab
-
 - name: init
   ansible.builtin.shell: 
-    cmd: /mylyn-config-dir/{{ role_name }}/doInit.sh "{{ common_domain_name }}/gitlab" "{{ common_domain_name }}"
+    cmd: /mylyn-config-dir/{{ role_name }}/doInit.sh "{{ mylyn_service_vm_name }}/gitlab" "{{ mylyn_service_vm_name }}"
     chdir: /mylyn-config-dir/{{ role_name }}
-  register: init_info
-
+  register: init_info 
 - ansible.builtin.debug: msg="{{ init_info.stdout_lines }}"   # verbosity=3

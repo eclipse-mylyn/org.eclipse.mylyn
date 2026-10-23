@@ -4,10 +4,7 @@
 - hosts: localhost
   gather_facts: true
   pre_tasks:
-    - include_vars:
-        dir: mylyn_vars
-        extensions:
-        - json
+    - ansible.builtin.include_vars: "mylyn_vars/localhost-{{local_prefix}}.json"
   tasks:
     - name: debug list
       vars:
@@ -25,10 +22,7 @@
 - hosts: "{{ hostvars['localhost'].mylyn_noadmin_vm_hosts }}"
   gather_facts: true
   pre_tasks:
-    - include_vars:
-        dir: mylyn_vars
-        extensions:
-        - json
+    - ansible.builtin.include_vars: "mylyn_vars/localhost-{{local_prefix}}.json"
   vars:
     rootca_name: "{{ hostvars['localhost'].rootca_server_name }}"
   tasks:
@@ -44,10 +38,7 @@
 - hosts: "{{ hostvars['localhost'].mylyn_service_vm_name }}"
   gather_facts: false
   pre_tasks:
-    - include_vars:
-        dir: mylyn_vars
-        extensions:
-        - json
+    - ansible.builtin.include_vars: "mylyn_vars/localhost-{{local_prefix}}.json"
   vars:
     swarm_master_name: "{{ hostvars['localhost'].mylyn_service_vm_name  }}"
   roles:
@@ -67,10 +58,7 @@
 - hosts: "{{ hostvars['localhost'].mylyn_noadmin_vm_hosts }}"
   gather_facts: true
   pre_tasks:
-    - include_vars:
-        dir: mylyn_vars
-        extensions:
-        - json
+    - ansible.builtin.include_vars: "mylyn_vars/localhost-{{local_prefix}}.json"
   vars:
     rootca_name: "{{ hostvars['localhost'].rootca_server_name }}"
   roles:
@@ -84,10 +72,7 @@
 - hosts: "{{ hostvars['localhost'].mylyn_service_vm_name  }}"
   gather_facts: false
   pre_tasks:
-    - include_vars:
-        dir: mylyn_vars
-        extensions:
-        - json
+    - ansible.builtin.include_vars: "mylyn_vars/localhost-{{local_prefix}}.json"
   vars:
     swarm_master_name: "{{ hostvars['localhost'].mylyn_service_vm_name  }}"
     docker_mode: "{{ hostvars['localhost'].mylyn_docker_mode_global }}"
@@ -126,7 +111,7 @@
         - gitlab
       vars:
         common_domain_name: "{{ hostvars['localhost'].mylyn_service_domain }}"
-        gitlabImageVersion: "18.1.2-ce.0"
+        gitlabImageVersion: "19.0.1-ce.0"
         gitlabHostURL: "gitlab.{{ hostvars['localhost'].mylyn_service_domain }}"
     - role: jenkins
       tags:
@@ -134,20 +119,52 @@
       vars:
         common_domain_name: "{{ hostvars['localhost'].mylyn_service_domain }}"
         jenkins_instances:
-          - {  servmame: "jenkins-latest", port1: 8084, port2: 50004, data_dir: "jenkins-2.303.3", image_tag: "jenkins/jenkins:latest", extra_info: '' }
+          - {  servmame: "jenkins-latest", port1: 8084, port2: 50004, data_dir: "jenkins-2.303.3", image_tag: "jenkins/jenkins:latest", extra_info: '"default": "true"' }
     - role: bugzilla
       tags:
         - bugzilla
       vars:
         common_domain_name: "{{ hostvars['localhost'].mylyn_service_domain }}"
         bugzilla_instances:
-          - { git_branch: "release-4.4-stable", servmame: "bugzilla-4_4", port1: 8090, port2: 8490, image_tag: "4.4", extra_info: '"default": "true"' }
+          - name: I1
+            git_branch: "release-4.4-stable"
+            servmame: "bugzilla-4_4"
+            port1: 8090
+            port2: 8490
+            image_tag: "4.4"
+            extra_info: 
+              default: "true"
+          - name: I2
+            git_branch: "release-5.2-stable"
+            servmame: "bugzilla-5_2"
+            port1: 8094
+            port2: 8494
+            image_tag: "5.2"
+          - name: I3
+            git_branch: "release-5.2-stable"
+            servmame: "bugzilla-5_2-rest"
+            port1: 8095
+            port2: 8495
+            image_tag: "5.2-rest"
+            extra_info:
+              rest_enabled: "true"
+              default: "true"
+              testdataVersion: "Version1"
+          - name: I4
+            git_branch: "release-5.2-stable"
+            servmame: "bugzilla-5_2-rest-api"
+            port1: 8096
+            port2: 8496
+            image_tag: "5.2-rest-api"
+            extra_info:
+              rest_enabled: "true"
+              api_key_enabled: "true"
+              testdataVersion: "Version1"
+
 #          - { git_branch: "release-4.4-stable", servmame: "bugzilla-4_4-custom-wf", port1: 8091, port2: 8491, image_tag: "4.4-custom_wf", extra_info: '"custom_wf":"true"' }
 #          - { git_branch: "release-4.4-stable", servmame: "bugzilla-4_4-custom-wf-and-status", port1: 8092, port2: 8492, image_tag: "4.4-custom_wf_a_s", extra_info: '"custom_wf_and_status":"true"' }
 #          - { git_branch: "release-4.4-stable", servmame: "bugzilla-4_4-bugaliases", port1: 8093, port2: 8493, image_tag: "4.4-bugaliases", extra_info: '"use_bug_alias":"true"' }
-          - { git_branch: "release-5.2-stable", servmame: "bugzilla-5_2", port1: 8094, port2: 8494, image_tag: "5.2", extra_info: '' }
-          - { git_branch: "release-5.2-stable", servmame: "bugzilla-5_2-rest", port1: 8095, port2: 8495, image_tag: "5.2-rest", extra_info: '"rest_enabled":"true", "default": "true", "testdataVersion": "Version1"' }
-          - { git_branch: "release-5.2-stable", servmame: "bugzilla-5_2-rest-api", port1: 8096, port2: 8496, image_tag: "5.2-rest-api", extra_info: '"rest_enabled": "true", "api_key_enabled": "true", "testdataVersion": "Version1"' }
+
 #    - role: cadvisor
 #      tags:
 #        - cadvisor
