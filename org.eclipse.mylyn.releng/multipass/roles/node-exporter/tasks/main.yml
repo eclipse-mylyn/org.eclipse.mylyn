@@ -28,27 +28,27 @@
 #- name: setlabels 
 #  ansible.builtin.set_fact:
 #    label_data: 
-#       { traefik.enable: "true",
+#       '{ traefik.enable: "true",
 #         traefik.docker.network: "mylyn_net",
-#         traefik.http.routers.prometheus_https.rule: "Host(`{{ common_domain_name }}`)  && PathPrefix(`/prometheus`)",
+#         traefik.http.routers.prometheus_https.rule: "(Host(`{{mylyn_service_vm_name}}`) || Host(`{{common_domain_name}}`))  && PathPrefix(`/prometheus`)",
 #         traefik.http.routers.prometheus_https.entrypoints: "websecure", 
 #         traefik.http.routers.prometheus_https.tls: "true",
 #         traefik.http.routers.prometheus_https.service: "prometheus",
 #         traefik.http.services.prometheus.loadbalancer.server.port: "9090",
-#       }
+#       }'
 # traefik.http.routers.prometheus_https.middlewares: "stripprefix_prometheus",
 # traefik.http.middlewares.stripprefix_prometheus.stripprefix.prefixes: "/prometheus",
 # traefik.http.services.prometheus.loadbalancer.passhostheader: "true"
 
 - name: Pull image
   community.docker.docker_image:
-    name: "prom/node-exporter:v1.9.1"
+    name: "prom/node-exporter:latest"
     source: pull
 
 - name: Deploy Container
   community.docker.docker_container:
     name: "node-exporter"
-    image: "prom/node-exporter:v1.9.1"
+    image: "prom/node-exporter:latest"
     networks:
       - name: mylyn_net
     restart: true

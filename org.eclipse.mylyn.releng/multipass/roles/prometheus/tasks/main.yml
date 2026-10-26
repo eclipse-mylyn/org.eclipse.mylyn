@@ -30,7 +30,7 @@
     label_data: 
        { traefik.enable: "true",
          traefik.docker.network: "mylyn_net",
-         traefik.http.routers.prometheus_https.rule: "Host(`{{ common_domain_name }}`)  && PathPrefix(`/prometheus`)",
+         traefik.http.routers.prometheus_https.rule: "(Host(`{{mylyn_service_vm_name}}`) || Host(`{{common_domain_name}}`))  && PathPrefix(`/prometheus`)",
          traefik.http.routers.prometheus_https.entrypoints: "websecure", 
          traefik.http.routers.prometheus_https.tls: "true",
          traefik.http.routers.prometheus_https.service: "prometheus",
@@ -55,13 +55,13 @@
 
 - name: Pull image
   community.docker.docker_image:
-    name: "prom/prometheus:v3.5.0"
+    name: "prom/prometheus:latest"
     source: pull
 
 - name: Deploy Container
   community.docker.docker_container:
     name: "prometheus"
-    image: "prom/prometheus:v3.5.0"
+    image: "prom/prometheus:latest"
     networks:
       - name: mylyn_net
     restart: true
