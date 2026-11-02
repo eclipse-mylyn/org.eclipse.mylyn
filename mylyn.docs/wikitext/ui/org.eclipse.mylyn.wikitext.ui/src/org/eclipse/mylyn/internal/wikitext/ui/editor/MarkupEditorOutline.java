@@ -103,6 +103,7 @@ public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSo
 				if (tipItem instanceof OutlineItem outlineItem) {
 					Label label = new Label(comp, SWT.WRAP);
 					label.setBackground(comp.getBackground());
+					label.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
 					label.setText(outlineItem.getTooltip());
 				}
 

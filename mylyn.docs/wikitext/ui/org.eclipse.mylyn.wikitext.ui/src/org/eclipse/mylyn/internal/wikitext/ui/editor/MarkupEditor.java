@@ -76,12 +76,14 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.operations.AbstractDocument
 import org.eclipse.mylyn.internal.wikitext.ui.editor.operations.CommandManager;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.Preferences;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.reconciler.MarkupMonoReconciler;
+import org.eclipse.mylyn.internal.wikitext.ui.viewer.CssStyleManager;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupDocumentProvider;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupTokenScanner;
 import org.eclipse.mylyn.internal.wikitext.ui.util.NlsResourceBundle;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage;
@@ -695,7 +697,14 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 						@Override
 						public void beginBlock(BlockType type, Attributes attributes) {
 							attributes.appendCssClass(CSS_CLASS_EDITOR_PREVIEW);
+							attributes.setCssStyle(CssStyleManager.withReadableForeground(attributes.getCssStyle()));
 							super.beginBlock(type, attributes);
+						}
+
+						@Override
+						public void beginSpan(SpanType type, Attributes attributes) {
+							attributes.setCssStyle(CssStyleManager.withReadableForeground(attributes.getCssStyle()));
+							super.beginSpan(type, attributes);
 						}
 					};
 					builder.setTitle(title);
