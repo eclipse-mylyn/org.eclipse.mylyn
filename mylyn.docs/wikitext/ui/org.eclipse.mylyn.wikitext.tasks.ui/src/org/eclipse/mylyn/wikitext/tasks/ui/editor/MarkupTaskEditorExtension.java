@@ -20,6 +20,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
@@ -55,7 +56,6 @@ import org.eclipse.mylyn.wikitext.ui.viewer.MarkupViewerConfiguration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.PlatformUI;
@@ -372,7 +372,8 @@ implements IAdaptable {
 		@Override
 		public IHyperlinkPresenter getHyperlinkPresenter(ISourceViewer sourceViewer) {
 			if (fPreferenceStore == null) {
-				return new TaskHyperlinkPresenter(new RGB(0, 0, 255));
+				return new TaskHyperlinkPresenter(
+						JFaceResources.getColorRegistry().getRGB(JFacePreferences.HYPERLINK_COLOR));
 			}
 			return new TaskHyperlinkPresenter(fPreferenceStore);
 		}
@@ -417,7 +418,8 @@ implements IAdaptable {
 		@Override
 		public IHyperlinkPresenter getHyperlinkPresenter(ISourceViewer sourceViewer) {
 			if (fPreferenceStore == null) {
-				return new TaskHyperlinkPresenter(new RGB(0, 0, 255));
+				return new TaskHyperlinkPresenter(
+						JFaceResources.getColorRegistry().getRGB(JFacePreferences.HYPERLINK_COLOR));
 			}
 			return new TaskHyperlinkPresenter(fPreferenceStore);
 		}

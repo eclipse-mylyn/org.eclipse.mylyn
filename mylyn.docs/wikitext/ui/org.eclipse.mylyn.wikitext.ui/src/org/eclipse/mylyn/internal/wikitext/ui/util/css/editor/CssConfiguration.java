@@ -37,7 +37,7 @@ public class CssConfiguration extends SourceViewerConfiguration {
 
 	public CssConfiguration(ColorRegistry colorRegistry) {
 		this.colorRegistry = colorRegistry;
-		for (Map.Entry<String, RGB> colorEnt : Colors.keyToRgb.entrySet()) {
+		for (Map.Entry<String, RGB> colorEnt : Colors.getKeyToRgb().entrySet()) {
 			colorRegistry.put(colorEnt.getKey(), colorEnt.getValue());
 		}
 	}
