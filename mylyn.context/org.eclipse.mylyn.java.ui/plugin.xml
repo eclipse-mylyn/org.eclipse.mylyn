@@ -189,7 +189,7 @@
    		targetID="org.eclipse.jdt.ui.PackageExplorer">
     	<action
            class="org.eclipse.mylyn.internal.java.ui.actions.FocusPackageExplorerAction"
-           disabledIcon="icons/elcl16/focus-disabled.gif"
+           disabledIcon="icons/elcl16/focus-disabled.svg"
            enablesFor="*"
            icon="icons/elcl16/focus.svg"
            id="org.eclipse.mylyn.java.actions.focus.packageExplorer"
@@ -311,7 +311,7 @@
   		<action
           class="org.eclipse.mylyn.internal.java.ui.actions.ToggleActiveFoldingAction"
           definitionId="org.eclipse.mylyn.java.ui.editor.folding.auto"
-          icon="icons/elcl16/interest-folding.gif"
+          icon="icons/elcl16/interest-folding.svg"
           id="org.eclipse.mylyn.java.ui.editor.folding.auto"
           label="%ToggleActiveFoldingAction.label"
           style="toggle"

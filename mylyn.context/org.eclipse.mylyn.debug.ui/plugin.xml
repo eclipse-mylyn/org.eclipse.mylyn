@@ -19,7 +19,7 @@
          targetID="org.eclipse.debug.ui.BreakpointView">
       <action
             class="org.eclipse.mylyn.internal.debug.ui.FocusBreakpointsViewAction"
-            disabledIcon="icons/elcl16/focus-disabled.gif"
+            disabledIcon="icons/elcl16/focus-disabled.svg"
             enablesFor="*"
             icon="icons/elcl16/focus.svg"
             id="org.eclipse.mylyn.java.ui.actions.focus.markers.breakpoints"
@@ -35,7 +35,7 @@
    		targetID="org.eclipse.debug.ui.DebugView">
     	<action
            class="org.eclipse.mylyn.internal.debug.ui.FocusDebugViewAction"
-           disabledIcon="icons/elcl16/focus-disabled.gif"
+           disabledIcon="icons/elcl16/focus-disabled.svg"
            enablesFor="*"
            icon="icons/elcl16/focus.svg"
            id="org.eclipse.mylyn.ui.actions.FilterResourceNavigatorAction"

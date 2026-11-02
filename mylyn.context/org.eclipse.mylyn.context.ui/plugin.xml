@@ -250,7 +250,7 @@
    		targetID="org.eclipse.ui.views.ContentOutline">
     	<action
            class="org.eclipse.mylyn.internal.context.ui.actions.FocusOutlineAction"
-           disabledIcon="icons/elcl16/focus-disabled.gif"
+           disabledIcon="icons/elcl16/focus-disabled.svg"
            enablesFor="*"
            icon="icons/elcl16/focus.svg"
            id="org.eclipse.mylyn.context.ui.contentOutline.focus"

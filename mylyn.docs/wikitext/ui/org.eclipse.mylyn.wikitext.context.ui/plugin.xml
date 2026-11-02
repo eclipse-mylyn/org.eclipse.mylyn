@@ -47,7 +47,7 @@
          <action
                class="org.eclipse.mylyn.internal.wikitext.context.ui.actions.ToggleActiveFoldingEditorActionDelegate"
                definitionId="org.eclipse.mylyn.wikitext.context.ui.editor.folding.auto"
-               icon="icons/elcl16/interest-folding.gif"
+               icon="icons/elcl16/interest-folding.svg"
                id="org.eclipse.mylyn.wikitext.context.ui.editor.folding.auto"
                label="%action.label.0"
                state="true"

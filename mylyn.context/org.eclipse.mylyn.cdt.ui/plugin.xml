@@ -47,7 +47,7 @@
             targetID="org.eclipse.cdt.ui.CView">
          <action
                class="org.eclipse.mylyn.internal.cdt.ui.actions.FocusCViewAction"
-               disabledIcon="icons/elcl16/focus-disabled.gif"
+               disabledIcon="icons/elcl16/focus-disabled.svg"
                enablesFor="*"
                icon="icons/elcl16/focus.svg"
                id="org.eclipse.mylyn.cdt.ui.cview.focusActiveTask.action"
@@ -267,7 +267,7 @@
   		<action
           class="org.eclipse.mylyn.internal.cdt.ui.actions.ToggleActiveFoldingAction"
           definitionId="org.eclipse.mylyn.cdt.ui.editor.folding.auto"
-          icon="icons/elcl16/interest-folding.gif"
+          icon="icons/elcl16/interest-folding.svg"
           id="org.eclipse.mylyn.cdt.ui.editor.folding.auto"
           label="%ToggleActiveFoldingAction.label"
           style="toggle"
