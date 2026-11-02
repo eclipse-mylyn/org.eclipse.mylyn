@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.mylyn.wikitext.parser.css.CssParser;
 import org.eclipse.mylyn.wikitext.parser.css.CssRule;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
@@ -49,6 +50,8 @@ public class CssStyleManager {
 	public static final String RULE_FONT_STYLE = "font-style"; //$NON-NLS-1$
 
 	public static final String RULE_BACKGROUND_COLOR = "background-color"; //$NON-NLS-1$
+
+	private static final double MINIMUM_CONTRAST = 3;
 
 	public static final String RULE_COLOR = "color"; //$NON-NLS-1$
 
@@ -267,7 +270,8 @@ public class CssStyleManager {
 	}
 
 	public StyleRange createStyleRange(FontState fontState, int offset, int length) {
-		StyleRange styleRange = new StyleRange(offset, length, getColorFromRgb(fontState.foreground),
+		StyleRange styleRange = new StyleRange(offset, length,
+				getColorFromRgb(readableForeground(fontState.foreground, fontState.background)),
 				getColorFromRgb(fontState.background));
 		if (fontState.isBold()) {
 			styleRange.fontStyle |= SWT.BOLD;
@@ -630,6 +634,60 @@ public class CssStyleManager {
 				fontState.setSubscript(true);
 			}
 		}
+	}
+
+	/**
+	 * Adds a readable text color to a CSS style that sets a background color but no text color.
+	 */
+	public static String withReadableForeground(String cssStyle) {
+		if (cssStyle == null) {
+			return null;
+		}
+		Integer background = null;
+		for (CssRule rule : new CssParser().parseBlockContent(cssStyle)) {
+			if (RULE_COLOR.equals(rule.name)) {
+				return cssStyle;
+			}
+			if (RULE_BACKGROUND_COLOR.equals(rule.name)) {
+				background = cssColorRgb(rule.value);
+			}
+		}
+		if (background == null) {
+			return cssStyle;
+		}
+		RGB foreground = readableForeground(null, toRGB(background));
+		String separator = cssStyle.stripTrailing().endsWith(";") ? " " : "; "; //$NON-NLS-1$ //$NON-NLS-2$
+		return cssStyle.stripTrailing() + separator
+				+ String.format("color: rgb(%d,%d,%d);", foreground.red, foreground.green, foreground.blue); //$NON-NLS-1$
+	}
+
+	/**
+	 * Returns the given foreground, or black or white if it is missing or unreadable on the given background.
+	 */
+	private static RGB readableForeground(RGB foreground, RGB background) {
+		if (background == null) {
+			return foreground;
+		}
+		double backgroundLuminance = luminance(background);
+		if (foreground != null && contrast(luminance(foreground), backgroundLuminance) >= MINIMUM_CONTRAST) {
+			return foreground;
+		}
+		return contrast(0, backgroundLuminance) >= contrast(1, backgroundLuminance)
+				? new RGB(0, 0, 0)
+				: new RGB(255, 255, 255);
+	}
+
+	private static double contrast(double luminance1, double luminance2) {
+		return (Math.max(luminance1, luminance2) + 0.05) / (Math.min(luminance1, luminance2) + 0.05);
+	}
+
+	private static double luminance(RGB rgb) {
+		return 0.2126 * linear(rgb.red) + 0.7152 * linear(rgb.green) + 0.0722 * linear(rgb.blue);
+	}
+
+	private static double linear(int channel) {
+		double value = channel / 255d;
+		return value <= 0.03928 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4);
 	}
 
 	private static RGB toRGB(int rgb) {

@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.mylyn.internal.wikitext.ui.viewer.HtmlTextPresentationParser;
 import org.eclipse.swt.graphics.RGB;
 
 /**
@@ -34,7 +35,9 @@ class Colors {
 
 	static final RGB RGB_PROPERTY_VALUE = new RGB(42, 0, 225);
 
-	static final Map<String, RGB> keyToRgb;
+	private static final Map<String, RGB> KEY_TO_RGB;
+
+	private static final Map<String, RGB> KEY_TO_RGB_DARK;
 
 	public static final String KEY_DEFAULT = "css.default"; //$NON-NLS-1$
 
@@ -53,7 +56,14 @@ class Colors {
 		tempKeyToRgb.put(KEY_SELECTOR, RGB_SELECTOR);
 		tempKeyToRgb.put(KEY_PROPERTY_NAME, RGB_PROPERTY_NAME);
 		tempKeyToRgb.put(KEY_PROPERTY_VALUE, RGB_PROPERTY_VALUE);
-		keyToRgb = Collections.unmodifiableMap(tempKeyToRgb);
+		KEY_TO_RGB = Collections.unmodifiableMap(tempKeyToRgb);
+		KEY_TO_RGB_DARK = Map.of(KEY_DEFAULT, new RGB(224, 224, 224), KEY_COMMENT, new RGB(156, 204, 156), KEY_SELECTOR,
+				new RGB(78, 201, 176), KEY_PROPERTY_NAME, new RGB(156, 220, 254), KEY_PROPERTY_VALUE,
+				new RGB(230, 176, 140));
+	}
+
+	static Map<String, RGB> getKeyToRgb() {
+		return HtmlTextPresentationParser.isDarkThemeActive() ? KEY_TO_RGB_DARK : KEY_TO_RGB;
 	}
 
 }
