@@ -15,11 +15,8 @@
 package org.eclipse.mylyn.commons.workbench.forms;
 
 import org.eclipse.mylyn.commons.ui.CommonImages;
-import org.eclipse.mylyn.commons.ui.GradientCanvas;
-import org.eclipse.mylyn.internal.commons.workbench.CommonsWorkbenchPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
@@ -30,8 +27,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.forms.FormColors;
-import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
@@ -59,8 +54,6 @@ public abstract class MessageControl {
 		final Font textFont = new Font(text.getDisplay(), fontData);
 		text.setFont(textFont);
 		text.addDisposeListener(e -> textFont.dispose());
-		Color color = CommonsWorkbenchPlugin.getDefault().getFormColors(text.getDisplay()).getColor(IFormColors.TITLE);
-		text.setForeground(color);
 		return textFont;
 	}
 
@@ -68,7 +61,7 @@ public abstract class MessageControl {
 
 	private Link descriptionLabel;
 
-	private GradientCanvas head;
+	private Composite head;
 
 	private GridData headData;
 
@@ -127,8 +120,7 @@ public abstract class MessageControl {
 	 * @return the control
 	 */
 	public Control createControl(Composite parent) {
-		FormColors colors = CommonsWorkbenchPlugin.getDefault().getFormColors(parent.getDisplay());
-		head = new GradientCanvas(parent, SWT.NONE);
+		head = new Composite(parent, SWT.NONE);
 		GridLayout headLayout = new GridLayout();
 		headLayout.marginHeight = 0;
 		headLayout.marginWidth = 0;
@@ -138,19 +130,6 @@ public abstract class MessageControl {
 		head.setLayout(headLayout);
 		headData = new GridData(SWT.FILL, SWT.TOP, true, false);
 		head.setLayoutData(headData);
-
-		Color top = colors.getColor(IFormColors.H_GRADIENT_END);
-		Color bot = colors.getColor(IFormColors.H_GRADIENT_START);
-		head.setBackgroundGradient(new Color[] { bot, top }, new int[] { 100 }, true);
-		head.setSeparatorVisible(true);
-		head.setSeparatorAlignment(SWT.TOP);
-
-		head.putColor(IFormColors.H_BOTTOM_KEYLINE1, colors.getColor(IFormColors.H_BOTTOM_KEYLINE1));
-		head.putColor(IFormColors.H_BOTTOM_KEYLINE2, colors.getColor(IFormColors.H_BOTTOM_KEYLINE2));
-		head.putColor(IFormColors.H_HOVER_LIGHT, colors.getColor(IFormColors.H_HOVER_LIGHT));
-		head.putColor(IFormColors.H_HOVER_FULL, colors.getColor(IFormColors.H_HOVER_FULL));
-		head.putColor(IFormColors.TB_TOGGLE, colors.getColor(IFormColors.TB_TOGGLE));
-		head.putColor(IFormColors.TB_TOGGLE_HOVER, colors.getColor(IFormColors.TB_TOGGLE_HOVER));
 
 		TableWrapLayout layout = new TableWrapLayout();
 		layout.numColumns = 3;
