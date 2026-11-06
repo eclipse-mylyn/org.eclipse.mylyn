@@ -26,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -209,7 +210,7 @@ public class SaxRepositoriesTest {
 	}
 
 	private void parse(String xml) throws SAXException, IOException {
-		XMLReader reader = XmlReaderUtil.createXmlReader();
+		XMLReader reader = CoreUtil.newXmlReader();
 		reader.setContentHandler(handler);
 		reader.parse(new InputSource(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))));
 	}

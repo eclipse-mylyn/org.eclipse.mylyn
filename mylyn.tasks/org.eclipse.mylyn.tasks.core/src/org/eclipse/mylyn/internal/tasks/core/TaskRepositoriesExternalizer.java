@@ -27,6 +27,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.xml.sax.InputSource;
@@ -115,7 +116,7 @@ public class TaskRepositoriesExternalizer {
 			}
 
 			SaxRepositoriesContentHandler contentHandler = new SaxRepositoriesContentHandler();
-			XMLReader reader = XmlReaderUtil.createXmlReader();
+			XMLReader reader = CoreUtil.newXmlReader();
 			reader.setContentHandler(contentHandler);
 			reader.parse(new InputSource(inputStream));
 			return contentHandler.getRepositories();
