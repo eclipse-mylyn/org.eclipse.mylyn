@@ -35,7 +35,6 @@
       <unit id="org.apache.commons.text" version="0.0.0"/>
       <unit id="org.apache.lucene.queryparser" version="0.0.0"/>
       <unit id="org.apache.tika.core" version="0.0.0"/>
-      <unit id="org.apache.xerces" version="0.0.0"/>
       <unit id="org.glassfish.hk2.osgi-resource-locator" version="0.0.0"/>
       <unit id="org.jsoup" version="0.0.0"/>
       <unit id="org.mockito.junit-jupiter" version="0.0.0"/>

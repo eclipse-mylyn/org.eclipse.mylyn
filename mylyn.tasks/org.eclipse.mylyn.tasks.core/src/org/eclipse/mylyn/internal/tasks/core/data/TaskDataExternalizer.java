@@ -30,7 +30,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.SafeRunner;
-import org.eclipse.mylyn.internal.tasks.core.XmlReaderUtil;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -182,7 +182,7 @@ public class TaskDataExternalizer {
 	}
 
 	public TaskDataState readState(InputStream in) throws IOException, SAXException {
-		XMLReader parser = XmlReaderUtil.createXmlReader();
+		XMLReader parser = CoreUtil.newXmlReader();
 		TaskDataStateReader handler = new TaskDataStateReader(taskRepositoryManager);
 		parser.setContentHandler(handler);
 		parser.parse(new InputSource(in));

@@ -28,10 +28,10 @@ import java.util.zip.ZipOutputStream;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.ITransferList;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
-import org.eclipse.mylyn.internal.tasks.core.XmlReaderUtil;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -89,7 +89,7 @@ public class TaskListExternalizer {
 		}
 
 		try (InputStream taskListFile = openTaskList(inFile)) {
-			XMLReader reader = XmlReaderUtil.createXmlReader();
+			XMLReader reader = CoreUtil.newXmlReader();
 			SaxTaskListHandler handler = new SaxTaskListHandler(taskList, repositoryModel, repositoryManager);
 			reader.setContentHandler(handler);
 			reader.parse(new InputSource(taskListFile));

@@ -19,18 +19,21 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.xerces.util.XMLChar;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.w3c.dom.Document;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
 import org.xml.sax.EntityResolver;
@@ -185,13 +188,29 @@ public class SaxRepositoriesWriter {
 		private void writeRepository(TaskRepository repository) throws SAXException {
 			// write properties as attributes to support reading by older versions
 			AttributesImpl repositoryPropertyAttributes = new AttributesImpl();
-			for (String key : repository.getProperties().keySet()) {
-				// avoid emitting XML we cannnot read
-				if (XMLChar.isValidName(key)) {
-					repositoryPropertyAttributes.addAttribute("", //$NON-NLS-1$
-							key, key, "", //$NON-NLS-1$
-							convertToXmlString(repository.getProperties().get(key)));
+			Document document;
+			try {
+				document = CoreUtil.newDocumentBuilder().newDocument();
+			} catch (ParserConfigurationException ex) {
+				// This can never actually happen.
+				document = null;
+			}
+			for (Map.Entry<String, String> entry : repository.getProperties().entrySet()) {
+				String key = entry.getKey();
+				if (key.indexOf(':') != -1) {
+					continue;
 				}
+				try {
+					if (document != null) {
+						document.createElement(key);
+					}
+				} catch (RuntimeException ex) {
+					// avoid emitting XML we cannnot read
+					continue;
+				}
+				repositoryPropertyAttributes.addAttribute("", //$NON-NLS-1$
+						key, key, "", //$NON-NLS-1$
+						convertToXmlString(entry.getValue()));
 			}
 
 			handler.startElement("", TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORY, //$NON-NLS-1$

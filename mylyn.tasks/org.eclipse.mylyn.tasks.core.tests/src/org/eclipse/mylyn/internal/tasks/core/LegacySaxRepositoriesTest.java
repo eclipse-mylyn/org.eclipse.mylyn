@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.Attributes;
@@ -127,7 +128,7 @@ public class LegacySaxRepositoriesTest {
 
 	private Set<TaskRepository> parseRepositoriesWithVersion1Parser(String xml) throws Exception {
 		SaxRepositoriesContentHandlerVersion1 handler = new SaxRepositoriesContentHandlerVersion1();
-		XMLReader reader = XmlReaderUtil.createXmlReader();
+		XMLReader reader = CoreUtil.newXmlReader();
 		reader.setContentHandler(handler);
 		reader.parse(new InputSource(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))));
 		return handler.getRepositories();
