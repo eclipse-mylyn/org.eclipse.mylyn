@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.internal.wikitext.ui.viewer.HtmlTextPresentationParser;
 import org.osgi.framework.Bundle;
 
 /**
@@ -37,7 +38,8 @@ public class CheatSheetContent extends HelpContent {
 	public String getContent() throws IOException {
 		String content = super.getContent();
 		Matcher headingMatcher = headingOpenTagPattern.matcher(content);
-		return headingMatcher.replaceAll("$1 style=\"color: DarkBlue;\">"); //$NON-NLS-1$
+		String color = HtmlTextPresentationParser.isDarkThemeActive() ? "#7eb8f7" : "DarkBlue"; //$NON-NLS-1$ //$NON-NLS-2$
+		return headingMatcher.replaceAll("$1 style=\"color: " + color + ";\">"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }

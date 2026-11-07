@@ -40,7 +40,6 @@ import org.eclipse.mylyn.wikitext.ui.viewer.HtmlViewer;
 import org.eclipse.mylyn.wikitext.ui.viewer.HtmlViewerConfiguration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -57,8 +56,6 @@ import org.xml.sax.SAXException;
  * @author Hiroyuki Inaba fix for bug 265079: Dialog font not apply WikiText preference pages
  */
 public class MarkupViewerPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
-
-	private static final String WHITE = "white"; //$NON-NLS-1$
 
 	private SourceViewer sourceViewer;
 
@@ -77,7 +74,6 @@ public class MarkupViewerPreferencePage extends PreferencePage implements IWorkb
 	@Override
 	protected Control createContents(Composite parent) {
 		colorRegistry = new Colors();
-		colorRegistry.put(WHITE, new RGB(255, 255, 255));
 
 		Composite composite = new Composite(parent, SWT.NULL);
 		GridLayoutFactory.fillDefaults().margins(5, 5).numColumns(1).applyTo(composite);
@@ -116,7 +112,6 @@ public class MarkupViewerPreferencePage extends PreferencePage implements IWorkb
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(previewViewerContainer);
 		{
 			previewViewer = new HtmlViewer(previewViewerContainer, new VerticalRuler(0), SWT.WRAP | SWT.V_SCROLL);
-			previewViewer.getTextWidget().setBackground(colorRegistry.get(WHITE));
 			GridDataFactory.fillDefaults().grab(true, true).applyTo(previewViewer.getControl());
 
 			htmlViewerConfiguration = new HtmlViewerConfiguration(previewViewer);

@@ -14,6 +14,7 @@
 package org.eclipse.mylyn.internal.wikitext.ui.util;
 
 import org.eclipse.jface.resource.ColorRegistry;
+import org.eclipse.mylyn.internal.wikitext.ui.viewer.HtmlTextPresentationParser;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
@@ -55,7 +56,8 @@ public class WikiTextUiResources {
 			colorRegistry = new ColorRegistry();
 
 			colorRegistry.put(COLOR_HR, new RGB(132, 132, 132));
-			colorRegistry.put(COLOR_HR_SHADOW, new RGB(206, 206, 206));
+			colorRegistry.put(COLOR_HR_SHADOW,
+					HtmlTextPresentationParser.isDarkThemeActive() ? new RGB(80, 80, 80) : new RGB(206, 206, 206));
 
 			Display.getCurrent().setData(KEY_COLOR_REGISTRY, colorRegistry);
 		}

@@ -35,6 +35,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.e4.ui.css.swt.theme.IThemeManager;
 import org.eclipse.jface.text.Position;
@@ -61,6 +62,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
@@ -97,6 +99,8 @@ public class HtmlTextPresentationParser {
 	private static Set<String> whitespaceCollapsingElements = new HashSet<>();
 
 	private static Stylesheet defaultStylesheet;
+
+	private static boolean defaultStylesheetDark;
 
 	static {
 		spanElements.add("a"); //$NON-NLS-1$
@@ -314,6 +318,10 @@ public class HtmlTextPresentationParser {
 
 	private ImageCache imageCache = new ImageCache();
 
+	private static final String THEME_PREFERENCE_NODE = "org.eclipse.e4.ui.css.swt.theme"; //$NON-NLS-1$
+
+	private static final String THEME_PREFERENCE_KEY = "themeid"; //$NON-NLS-1$
+
 	private Stylesheet stylesheet = getDefaultStylesheet();
 
 	private final CssParser cssParser = new CssParser();
@@ -323,7 +331,9 @@ public class HtmlTextPresentationParser {
 
 	private static Stylesheet getDefaultStylesheet() {
 		synchronized (HtmlTextPresentationParser.class) {
-			if (defaultStylesheet == null) {
+			boolean dark = isDarkThemeActive();
+			if (defaultStylesheet == null || dark != defaultStylesheetDark) {
+				defaultStylesheetDark = dark;
 				try (Reader reader = new InputStreamReader(getDefaultStylesheetContent(), StandardCharsets.UTF_8)) {
 					defaultStylesheet = new CssParser().parse(reader);
 				} catch (IOException e) {
@@ -346,11 +356,22 @@ public class HtmlTextPresentationParser {
 	}
 
 	public static boolean isDarkThemeActive() {
-		BundleContext context = FrameworkUtil.getBundle(HtmlTextPresentationParser.class).getBundleContext();
+		Bundle bundle = FrameworkUtil.getBundle(HtmlTextPresentationParser.class);
+		BundleContext context = bundle == null ? null : bundle.getBundleContext();
+		if (context == null) {
+			return false; // stand-alone SWT application
+		}
+		Display display = Display.getCurrent();
+		if (display == null) {
+			return InstanceScope.INSTANCE.getNode(THEME_PREFERENCE_NODE)
+					.get(THEME_PREFERENCE_KEY, "") //$NON-NLS-1$
+					.toLowerCase()
+					.contains("dark"); //$NON-NLS-1$
+		}
 		ServiceReference<IThemeManager> ref = context.getServiceReference(IThemeManager.class);
 		if (ref != null) {
 			IThemeManager manager = context.getService(ref);
-			IThemeEngine engine = manager.getEngineForDisplay(Display.getCurrent());
+			IThemeEngine engine = manager.getEngineForDisplay(display);
 			if (engine != null && engine.getActiveTheme() != null) {
 				return engine.getActiveTheme().getId().toLowerCase().contains("dark"); //$NON-NLS-1$
 			}
@@ -371,8 +392,8 @@ public class HtmlTextPresentationParser {
 			if (presentation.getDefaultStyleRange().foreground != null) {
 				defaultForeground = presentation.getDefaultStyleRange().foreground;
 			}
-			if (presentation.getDefaultStyleRange().foreground != null) {
-				defaultForeground = presentation.getDefaultStyleRange().background;
+			if (presentation.getDefaultStyleRange().background != null) {
+				defaultBackground = presentation.getDefaultStyleRange().background;
 			}
 		}
 	}

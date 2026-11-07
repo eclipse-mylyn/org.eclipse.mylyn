@@ -276,6 +276,8 @@ public class Preferences implements Cloneable {
 			}
 		}
 		editorFolding = store.getBoolean(KEY_EDITOR_FOLDING);
+		// the default depends on the active theme, which can change while the IDE runs
+		store.setDefault(KEY_MARKUP_VIEWER_CSS, getDefaultMarkupViewerCss());
 		markupViewerCss = store.getString(KEY_MARKUP_VIEWER_CSS);
 		openAsPreviewFileNamePattern = store.getString(KEY_OPEN_AS_PREVIEW_NAME_PATTERN);
 		if (isEmpty(markupViewerCss)) {
