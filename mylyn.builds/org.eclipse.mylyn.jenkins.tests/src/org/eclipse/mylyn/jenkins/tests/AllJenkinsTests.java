@@ -19,6 +19,7 @@ import org.eclipse.mylyn.jenkins.tests.client.JenkinsValidationTest;
 import org.eclipse.mylyn.jenkins.tests.core.JenkinsConnectorTest;
 import org.eclipse.mylyn.jenkins.tests.core.JenkinsServerBehaviourTest;
 import org.eclipse.mylyn.jenkins.tests.integration.JenkinsIntegrationTest;
+import org.eclipse.mylyn.jenkins.tests.ui.JenkinsMdnsMessageTest;
 import org.junit.platform.suite.api.BeforeSuite;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
@@ -28,7 +29,7 @@ import org.junit.platform.suite.api.Suite;
  */
 @Suite
 @SelectClasses({ JenkinsConnectorTest.class, JenkinsServerBehaviourTest.class, JenkinsUrlTest.class,
-	JenkinsValidationTest.class,
+	JenkinsValidationTest.class, JenkinsMdnsMessageTest.class,
 	//Jenkins fixure
 	JenkinsUrlUtilTest.class, JenkinsClientTest.class, JenkinsIntegrationTest.class })
 public class AllJenkinsTests {

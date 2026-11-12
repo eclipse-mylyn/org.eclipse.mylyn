@@ -36,13 +36,8 @@ public class JenkinsStartup extends BuildsUiStartup {
 		if (discovery != null) {
 			throw new IllegalStateException("Already started"); //$NON-NLS-1$
 		}
-		try {
-			discovery = new JenkinsDiscovery();
-			discovery.start();
-		} catch (LinkageError e) {
-			// occurs when the optional ECF dependency is not satisfied
-			discovery = null;
-		}
+		discovery = new JenkinsDiscovery();
+		discovery.start();
 	}
 
 	public void stop() {
