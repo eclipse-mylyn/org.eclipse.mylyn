@@ -24,7 +24,8 @@ Export-Package: org.eclipse.mylyn.jenkins.tests;x-internal:=true,
  org.eclipse.mylyn.jenkins.tests.client;x-internal:=true,
  org.eclipse.mylyn.jenkins.tests.core;x-internal:=true,
  org.eclipse.mylyn.jenkins.tests.integration,
- org.eclipse.mylyn.jenkins.tests.support;x-internal:=true
+ org.eclipse.mylyn.jenkins.tests.support;x-internal:=true,
+ org.eclipse.mylyn.jenkins.tests.ui;x-internal:=true
 Import-Package: org.junit.jupiter.api;version="[6.0.0,7.0.0)",
  org.junit.jupiter.api.function;version="[6.0.0,7.0.0)",
  org.junit.jupiter.params;version="[6.0.0,7.0.0)",

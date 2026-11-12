@@ -116,8 +116,6 @@
    <bundle id="org.apache.ws.commons.util"/>
    <bundle id="org.apiguardian.api"/>
    <bundle id="org.jsoup"/>
-   <bundle id="org.eclipse.ecf.discovery"/>
-   <bundle id="org.eclipse.ecf.provider.jmdns"/>
    <bundle id="org.glassfish.hk2.osgi-resource-locator"/>
    <category-def name="org.eclipse.mylyn.docs.category" label="Mylyn Docs">
       <description>
