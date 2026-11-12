@@ -29,31 +29,11 @@ public class JenkinsStartup extends BuildsUiStartup {
 		instance = this;
 	}
 
-	private JenkinsDiscovery discovery;
-
 	@Override
 	public void lazyStartup() {
-		if (discovery != null) {
-			throw new IllegalStateException("Already started"); //$NON-NLS-1$
-		}
-		try {
-			discovery = new JenkinsDiscovery();
-			discovery.start();
-		} catch (LinkageError e) {
-			// occurs when the optional ECF dependency is not satisfied
-			discovery = null;
-		}
 	}
 
 	public void stop() {
-		if (discovery != null) {
-			try {
-				discovery.stop();
-			} catch (NullPointerException e) {
-				// ignore, see bug 383316
-			}
-			discovery = null;
-		}
 	}
 
 }

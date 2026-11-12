@@ -16,10 +16,6 @@
       <unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <repository location="https://download.eclipse.org/rt/ecf/3.16.8/site.p2/3.16.8.v20260415-2025"/>
-      <unit id="org.eclipse.ecf.provider.jmdns" version="0.0.0"/>
-    </location>
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <repository location="https://download.eclipse.org/tools/cdt/builds/cdt/main/"/>
       <unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
     </location>
