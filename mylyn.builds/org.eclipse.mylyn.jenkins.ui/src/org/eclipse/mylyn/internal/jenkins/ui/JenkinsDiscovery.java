@@ -203,7 +203,7 @@ public class JenkinsDiscovery {
 			// Change the first segment (org.eclipse.mylyn.hudson) to the id of
 			// the new repository type when we start differentiation between the two
 			notifyMessage(Messages.JenkinsDiscovery_MessageTitle, NLS.bind(Messages.JenkinsDiscovery_MessageText,
-					new Object[] { url, Messages.JenkinsDiscovery_ServerName, url, id }));
+					url, Messages.JenkinsDiscovery_ServerName, url, id));
 		}
 	}
 
