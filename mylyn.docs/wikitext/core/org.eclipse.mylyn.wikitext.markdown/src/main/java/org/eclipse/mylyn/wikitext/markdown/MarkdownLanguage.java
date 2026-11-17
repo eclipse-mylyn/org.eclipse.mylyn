@@ -31,6 +31,7 @@ import org.eclipse.mylyn.wikitext.markdown.internal.block.LinkDefinitionBlock;
 import org.eclipse.mylyn.wikitext.markdown.internal.block.ListBlock;
 import org.eclipse.mylyn.wikitext.markdown.internal.block.ParagraphBlock;
 import org.eclipse.mylyn.wikitext.markdown.internal.block.QuoteBlock;
+import org.eclipse.mylyn.wikitext.markdown.internal.block.TableBlock;
 import org.eclipse.mylyn.wikitext.markdown.internal.block.UnderlinedHeadingBlock;
 import org.eclipse.mylyn.wikitext.markdown.internal.phrase.BackslashEscapePhraseModifier;
 import org.eclipse.mylyn.wikitext.markdown.internal.phrase.ExtendedAutomaticLinkReplacementToken;
@@ -149,6 +150,7 @@ public class MarkdownLanguage extends AbstractMarkupLanguage {
 		QuoteBlock quoteBlock = new QuoteBlock();
 		ListBlock listBlock = new ListBlock();
 		LinkDefinitionBlock linkDefinitionBlock = new LinkDefinitionBlock();
+		TableBlock tableBlock = new TableBlock();
 
 		blocks.add(codeBlock);
 		blocks.add(horizontalRuleBlock);
@@ -157,6 +159,7 @@ public class MarkdownLanguage extends AbstractMarkupLanguage {
 		blocks.add(quoteBlock);
 		blocks.add(listBlock);
 		blocks.add(linkDefinitionBlock);
+		blocks.add(tableBlock);
 
 		paragraphBreakingBlocks.add(horizontalRuleBlock);
 		paragraphBreakingBlocks.add(headingBlock);
