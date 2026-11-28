@@ -9,10 +9,7 @@ This project implements the Eclipse Foundation Security Policy
 These versions of Mylyn Project are currently being supported with security
 updates.
 
-| Version  | Released   | Supported | 
-| -------- | ---------- | --------- | 
-| 4.1.0    | 2023-12-06 | Yes       | 
-| < 4.0.0  | 2023-09-13 | No        | 
+* The latest release of [4.x] stream (https://download.eclipse.org/mylyn/updates/)
 
 ## Reporting a Vulnerability
 
